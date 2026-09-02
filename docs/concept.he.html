@@ -1,0 +1,548 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · מסמך קונספט</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#6b7480; --s2:#6f8fb0; --s3:#5fa3c9; --s4:#4fb8a8; --s5:#6fc97f; --s6:#c0705f; --flag:#c9a45a;
+    --t-official:#b3ada4; --t-oversight:#b9a6d6; --t-press:#d29a7c; --t-research:#d19ab4; --t-civil:#e2b1a0;
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    --shadow:0 1px 0 rgba(255,255,255,.03) inset;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+      --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+    --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html{direction:rtl}
+  pre{direction:ltr;text-align:left}
+  .mono{direction:ltr;unicode-bidi:isolate}
+  .langlink{font-size:13px;color:var(--muted);margin-top:10px}
+  .langlink a{color:var(--accent)}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .display{font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .frame{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:64px 0 40px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:10px 0 6px;text-wrap:balance}
+  h1 .he{direction:rtl;unicode-bidi:isolate}
+  .subtitle{font-size:20px;color:var(--text-2);max-width:60ch;margin:0;text-wrap:balance}
+  .meta{display:grid;grid-auto-flow:row;gap:6px;text-align:end;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .meta b{color:var(--text-2);font-weight:600}
+
+  .layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;margin-top:48px}
+  nav.toc{position:sticky;top:24px;align-self:start;font-size:14px}
+  nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  nav.toc a{color:var(--muted);border:0;display:block;padding:2px 0 2px 12px;border-inline-start:2px solid var(--line-soft)}
+  nav.toc a:hover{color:var(--text);border-inline-start-color:var(--accent)}
+  nav.toc .toc-h{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:600}
+
+  main{min-width:0}
+  section{padding:40px 0;border-bottom:1px solid var(--line-soft)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:32px;line-height:1.15;margin:0 0 6px;text-wrap:balance}
+  .lede{color:var(--text-2);font-size:18px;margin:0 0 24px;max-width:66ch}
+  h3{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:32px 0 10px}
+  p{max-width:68ch;margin:0 0 14px}
+  ul,ol{max-width:68ch;margin:0 0 16px;padding-inline-start:22px}
+  li{margin-bottom:6px}
+  li::marker{color:var(--muted)}
+  strong{color:var(--text);font-weight:600}
+  em{font-style:italic}
+  .he{direction:rtl;unicode-bidi:isolate;font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;color:var(--text)}
+
+  .rule{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;max-width:68ch;padding:14px 0;border-top:1px solid var(--line-soft)}
+  .rule:last-child{border-bottom:1px solid var(--line-soft)}
+  .rule .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:3px;margin-top:4px;white-space:nowrap}
+  .rule p{margin:0}
+
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:900px}
+  .panel{background:var(--surface);border:1px solid var(--line);padding:20px 22px;box-shadow:var(--shadow)}
+  .panel h4{margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .panel p,.panel ul{font-size:15.5px;margin-bottom:8px}
+  .panel ul{padding-inline-start:18px}
+  .panel.out h4{color:var(--s6)}
+  .panel.in h4{color:var(--s5)}
+
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  .tablewrap{overflow-x:auto;max-width:900px;margin:8px 0 16px}
+  th{text-align:start;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--text-2)}
+  td:first-child{color:var(--text);font-weight:600}
+  tr:last-child td{border-bottom:0}
+
+  /* lifecycle */
+  .stages{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;max-width:900px;margin:12px 0 20px;counter-reset:st}
+  .stage{position:relative;padding:14px 12px 14px 14px;border-top:3px solid var(--st);background:var(--surface);border-right:1px solid var(--line-soft)}
+  .stage:last-child{border-right:0}
+  .stage .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--st);font-weight:500}
+  .stage .name{font-weight:700;font-size:14px;margin:2px 0 2px;color:var(--text);overflow-wrap:anywhere;line-height:1.25}
+  .stage .hname{direction:rtl;font-family:"Frank Ruhl Libre",serif;color:var(--text-2);font-size:14px;margin-bottom:6px}
+  .stage .what{font-size:13.5px;color:var(--text-2);line-height:1.45}
+  .stage.regress{background:transparent;border-top-style:dashed}
+
+  /* tree diagram */
+  .tree{max-width:900px;background:var(--surface);border:1px solid var(--line);padding:22px 24px;font-size:15px}
+  .node{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:8px 0}
+  .node .dot{width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--accent)}
+  .node.child{margin-inline-start:28px;border-inline-start:1px solid var(--line);padding-inline-start:16px}
+  .node.child .dot{background:var(--s2)}
+  .node.claim{margin-inline-start:56px;border-inline-start:1px solid var(--line-soft);padding-inline-start:16px}
+  .node.claim .dot{width:8px;height:8px;background:var(--muted);margin-top:9px}
+  .node .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block}
+  .node .t{color:var(--text)}
+  .node .d{color:var(--text-2);font-size:14px}
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:3px;border:1px solid var(--c);color:var(--c);vertical-align:middle;margin-inline-start:6px}
+
+  /* item mock */
+  .item{max-width:900px;background:var(--surface);border:1px solid var(--line);padding:22px 24px;direction:rtl;text-align:end}
+  .item .crumb{font-size:13px;color:var(--muted)}
+  .item h5{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:24px;margin:6px 0 12px;color:var(--text)}
+  .item .row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px}
+  .item .box{background:var(--surface-2);padding:14px 16px}
+  .item .box .k{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .bar{display:flex;height:12px;overflow:hidden;border-radius:2px;background:var(--line)}
+  .bar span{display:block;height:100%}
+  .legend{display:flex;gap:16px;font-size:13px;color:var(--text-2);margin-top:8px;font-variant-numeric:tabular-nums}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-inline-end:6px;vertical-align:middle}
+  .ledger{list-style:none;padding:0;margin:0;font-size:14px}
+  .ledger li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-soft);color:var(--text-2)}
+  .ledger li:last-child{border-bottom:0}
+  .ledger .st{font-weight:700;color:var(--c)}
+  .ledger .dt{color:var(--muted);font-variant-numeric:tabular-nums}
+
+  pre{background:var(--surface);border:1px solid var(--line);padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.5;max-width:900px;color:var(--text-2);margin:8px 0 18px}
+  pre .c{color:var(--muted)}
+  pre .k{color:var(--accent)}
+
+  .weeks{display:grid;grid-template-columns:120px 1fr;max-width:900px;border-top:1px solid var(--line)}
+  .weeks>div{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .weeks .w{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .weeks .w small{display:block;color:var(--muted);font-family:"Assistant",sans-serif;font-size:13px}
+  .weeks .goal{font-weight:700;color:var(--text);margin-bottom:4px}
+  .weeks p{font-size:15px;margin:0;color:var(--text-2)}
+
+  .swatch{display:grid;grid-template-columns:repeat(5,1fr) 10px 1fr;gap:0;max-width:620px;margin:10px 0 8px;direction:rtl}
+  .swatch span{padding:8px 4px;text-align:center;font-size:12.5px;font-weight:600;color:var(--text);border-top:4px solid var(--c);background:color-mix(in srgb,var(--c) 34%,var(--surface-2))}
+  .swatch span:first-child{border-start-start-radius:4px;border-end-start-radius:4px}
+  .swatch span:nth-child(5){border-start-end-radius:4px;border-end-end-radius:4px}
+  .swatch span.exit{border-radius:4px;border-top-style:dashed}
+  .swatch i{border-inline-start:1px dashed var(--line);margin:3px 0}
+  .dots{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--text-2);margin:6px 0 14px}
+  .dots i{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);margin-inline-end:6px;vertical-align:-1px}
+  .chapters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:900px;margin:12px 0 16px}
+  .chap{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);padding:14px 16px}
+  .chap .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--c)}
+  .chap .t{font-weight:700;color:var(--text);margin:2px 0 6px}
+  .chap .he{font-size:14px;color:var(--text-2);display:block;margin-bottom:8px}
+  .chap ul{padding-inline-start:16px;margin:0;font-size:14px}
+  @media (max-width:860px){.chapters{grid-template-columns:1fr}}
+  .risk td:nth-child(2){color:var(--text-2)}
+  .sev{font-size:11px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;background:var(--c);color:var(--accent-ink);white-space:nowrap}
+  .callout{border-inline-start:3px solid var(--accent);padding:12px 18px;background:var(--accent-soft);max-width:68ch;margin:18px 0}
+  .callout p{margin:0}
+  .oq li{margin-bottom:10px}
+  .oq b{color:var(--text)}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:24px}
+    nav.toc{position:static}
+    nav.toc ol{grid-template-columns:repeat(2,1fr)}
+    header.masthead{grid-template-columns:1fr}
+    .meta{text-align:start}
+    .grid2{grid-template-columns:1fr}
+    .stages{grid-template-columns:repeat(2,1fr)}
+    .stage{border-right:0;border-bottom:1px solid var(--line-soft)}
+    .item .row{grid-template-columns:1fr}
+    .weeks{grid-template-columns:1fr}
+    .weeks .w{padding-bottom:0}
+  }
+  @media (prefers-reduced-motion:no-preference){ a{transition:border-color .15s} }
+</style>
+</head><body>
+<div class="frame">
+<header class="masthead">
+  <div>
+    <div class="kicker">מסמך קונספט ומוצר · גרסה 0.3</div>
+    <h1>היום שאחרי</h1>
+    <p class="subtitle">פנקס אזרחי של מה שנכשל ב־7 באוקטובר 2023 — ומה נעשה מאז, כשל אחרי כשל.</p>
+    <div class="langlink">מהדורה עברית · <a href="concept.html">English edition</a></div>
+  </div>
+  <div class="meta">
+    <div><b>הוחלט</b> 1–2 בספטמבר 2026</div>
+    <div><b>אחראי</b> רועי</div>
+    <div><b>יעד</b> MVP באוויר ב־7 באוקטובר 2026 (36 ימים)</div>
+    <div><b>מצב</b> אב-טיפוס 0.3 במאגר · תואם למסמך הזה</div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="תוכן">
+  <p class="toc-h">תוכן</p>
+  <ol>
+    <li><a href="#thesis">התזה</a></li>
+    <li><a href="#purpose">מטרה, קהל, עמדה</a></li>
+    <li><a href="#scope">היקף</a></li>
+    <li><a href="#model">מודל הנתונים</a></li>
+    <li><a href="#lifecycle">מחזור חיי הראיות</a></li>
+    <li><a href="#confidence">דעת הציבור</a></li>
+    <li><a href="#editorial">מדיניות עריכה</a></li>
+    <li><a href="#product">המוצר</a></li>
+    <li><a href="#visual">שפה חזותית</a></li>
+    <li><a href="#arch">ארכיטקטורה</a></li>
+    <li><a href="#legal">משפט וסיכונים</a></li>
+    <li><a href="#mvp">MVP ותוכנית</a></li>
+    <li><a href="#open">שאלות פתוחות</a></li>
+    <li><a href="#log">יומן החלטות</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="thesis">
+  <h2>התזה</h2>
+  <p class="lede">על כשלי 7 באוקטובר נכתב בישראל כמות חריגה של תיעוד: תחקירי צה״ל, דוחות מבקר המדינה, דיוני כנסת, ועדת חקירה אזרחית, שנים של עיתונות חוקרת. מה שאין הוא מקום אחד שבו אזרח יכול לראות, לכל כשל שתועד, מה השתנה מאז בפועל — ולומר אם הוא מאמין לזה.</p>
+  <p><b>היום שאחרי</b> הוא המקום הזה. פנקס מובנה, ממוקר, מתעדכן ברציפות. כל רשומה בו היא כשל שמישהו אמין תיעד; לצידה כל טענה שבאה אחר כך — הכרה, תכנון, יישום או אימות עצמאי — כל אחת עם קישור, תאריך וסוג מקור. לצד הראיות יושב אות שני, מופרד בכוונה: כמה ישראלים מאומתים מאמינים שהכשל תוקן.</p>
+  <p>הפרויקט אינו נוקט עמדה בשאלת האשמה. הוא נוקט עמדה אחת בלבד בשאלת העובדות: טענה בלי מקור פומבי לא קיימת כאן.</p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="panel in"><h4>מה זה</h4><ul><li>פנקס של כשלים מתועדים ושל מעקב מתועד.</li><li>אוסף המקורות והעדויות שחושפים כל כשל — מצוירים על מפה כשיש להם מקום.</li><li>שאלה ציבורית אחת לכל כשל, מותאמת לשלב שלו, בפרק משלה, בנפרד מהראיות.</li><li>מתודולוגיה פומבית עם יומן תיקונים גלוי.</li></ul></div>
+    <div class="panel out"><h4>מה זה לא</h4><ul><li>פסק דין בשאלה מי אחראי.</li><li>אתר הנצחה, ארכיון עדויות או אתר חדשות.</li><li>מקום שבו הצבעות קובעות מה נכון.</li><li>סקר על אמון במוסדות או בתקשורת — שאלות מקטבות מחוץ להיקף בכוונה.</li><li>מפרסם של דבר שלא עבר פרסום קודם במקום אחר.</li></ul></div>
+  </div>
+</section>
+
+<section id="purpose">
+  <h2>מטרה, קהל, עמדה</h2>
+  <h3>מטרה</h3>
+  <p>שלוש מטרות, לפי סדר עדיפות. <strong>לחץ לאחריותיות</strong>: להקשות על מוסד להשאיר כשל מתועד לא מתוקן בשקט — ״1,096 ימים אחרי, עדיין בשלב 2״ הוא משפט שהאתר צריך לדעת לייצר אוטומטית. <strong>חינוך אזרחי</strong>: לאפשר לקורא רגיל לראות את התמונה המערכתית ולא את הכותרת של השבוע. <strong>זיכרון ציבורי</strong>: רשומה עמידה וממוקרת היטב שקשה לשכתב, כי כל שורה בה מצביעה לאנשהו.</p>
+  <h3>קהל</h3>
+  <p>הציבור הישראלי הרחב, עברית תחילה. עיתונאים, חוקרים ומקבלי החלטות הם משתמשים מסדר שני ומבורכים — מודל הנתונים בנוי כך שיוכלו לצטט אותו — אבל חוויית הקריאה מתוכננת למי שיש לו עשר דקות וטלפון.</p>
+  <h3>עמדה</h3>
+  <p>תיאורי בעובדות, נייטרלי באשמה, מפורש בשיטה. הפרויקט לעולם לא אומר ״X אשם״. הוא כן אומר ״מקור א׳ תיעד את הכשל; מקור ב׳ אומר שהוכר; מקור ג׳ אומר שיושם; אף גורם עצמאי עוד לא אימת״. במקום שבו הפרויקט מפעיל שיקול דעת — השלב שבו כשל עומד — הכלל שמייצר אותו מפורסם ומכני.</p>
+  <div class="callout"><p><strong>כלל האמינות.</strong> כל אדם מכל מחנה פוליטי צריך להיות מסוגל לקרוא את עמוד השיטה ולא למצוא בו מנוף. אם מבקר יכול להצביע על כלל ולומר ״כאן גרה ההטיה שלכם״ — הכלל שגוי, לא המבקר.</p></div>
+</section>
+
+<section id="scope">
+  <h2>היקף</h2>
+  <p class="lede">ארבעה תחומים בגרסה 1. הרביעי מצומצם בכוונה.</p>
+  <div class="tablewrap"><table>
+    <tr><th>תחום</th><th>בגרסה 1</th><th>דוגמאות לכשלים מערכתיים</th></tr>
+    <tr><td>צבא ומודיעין</td><td>כן</td><td>התרעה והערכה; ארכיטקטורת ההגנה על הגדר; כשירות ופיקוד באוגדת עזה; זמן תגובה ותגבור; מבנה הכוח ותורת הלחימה.</td></tr>
+    <tr><td>עורף ומערכות אזרחיות</td><td>כן</td><td>כשירות ותיאום המשטרה; מד״א / זק״א / בתי חולים; התרעות פיקוד העורף; כיתות כוננות ביישובים; טיפול במפונים; שיקום העוטף.</td></tr>
+    <tr><td>חברה ומוסדות</td><td>כן</td><td>ועדות החקירה עצמן; תפקוד התקשורת ביום האירוע; אמון הציבור; החברה האזרחית שמילאה את החללים שהמדינה הותירה.</td></tr>
+    <tr><td>ממשלה וקבלת החלטות</td><td>כשלי תהליך בלבד</td><td>מנגנון המשא ומתן על החטופים; נהלי המטה לביטחון לאומי; מנגנוני חקיקה ותקצוב בחירום. <em>לא</em> מדיניות כלפי חמאס לפני המלחמה, לא פוליטיקה בקבינט, לא אחריות אישית של שרים.</td></tr>
+  </table></div>
+  <p>צמצום התחום הרביעי הוא החלטת אמינות, לא התחמקות, ועמוד השיטה צריך לומר זאת בפשטות: הפרויקט עוקב אחרי <em>מנגנונים</em> שנכשלו ואחרי השאלה אם תוקנו. שיפוט המדיניות שלפני המלחמה הוא משימה לגיטימית לאחרים.</p>
+</section>
+
+<section id="model">
+  <h2>מודל הנתונים</h2>
+  <p class="lede">עץ כשלים בשני מפלסים, ופנקס של טענות ממוקרות תלוי על כל עלה. המצב מחושב, לעולם לא מוקלד.</p>
+  <div class="tree">
+    <div class="node"><span class="dot"></span><div><span class="lbl">כשל מערכתי · הורה</span><span class="t">התרעה נאספה ולא תורגמה לפעולה</span><div class="d">כ־8 ב־MVP. יושב בתא אחד במטריצת מי × מתי. מציג את התפלגות השלבים של ילדיו; לעולם לא ממצע את הציונים שלהם.</div></div></div>
+    <div class="node child"><span class="dot"></span><div><span class="lbl">אירוע · עלה</span><span class="t">אזהרות חוזרות של התצפיתניות בנחל עוז לא הועלו לדרג הפיקודי</span> <span class="chip" style="--c:var(--s4)">שלב 4 · יושם</span> <span class="chip" style="--c:var(--flag)">במחלוקת</span><div class="d">נושא את פנקס הטענות ושאלה ציבורית אחת לכל שלב. אין לו מקום משלו — מקומותיו הם המקומות שמהם באו הראיות. 25–40 ב־MVP.</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">טענה · ראיה</span><span class="t">כתבה, 2024 — חיילת שהוצבה בעמדה מתארת אזהרות שלא נענו</span><div class="d">סוג מקור: עיתונות · טוענת: שלב 1 · מקום: נחל עוז · ציטוט · קישור · תאריך. טענות-ראיה הן מה שמפת הכשל מציירת.</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">טענה</span><span class="t">תחקיר צה״ל, פברואר 2025 — הכיר בכשל ותיאר נוהל העלאה חדש</span><div class="d">סוג מקור: רשמי · טוענת: שלב 2 ושלב 3 · קישור · תאריך · בלי מקום (מסמך, לא עדות)</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">טענה</span><span class="t">דובר צה״ל, 2025 — הנוהל בתוקף בכל האוגדה</span><div class="d">סוג מקור: רשמי (הגוף המבצע) · טוענת: שלב 4</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">טענה · חולקת</span><span class="t">הודעת ועדת הביטחון של הקיבוץ — לתצפיתניות עדיין אין קו ישיר לאוגדה</span><div class="d">סוג מקור: חברה אזרחית · חולקת על: טענת שלב 4 שלמעלה</div></div></div>
+  </div>
+  <h3>שדות של אירוע</h3>
+  <div class="tablewrap"><table>
+    <tr><th>שדה</th><th>משמעות</th></tr>
+    <tr><td>id, slug</td><td>מזהה יציב; ה־slug מתועתק מעברית לכתובות.</td></tr>
+    <tr><td>parent</td><td>הורה מערכתי אחד בדיוק.</td></tr>
+    <tr><td>title, summary</td><td>מה נכשל, בשורה אחת ובפסקה אחת. מוסדות ומערכות בלבד; בלי אנשים, בלי שמות נרצחים.</td></tr>
+    <tr><td>domain, phase</td><td>יורשים מההורה: אחד משלושה תחומים (צבא ומודיעין · עורף ומערכות אזרחיות · חברה ומוסדות) ואחד משלושה שלבי זמן (לפני · ביום עצמו · אחרי). שני הצירים האלה הם מטריצת עמוד הבית.</td></tr>
+    <tr><td>claims[]</td><td>הפנקס. כל טענה: מקור, סוג מקור, קישור, קישור ארכיון, תאריך, ציטוט (עד 40 מילים), השלב הנטען, <strong>מקום</strong> (אופציונלי: יישוב, בסיס, כביש או עיר עם קואורדינטות — על עדויות ודיווחים ספציפיים למקום, לא על מסמכים), חולקת-על (הפניה אופציונלית לטענה אחרת).</td></tr>
+    <tr><td>places</td><td><em>מחושב</em>: המקומות הנפרדים של טענות האירוע. מניע את מפת הראיות; אירוע בלי טענות ממוקמות הוא אירוע בלי מפה.</td></tr>
+    <tr><td>stage</td><td><em>מחושב</em>: השלב הגבוה ביותר שיש לו לפחות טענה אחת. ראו כללי מחזור החיים.</td></tr>
+    <tr><td>contested</td><td><em>מחושב</em>: אמת אם לטענה כלשהי בשלב הנוכחי יש טענה חולקת.</td></tr>
+    <tr><td>summaries{}</td><td>לכל שלב שבו זה רלוונטי: סיכום שאושר על ידי העורך של ההכרה (2), התוכנית (3) או מה שיושם (4–6). נכתב בעזרת AI, כל משפט מקושר לטענה.</td></tr>
+    <tr><td>opinion{}</td><td><em>מ־Supabase</em>: פרק אחד לכל שלב שהאירוע עבר — שאלת השלב, התפלגות התשובות, מספר המצביעים המאומתים ואשכולות הטיעונים. פרק השלב הנוכחי פתוח; פרקים קודמים קפואים.</td></tr>
+    <tr><td>history[]</td><td>כל שינוי באירוע עם תאריך וסיבה — שובל התיקונים הפומבי.</td></tr>
+  </table></div>
+</section>
+
+<section id="lifecycle">
+  <h2>מחזור חיי הראיות</h2>
+  <p class="lede">שישה שלבים. כל אחד הוא <em>אירוע</em> שמקור דיווח עליו, לא דעה שהפרויקט מחזיק. זה מה שמונע מהפנקס לקרוס ל״במחלוקת״ לאורך קווים פוליטיים.</p>
+  <div class="stages">
+    <div class="stage" style="--st:var(--s1)"><div class="n">1</div><div class="name">זוהה</div><div class="hname">Identified</div><div class="what">מקור אמין תיעד את הכשל.</div></div>
+    <div class="stage" style="--st:var(--s2)"><div class="n">2</div><div class="name">הוכר</div><div class="hname">Acknowledged</div><div class="what">המוסד האחראי הודה בו בעצמו.</div></div>
+    <div class="stage" style="--st:var(--s3)"><div class="n">3</div><div class="name">הוכרזה תוכנית</div><div class="hname">Plan announced</div><div class="what">קיימת החלטה קונקרטית: תקציב, החלטת ממשלה, יחידה, תורה, חוק.</div></div>
+    <div class="stage" style="--st:var(--s4)"><div class="n">4</div><div class="name">יושם</div><div class="hname">Implemented</div><div class="what">הגוף המבצע מדווח שהשינוי בתוקף.</div></div>
+    <div class="stage" style="--st:var(--s5)"><div class="n">5</div><div class="name">אומת עצמאית</div><div class="hname">Independently verified</div><div class="what">גוף שאינו המבצע אישר.</div></div>
+    <div class="stage regress" style="--st:var(--s6)"><div class="n">6</div><div class="name">נסוג</div><div class="hname">Regressed</div><div class="what">מקור מאוחר מדווח שהתיקון נשחק או בוטל.</div></div>
+  </div>
+  <h3>כללים</h3>
+  <div class="rule"><span class="tag">חישוב</span><p>שלב האירוע הוא השלב הגבוה ביותר שקיימת לו לפחות טענה אחת. אף אחד לא צריך להסכים כדי שזה יחושב. ״צה״ל אומר שיושם״ מעביר את האירוע לשלב 4 — זו עובדה על מה שצה״ל אמר.</p></div>
+  <div class="rule"><span class="tag">עצמאות</span><p>שלב 5 דורש מקור מסוג <em>עצמאי</em> — מבקר המדינה, ועדת כנסת, בית משפט, או תחקיר עיתונאי עם בסיס מסמכי מפורש. גוף מבצע לעולם לא מאמת את עצמו.</p></div>
+  <div class="rule"><span class="tag">מחלוקת</span><p>״במחלוקת״ הוא דגל, לא שלב. טענה חולקת נצמדת לטענה הספציפית שהיא חולקת עליה. האירוע מציג תג ״במחלוקת״ ואת הקישור החולק; השלב לא יורד. פוליטיקה יכולה להוסיף קישור; היא לא יכולה לעצור את הפנקס.</p></div>
+  <div class="rule"><span class="tag">נסיגה</span><p>שלב 6 הוא החריג היחיד למונוטוניות: דיווח ממוקר על שחיקה או ביטול מעביר את האירוע ל״נסוג״ ושומר את שיא השלב הקודם בהיסטוריה. טענת יישום מאוחרת יותר מעלה אותו חזרה.</p></div>
+  <div class="rule"><span class="tag">בלי קישור, אין טענה</span><p>כל טענה נושאת קישור למקור שכבר פורסם, תאריך וסוג מקור. טענה שחסר בה אחד משלושתם לא נכנסת. זה כל מנגנון האנטי-פוליטיקה, והוא אמור להיות משעמם.</p></div>
+  <h3>סוגי מקורות ותפקידם</h3>
+  <div class="tablewrap"><table>
+    <tr><th>סוג</th><th>דוגמאות</th><th>יכול לטעון</th></tr>
+    <tr><td>רשמי</td><td>תחקירי צה״ל ודובר צה״ל, החלטות ממשלה, הודעות משרדים, משטרה, מד״א</td><td>שלבים 1–4, 6. לא 5 על הרפורמות של עצמו.</td></tr>
+    <tr><td>פיקוח עצמאי</td><td>מבקר המדינה, ועדות הכנסת, בתי משפט, ועדת חקירה ממלכתית</td><td>כל השלבים, כולל 5.</td></tr>
+    <tr><td>עיתונות</td><td>הארץ, ynet, N12, כאן, כלכליסט, שומרים, העין השביעית</td><td>שלבים 1–4 ו־6 על סמך כלי תקשורת אחד; שלב 5 רק לתחקיר שמצטט מסמכים, ורצוי באישוש של כלי שני.</td></tr>
+    <tr><td>מחקר</td><td>INSS, המכון הישראלי לדמוקרטיה, משגב, מחקר אקדמי, ועדת החקירה האזרחית</td><td>בעיקר שלבים 1 ו־5; שימושי למסגור ההורים.</td></tr>
+    <tr><td>חברה אזרחית</td><td>ארגוני משפחות שכולות ומשפחות חטופים, ועדות קיבוצים, קבוצות ניצולים, עמותות</td><td>שלב 1, שלב 6 וטענות חולקות. חיוני לשאלה ״האם זה באמת תוקן״.</td></tr>
+  </table></div>
+</section>
+
+<section id="confidence">
+  <h2>דעת הציבור — שאלה אחת לכל שלב</h2>
+  <p class="lede">דעה חיה כאן ובשום מקום אחר. הציבור לא קובע את השלב; הוא מדרג את מה שהשלב הנוכחי מציע. מפני שתוכנית ויישום הם דברים שונים, השאלה משתנה כשהאירוע מתקדם.</p>
+  <h3>השאלות</h3>
+  <div class="tablewrap"><table>
+    <tr><th>שלב</th><th>שאלה</th><th>תשובה</th><th>מה הפאנל העובדתי מציג לצידה</th></tr>
+    <tr><td>1 זוהה</td><td>עד כמה דחוף לתקן את הכשל הזה?</td><td>1–5</td><td>הראיות: כל מקור ועדות שחושפים את הכשל, עם המפה שלהם.</td></tr>
+    <tr><td>2 הוכר</td><td>האם ההכרה בכשל תואמת את מה שקרה בפועל?</td><td>כן / חלקית / לא</td><td>ההכרה, מצוטטת מהמקור.</td></tr>
+    <tr><td>3 הוכרזה תוכנית</td><td>האם התוכנית שהוכרזה נותנת מענה לבעיה?</td><td>1–5</td><td>סיכום התוכנית שאושר על ידי העורך, כל משפט מקושר.</td></tr>
+    <tr><td>4 יושם</td><td>עד כמה מה שיושם בפועל נותן מענה לבעיה?</td><td>1–5</td><td>סיכום מה שיושם — נתונים, לא התוכנית.</td></tr>
+    <tr><td>5 אומת עצמאית</td><td>אותה שאלה כמו שלב 4.</td><td>1–5</td><td>כמו שלב 4, בתוספת מסלול האימות פתוח לעיון. <strong>בלי שאלה על אמון במאמת</strong> — אמון במוסדות ובתקשורת הוא נושא מקטב, ונושאים מקטבים מחוץ להיקף.</td></tr>
+    <tr><td>6 נסוג</td><td>עד כמה מה שנותר מיושם נותן מענה?</td><td>1–5</td><td>סיכום היישום עם דיווח הנסיגה מצורף.</td></tr>
+  </table></div>
+  <h3>פרקים</h3>
+  <p>כשאירוע עולה שלב, השאלה הפתוחה נסגרת ותוצאותיה קופאות כפרק. עמוד האירוע מציג את השאלה הנוכחית עם ההתפלגות החיה שלה, ומתחתיה את הפרקים הקודמים: ״את התוכנית הציבור דירג 2.1 מתוך 5 (1,870 מאומתים); אחרי היישום — 3.4 (4,820 מאומתים)״. אפשר לשנות הצבעה כל עוד הפרק שלה פתוח. הורים לא ממצעים ציונים בין פרקים — השאלות שונות — אלא מציגים את התפלגות השלבים של האירועים שלהם.</p>
+  <h3>לפני התשובה: הטיעונים</h3>
+  <p>המצביע רואה את הטיעונים לפני הכפתורים. שתי שורות, לעולם לא מעורבבות. <strong>ממקורות פומביים</strong>: מה אמרו אנליסטים, ארגוני משפחות ותחקירים בעד ונגד התוכנית או היישום — כל אחד טענה עם קישור. <strong>מהציבור</strong>: ההסברים החופשיים שמצביעים השאירו, מקובצים אוטומטית לקומץ טיעונים בעד ונגד. כל אשכול מציין מכמה תשובות הוא נבנה ואפשר לפתוח אותו לשניים-שלושה ציטוטים מייצגים שהעורך אישר. אין פיד תגובות גולמי: הקיבוץ לאשכולות שומר על עומס מיתון שאדם אחד יכול לשאת ומסיר את חזית לשון הרע.</p>
+  <p>הטקסט החופשי הוא רשות, אנונימי, ונכנס לתור סיכום. ה־AI לעולם לא ממציא טיעון שלא נמצא בתשובות; העורך סוקר אשכולות לפני שהם מתפרסמים, בדיוק כמו טענות.</p>
+  <h3>רמות אימות</h3>
+  <div class="tablewrap"><table>
+    <tr><th>רמה</th><th>מנגנון</th><th>מתי</th><th>מה נשמר</th></tr>
+    <tr><td>מחובר</td><td>כניסה עם Google או Apple, הצבעה אחת לחשבון</td><td>MVP</td><td>מזהה משתמש של הספק בלבד.</td></tr>
+    <tr><td>מאומת בטלפון</td><td>מספר נייד ישראלי, קוד חד-פעמי, הצבעה אחת למספר</td><td>MVP</td><td>גיבוב עם מלח של המספר. לעולם לא המספר.</td></tr>
+    <tr><td>מאומת בזהות</td><td>ספק KYC (למשל AU10TIX, Persona, Veriff) בודק מסמך ומחזיר רק ״תקף + ייחודי״ ואסימון למניעת כפילויות</td><td>גרסה 1.1, אם המספרים יתחילו להיות חשובים</td><td>האסימון. המסמך לעולם לא נוגע בשרתי הפרויקט.</td></tr>
+  </table></div>
+  <div class="callout"><p><strong>החלטה: אין העלאת תעודת זהות לפרויקט, בשום שלב.</strong> החזקת סריקות של תעודות זהות תהיה החבות הגדולה ביותר בפרויקט (חוק הגנת הפרטיות, שחוזק בתיקון 2024 שנכנס לתוקף באוגוסט 2025, מתייחס למאגר כזה כרגיש, עם חובות רישום, ממונה הגנת פרטיות ודיווח על פרצות), תדכא השתתפות בנושא הטעון ביותר במדינה, וממילא לא תעצור שחקן נחוש. הבטחת זהות, כשתידרש, נקנית מספק שמחזיק את המסמך אצלו.</p></div>
+  <h3>כללי תצוגה</h3>
+  <ul>
+    <li>תמיד להציג את הפירוט בגלוי: ״12,400 הצבעות · 9,100 מאומתות בטלפון״. שקיפות על אי-שלמות עדיפה על העמדת פנים שפתרנו את עמידות ה־Sybil.</li>
+    <li>לא מציגים מספרים מתחת למינימום (נניח 50 מצביעים מאומתים בטלפון) — אחוז של 7 אנשים הוא רעש מחופש לנתון.</li>
+    <li>המספר הראשי הוא שיעור המאומתים בטלפון; הצבעות של מחוברים בלבד מוצגות אבל מסומנות.</li>
+    <li>התצוגה החשובה ביותר במוצר היא <strong>הפער</strong>: אירועים בשלב 4–5 שהציבור מדרג את היישום שלהם מתחת ל־2.5 מתוך 5. שם נמצא סיפור האחריותיות, וזו כותרת ששום מוסד ושום המון לא יכולים לייצר לבד.</li>
+  </ul>
+</section>
+
+<section id="editorial">
+  <h2>מדיניות עריכה</h2>
+  <h3>עריכה</h3>
+  <p>עורך אחד — רועי — מאשר כל רשומה וכל טענה. סריקה יומית אוטומטית (פידים של חדשות בעברית, סדרי יום ופרוטוקולים של ועדות הכנסת, פרסומי מבקר המדינה, דובר צה״ל) מתאימה חומר חדש לאירועים פתוחים ומציעה טענות לתור בדיקה. שום דבר לא מתפרסם בלי בדיקה. צוואר הבקבוק מכוון בשלב הזה; הוא קונה סטנדרט אחיד בזמן שהכללים מתייצבים.</p>
+  <h3>שמות</h3>
+  <p>מוסדות, יחידות ומערכות בלבד: ״מפקדת אוגדת עזה״, ״התיאום בין שב״כ לאמ״ן״, ״תחנת משטרת שדרות״, ״מערכת ההתרעה״. בלי מפקדים, פקידים או שרים כאנשים פרטיים, גם כשמקור נוקב בשמם. ציטוטים נחתכים כדי להסיר שמות.</p>
+  <p><strong>חריג אחד מוגדר.</strong> טבלת האנליסטים בפרק 3 נוקבת בשמות <em>מחברי ניתוח שפורסם</em> — חוקר, בעל טור, מחבר דוח של עמותה — עם השיוך שלהם, כי טיעון בלי מחבר אינו מקור. היא לעולם לא נוקבת בשם של מי שהיה מעורב באירועים עצמם. באב-הטיפוס אלה שמות בדויים שמצומדים לתיאורי מוסד גנריים, לעולם לא אנשים בדויים שמצומדים למוסדות אמיתיים בשמם.</p>
+  <h3>נרצחים וניצולים</h3>
+  <p>בלי שמות של נרצחים או ניצולים. בלי פרטים גרפיים מעבר לנדרש כדי לנסח את הכשל. בלי ציטוטי עדות אלא אם כבר פורסמו בהסכמה ברורה של הדובר, וגם אז רק כטענה מקושרת, לעולם לא כנרטיב.</p>
+  <h3>רק מקורות שכבר פומביים</h3>
+  <p>הפרויקט לא מפרסם דבר שלא הופיע קודם במקור שנושא באחריות לאישור הפרסום שלו. כל טענה מקשרת למקור. כך נעקפת שאלת הצנזורה הצבאית מעצם התכנון, והפרויקט נשאר מחוץ לעסקי החדשות המתפרצות.</p>
+  <h3>סיכומים</h3>
+  <p>סיכומי תוכנית ויישום נכתבים בעזרת AI מתוך הטענות, מאושרים על ידי העורך, ומקושרים משפט אחר משפט. הסיכום הוא נוחות; המקור הוא הסמכות, והתווית על כל סיכום אומרת זאת.</p>
+  <h3>שיטה ותיקונים</h3>
+  <p>עמוד שיטה פומבי מציג בעברית פשוטה את כללי מחזור החיים, את השאלות לכל שלב, את סוגי המקורות, את מדיניות השמות והפרטיות ואת רמות האימות. יומן תיקונים מפרט כל שינוי שלב, כל היפוך וכל טעות עם תאריך וסיבה. כל אחד יכול להגיש תיקון או מקור מועמד דרך טופס; ההגשות נכנסות לאותו תור בדיקה כמו הסריקה האוטומטית.</p>
+</section>
+
+<section id="product">
+  <h2>המוצר</h2>
+  <p class="lede">עברית, מימין לשמאל, נייד תחילה. חזותי למעלה, טקסטואלי ככל שיורדים.</p>
+  <h3>כניסה: עמוד הפתיחה</h3>
+  <p>ביקור ראשון נפתח ב״על הפרויקט״: השם, התזה בשורה אחת, וטור אחד של פרוזה — למה האתר קיים, מה עומדים לראות בעמוד הכשלים, מה מכיל עמוד של כשל, מה הפרויקט לא יעשה, מי מאחוריו — עם השיטה המלאה מקופלת מתחת כמקטע נפתח, וקריאה לפעולה אל ״הכשלים״. אחרי הביקור הראשון האתר נפתח בעמוד הכשלים, ועמוד הפתיחה נשאר נגיש כלשונית משנית בכוונה: קטנה יותר, עמומה, אחרי מפריד.</p>
+  <h3>עמוד הבית: מטריצת הכשלים</h3>
+  <p>הכשלים המערכתיים פרושים על שני צירים: <strong>מי</strong> (צבא ומודיעין · עורף ומערכות אזרחיות · חברה ומוסדות) לרוחב, <strong>מתי</strong> (לפני · ביום עצמו · אחרי) לאורך. כל כשל הוא ריבוע מלא בצבע השלב הממוצע שלו, עם אייקון בתוך עיגול מגוון, תווית של שתיים-שלוש מילים, פס התפלגות שלבים ו״x מ־y יושמו״ בתחתיתו. תאים ריקים נשארים גלויים כמשבצות מקווקוות — גם צורת החלל היא מידע. לחיצה על ריבוע פותחת מגירה עם האירועים; שם מתחיל הטקסט.</p>
+  <p>פס מעל המטריצה נושא את המספרים שצריכים להיות נכונים לפני כל דבר אחר: ימים מאז 7 באוקטובר; כשלים במעקב, ובכמה כשלים מערכתיים הם מקובצים; <strong>סולם שלבים</strong> של שישה תאים — הספירה בכל שלב, לפי הסדר, בצבע, עם ״נסוג״ מופרד אחרי מפריד מקווקו כשלב היציאה, בלי מקרא; והפער — כמה אירועים מדווחים כמיושמים בזמן שהציבור מדרג את היישום מתחת ל־2.5.</p>
+  <h3>רצף הפתיחה</h3>
+  <p>בביקור הראשון בעמוד הכשלים בלבד, הפס הוא הדבר הראשון והיחיד על המסך: ממורכז, מוגדל, מופיע בהדרגה בזמן שכל מספר בו סופר מאפס לאורך אותן 1.8 שניות. הוא משתהה, ואז מתיישב במקומו בראש העמוד. רק אז המטריצה נחשפת, שורה אחר שורה, מלמעלה למטה, בהופעה הדרגתית. הרצף רץ פעם אחת (דגל מקומי), לעולם לא תחת <span class="mono">prefers-reduced-motion</span>, ולא משאיר אחריו סגנונות בשורה.</p>
+  <h3>המפה, בדרגה נמוכה יותר</h3>
+  <p>אין עמוד מפה. מפה מופיעה בתוך אירוע, כהרחבה של ״מה נכשל״, כשלראיות של האירוע יש מקום: כל עדות וכל דיווח ספציפי למקום הוא סיכה בצבע סוג המקור, כך שקריסת מוקד חירום מסומנת בכל עיר שתושב שלה צוטט. אירועים שלראיותיהם אין מקום — ועדת חקירה, תרבות הערכה — הם אירועים בלי מפה. המפה היא דרך לראות את אוסף המקורות; האוסף הוא העיקר.</p>
+  <h3>עמוד האירוע: סיפור אחד בשלושה פרקים</h3>
+  <p>טור אחד, נקרא מלמעלה למטה, בפרקים ממוספרים שמופרדים בקו דק עם סימון צבעוני. כותרת מעוגנת (שם, תג שלב, חזרה) עוקבת אחרי הקורא מתחת לכותרת האתר; במסכים רחבים מסילת פרקים קבועה עם מעקב גלילה יושבת לצד הטקסט, ובצרים יותר שורת פרק מגוונת בתוך העיגון מחליפה אותה.</p>
+  <div class="chapters">
+    <div class="chap" style="--c:var(--s2)"><div class="n">1</div><div class="t">הבעיה</div><span class="he">The problem</span><ul><li>תיאור קצר.</li><li>כל מקור חושף עם ציטוט, סוג ומקום.</li><li>מפת הראיות, כשלמקור כלשהו יש מקום.</li></ul></div>
+    <div class="chap" style="--c:var(--s4)"><div class="n">2</div><div class="t">ההתקדמות</div><span class="he">The progress</span><ul><li>השלב המחושב וסולם ששת השלבים.</li><li>סיכום השלב: ציטוט ההכרה, התוכנית או היישום — מאושר על ידי העורך, מקושר משפט-משפט.</li><li>מסלול האימות (שלב 5) והפנקס המלא, מקופלים.</li><li>מחלוקת מוצגת כדגל זהוב על הטענה; השלב לא זז.</li></ul></div>
+    <div class="chap" style="--c:var(--accent)"><div class="n">3</div><div class="t">דעת הציבור</div><span class="he">Public opinion</span><ul><li>שאלת השלב.</li><li>אנליסטים: טבלת עימות.</li><li>הציבור: שרשור הודעות.</li><li>התשובה שלכם, ההתפלגות, פרקים קודמים.</li></ul></div>
+  </div>
+  <p><strong>האנליסטים</strong> הם טבלת עימות: עמוד שדרה מרכזי עם כותרות ״בעד״ ו״נגד״ שנושאות ספירת טענות וכותבים, בועות בסגנון פתק שנמתחות לרוחב הטור שלהן כך ששני הקצוות מיושרים לאורך העמוד, אווטרים של ראשי תיבות באגפים החיצוניים עם חלון קופץ שמפרט כל כותב ושיוכו. <strong>הציבור</strong> הוא שרשור בסגנון וואטסאפ על פאנל שקוע, בשלושה נתיבים: בועות תומכות בצד אחד, ביקורתיות בצד השני, ותשובות מעורבות באמצע — מקווקוות ובלי זנב, כי הן לא שייכות לאף צד. תשובות מילוליות נושאות את הדירוג שלהן כתג (״דירג 4 מתוך 5״). גווני הבועות הם ירוק-אפרפר וחימר מרוככים, כך שהעמדה נקראת כטון ולא כרמזור; צבעי הבעד/נגד הרוויים נשארים על פס כן/חלקית/לא ועל המקראות.</p>
+  <p>שאלת השלב חוזרת ישירות מעל סולם 1–5, כדי שאיש לא ידרג בלי שהיא מול עיניו. התוצאות הן שורות אופקיות בסגנון ביקורות לצד ממוצע גדול. פרקים קודמים נגזרים, לא נשמרים: כל שלב שהכשל הגיע אליו בפועל מקבל שורה, ושלב שהתקדם בלי חלון הצבעה אומר זאת במקום להיעלם.</p>
+  <p>העמוד נסגר ברצועה אחת: פעולות (הגשת מקור, שיתוף, איך מחושב השלב) לצד שאר האירועים של ההורה. כרטיס השיתוף (תמונת Open Graph) נוצר לכל אירוע ונושא את הכותרת, את השלב ואת תוצאת השאלה הנוכחית — התמונה הזאת היא ההשקה ברשתות.</p>
+  <h3>תצוגות נוספות</h3>
+  <p><strong>תצוגת הפער</strong> (שלבים 3–5 על ציר אחד, דירוג 1–5 של הציבור לתוכנית או ליישום על הציר השני; האזור המודגש הוא ״דווח כמיושם, מדורג נמוך״). עמוד <strong>התיקונים</strong>. השיטה חיה בתוך עמוד הפתיחה. תצוגה לפי מקום וציר זמן נדחו במפורש.</p>
+</section>
+
+<section id="visual">
+  <h2>שפה חזותית</h2>
+  <p class="lede">חזותי במפלס העליון, טקסטואלי ככל שיורדים. צבע מקודד דבר אחד בדיוק בכל משטח.</p>
+  <h3>צבעי השלבים הם סולם מסודר</h3>
+  <p>ששת השלבים הם סולם אחד מקר לירוק — צפחה, כחול, ציאן, טורקיז, ירוק — עם בהירות ורוויה שעולות עם השלב, כך ש״מתקדם יותר״ נקרא בלי מקרא. ״נסוג״ הוא הגוון החם היחיד, חלודה, כי הוא יציאה ולא שלב. הסולם שורד סימולציה של דאוטרנופיה, שבה זיווג הענבר/ירוק הקודם קרס לזית אחד.</p>
+  <div class="swatch"><span style="--c:var(--s1)">זוהה</span><span style="--c:var(--s2)">הוכר</span><span style="--c:var(--s3)">תוכנית</span><span style="--c:var(--s4)">יושם</span><span style="--c:var(--s5)">אומת</span><i></i><span class="exit" style="--c:var(--s6)">נסוג</span></div>
+  <h3>ענבר הוא הדגשה בלבד</h3>
+  <p>צבע ההדגשה שמור לקריאות לפעולה ולמספר הפער, מה שהופך את הפער לדבר הענברי היחיד בעמוד הכשלים — בדיוק במקום שבו נמצא סיפור האחריותיות. שום שלב לא משתמש בו.</p>
+  <h3>מחלוקת היא דגל, לא מצב</h3>
+  <p>ל״במחלוקת״ זהב עמום משלו — תג מתאר על האירוע וגוון על שורת הפנקס החולקת — כך שלעולם לא יתבלבל עם ״נסוג״.</p>
+  <h3>סוגי מקורות לעולם לא שואלים גוונים מהשלבים</h3>
+  <p>נקודות הראיות וסיכות המפה משתמשות בסט חם ושקט יותר שלא מופיע בסולם, כך שנקודה כחולה לעולם לא תיקרא בטעות כ״הוכר״:</p>
+  <div class="dots"><span><i style="--c:var(--t-official)"></i>רשמי</span><span><i style="--c:var(--t-oversight)"></i>פיקוח עצמאי</span><span><i style="--c:var(--t-press)"></i>עיתונות</span><span><i style="--c:var(--t-research)"></i>מחקר</span><span><i style="--c:var(--t-civil)"></i>חברה אזרחית</span></div>
+  <h3>טיפוגרפיה</h3>
+  <p>Frank Ruhl Libre לשמות, לכותרות ולמספרים גדולים; Assistant לכל השאר. שניהם נושאים עברית ולטינית. ספרות טבלאיות בכל מקום שבו מספרים מסתדרים בטורים.</p>
+</section>
+
+<section id="arch">
+  <h2>ארכיטקטורה</h2>
+  <p class="lede">נתונים כקוד, כדי שהרשומה תהיה ניתנת לביקורת. אתר סטטי, כדי שיהיה זול וקשה להפיל. שרת קטן רק במקום שבו מצב הוא בלתי נמנע.</p>
+  <h3>מאגר התוכן (פומבי)</h3>
+<pre><span class="c"># the-next-day/</span>
+data/
+  parents/                 <span class="c"># קובץ אחד לכל כשל מערכתי</span>
+    early-warning.json
+  incidents/               <span class="c"># קובץ אחד לכל עלה; הטענות בפנים</span>
+    nahal-oz-observers.json
+  sources.json             <span class="c"># רישום כלי תקשורת וגופים עם source_type</span>
+  places.json              <span class="c"># מילון מקומות: יישוב → קואורדינטות</span>
+schema/
+  incident.schema.json     <span class="c"># מאומת ב-CI; טענה בלי url/date/type מפילה את הבנייה</span>
+scripts/
+  compute-stage.ts         <span class="c"># הכלל המפורסם, כקוד</span>
+  build-og-cards.ts
+site/                      <span class="c"># Next.js (ייצוא סטטי) · עברית RTL</span>
+monitor/                   <span class="c"># סריקה יומית → issues/PRs לתור הבדיקה</span>
+docs/
+  methodology.md</pre>
+  <p>כל שינוי שלב הוא commit. היסטוריית ה־git <em>היא</em> יומן התיקונים, ועמוד התיקונים נבנה ממנה. pull request הוא הצורה הטבעית של טענה מוצעת, בין אם היא מגיעה מהמוניטור ובין אם מאדם.</p>
+  <h3>זמן ריצה</h3>
+  <div class="tablewrap"><table>
+    <tr><th>עניין</th><th>בחירה</th><th>למה</th></tr>
+    <tr><td>אתר</td><td>ייצוא סטטי של Next.js, פריסה ל־Vercel או Cloudflare Pages</td><td>הסטאק של רועי; אין שרת להגן עליו; חינם בקנה המידה הזה.</td></tr>
+    <tr><td>מפה</td><td>SVG סכמטי של העוטף (כמו באב-הטיפוס), או Leaflet/MapLibre בתוך עמוד האירוע אם אריחים אמיתיים יצדיקו את עצמם</td><td>המפה קטנה ומשנית עכשיו; סכמה נשלטת לחלוטין, בלי אריחים, בלי חיוב, בלי מאבקי תוויות בעברית.</td></tr>
+    <tr><td>אימות והצבעות</td><td>Supabase: Auth (Google, Apple, קוד לטלפון), Postgres עם אבטחת שורות, שורה אחת לכל (משתמש, אירוע, שלב) ועוד טקסט חופשי אופציונלי</td><td>החלק היחיד עם מצב. הטלפון נשמר כגיבוב עם מלח דרך edge function; המספר הגולמי לעולם לא נשמר. השלב במפתח הוא מה שמאפשר פרקים.</td></tr>
+    <tr><td>צבירה</td><td>משימת לילה מגבשת התפלגויות לכל (אירוע, שלב) ל־JSON פומבי שהאתר הסטטי קורא</td><td>האתר נשאר סטטי; אי אפשר לגרד הצבעות לפי משתמש.</td></tr>
+    <tr><td>אשכולות</td><td>משימה מתוזמנת מטמיעה תשובות טקסט חדשות, מקבצת אותן לפי (אירוע, שלב, בעד/נגד), מנסחת תווית ובוחרת ציטוטים מועמדים → תור בדיקה</td><td>מציעה, לעולם לא מפרסמת. אותו כלל כמו טענות.</td></tr>
+    <tr><td>מוניטור</td><td>משימה מתוזמנת: משיכת RSS/HTML מרשימת מקורות קבועה → התאמת הטמעות מול אירועים פתוחים → טענה מנוסחת על ידי LLM עם ציטוט → issue או טיוטת PR ב־GitHub</td><td>מציע, לעולם לא מפרסם. רועי ממזג.</td></tr>
+    <tr><td>כרטיסי שיתוף</td><td>תמונת OG לכל אירוע בזמן הבנייה</td><td>ההשקה ברשתות היא התמונות האלה.</td></tr>
+  </table></div>
+</section>
+
+<section id="legal">
+  <h2>משפט וסיכונים</h2>
+  <p class="lede">פרויקט אזרחי בנושא הזה יותקף על השיטה, על החוק ועל המניע. רוב ההגנה היא תכנון, שנעשה לפני ההשקה.</p>
+  <div class="tablewrap"><table class="risk">
+    <tr><th>סיכון</th><th>מענה</th><th>חומרה</th></tr>
+    <tr><td>תביעת לשון הרע של אדם פרטי</td><td>שמות מוסדות בלבד; ציטוטים נחתכים משמות; בדיקה משפטית פרו-בונו לפני ההשקה.</td><td><span class="sev" style="--c:var(--s4)">בינונית</span></td></tr>
+    <tr><td>חשיפה לצנזורה צבאית</td><td>רק מקורות שכבר פורסמו, תמיד מקושרים. הפרויקט לא יוצר דבר.</td><td><span class="sev" style="--c:var(--s1)">נמוכה</span></td></tr>
+    <tr><td>חוק הפרטיות (נתוני מצביעים)</td><td>בלי מסמכי זהות לעולם. טלפון מגובב. שמירה מינימלית. הודעת פרטיות כתובה. בדיקת חובות רישום עם עורך דין כשמספרי המשתמשים יתבררו.</td><td><span class="sev" style="--c:var(--s4)">בינונית</span></td></tr>
+    <tr><td>מניפולציה של הצבעות</td><td>רמות מוצגות בגלוי; ספים; הגבלת קצב; רמת הטלפון כמספר ראשי; התראות על תנודות פתאומיות; הצבעות הן דעה ומסומנות ככאלה.</td><td><span class="sev" style="--c:var(--s4)">בינונית</span></td></tr>
+    <tr><td>תפיסה של מפלגתיות</td><td>כללים מכניים מפורסמים; תחום הממשלה מצומצם לתהליך; יומן תיקונים; הזמנת מבקרים משני הצדדים לבקר את השיטה לפני ההשקה.</td><td><span class="sev" style="--c:var(--s6)">גבוהה</span></td></tr>
+    <tr><td>פגיעה במשפחות הנרצחים</td><td>בלי שמות נרצחים, בלי פרטים גרפיים; פנייה לארגוני המשפחות <em>לפני</em> ההשקה, לא אחריה.</td><td><span class="sev" style="--c:var(--s6)">גבוהה</span></td></tr>
+    <tr><td>שחיקה או נטישה של העורך</td><td>ההיקף מוחזק על 25–40 אירועים; המוניטור עושה את הקריאה; המאגר פומבי כך שהרשומה שורדת את העורך.</td><td><span class="sev" style="--c:var(--s4)">בינונית</span></td></tr>
+    <tr><td>ריקבון מקורות (קישורים מתים)</td><td>שמירת כתובת ארכיון (archive.org) לצד כל קישור טענה בזמן ההזנה.</td><td><span class="sev" style="--c:var(--s1)">נמוכה</span></td></tr>
+  </table></div>
+  <p>ארגון: פרויקט צד של אדם אחד עכשיו; רישום עמותה אחרי שהאתר באוויר והשיטה שרדה מגע ראשון — הישות צריכה להתקיים לפני שמתקבלות תרומות או לפני שנחתם חוזה עם ספק אימות זהות.</p>
+</section>
+
+<section id="mvp">
+  <h2>MVP ותוכנית לחמישה שבועות</h2>
+  <p class="lede">באוויר ב־7 באוקטובר 2026. קטן, ממוקר, וכן לגבי מה שהוא עוד לא מכסה.</p>
+  <h3>ב־MVP</h3>
+  <ul>
+    <li>כ־8 הורים מערכתיים, 25–40 אירועים, כל טענה עם קישור, תאריך וסוג. זרעים מתחקירי צה״ל שפורסמו (גל פברואר 2025), דוחות מבקר המדינה וועדות הכנסת, ועדת החקירה האזרחית ותחקירים עיתונאיים.</li>
+    <li>עמוד בית מטריצה עם פס כותרת; עמודי אירוע עם רשימת ראיות, מפת ראיות, סיכום שלב ופנקס; תצוגת הפער; עמודי שיטה ותיקונים.</li>
+    <li>שאלות לכל שלב עם כניסת Google/Apple וקוד לטלפון ישראלי; ספים ותוויות רמה; איסוף טקסט חופשי. אשכולות טיעונים ממקורות פומביים בהשקה; אשכולות ציבור כשיהיו מספיק תשובות כדי לקבץ ביושר.</li>
+    <li>כרטיסי שיתוף לכל אירוע. עברית בלבד.</li>
+  </ul>
+  <h3>לא ב־MVP</h3>
+  <p>רמת אימות זהות, אנגלית, תצוגת ציר זמן, חשבונות תורמים פתוחים, המוניטור האוטומטי (סריקה ידנית עד שסט האירועים יתייצב — המוניטור הוא שבוע 6 ואילך).</p>
+  <h3>שבועות</h3>
+  <div class="weeks">
+    <div class="w">שבוע 1<small>1–7 בספטמבר</small></div><div><div class="goal">שיטה ושלד</div><p>סכמה, מחזור חיים כקוד, מבנה המאגר, טיוטת שיטה. אב-טיפוס של מפה ועמוד אירוע. בחירת 8 ההורים. תחילת מעבר המקורות על תחקירי צה״ל.</p></div>
+    <div class="w">שבוע 2<small>8–14 בספטמבר</small></div><div><div class="goal">15 אירועים ראשונים, ממוקרים</div><p>אוגדת עזה וחמישה יישובים ברמה גבוהה. האתר נבנה מהנתונים. מילון המקומות. פנייה לעורך דין לבדיקה שלפני ההשקה.</p></div>
+    <div class="w">שבוע 3<small>15–21 בספטמבר</small></div><div><div class="goal">שאר האירועים + הצבעות</div><p>אירועי מבקר, כנסת, ועדה אזרחית ועיתונות. אימות Supabase וסכמת הצבעות; edge function לגיבוב; משימת צבירה. מחולל כרטיסי שיתוף.</p></div>
+    <div class="w">שבוע 4<small>22–28 בספטמבר</small></div><div><div class="goal">מעבר אמינות</div><p>בדיקה משפטית. שליחת השיטה והנתונים לשניים-שלושה קוראים ממחנות שונים ולארגון משפחות אחד; תיקון מה שימצאו. עמוד תיקונים באוויר. הודעת פרטיות.</p></div>
+    <div class="w">שבוע 5<small>29 בספטמבר – 6 באוקטובר</small></div><div><div class="goal">הכנות להשקה</div><p>בדיקות ביצועים ונייד בעברית. הכנת פוסטים וכרטיסים. פנייה למועצות ולפורומי משפחות. הקפאת נתונים ב־5 באוקטובר.</p></div>
+    <div class="w">7 באוקטובר<small>השקה</small></div><div><div class="goal">פרסום</div><p>עולים לאוויר בבוקר. מעקב אחרי חריגות בהצבעות. רישום הכול ביומן התיקונים. מנוחה.</p></div>
+  </div>
+</section>
+
+<section id="open">
+  <h2>שאלות פתוחות</h2>
+  <ol class="oq">
+    <li><b>שמונת ההורים.</b> אילו כשלים מערכתיים נכנסים לגרסה 1? סט התחלתי מוצע: התרעה שלא תורגמה לפעולה; ארכיטקטורת ההגנה על הגדר; פיקוד וכשירות באוגדת עזה; תגבור וזמן תגובה; תיאום משטרתי; רפואת חירום ופינוי; מערכות התרעה ותקשורת; כיתות כוננות. הורים של תהליכי ממשלה (מנגנון החטופים, נהלי המל״ל) אולי יחכו לגרסה 1.1.</li>
+    <li><b>מקור המפה.</b> ה־SVG הסכמטי הוא ברירת המחדל העובדת; אריחים אמיתיים בתוך עמוד האירוע רק אם הסכמה תתגלה כלא מספיקה עם ראיות אמיתיות.</li>
+    <li><b>שמות אנליסטים.</b> החריג המוגדר (מחברי ניתוח שפורסם נקובים בשם) צריך לקבל שורה בבדיקה המשפטית שלפני ההשקה.</li>
+    <li><b>מעברי פרקים.</b> כשהשלב עולה, האם השאלה החדשה נפתחת מיד עם אפס הצבעות, או אחרי אישור סיכום השלב? הצעה: אחרי הסיכום — למצביעים צריך להיות מה לדרג.</li>
+    <li><b>טיעונים מצד המקורות.</b> אילו סוגי מקורות רשאים להופיע בשורת ״ממקורות פומביים״ — מחקר וחברה אזרחית בלבד, או גם פרשנות עיתונאית? הצעה: מחקר, חברה אזרחית ועיתונות חוקרת עם בסיס מסמכי; בלי טורי דעה.</li>
+    <li><b>סף הצבעות.</b> המספר המינימלי של מצביעים מאומתים בטלפון לפני שמוצג אחוז. 50 הוא מציין מקום.</li>
+    <li><b>משקל המחלוקת.</b> האם טענה חולקת ממקור <em>פיקוח עצמאי</em> (לא רק חברה אזרחית) עושה משהו מעבר לסימון? הצעה: עדיין דגל — אבל צבע הדגל משקף את סוג המקור החולק.</li>
+    <li><b>דומיין וכינוי.</b> מועמדים סביב <span class="mono">oct8</span> / <span class="mono">8october</span> / השמונה; בדיקת זמינות ב־.il, ב־.org.il וברשתות בשבוע 1.</li>
+    <li><b>מי קורא את השיטה לפני ההשקה.</b> שמות של שניים-שלושה קוראים אמינים ממחנות שונים, ואיש קשר אחד בארגון משפחות.</li>
+    <li><b>איך נראה ״יום אפס״ בפומבי.</b> האם להצהיר בעמוד הבית שהנתונים חלקיים ולהזמין מקורות, או להציג רק מה שהושלם.</li>
+  </ol>
+</section>
+
+<section id="log">
+  <h2>יומן החלטות</h2>
+  <p class="lede">כל החלטה מהריאיון של 1 בספטמבר ומסבבי אב-הטיפוס של 2 בספטמבר, במקום אחד.</p>
+  <div class="tablewrap"><table>
+    <tr><th>נושא</th><th>החלטה</th></tr>
+    <tr><td>שם</td><td>היום שאחרי (שם עבודה, בינתיים). מועמדים קודמים: השמונה באוקטובר; היום אחרי נדחה — מתנגש בשיח ״היום שאחרי״ על עזה.</td></tr>
+    <tr><td>מטרה</td><td>לחץ לאחריותיות, חינוך אזרחי, זיכרון ציבורי.</td></tr>
+    <tr><td>קהל</td><td>הציבור הישראלי הרחב, עברית תחילה.</td></tr>
+    <tr><td>עמדה</td><td>תיאורי, נייטרלי באשמה; שיפוט מצב דרך כללים מכניים מפורסמים.</td></tr>
+    <tr><td>היקף</td><td>צבא ומודיעין; מערכות אזרחיות ועורף; חברה ומוסדות; ממשלה מוגבלת לכשלי תהליך לא-מפלגתיים.</td></tr>
+    <tr><td>יחידה</td><td>עץ בשני מפלסים: הורים מערכתיים ← אירועים ממוקמים; המצב מתגלגל למעלה.</td></tr>
+    <tr><td>מקורות</td><td>רשמי (ראשי), פיקוח עצמאי, עיתונות, מחקר, חברה אזרחית — לכל אחד תפקיד מוגדר.</td></tr>
+    <tr><td>מצב</td><td>מחזור חיים של שישה שלבי-אירוע, מחושב מטענות; ״במחלוקת״ הוא דגל, לא שלב.</td></tr>
+    <tr><td>שכבת הציבור</td><td>שאלה אחת לכל שלב (דחיפות 1–5 ← הכרה כן/חלקית/לא ← תוכנית 1–5 ← יישום 1–5; אירועים מאומתים שומרים את שאלת היישום). פרקים קפואים לכל שלב. בלי שאלות על אמון במאמת או בתקשורת. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>טיעונים</td><td>אשכולות בעד/נגד ממקורות פומביים ומטקסט חופשי של הציבור, בשורות נפרדות ומסומנות; אשכולות וציטוטים מייצגים מאושרים, בלי פיד גולמי. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>סיכומים</td><td>סיכומי הכרה, תוכנית ויישום בפאנל העובדתי — נכתבים בעזרת AI, מאושרים על ידי העורך, מקושרים משפט-משפט. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>אימות</td><td>MVP: Google/Apple + קוד לטלפון ישראלי (מגובב). בהמשך: אסימון של ספק KYC. לעולם לא העלאת תעודת זהות לפרויקט.</td></tr>
+    <tr><td>עריכה</td><td>רועי לבדו, סריקה יומית בעזרת AI ← תור בדיקה (אחרי ה־MVP).</td></tr>
+    <tr><td>שמות</td><td>מוסדות ומערכות בלבד; חריג מוגדר אחד למחברי ניתוח שפורסם. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>משפט</td><td>רק מקורות שכבר פומביים; בדיקה פרו-בונו; כללי פרטיות לנרצחים ולניצולים; שיטה ותיקונים פומביים.</td></tr>
+    <tr><td>עמוד הבית</td><td>מטריצת כשלים — מי × מתי — של ריבועי אייקון; הטקסט מתחיל מפלס אחד למטה. פס כותרת בראשה. <em>(עודכן 1–2 בספטמבר)</em></td></tr>
+    <tr><td>מפה</td><td>אין עמוד מפה. מפה מופיעה בתוך אירוע כשלראיותיו יש מקום; מקום הוא תכונה של הטענה, לא של האירוע. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>כניסה</td><td>ביקור ראשון נפתח בעמוד פתיחה (פרוזה, השיטה מקופלת, קריאה לפעולה); אחר כך לשונית משנית עמומה. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>רצף פתיחה</td><td>ביקור ראשון בעמוד הכשלים: הפס לבדו, ממורכז, המספרים סופרים למעלה; מתיישב; המטריצה נחשפת מלמעלה למטה. פעם אחת בלבד; לא תחת הפחתת תנועה. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>פס</td><td>השלב מוצג כסולם רציף של שישה תאים עם ספירות, בלי מקרא, בלי לחיצה; ״נסוג״ מופרד אחרי מפריד. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>עמוד אירוע</td><td>טור אחד, שלושה פרקים ממוספרים (הבעיה · ההתקדמות · דעת הציבור), כותרת מעוגנת ומסילת פרקים. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>ממשק הדעות</td><td>אנליסטים כטבלת עימות עם מחברים בשמם; הציבור כשרשור הודעות בשלושה נתיבים עם תגי דירוג; שורות תוצאה בסגנון ביקורות; פרקים קודמים נגזרים. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>צבע</td><td>שלבים כסולם מסודר מקר לירוק; חלודה לנסוג; דגל זהוב למחלוקת; ענבר שמור להדגשה; סוגי מקורות על סט חם נפרד. <em>(2 בספטמבר)</em></td></tr>
+    <tr><td>שפה</td><td>עברית בלבד בגרסה 1. המסמך הזה הוא המהדורה העברית של מסמך הקונספט.</td></tr>
+    <tr><td>סטאק</td><td>נתונים כקוד במאגר פומבי; Next.js סטטי; Supabase לאימות והצבעות בלבד.</td></tr>
+    <tr><td>זרעים</td><td>תחקירי צה״ל (פברואר 2025), דוחות מבקר וכנסת, ועדה אזרחית ותחקירים עיתונאיים.</td></tr>
+    <tr><td>גודל MVP</td><td>כ־8 הורים, 25–40 אירועים.</td></tr>
+    <tr><td>השקה</td><td>7 באוקטובר 2026; רשתות עם כרטיסים לכל אירוע; פנייה לארגוני משפחות ולקהילות.</td></tr>
+    <tr><td>ארגון</td><td>פרויקט צד של אדם אחד; רישום עמותה אחרי ההשקה.</td></tr>
+  </table></div>
+</section>
+
+</main>
+</div>
+
+<footer>מסמך קונספט גרסה 0.3 · מהדורה עברית · ההחלטות נרשמו ב־1–2 בספטמבר 2026 · המספרים בדוגמאות הם להמחשה, לא נתונים.</footer>
+</div>
+
+</body></html>
