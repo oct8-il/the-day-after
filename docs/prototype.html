@@ -60,8 +60,9 @@
 
   /* strip */
   .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
-  .strip>div{background:var(--surface);padding:14px 16px}
+  .strip>div{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column}
   .strip .k{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .strip .data{flex:1;display:flex;flex-direction:column;justify-content:center}
   .strip .v{font-family:"Frank Ruhl Libre",serif;font-size:30px;line-height:1.1;margin-top:2px;color:var(--text);text-align:center}
   .strip .v small{font-family:"Assistant",sans-serif;font-size:14px;color:var(--text-2);margin-inline-start:6px}
   .strip .gap .v{color:var(--accent)}
@@ -553,10 +554,10 @@
 <!-- ================= HOME: matrix ================= -->
 <section class="view active" id="view-home">
   <div class="strip">
-    <div><div class="k">ימים מאז 7.10.2023</div><div class="v num" id="days">—</div></div>
-    <div><div class="k">כשלים במעקב</div><div class="v num" id="count">—<small>ב־<span id="pcount"></span> כשלים מערכתיים</small></div></div>
-    <div><div class="k">היכן הם עומדים לפי המקורות</div><div class="stagebar" id="stagebar"></div><div class="lg" style="font-size:12px;margin-top:6px" id="stagelg"></div></div>
-    <div class="gap"><div class="k">הפער</div><div class="v num" id="gapn">—<small>כשלים שדווחו כמיושמים והציבור מדרג מתחת ל־2.5</small></div></div>
+    <div><div class="k">ימים מאז 7.10.2023</div><div class="data"><div class="v num" id="days">—</div></div></div>
+    <div><div class="k">כשלים במעקב</div><div class="data"><div class="v num" id="count">—<small>ב־<span id="pcount"></span> כשלים מערכתיים</small></div></div></div>
+    <div><div class="k">היכן הם עומדים לפי המקורות</div><div class="data"><div class="stagebar" id="stagebar"></div><div class="lg" style="font-size:12px;margin-top:6px" id="stagelg"></div></div></div>
+    <div class="gap"><div class="k">הפער</div><div class="data"><div class="v num" id="gapn">—<small>כשלים שדווחו כמיושמים והציבור מדרג מתחת ל־2.5</small></div></div></div>
   </div>
   <div class="pagehead"><h2>מפת הכשלים</h2><span class="sub">מי נכשל × מתי · לחיצה על ריבוע פותחת את האירועים</span></div>
   <div class="matrix" id="matrix"></div>
