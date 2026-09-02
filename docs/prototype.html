@@ -285,6 +285,64 @@
     .closeband>div+div{border-inline-start:0;border-top:1px solid var(--line-soft)}
     .chap{padding:30px 0 34px}
   }
+
+  /* ===== argument clusters as message bubbles ===== */
+  .argrow .who{margin-bottom:9px}
+  .argcols{gap:12px}
+  .argcol{gap:11px}
+  .argcol .h{display:flex;align-items:center;gap:6px}
+  .argcol .h::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c);flex:none}
+  .clwrap{display:grid;gap:4px}
+  .cl{position:relative;display:block;width:100%;text-align:start;
+      border:1px solid color-mix(in srgb,var(--c) 42%,transparent);
+      background:color-mix(in srgb,var(--c) 11%,var(--surface));
+      border-radius:15px;padding:9px 13px;font-size:13.5px;line-height:1.45;color:var(--text);
+      transition:background .12s,border-color .12s}
+  .cl::after{content:"";position:absolute;top:12px;width:9px;height:9px;transform:rotate(45deg);
+      background:color-mix(in srgb,var(--c) 11%,var(--surface));
+      border:0 solid color-mix(in srgb,var(--c) 42%,transparent)}
+  .cl:hover,.cl:focus-visible{background:color-mix(in srgb,var(--c) 19%,var(--surface));border-color:var(--c)}
+  .cl:hover::after,.cl:focus-visible::after{background:color-mix(in srgb,var(--c) 19%,var(--surface));border-color:var(--c)}
+  .cl.open{background:color-mix(in srgb,var(--c) 27%,var(--surface));border-color:var(--c)}
+  .cl.open::after{background:color-mix(in srgb,var(--c) 27%,var(--surface));border-color:var(--c)}
+  .argcol.pro .cl{border-top-right-radius:5px}
+  .argcol.pro .cl::after{right:-5.5px;border-top-width:1px;border-right-width:1px}
+  .argcol.con .cl{border-top-left-radius:5px}
+  .argcol.con .cl::after{left:-5.5px;border-bottom-width:1px;border-left-width:1px}
+  .clmeta{font-size:11px;color:var(--muted);padding:0 7px}
+  .argcol.pro .clmeta{text-align:start}
+  .argcol.con .clmeta{text-align:end}
+
+  /* approved representative quotes — same bubble language, neutral voice */
+  .quotes{grid-column:1/-1;background:transparent;padding:4px 0 0;display:grid;gap:11px}
+  .quotes .qh{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--muted)}
+  .qbub{display:grid;gap:4px;max-width:78%}
+  .qb{position:relative;background:var(--surface-2);border:1px solid var(--line);
+      border-radius:15px;border-top-right-radius:5px;padding:9px 13px;
+      font-size:13.5px;line-height:1.45;color:var(--text-2)}
+  .qb::after{content:"";position:absolute;top:12px;right:-5.5px;width:9px;height:9px;transform:rotate(45deg);
+      background:var(--surface-2);border:0 solid var(--line);border-top-width:1px;border-right-width:1px}
+  .qm{font-size:11px;color:var(--muted);padding:0 7px}
+
+  /* ===== matrix tiles: full colour field, centred content ===== */
+  .tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;min-height:158px;padding:16px 12px 14px;text-align:center;border-radius:10px;
+    background:color-mix(in srgb,var(--c) 17%,var(--surface-2));
+    border:1px solid color-mix(in srgb,var(--c) 36%,var(--line));
+    transition:transform .12s,background .12s,border-color .12s,box-shadow .12s}
+  .tile:hover,.tile:focus-visible{transform:translateY(-2px);border-color:var(--c);
+    background:color-mix(in srgb,var(--c) 26%,var(--surface-2));box-shadow:0 6px 16px rgba(0,0,0,.16)}
+  .tile.on{background:color-mix(in srgb,var(--c) 34%,var(--surface-2));border-color:var(--c);
+    box-shadow:inset 0 0 0 1px var(--c)}
+  .tile .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;
+    background:color-mix(in srgb,var(--c) 26%,transparent);
+    border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+  .tile svg{width:23px;height:23px}
+  .tile .lab{font-weight:700;font-size:15.5px;line-height:1.25;color:var(--text);max-width:17ch;text-wrap:balance}
+  .tile .foot{width:100%;display:grid;gap:7px;padding-top:11px;
+    border-top:1px solid color-mix(in srgb,var(--c) 28%,transparent)}
+  .tile .foot .st{display:block;text-align:center;font-size:11.5px;color:var(--text-2)}
+  .tile .score{background:color-mix(in srgb,var(--c) 20%,var(--line))}
 </style>
 
 <div class="proto">אב-טיפוס · כל הכשלים, המקורות, הסיכומים והמספרים באתר הזה הם <b>להמחשה בלבד</b> ואינם נתונים מאומתים</div>
@@ -553,8 +611,8 @@ function openParent(pid,scroll){
       const cell=el('div',{class:'cell'});
       ps.forEach(p=>{const a=parentAgg(p.id),S=STAGES[a.stage];
         cell.append(el('button',{class:'tile','data-id':p.id,style:`--c:${S.c}`,onclick:()=>{if(location.hash==='#/parent/'+p.id)openParent(p.id,true);else location.hash='#/parent/'+p.id;}},
-          el('span',{class:'n'},`${a.kids.length}`),el('div',{html:icon(p.icon)}),el('div',{class:'lab'},p.short),
-          el('div',{class:'foot',html:stageMini(a.kids)+`<div class="st"><b>${S.he}</b><span class="num">${a.kids.filter(i=>stageOf(i)>=4&&stageOf(i)<6).length} מ־${a.kids.length} יושמו</span></div>`})));});
+          el('div',{class:'ico',html:icon(p.icon)}),el('div',{class:'lab'},p.short),
+          el('div',{class:'foot',html:stageMini(a.kids)+`<div class="st num">${a.kids.filter(i=>stageOf(i)>=4&&stageOf(i)<6).length} מ־${a.kids.length} יושמו</div>`})));});
       m.append(cell);});});
 })();
 
@@ -604,7 +662,17 @@ function drawMap(svg,pins){
 let myAns={},myText={};
 function hist(dist){const mx=Math.max(...dist);return `<div class="hist">${dist.map(v=>`<div style="height:${Math.max(4,v/mx*100)}%" data-v="${v}%"></div>`).join('')}</div><div class="histlbl">${[1,2,3,4,5].map(n=>`<span>${n}</span>`).join('')}</div>`;}
 function bar3(d){const s=d.reduce((a,b)=>a+b,0);const p=d.map(v=>Math.round(v/s*100));return `<div class="bar3"><span style="width:${p[0]}%;background:var(--pro)"></span><span style="width:${p[1]}%;background:var(--s4)"></span><span style="width:${p[2]}%;background:var(--con)"></span></div><div class="lg num"><span><i style="background:var(--pro)"></i>כן ${p[0]}%</span><span><i style="background:var(--s4)"></i>חלקית ${p[1]}%</span><span><i style="background:var(--con)"></i>לא ${p[2]}%</span></div>`;}
-function clusterCol(list,c,title){const col=el('div',{class:'argcol',style:`--c:${c}`});col.append(el('div',{class:'h'},title));list.forEach(([t,n])=>col.append(el('button',{class:'cl',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת הציטוטים והמקורות שמהם נבנה האשכול');}},t,el('small',{},typeof n==='number'&&n>20?`סוכם מ־${n} תשובות`:`${n} מקורות`))));return col;}
+function clusterCol(list,c,title,side){
+  const col=el('div',{class:'argcol '+side,style:`--c:${c}`});
+  col.append(el('div',{class:'h'},title));
+  list.forEach(([txt,n])=>{
+    const w=el('div',{class:'clwrap'});
+    w.append(el('button',{class:'cl',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת הציטוטים והמקורות שמהם נבנה האשכול');}},txt));
+    w.append(el('div',{class:'clmeta'},typeof n==='number'&&n>20?`סוכם מ־${n.toLocaleString('he-IL')} תשובות`:`${n} מקורות`));
+    col.append(w);
+  });
+  return col;
+}
 function renderItem(id){
   const i=INCIDENTS.find(x=>x.id===id);if(!i)return;
   const p=PARENTS.find(x=>x.id===i.p),st=stageOf(i),S=STAGES[st],q=qOf(i),type=curType(i);
@@ -693,10 +761,13 @@ function renderItem(id){
   const args=el('div',{class:'args'});
   const r1=el('div',{class:'argrow'});
   r1.append(el('div',{class:'who',html:`<span>מה נאמר במקורות פומביים</span><span>אנליסטים · ארגונים · עיתונות</span>`}),
-    el('div',{class:'argcols'},clusterCol(A.src.pro,'var(--pro)','בעד'),clusterCol(A.src.con,'var(--con)','נגד')));
+    el('div',{class:'argcols'},clusterCol(A.src.pro,'var(--pro)','בעד','pro'),clusterCol(A.src.con,'var(--con)','נגד','con')));
   const r2=el('div',{class:'argrow'});
-  const pubcols=el('div',{class:'argcols'},clusterCol(A.pub.pro,'var(--pro)','בעד'),clusterCol(A.pub.con,'var(--con)','נגד'));
-  pubcols.append(el('div',{class:'quotes',html:`<small>ציטוטים מייצגים שאושרו · </small>`+A.q.map(([tx,w])=>`<q>${tx} <small>— ${w}</small></q>`).join('')}));
+  const pubcols=el('div',{class:'argcols'},clusterCol(A.pub.pro,'var(--pro)','בעד','pro'),clusterCol(A.pub.con,'var(--con)','נגד','con'));
+  const qwrap=el('div',{class:'quotes'});
+  qwrap.append(el('div',{class:'qh'},'ציטוטים מייצגים שאושרו'));
+  A.q.forEach(([tx,w])=>qwrap.append(el('div',{class:'qbub'},el('div',{class:'qb'},tx),el('div',{class:'qm'},'— '+w))));
+  pubcols.append(qwrap);
   r2.append(el('div',{class:'who',html:`<span>מה כתב הציבור</span><span>מסוכם אוטומטית לאשכולות · בלי פיד גולמי</span>`}),pubcols);
   args.append(r1,r2);c3.append(args);
   const box=el('div',{class:'answerbox'});
