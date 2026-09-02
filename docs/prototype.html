@@ -53,13 +53,50 @@
   nav.main{display:flex;gap:4px}
   nav.main button{padding:6px 12px;border-radius:4px;color:var(--text-2);font-weight:600;font-size:15px}
   nav.main button[aria-current="page"]{background:var(--surface-2);color:var(--text)}
+  nav.main .navsep{width:1px;background:var(--line);margin:6px 6px}
+  nav.main button.sec{font-weight:500;font-size:13.5px;color:var(--muted)}
+  nav.main button.sec[aria-current="page"]{color:var(--text-2);background:transparent;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:6px}
+
+  /* ===== about / onboarding ===== */
+  .about{max-width:880px;margin:0 auto}
+  .hero{padding:44px 0 28px;text-align:center}
+  .hero .name{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:clamp(40px,6vw,60px);line-height:1.05;color:var(--text);margin:0 0 10px}
+  .hero .thesis{font-size:clamp(18px,2.4vw,22px);color:var(--text-2);max-width:34ch;margin:0 auto 8px;text-wrap:balance;line-height:1.4}
+  .hero .civ{font-size:13.5px;color:var(--muted);margin:0 0 26px}
+  .cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:17px;padding:12px 22px;border-radius:8px}
+  .cta:hover{filter:brightness(1.06)}
+  .cta svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 14px}
+  .step{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:22px 16px 18px;border-radius:10px;
+    background:color-mix(in srgb,var(--c) 14%,var(--surface-2));border:1px solid color-mix(in srgb,var(--c) 30%,var(--line))}
+  .step .no{position:absolute;top:10px;inset-inline-start:12px;font-family:"Frank Ruhl Libre",serif;font-size:14px;color:var(--c)}
+  .step .ico{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 26%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+  .step .ico svg{width:24px;height:24px;stroke:var(--text);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .step .t{font-weight:700;font-size:17px;color:var(--text)}
+  .step .d{font-size:14px;color:var(--text-2);line-height:1.45;max-width:26ch;text-wrap:balance}
+  .step .mini6{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;width:100%;max-width:200px;margin-top:2px}
+  .step .mini6 span{height:6px;border-radius:2px}
+  .rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 22px}
+  .rule4{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;color:var(--text-2)}
+  .rule4 svg{width:18px;height:18px;flex:none;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .rule4 b{color:var(--text);font-weight:700;display:block;font-size:14px}
+  details.method{border:1px solid var(--line);border-radius:10px;background:var(--surface);margin:0 0 26px}
+  details.method summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;font-weight:700;font-size:16px;color:var(--text)}
+  details.method summary::-webkit-details-marker{display:none}
+  details.method summary .hint{font-weight:400;font-size:13px;color:var(--muted)}
+  details.method summary::after{content:"+";font-size:22px;line-height:1;color:var(--muted);flex:none}
+  details.method[open] summary::after{content:"−"}
+  details.method .prose{padding:0 20px 20px;max-width:none}
+  details.method .prose h2{display:none}
+  .about .ctarow{text-align:center;padding:6px 0 30px}
+  .about .ctarow small{display:block;margin-top:10px;font-size:12.5px;color:var(--muted)}
   .signin{font-size:13.5px;color:var(--muted);border:1px solid var(--line);padding:5px 10px;border-radius:4px}
 
   .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
   .view{display:none} .view.active{display:block}
 
   /* strip */
-  .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
+  .strip{display:grid;grid-template-columns:1fr 1fr 2.2fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
   .strip>div{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column}
   .strip .k{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700}
   .strip .data{flex:1;display:flex;flex-direction:column;justify-content:center}
@@ -69,6 +106,17 @@
   .strip .stagebar,.strip .lg{justify-content:center}
   .stagebar{display:flex;height:8px;margin-top:10px;border-radius:2px;overflow:hidden;background:var(--line)}
   .stagebar span{display:block;height:100%}
+  /* stage ladder: six ordered cells, count + short name, no legend */
+  .ladder6{display:grid;grid-template-columns:repeat(5,1fr) 10px 1fr;gap:0;align-items:stretch}
+  .ladder6 .cell6{display:grid;gap:1px;padding:6px 4px 5px;text-align:center;border-top:4px solid var(--c);
+    background:color-mix(in srgb,var(--c) 34%,var(--surface-2));color:var(--text)}
+  .ladder6 .cell6:first-child{border-start-start-radius:4px;border-end-start-radius:4px}
+  .ladder6 .cell6:nth-child(5){border-start-end-radius:4px;border-end-end-radius:4px}
+  .ladder6 .cell6.zero{background:color-mix(in srgb,var(--c) 12%,var(--surface-2));color:var(--muted)}
+  .ladder6 .cell6.exit{border-radius:4px;border-top-style:dashed}
+  .ladder6 .c{font-family:"Frank Ruhl Libre",serif;font-size:22px;line-height:1}
+  .ladder6 .l{font-size:11px;line-height:1.2;font-weight:600;opacity:.85}
+  .ladder6 .div{border-inline-start:1px dashed var(--line);margin:3px 0}
   .lg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin-top:8px}
   .lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-inline-end:5px}
 
@@ -247,6 +295,8 @@
     nav.main{order:3;width:100%;justify-content:space-between;border-top:1px solid var(--line-soft);padding-top:8px}
     .signin{font-size:12.5px;padding:4px 8px}
     .strip{grid-template-columns:repeat(2,1fr)}
+    .strip .wide{grid-column:1/-1}
+    .ladder6 .c{font-size:19px} .ladder6 .l{font-size:10.5px}
     .strip .v{font-size:26px} .strip .v small{display:block;margin:2px 0 0}
     .matrix{grid-template-columns:1fr;gap:14px}
     .matrix .colh{display:none}
@@ -256,6 +306,9 @@
     .itemgrid{grid-template-columns:1fr}
     .gapwrap{grid-template-columns:1fr}
     .stages{grid-template-columns:repeat(3,1fr)}
+    .steps{grid-template-columns:1fr} .rules{grid-template-columns:repeat(2,1fr)}
+    .hero{padding:28px 0 20px}
+    nav.main .navsep{display:none}
     .argcols{grid-template-columns:1fr}
   }
   @media (prefers-reduced-motion:reduce){ .tile{transition:none} }
@@ -544,7 +597,8 @@
   <nav class="main" aria-label="ראשי">
     <button data-nav="home" aria-current="page">הכשלים</button>
     <button data-nav="gap">הפער</button>
-    <button data-nav="method">שיטה</button>
+    <span class="navsep" aria-hidden="true"></span>
+    <button data-nav="about" class="sec">על הפרויקט</button>
   </nav>
   <button class="signin" id="signin">כניסה · אימות טלפוני</button>
 </header>
@@ -556,7 +610,7 @@
   <div class="strip">
     <div><div class="k">ימים מאז 7.10.2023</div><div class="data"><div class="v num" id="days">—</div></div></div>
     <div><div class="k">כשלים במעקב</div><div class="data"><div class="v num" id="count">—<small>ב־<span id="pcount"></span> כשלים מערכתיים</small></div></div></div>
-    <div><div class="k">היכן הם עומדים לפי המקורות</div><div class="data"><div class="stagebar" id="stagebar"></div><div class="lg" style="font-size:12px;margin-top:6px" id="stagelg"></div></div></div>
+    <div class="wide"><div class="k">היכן הם עומדים לפי המקורות</div><div class="data"><div class="ladder6" id="ladder6"></div></div></div>
     <div class="gap"><div class="k">הפער</div><div class="data"><div class="v num" id="gapn">—<small>כשלים שדווחו כמיושמים והציבור מדרג מתחת ל־2.5</small></div></div></div>
   </div>
   <div class="pagehead"><h2>מפת הכשלים</h2><span class="sub">מי נכשל × מתי · לחיצה על ריבוע פותחת את האירועים</span></div>
@@ -583,8 +637,44 @@
   </div>
 </section>
 
-<!-- ================= METHOD ================= -->
-<section class="view" id="view-method">
+<!-- ================= ABOUT / ONBOARDING (method folded inside) ================= -->
+<section class="view" id="view-about">
+<div class="about">
+  <div class="hero">
+    <h1 class="name">היום שאחרי</h1>
+    <p class="thesis">מה נכשל ב־7 באוקטובר 2023 — ומה נעשה מאז, כשל אחרי כשל.</p>
+    <p class="civ">פרויקט אזרחי · עובדות ממקורות פומביים בלבד · שאלה אחת לציבור</p>
+    <button class="cta" data-go="home">אל הכשלים <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+  </div>
+
+  <div class="steps">
+    <div class="step" style="--c:var(--s2)"><span class="no">1</span>
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h6"/></svg></div>
+      <div class="t">הכשל</div>
+      <div class="d">כל כשל תועד במקור פומבי — תחקיר, דוח מבקר, עדות שפורסמה. בלי קישור, אין כשל.</div>
+    </div>
+    <div class="step" style="--c:var(--s4)"><span class="no">2</span>
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4"/><path d="M4 20V4"/></svg></div>
+      <div class="t">השלב</div>
+      <div class="d">שישה שלבים, מ״זוהה״ ועד ״אומת עצמאית״. כל שלב הוא אירוע שדווח — לא דעה.</div>
+      <div class="mini6" aria-hidden="true"><span style="background:var(--s1)"></span><span style="background:var(--s2)"></span><span style="background:var(--s3)"></span><span style="background:var(--s4)"></span><span style="background:var(--s5)"></span><span style="background:var(--s6)"></span></div>
+    </div>
+    <div class="step" style="--c:var(--accent)"><span class="no">3</span>
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M10 9h4"/></svg></div>
+      <div class="t">השאלה</div>
+      <div class="d">שאלה אחת לציבור, מותאמת לשלב. הציבור לא קובע את השלב — הוא מדרג את המענה.</div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div class="rule4"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 1 0-5.7l2.3-2.3a4 4 0 0 1 5.7 5.7L17 12.7"/><path d="M14 10a4 4 0 0 1 0 5.7l-2.3 2.3a4 4 0 0 1-5.7-5.7L7 11.3"/></svg><span><b>רק מקורות פומביים</b>כל טענה מקושרת</span></div>
+    <div class="rule4"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M3 3l18 18"/></svg><span><b>בלי שמות</b>מוסדות ומערכות בלבד</span></div>
+    <div class="rule4"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8l7-3 7 3"/><path d="M3 14l2-6 2 6a2 2 0 0 1-4 0zM17 14l2-6 2 6a2 2 0 0 1-4 0z"/></svg><span><b>בלי אשמה</b>מה דווח, לא מי אחראי</span></div>
+    <div class="rule4"><svg viewBox="0 0 24 24"><path d="M4 12h16"/><path d="M12 4v16" opacity=".35"/><circle cx="12" cy="12" r="9"/></svg><span><b>בלי נושאים מקטבים</b>לא שואלים על אמון</span></div>
+  </div>
+
+  <details class="method" id="methodbox">
+  <summary><span>השיטה במלואה <span class="hint">· שלבים, שאלות, טיעונים, סיכומים, מה לא יופיע</span></span></summary>
   <div class="prose">
     <h2>השיטה</h2>
     <p>כל כשל באתר תועד על ידי מקור פומבי. כל טענה על מה שנעשה מאז נושאת קישור, תאריך וסוג מקור. בלי שלושתם — הטענה לא נכנסת. הפרויקט אינו קובע מי אשם; הוא מתעד מה דווח, ושואל את הציבור שאלה אחת מותאמת לשלב.</p>
@@ -616,6 +706,13 @@
     <h3>מה לא יופיע כאן</h3>
     <p>שמות של אנשים — מפקדים, פקידים, שרים. שמות של נרצחים וניצולים. פרטים גרפיים. שאלות על אמון במוסדות או בתקשורת. כל דבר שלא פורסם קודם במקור שנושא באחריות לפרסומו.</p>
   </div>
+  </details>
+
+  <div class="ctarow">
+    <button class="cta" data-go="home">אל הכשלים <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <small>אפשר לחזור לעמוד הזה בכל עת דרך ״על הפרויקט״</small>
+  </div>
+</div>
 </section>
 
 </div>
@@ -804,19 +901,27 @@ const stageMini=kids=>{const cnt=[0,0,0,0,0,0,0];kids.forEach(i=>cnt[stageOf(i)]
 /* ---------- routing ---------- */
 function show(view){if(view!=='item'&&teardownOrient){teardownOrient();teardownOrient=null;}document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('nav.main button').forEach(b=>{if(b.dataset.nav===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});window.scrollTo({top:0});}
 document.querySelectorAll('nav.main button').forEach(b=>b.addEventListener('click',()=>{location.hash='#/'+b.dataset.nav;}));
-function route(){const h=location.hash.replace(/^#\/?/,'')||'home';const [v,id]=h.split('/');
+function route(){const raw=location.hash.replace(/^#\/?/,'');if(!raw&&!hasSeen()){show('about');return;}const h=raw||'home';const [v,id]=h.split('/');
   if(v==='item'&&id){renderItem(id);show('item');}
   else if(v==='parent'&&id){const already=$('#view-home').classList.contains('active');show('home');openParent(id,already);}
-  else if(['home','gap','method'].includes(v))show(v); else show('home');}
+  else if(v==='method'){show('about');const m=$('#methodbox');if(m){m.open=true;m.scrollIntoView({block:'start'});}}
+  else if(['home','gap','about'].includes(v)){show(v);if(v!=='about')markSeen();}
+  else show('home');}
 window.addEventListener('hashchange',route);
+/* first visit lands on the intro; any move into the site remembers that */
+function hasSeen(){try{return localStorage.getItem('hy_seen')==='1';}catch(e){return true;}}
+function markSeen(){try{localStorage.setItem('hy_seen','1');}catch(e){}}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{markSeen();location.hash='#/'+b.dataset.go;}));
 
 /* ---------- strip ---------- */
 (function strip(){
   const d0=new Date('2023-10-07T06:29:00+03:00');$('#days').textContent=Math.floor((Date.now()-d0)/864e5).toLocaleString('he-IL');
   $('#count').firstChild.textContent=INCIDENTS.length;$('#pcount').textContent=PARENTS.length;
   const cnt=[0,0,0,0,0,0,0];INCIDENTS.forEach(i=>cnt[stageOf(i)]++);
-  $('#stagebar').innerHTML=[1,2,3,4,5,6].map(s=>`<span style="width:${cnt[s]/INCIDENTS.length*100}%;background:${STAGES[s].c}"></span>`).join('');
-  $('#stagelg').innerHTML=[1,2,3,4,5,6].filter(s=>cnt[s]).map(s=>`<span><i style="background:${STAGES[s].c}"></i>${STAGES[s].he} ${cnt[s]}</span>`).join('');
+  const L=$('#ladder6');const SHORT={1:'זוהה',2:'הוכר',3:'תוכנית',4:'יושם',5:'אומת',6:'נסוג'};
+  [1,2,3,4,5,6].forEach(s=>{if(s===6)L.append(el('span',{class:'div'}));
+    L.append(el('div',{class:'cell6 '+(cnt[s]?'':'zero ')+(s===6?'exit':''),style:`--c:${STAGES[s].c}`,title:STAGES[s].he},
+      el('span',{class:'c num'},String(cnt[s])),el('span',{class:'l'},SHORT[s])));});
   const gap=INCIDENTS.filter(i=>stageOf(i)>=4&&curType(i)==='scale'&&mean(i.op.cur)<2.5).length;
   $('#gapn').firstChild.textContent=gap;
 })();
