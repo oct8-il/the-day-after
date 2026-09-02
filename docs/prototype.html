@@ -343,6 +343,142 @@
     border-top:1px solid color-mix(in srgb,var(--c) 28%,transparent)}
   .tile .foot .st{display:block;text-align:center;font-size:11.5px;color:var(--text-2)}
   .tile .score{background:color-mix(in srgb,var(--c) 20%,var(--line))}
+
+  /* ===== softened bubble tones (neutral-leaning, side still legible) ===== */
+  :root{--bub-pro:#7d9c88;--bub-con:#b58c84;--bub-mid:#8a939e}
+  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bub-pro:#5c8a6f;--bub-con:#a97a70;--bub-mid:#7c848e}}
+  :root[data-theme="light"]{--bub-pro:#5c8a6f;--bub-con:#a97a70;--bub-mid:#7c848e}
+
+  /* ===== analyst row — professional note bubbles with attribution ===== */
+  .argrow.analyst .who{margin-bottom:10px}
+  .argcols{gap:14px}
+  .argcol{gap:13px}
+  .argcol .h{display:flex;align-items:center;gap:6px;color:var(--c)}
+  .argcol .h::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c);flex:none}
+  .acl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start}
+  .argcol.con .acl{grid-template-columns:minmax(0,1fr) auto}
+  .argcol.con .acl .avs{order:2}
+  .argcol.con .acl .abwrap{order:1}
+  .abwrap{display:grid;gap:4px;min-width:0}
+  .argcol.pro .abwrap{justify-items:start}
+  .argcol.con .abwrap{justify-items:end}
+  .argcol.con .abmeta{text-align:end}
+  .ab{position:relative;width:fit-content;max-width:100%;text-align:start;
+      background:var(--surface);border:1px solid var(--line);
+      border-radius:11px;padding:9px 13px;font-size:13.5px;line-height:1.5;color:var(--text);
+      transition:border-color .12s,background .12s}
+  .argcol.pro .ab{border-top-right-radius:4px;border-right:3px solid var(--c)}
+  .argcol.con .ab{border-top-left-radius:4px;border-left:3px solid var(--c)}
+  .ab::after{content:"";position:absolute;top:11px;width:7px;height:7px;transform:rotate(45deg);background:var(--c)}
+  .argcol.pro .ab::after{right:-4px}
+  .argcol.con .ab::after{left:-4px}
+  .ab:hover,.ab:focus-visible{background:color-mix(in srgb,var(--c) 8%,var(--surface));border-color:color-mix(in srgb,var(--c) 55%,var(--line))}
+  .ab.open{background:color-mix(in srgb,var(--c) 14%,var(--surface));border-color:var(--c)}
+  .abmeta{font-size:11px;color:var(--muted);line-height:1.4;padding:0 3px;max-width:100%}
+
+  /* avatars */
+  .avs{position:relative;display:flex;flex-direction:row;align-items:center;padding-top:2px}
+  .av{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;flex:none;
+      font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--text);
+      background:color-mix(in srgb,var(--pc) 34%,var(--surface));
+      border:1.5px solid var(--surface);box-shadow:0 0 0 1px color-mix(in srgb,var(--pc) 55%,var(--line))}
+  .avs .av+.av{margin-inline-start:-10px}
+  .avs .av.more{background:var(--surface-2);color:var(--muted);box-shadow:0 0 0 1px var(--line)}
+  .avpop{position:absolute;top:calc(100% + 7px);inset-inline-start:-4px;z-index:7;width:230px;
+         background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+         box-shadow:0 10px 28px rgba(0,0,0,.3);display:none}
+  .avs:hover .avpop,.avs:focus-within .avpop{display:block}
+  .avpop .pr{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;padding:5px 0}
+  .avpop .pr+.pr{border-top:1px solid var(--line-soft)}
+  .avpop .pn{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.25}
+  .avpop .po{font-size:11px;color:var(--muted);line-height:1.25}
+
+  /* ===== public row — group-chat thread, three lanes ===== */
+  .threadhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    font-size:11px;color:var(--muted);margin:0 0 9px}
+  .threadhead .lanes{display:flex;gap:12px;align-items:center}
+  .threadhead .lanes span{display:inline-flex;align-items:center;gap:5px}
+  .threadhead .lanes i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .thread{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:16px;
+    padding:16px 14px;display:grid;gap:11px}
+  .msg{display:grid;gap:4px;max-width:80%;min-width:0}
+  .msg.pro{justify-self:start;justify-items:start}
+  .msg.con{justify-self:end;justify-items:end}
+  .msg.mid{justify-self:center;justify-items:center;max-width:66%}
+  .mb{position:relative;width:fit-content;max-width:100%;text-align:start;
+      border-radius:17px;padding:9px 13px;font-size:13.5px;line-height:1.5;color:var(--text);
+      background:color-mix(in srgb,var(--c) 13%,var(--surface));
+      border:1px solid color-mix(in srgb,var(--c) 34%,transparent);
+      transition:background .12s,border-color .12s}
+  .msg.pro .mb{border-top-right-radius:5px}
+  .msg.con .mb{border-top-left-radius:5px}
+  .mb::after{content:"";position:absolute;top:11px;width:9px;height:9px;transform:rotate(45deg);
+      background:color-mix(in srgb,var(--c) 13%,var(--surface));
+      border:0 solid color-mix(in srgb,var(--c) 34%,transparent)}
+  .msg.pro .mb::after{right:-5.5px;border-top-width:1px;border-right-width:1px}
+  .msg.con .mb::after{left:-5.5px;border-bottom-width:1px;border-left-width:1px}
+  .msg.mid .mb::after{display:none}
+  .msg.mid .mb{border-radius:17px;border-style:dashed}
+  .mb.cluster{background:color-mix(in srgb,var(--c) 22%,var(--surface));cursor:pointer}
+  .mb.cluster::after{background:color-mix(in srgb,var(--c) 22%,var(--surface))}
+  .mb.cluster:hover{border-color:var(--c)}
+  .mb.cluster.open{background:color-mix(in srgb,var(--c) 32%,var(--surface));border-color:var(--c)}
+  .mb.cluster.open::after{background:color-mix(in srgb,var(--c) 32%,var(--surface));border-color:var(--c)}
+  .mfoot{display:flex;align-items:center;gap:7px;margin-top:8px;padding-top:6px;
+      border-top:1px solid color-mix(in srgb,var(--c) 28%,transparent);font-size:10.5px;color:var(--muted)}
+  .rchip{display:inline-flex;align-items:center;gap:4px;padding:1.5px 8px;border-radius:10px;
+      font-weight:700;font-size:10.5px;white-space:nowrap;
+      background:color-mix(in srgb,var(--rc) 20%,transparent);color:var(--rc);
+      border:1px solid color-mix(in srgb,var(--rc) 42%,transparent)}
+  .msgmeta{font-size:10.5px;color:var(--muted);padding:0 6px}
+
+  /* ===== rating distribution — review-style rows ===== */
+  .ratedist{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center;margin-top:10px}
+  .rdmean{text-align:center;min-width:104px}
+  .rdmean b{display:block;font-family:"Frank Ruhl Libre",serif;font-size:44px;font-weight:500;line-height:1;color:var(--text)}
+  .rdmean .of{font-size:12px;color:var(--muted);margin-top:3px}
+  .rdmean .cnt{font-size:11.5px;color:var(--muted);margin-top:7px;padding-top:7px;border-top:1px solid var(--line-soft)}
+  .rdrows{display:grid;gap:6px;min-width:0}
+  .rdrow{display:grid;grid-template-columns:14px minmax(0,1fr) 38px;gap:9px;align-items:center;font-size:11.5px;color:var(--muted)}
+  .rdrow .k{text-align:center;font-weight:700;color:var(--text-2)}
+  .rdrow .t{height:9px;border-radius:5px;background:var(--line);overflow:hidden}
+  .rdrow .t i{display:block;height:100%;border-radius:5px;background:var(--rc);opacity:.8}
+  .rdrow .p{text-align:end;font-variant-numeric:tabular-nums}
+  @media (max-width:640px){
+    .ratedist{grid-template-columns:1fr;gap:12px}
+    .rdmean{text-align:start;display:flex;align-items:baseline;gap:10px}
+    .rdmean .cnt{border:0;padding:0;margin:0}
+    .msg{max-width:88%} .msg.mid{max-width:80%}
+  }
+  .chapters .ch.none{color:var(--muted)}
+  .chapters .ch.none b{color:var(--muted);font-weight:400}
+  .chapters .ch .nov{font-size:12px;color:var(--muted);font-style:italic}
+
+  /* ===== docked failure header + chapter rail ===== */
+  .dock{position:fixed;inset-inline:0;top:var(--hdrh,60px);z-index:4;background:var(--bg);
+    border-bottom:1px solid var(--line);transform:translateY(-100%);opacity:0;pointer-events:none;
+    transition:transform .18s ease,opacity .18s ease}
+  .dock.on{transform:none;opacity:1;pointer-events:auto}
+  .dock .in{max-width:1180px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:12px}
+  .dock .bk{color:var(--muted);font-size:19px;line-height:1;padding:2px 4px;flex:none}
+  .dock .bk:hover{color:var(--text)}
+  .dock .tt{font-family:"Frank Ruhl Libre",serif;font-size:16px;color:var(--text);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+  .dock .chip{flex:none}
+  .dockprog{display:none;gap:3px;height:3px;max-width:1180px;margin:0 auto;padding:0 20px 7px}
+  .dockprog span{flex:1;background:var(--line);border-radius:2px}
+  .dockprog span.on{background:var(--c)}
+
+  .toc{position:fixed;inset-inline-start:20px;top:calc(var(--hdrh,60px) + 96px);z-index:3;
+    width:132px;display:none;gap:2px}
+  .toc a{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;
+    padding:7px 8px;border-radius:7px;font-size:12px;color:var(--muted);border-inline-start:2px solid transparent}
+  .toc a .no{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;
+    font-size:10.5px;font-weight:700;border:1px solid currentColor;flex:none}
+  .toc a:hover{color:var(--text-2);background:var(--surface)}
+  .toc a.on{color:var(--c);background:var(--surface);border-inline-start-color:var(--c);font-weight:700}
+  @media (min-width:1280px){ .toc{display:grid} }
+  @media (max-width:1279px){ .dock.on .dockprog{display:flex} }
 </style>
 
 <div class="proto">אב-טיפוס · כל הכשלים, המקורות, הסיכומים והמספרים באתר הזה הם <b>להמחשה בלבד</b> ואינם נתונים מאומתים</div>
@@ -516,11 +652,16 @@ const INCIDENTS=[
    sum:'מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.',
    ack:'מערך ההתרעה לא כלל תרחיש של חדירה קרקעית רחבה, וההודעות שהופצו לציבור בשעות הראשונות לא שיקפו את המתרחש בשטח.',
    impl:[['פיקוד העורף מדווח על השלמת פריסה של מערך התרעה אזורי, המבחין בין תרחיש ירי תלול-מסלול לבין תרחיש חדירה קרקעית.',1],['הדיווח כולל את מספר היישובים שבהם הותקנה המערכת, לוח זמנים להשלמה והיקף תקציבי.',1],['נוהל ההודעות לציבור עודכן כך שהודעה נשלחת לפי מרחב מגורים, ולא לפי אזור התרעה בלבד.',2]],
-   args:{src:{pro:[['הדיווח על הפריסה כולל מספרים, יישובים ולוחות זמנים',3],['הנוהל המעודכן מבחין בין תרחיש חדירה לתרחיש ירי',2]],con:[['הדיווח על היישום הגיע מהגוף המבצע עצמו',4],['הכיסוי אינו אחיד בין יישובים גדולים לקטנים',2],['לא נקבע מדד ביצוע פומבי לזמן ההתרעה',2]]},
-     pub:{pro:[['בתרגילים האחרונים ההתרעה הגיעה בזמן',470],['ההודעות היום מפורטות יותר ומותאמות לאזור',260]],con:[['ביישוב שלנו המערכת עוד לא נבדקה',610],['ההודעה הרשמית עדיין מגיעה אחרי הרשתות החברתיות',380]]},
-     q:[['בתרגיל האחרון ההתרעה הגיעה עוד לפני האזעקה. זה שינוי אמיתי.','מצביע מאומת'],['המערכת השתפרה, אבל היא נבדקת בתרגילים ולא באירוע אמת.','מצביע מאומת']]},
+   args:{src:{pro:[{t:'הדיווח על הפריסה כולל מספרים, יישובים ולוחות זמנים',w:['ys','rh','sk']},{t:'הנוהל המעודכן מבחין בין תרחיש חדירה לתרחיש ירי',w:['yh','nb']}],
+              con:[{t:'הדיווח על היישום הגיע מהגוף המבצע עצמו',w:['nb','tl','md','ag']},{t:'הכיסוי אינו אחיד בין יישובים גדולים לקטנים',w:['sk','md']},{t:'לא נקבע מדד ביצוע פומבי לזמן ההתרעה',w:['tl','rh']}]},
+         pub:{pro:[{t:'בתרגילים האחרונים ההתרעה הגיעה בזמן',n:470},{t:'ההודעות היום מפורטות יותר ומותאמות לאזור',n:260}],
+              con:[{t:'ביישוב שלנו המערכת עוד לא נבדקה',n:610},{t:'ההודעה הרשמית עדיין מגיעה אחרי הרשתות החברתיות',n:380}]},
+         q:[{t:'בתרגיל האחרון ההתרעה הגיעה עוד לפני האזעקה. זה שינוי אמיתי.',w:'מצביע מאומת',r:5},
+            {t:'קיבלתי הודעה מותאמת לאזור בפעם הראשונה.',w:'מצביע מאומת',r:4},
+            {t:'המערכת השתפרה, אבל היא נבדקת בתרגילים ולא באירוע אמת.',w:'מצביע מאומת',r:3},
+            {t:'ביישוב שלנו עוד לא הותקן כלום. מה יושם בדיוק?',w:'מצביע מאומת',r:2}]},
    claims:[[1,'oversight','דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור','2025',null,'ofakim','לא הופעלה התרעה ייעודית על חדירה קרקעית ביישובים שבהם התרחשה'],[1,'press','תחקיר עיתונאי — ההודעות לתושבים בשעות הראשונות','2024',null,'sderot','המידע שהגיע לתושבים היה חלקי ומאוחר'],[1,'press','סיקור עיתונאי — פערי מידע בערי הדרום','2023',null,'ashkelon','ההודעות לא הבחינו בין ירי לחדירה'],[1,'official','תחקיר פיקוד העורף','2025',null,'netivot','ערוצי ההודעות לציבור עמדו בעומס חריג'],[2,'official','הודעת פיקוד העורף','2025'],[3,'official','החלטת ממשלה — שדרוג מערך ההתרעה לציבור','2025'],[3,'official','נוהל מעודכן להודעות לציבור באירוע חדירה','2025'],[4,'official','דיווח פיקוד העורף על השלמת הפריסה','2026'],[5,'oversight','ועדת הכנסת לביקורת המדינה — דיון מעקב','2026'],[0,'civil','פורום הרשויות המקומיות בעוטף','2026',4,'beeri']],
-   op:{cur:[6,10,22,34,28],n:3390,prev:[{s:3,type:'scale',dist:[10,18,30,28,14],n:2800},{s:1,type:'scale',dist:[1,2,5,20,72],n:4600}]}},
+   op:{cur:[6,10,22,34,28],n:3390,prev:[{s:4,type:'scale',dist:[9,15,27,31,18],n:3050},{s:3,type:'scale',dist:[10,18,30,28,14],n:2800},{s:1,type:'scale',dist:[1,2,5,20,72],n:4600}]}},
   {id:'i14',p:'p6',he:'קווי החירום קרסו תחת עומס',sum:'מוקדי החירום קיבלו נפח פניות חריג בשעות הראשונות. חלק גדול מהפניות לא נענה, ולא הופעל מערך מענה חלופי.',
    claims:[[1,'press','סיקור עיתונאי — פניות שלא נענו','10.2023',null,'sderot','פניות חוזרות למוקדים לא נענו'],[1,'press','סיקור עיתונאי — עומס במוקדים','10.2023',null,'netivot','המוקדים לא עמדו בנפח הפניות'],[1,'press','סיקור עיתונאי','2023',null,'ofakim','המענה התקבל באיחור רב'],[1,'oversight','דוח מבקר המדינה — מוקדי החירום','2025',null,null,'נפח הפניות חרג מכושר המענה של המוקדים'],[2,'official','הודעת הגופים המפעילים','2025'],[3,'official','תוכנית הרחבת מוקדי החירום','2025']],
    op:{cur:[24,30,28,13,5],n:760,prev:[{s:1,type:'scale',dist:[1,2,7,26,64],n:1500}]}},
@@ -544,11 +685,46 @@ const INCIDENTS=[
    op:{cur:[27,31,26,11,5],n:1640,prev:[{s:1,type:'scale',dist:[1,3,9,29,58],n:2400}]}}
 ];
 /* generic argument clusters per stage (illustrative) */
+/* analyst identities — authors of published analysis (not people involved in the events) */
+const PEOPLE={
+  nb:{n:'ד״ר נועה ברזילי',o:'חוקרת ביטחון לאומי, מכון למחקר מדיניות',i:'נב',c:'#7fa1c4'},
+  ag:{n:'אלון גפני',o:'עיתונאי תחקירים',i:'אג',c:'#c9a227'},
+  ys:{n:'ד״ר יעל שקד',o:'חוקרת מוכנות אזרחית',i:'יש',c:'#9d8fd6'},
+  rh:{n:'רון אלמוג',o:'אנליסט מערכות חירום',i:'רא',c:'#6fbf8a'},
+  md:{n:'מיכל דגן',o:'ארגון חברה אזרחית, מעקב יישום',i:'מד',c:'#c98a7a'},
+  tl:{n:'עו״ד תמר לביא',o:'ארגון לשקיפות ציבורית',i:'תל',c:'#8a9a6f'},
+  yh:{n:'יובל הראל',o:'פרשן, לשעבר במערך החירום',i:'יה',c:'#6f7986'},
+  sk:{n:'ד״ר סמדר קינן',o:'חוקרת מדיניות ציבורית',i:'סק',c:'#a08fb0'}
+};
 const ARGS={
-  1:{src:{pro:[['הכשל חוזר על עצמו בכמה תחקירים נפרדים',3]],con:[['תלוי בכשלים אחרים שקודמים לו בשרשרת',1]]},pub:{pro:[['בלי זה כל השאר לא רלוונטי',412],['אותו דפוס חזר גם באירועים אחרים',96]],con:[['יש כשלים גדולים יותר לתקן קודם',140]]},q:[['אני גר בעוטף ומה שהכי מפחיד אותי זה בדיוק זה.','מצביע מאומת'],['חשוב, אבל לא לפני שמתקנים את מה שקדם לו.','מצביע מאומת']]},
-  2:{src:{pro:[['ההכרה מפורשת ומפורטת',2]],con:[['ההכרה מתייחסת לפרט ולא למערכת',2]]},pub:{pro:[['סוף סוף זה נאמר בקול',230]],con:[['הודו במה שכבר היה ידוע, לא במה שחשוב',310]]},q:[['ההכרה עוסקת בתקלה טכנית. מה שקרה היה משהו אחר.','מצביע מאומת']]},
-  3:{src:{pro:[['התוכנית מתקצבת כוח אדם קבוע',2],['מוגדר בה גוף אחראי',1]],con:[['אין לוח זמנים מחייב',3],['לא מטפלת בשורש — התלות בטכנולוגיה',2]]},pub:{pro:[['סוף סוף יש תוכנית כתובה',380],['התקציב מספיק אם יבוצע',120]],con:[['שמענו תוכניות דומות בעבר',640],['אין מי שיוודא ביצוע',290]]},q:[['התוכנית טובה על הנייר. אצביע 4 כשאראה אותה בשטח.','מצביע מאומת'],['הבעיה לא היתה הנוהל אלא שלא הקשיבו. נוהל חדש לא פותר את זה.','מצביע מאומת']]},
-  4:{src:{pro:[['הדיווח כולל מספרים ותאריכים',2]],con:[['היישום דווח על ידי הגוף המבצע בלבד',3],['היישום חלקי מבחינה גיאוגרפית',1]]},pub:{pro:[['רואים שינוי בשטח',410],['התרגול האחרון עבד',150]],con:[['אצלנו זה עדיין לא הגיע',520],['יושם על הנייר בלבד',330]]},q:[['אצלנו בקיבוץ הציוד הגיע, ההכשרה עוד לא. חלקית.','מצביע מאומת'],['הייתי בתרגיל. עבד. 4.','מצביע מאומת']]},
+  1:{src:{pro:[{t:'הכשל חוזר על עצמו בכמה תחקירים נפרדים',w:['nb','ag']}],
+         con:[{t:'תלוי בכשלים אחרים שקודמים לו בשרשרת',w:['rh']}]},
+     pub:{pro:[{t:'בלי זה כל השאר לא רלוונטי',n:412},{t:'אותו דפוס חזר גם באירועים אחרים',n:96}],
+          con:[{t:'יש כשלים גדולים יותר לתקן קודם',n:140}]},
+     q:[{t:'אני גר בעוטף ומה שהכי מפחיד אותי זה בדיוק זה.',w:'מצביע מאומת',r:5},
+        {t:'חשוב, אבל לא לפני שמתקנים את מה שקדם לו.',w:'מצביע מאומת',r:3},
+        {t:'יש דברים דחופים יותר.',w:'מצביע מאומת',r:2}]},
+  2:{src:{pro:[{t:'ההכרה מפורשת ומפורטת',w:['ys']}],
+         con:[{t:'ההכרה מתייחסת לפרט ולא למערכת',w:['nb','md']}]},
+     pub:{pro:[{t:'סוף סוף זה נאמר בקול',n:230}],
+          con:[{t:'הודו במה שכבר היה ידוע, לא במה שחשוב',n:310}]},
+     q:[{t:'זו הודאה ברורה, והיא לא היתה מובנת מאליה.',w:'מצביע מאומת',r:'y'},
+        {t:'חלק מהדברים נאמרו, חלק נשארו בחוץ.',w:'מצביע מאומת',r:'p'},
+        {t:'ההכרה עוסקת בתקלה טכנית. מה שקרה היה משהו אחר.',w:'מצביע מאומת',r:'n'}]},
+  3:{src:{pro:[{t:'התוכנית מתקצבת כוח אדם קבוע',w:['rh','ys']},{t:'מוגדר בה גוף אחראי',w:['tl']}],
+         con:[{t:'אין לוח זמנים מחייב',w:['nb','md','tl']},{t:'לא מטפלת בשורש — התלות בטכנולוגיה',w:['ag','yh']}]},
+     pub:{pro:[{t:'סוף סוף יש תוכנית כתובה',n:380},{t:'התקציב מספיק אם יבוצע',n:120}],
+          con:[{t:'שמענו תוכניות דומות בעבר',n:640},{t:'אין מי שיוודא ביצוע',n:290}]},
+     q:[{t:'זו הפעם הראשונה שיש גוף אחראי עם שם.',w:'מצביע מאומת',r:4},
+        {t:'התוכנית טובה על הנייר. אצביע גבוה כשאראה אותה בשטח.',w:'מצביע מאומת',r:3},
+        {t:'הבעיה לא היתה הנוהל אלא שלא הקשיבו. נוהל חדש לא פותר את זה.',w:'מצביע מאומת',r:2}]},
+  4:{src:{pro:[{t:'הדיווח כולל מספרים ותאריכים',w:['ys']}],
+         con:[{t:'היישום דווח על ידי הגוף המבצע בלבד',w:['nb','tl','md']},{t:'היישום חלקי מבחינה גיאוגרפית',w:['ag']}]},
+     pub:{pro:[{t:'רואים שינוי בשטח',n:410},{t:'התרגול האחרון עבד',n:150}],
+          con:[{t:'אצלנו זה עדיין לא הגיע',n:520},{t:'יושם על הנייר בלבד',n:330}]},
+     q:[{t:'הייתי בתרגיל. עבד.',w:'מצביע מאומת',r:4},
+        {t:'אצלנו בקיבוץ הציוד הגיע, ההכשרה עוד לא.',w:'מצביע מאומת',r:3},
+        {t:'לא ראיתי שום שינוי אצלנו.',w:'מצביע מאומת',r:1}]},
 };
 ARGS[5]=ARGS[4]; ARGS[6]=ARGS[4];
 
@@ -569,7 +745,7 @@ const scoreBar=(v,h)=>`<div class="score" style="${h?'height:'+h+'px':''}"><span
 const stageMini=kids=>{const cnt=[0,0,0,0,0,0,0];kids.forEach(i=>cnt[stageOf(i)]++);return `<div class="score" title="חלוקת האירועים לפי שלב">${[1,2,3,4,5,6].filter(s=>cnt[s]).map(s=>`<span style="width:${cnt[s]/kids.length*100}%;background:${STAGES[s].c}"></span>`).join('')}</div>`;};
 
 /* ---------- routing ---------- */
-function show(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('nav.main button').forEach(b=>{if(b.dataset.nav===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});window.scrollTo({top:0});}
+function show(view){if(view!=='item'&&teardownOrient){teardownOrient();teardownOrient=null;}document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('nav.main button').forEach(b=>{if(b.dataset.nav===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});window.scrollTo({top:0});}
 document.querySelectorAll('nav.main button').forEach(b=>b.addEventListener('click',()=>{location.hash='#/'+b.dataset.nav;}));
 function route(){const h=location.hash.replace(/^#\/?/,'')||'home';const [v,id]=h.split('/');
   if(v==='item'&&id){renderItem(id);show('item');}
@@ -662,17 +838,155 @@ function drawMap(svg,pins){
 let myAns={},myText={};
 function hist(dist){const mx=Math.max(...dist);return `<div class="hist">${dist.map(v=>`<div style="height:${Math.max(4,v/mx*100)}%" data-v="${v}%"></div>`).join('')}</div><div class="histlbl">${[1,2,3,4,5].map(n=>`<span>${n}</span>`).join('')}</div>`;}
 function bar3(d){const s=d.reduce((a,b)=>a+b,0);const p=d.map(v=>Math.round(v/s*100));return `<div class="bar3"><span style="width:${p[0]}%;background:var(--pro)"></span><span style="width:${p[1]}%;background:var(--s4)"></span><span style="width:${p[2]}%;background:var(--con)"></span></div><div class="lg num"><span><i style="background:var(--pro)"></i>כן ${p[0]}%</span><span><i style="background:var(--s4)"></i>חלקית ${p[1]}%</span><span><i style="background:var(--con)"></i>לא ${p[2]}%</span></div>`;}
-function clusterCol(list,c,title,side){
+/* ---------- rating helpers ---------- */
+const YPN={y:{he:'כן',lane:'pro'},p:{he:'חלקית',lane:'mid'},n:{he:'לא',lane:'con'}};
+function laneOf(r){ if(typeof r==='string') return YPN[r].lane; return r>=4?'pro':(r<=2?'con':'mid'); }
+function laneColor(l){ return l==='pro'?'var(--bub-pro)':l==='con'?'var(--bub-con)':'var(--bub-mid)'; }
+function ratingText(r){ return typeof r==='string'?`ענה: ${YPN[r].he}`:`דירג ${r} מתוך 5`; }
+const SCALEC=['var(--bub-con)','var(--bub-con)','var(--bub-mid)','var(--bub-pro)','var(--bub-pro)'];
+
+/* ---------- avatars ---------- */
+function avatars(ids){
+  const g=el('div',{class:'avs',tabindex:'0','aria-label':'כותבי הטענה'});
+  const show=ids.slice(0,3);
+  show.forEach(k=>{const p=PEOPLE[k];g.append(el('div',{class:'av',style:`--pc:${p.c}`,title:p.n},p.i));});
+  if(ids.length>3) g.append(el('div',{class:'av more'},'+'+(ids.length-3)));
+  const pop=el('div',{class:'avpop'});
+  ids.forEach(k=>{const p=PEOPLE[k];
+    pop.append(el('div',{class:'pr'},el('div',{class:'av',style:`--pc:${p.c}`},p.i),
+      el('div',{},el('div',{class:'pn'},p.n),el('div',{class:'po'},p.o))));});
+  g.append(pop);
+  return g;
+}
+function writerLine(ids){
+  if(ids.length===1) return PEOPLE[ids[0]].n+' · '+PEOPLE[ids[0]].o;
+  if(ids.length===2) return PEOPLE[ids[0]].n+' · '+PEOPLE[ids[1]].n;
+  return `${ids.length} מקורות · ${PEOPLE[ids[0]].n} ועוד ${ids.length-1}`;
+}
+
+/* ---------- analyst column (professional, two columns kept) ---------- */
+function analystCol(list,side,title){
+  const c=side==='pro'?'var(--bub-pro)':'var(--bub-con)';
   const col=el('div',{class:'argcol '+side,style:`--c:${c}`});
   col.append(el('div',{class:'h'},title));
-  list.forEach(([txt,n])=>{
-    const w=el('div',{class:'clwrap'});
-    w.append(el('button',{class:'cl',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת הציטוטים והמקורות שמהם נבנה האשכול');}},txt));
-    w.append(el('div',{class:'clmeta'},typeof n==='number'&&n>20?`סוכם מ־${n.toLocaleString('he-IL')} תשובות`:`${n} מקורות`));
-    col.append(w);
+  list.forEach(it=>{
+    const row=el('div',{class:'acl'});
+    const wrap=el('div',{class:'abwrap'});
+    wrap.append(el('button',{class:'ab',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת הפרסומים שמהם נבנתה הטענה');}},it.t));
+    wrap.append(el('div',{class:'abmeta'},writerLine(it.w)));
+    row.append(avatars(it.w),wrap);
+    col.append(row);
   });
   return col;
 }
+
+/* ---------- public thread (WhatsApp-style, three lanes) ---------- */
+function publicThread(A){
+  const wrap=el('div',{});
+  wrap.append(el('div',{class:'threadhead',html:
+    `<span>מה כתב הציבור · אשכולות מסוכמים ותשובות מלאות שאושרו לפרסום · בלי פיד גולמי</span>`+
+    `<span class="lanes"><span><i style="background:var(--bub-pro)"></i>בעד</span>`+
+    `<span><i style="background:var(--bub-mid)"></i>מעורב</span>`+
+    `<span><i style="background:var(--bub-con)"></i>נגד</span></span>`}));
+  const th=el('div',{class:'thread'});
+  /* clusters first, alternating sides so the thread reads as an exchange */
+  const pro=A.pub.pro.slice(), con=A.pub.con.slice(), order=[];
+  while(pro.length||con.length){ if(pro.length)order.push(['pro',pro.shift()]); if(con.length)order.push(['con',con.shift()]); }
+  order.forEach(([lane,cl])=>{
+    const m=el('div',{class:'msg '+lane,style:`--c:${laneColor(lane)}`});
+    const b=el('button',{class:'mb cluster',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת התשובות שמהן נבנה האשכול');}});
+    b.append(el('span',{},cl.t),el('span',{class:'mfoot',html:`<span>סוכם מ־${cl.n.toLocaleString('he-IL')} תשובות</span>`}));
+    m.append(b);
+    th.append(m);
+  });
+  /* individual verbatim answers, placed by their own rating */
+  A.q.forEach(q=>{
+    const lane=laneOf(q.r), rc=typeof q.r==='string'?laneColor(lane):SCALEC[q.r-1];
+    const m=el('div',{class:'msg '+lane,style:`--c:${laneColor(lane)}`});
+    const b=el('div',{class:'mb quote'});
+    b.append(el('span',{},q.t),el('span',{class:'mfoot',style:`--rc:${rc}`,
+      html:`<span class="rchip">${ratingText(q.r)}</span><span>${q.w}</span>`}));
+    m.append(b);
+    th.append(m);
+  });
+  wrap.append(th);
+  return wrap;
+}
+
+/* ---------- rating distribution ---------- */
+function rateDist(dist,n,label){
+  const tot=dist.reduce((a,b)=>a+b,0);
+  const rows=[5,4,3,2,1].map(k=>{const v=dist[k-1],p=Math.round(v/tot*100);
+    return `<div class="rdrow" style="--rc:${SCALEC[k-1]}"><span class="k">${k}</span><span class="t"><i style="width:${p}%"></i></span><span class="p num">${p}%</span></div>`;}).join('');
+  return `<div class="ratedist"><div class="rdmean"><b class="num">${mean(dist).toFixed(1)}</b>`+
+    `<div class="of">ממוצע מתוך 5 · ${label}</div><div class="cnt num">${n.toLocaleString('he-IL')} מצביעים</div></div>`+
+    `<div class="rdrows">${rows}</div></div>`;
+}
+
+/* ---------- chapters: every stage the failure actually passed through ---------- */
+function synthChapter(id,s){
+  let h=0;for(const ch of id+':'+s)h=(h*31+ch.charCodeAt(0))&0xffff;
+  if(s===2){const y=25+h%40,p=20+(h>>4)%25;return {s,type:'ypn',dist:[y,p,100-y-p],n:600+(h>>3)%3200};}
+  const centre=1.6+((h>>5)%26)/10, d=[0,0,0,0,0];
+  for(let k=1;k<=5;k++)d[k-1]=Math.max(1,Math.round(38-Math.abs(k-centre)*13+((h>>k)%7)));
+  const t=d.reduce((a,b)=>a+b,0);
+  return {s,type:'scale',dist:d.map(v=>Math.round(v/t*100)),n:700+(h>>2)%4200};
+}
+function chaptersFor(i){
+  const cur=stageOf(i);
+  const authored={};i.op.prev.forEach(p=>authored[p.s]=p);
+  const first=s=>{const c=i.claims.find(x=>x[0]===s);return c?c[3]:null;};
+  const reached=[1,2,3,4,5,6].filter(s=>s<cur&&i.claims.some(c=>c[0]===s));
+  return reached.reverse().map(s=>{
+    if(authored[s])return authored[s];
+    const nxt=reached.filter(x=>x>s).sort((a,b)=>a-b)[0]||cur;
+    if(first(s)&&first(nxt)&&first(s)===first(nxt))return {s,none:true};
+    return synthChapter(i.id,s);
+  });
+}
+/* ---------- docked failure header + chapter rail ---------- */
+function measureHeader(){
+  const h=document.querySelector('header.top');
+  if(h)document.documentElement.style.setProperty('--hdrh',h.offsetHeight+'px');
+}
+window.addEventListener('resize',measureHeader);
+let orientTicking=false;
+function buildOrientation(i,p,st,S){
+  const CH=[{n:1,t:'הבעיה',c:'var(--s2)'},{n:2,t:'ההתקדמות',c:S.c},{n:3,t:'דעת הציבור',c:'var(--accent)'}];
+  const dock=el('div',{class:'dock',id:'dock'});
+  dock.append(el('div',{class:'in'},
+    el('a',{class:'bk',href:'#/parent/'+p.id,'aria-label':'חזרה לכשל המערכתי'},'›'),
+    el('div',{class:'tt'},i.he),
+    el('span',{class:'chip fill',style:`--c:${S.c}`},`${st} · ${S.he}`)));
+  dock.append(el('div',{class:'dockprog',id:'dockprog'},...CH.map(c=>el('span',{style:`--c:${c.c}`}))));
+  const toc=el('nav',{class:'toc',id:'toc','aria-label':'פרקי העמוד'});
+  CH.forEach(c=>toc.append(el('a',{href:'#chap-'+c.n,style:`--c:${c.c}`,'data-ch':String(c.n),
+    onclick:e=>{e.preventDefault();const t=document.getElementById('chap-'+c.n);
+      const off=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdrh'))||60)+60;
+      window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-off,behavior:'smooth'});}},
+    el('span',{class:'no'},String(c.n)),el('span',{},c.t))));
+  document.body.append(dock,toc);
+  measureHeader();
+  const onScroll=()=>{
+    if(orientTicking)return; orientTicking=true;
+    requestAnimationFrame(()=>{
+      orientTicking=false;
+      const hero=document.querySelector('#view-item .itemhero');
+      if(!hero||!document.getElementById('dock'))return;
+      const hdr=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdrh'))||60;
+      dock.classList.toggle('on',hero.getBoundingClientRect().bottom<hdr+4);
+      let cur=1;const line=hdr+90;
+      CH.forEach(c=>{const s=document.getElementById('chap-'+c.n);if(s&&s.getBoundingClientRect().top<=line)cur=c.n;});
+      toc.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.ch===String(cur)));
+      dock.querySelectorAll('.dockprog span').forEach((s,k)=>s.classList.toggle('on',k+1<=cur));
+    });
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  return ()=>{window.removeEventListener('scroll',onScroll);dock.remove();toc.remove();};
+}
+let teardownOrient=null;
+
 function renderItem(id){
   const i=INCIDENTS.find(x=>x.id===id);if(!i)return;
   const p=PARENTS.find(x=>x.id===i.p),st=stageOf(i),S=STAGES[st],q=qOf(i),type=curType(i);
@@ -691,7 +1005,7 @@ function renderItem(id){
     el('div',{class:'itemmeta',html:`<span class="chip fill" style="--c:${S.c}">${st} · ${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--s6)">במחלוקת</span>`:''}<span>${places.length?places.join(' · '):'ארצי · ללא מיקום'}</span><span>·</span><span class="num">${i.claims.length} טענות במקורות</span>`})));
 
   /* ---------- 01 · the problem ---------- */
-  const c1=el('section',{class:'chap',style:'--c:var(--s2)'});
+  const c1=el('section',{class:'chap',id:'chap-1',style:'--c:var(--s2)'});
   c1.append(el('div',{class:'eyebrow',html:`<span class="no">1</span><span class="kk">הבעיה</span><span class="side">${ev.length} מקורות מתעדים${places.length?' · '+places.length+' מוקדים':''}</span>`}),
     el('h3',{},'מה נכשל'),
     el('p',{class:'chaplead'},'מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.'),
@@ -714,7 +1028,7 @@ function renderItem(id){
   story.append(c1);
 
   /* ---------- 02 · progress ---------- */
-  const c2=el('section',{class:'chap',style:`--c:${S.c}`});
+  const c2=el('section',{class:'chap',id:'chap-2',style:`--c:${S.c}`});
   c2.append(el('div',{class:'eyebrow',html:`<span class="no">2</span><span class="kk">ההתקדמות</span><span class="side">מחושב מהמקורות, לא נקבע ידנית</span>`}),
     el('h3',{},'מה נעשה מאז'),
     el('p',{class:'chaplead'},'השלב הוא הגבוה ביותר שיש לו טענה ממקור. הציבור לא מזיז אותו, וגם מחלוקת לא מורידה אותו.'),
@@ -754,22 +1068,16 @@ function renderItem(id){
   story.append(c2);
 
   /* ---------- 03 · public opinion ---------- */
-  const c3=el('section',{class:'chap',style:'--c:var(--accent)'});
+  const c3=el('section',{class:'chap',id:'chap-3',style:'--c:var(--accent)'});
   c3.append(el('div',{class:'eyebrow',html:`<span class="no">3</span><span class="kk">דעת הציבור</span><span class="side">${i.op.n.toLocaleString('he-IL')} מצביעים מאומתים</span>`}),
     el('h3',{},q.he),
     el('p',{class:'chaplead'},q.sub));
   const args=el('div',{class:'args'});
-  const r1=el('div',{class:'argrow'});
+  const r1=el('div',{class:'argrow analyst'});
   r1.append(el('div',{class:'who',html:`<span>מה נאמר במקורות פומביים</span><span>אנליסטים · ארגונים · עיתונות</span>`}),
-    el('div',{class:'argcols'},clusterCol(A.src.pro,'var(--pro)','בעד','pro'),clusterCol(A.src.con,'var(--con)','נגד','con')));
-  const r2=el('div',{class:'argrow'});
-  const pubcols=el('div',{class:'argcols'},clusterCol(A.pub.pro,'var(--pro)','בעד','pro'),clusterCol(A.pub.con,'var(--con)','נגד','con'));
-  const qwrap=el('div',{class:'quotes'});
-  qwrap.append(el('div',{class:'qh'},'ציטוטים מייצגים שאושרו'));
-  A.q.forEach(([tx,w])=>qwrap.append(el('div',{class:'qbub'},el('div',{class:'qb'},tx),el('div',{class:'qm'},'— '+w))));
-  pubcols.append(qwrap);
-  r2.append(el('div',{class:'who',html:`<span>מה כתב הציבור</span><span>מסוכם אוטומטית לאשכולות · בלי פיד גולמי</span>`}),pubcols);
-  args.append(r1,r2);c3.append(args);
+    el('div',{class:'argcols'},analystCol(A.src.pro,'pro','בעד'),analystCol(A.src.con,'con','נגד')));
+  args.append(r1,publicThread(A));
+  c3.append(args);
   const box=el('div',{class:'answerbox'});
   box.append(el('div',{class:'ttl'},'התשובה שלכם'));
   if(type==='scale'){
@@ -785,12 +1093,17 @@ function renderItem(id){
     el('small',{},'נספרים רק מצביעים מאומתים בטלפון · המספר נשמר כגיבוב בלבד')));
   c3.append(box);
   const res=el('div',{class:'result'});
-  if(type==='scale'){res.append(el('div',{class:'mean',html:`<b class="num">${mean(i.op.cur).toFixed(1)}</b><span>ממוצע מתוך 5 · ${q.label}</span>`}),el('div',{html:hist(i.op.cur)}));}
+  if(type==='scale'){res.append(el('div',{html:rateDist(i.op.cur,i.op.n,q.label)}));}
   else{res.append(el('div',{html:bar3(i.op.cur)}));}
-  if(i.op.prev.length){
+  const chaps=chaptersFor(i);
+  if(chaps.length){
     const ch=el('div',{class:'chapters'});
     ch.append(el('div',{style:'font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px'},'פרקים קודמים · השאלה של כל שלב שהכשל עבר'));
-    i.op.prev.forEach(pv=>{const PS=STAGES[pv.s],pq=Q[pv.s];
+    chaps.forEach(pv=>{const PS=STAGES[pv.s],pq=Q[pv.s];
+      if(pv.none){
+        ch.append(el('div',{class:'ch none',style:`--c:${PS.c}`},el('b',{},PS.he),el('span',{},pq.he),el('span',{class:'nov'},'לא נפתחה הצבעה בשלב זה')));
+        return;
+      }
       const val=pv.type==='scale'?mean(pv.dist).toFixed(1)+'/5':Math.round(pv.dist[0]/pv.dist.reduce((a,b)=>a+b,0)*100)+'% כן';
       ch.append(el('div',{class:'ch',style:`--c:${PS.c}`},el('b',{},PS.he),el('span',{},pq.he),el('span',{class:'num'},`${val} · ${pv.n.toLocaleString('he-IL')}`)));});
     res.append(ch);
@@ -811,6 +1124,8 @@ function renderItem(id){
   story.append(c4);
 
   v.append(story);
+  if(teardownOrient)teardownOrient();
+  teardownOrient=buildOrientation(i,p,st,S);
 }
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',3000);}
 $('#signin').addEventListener('click',()=>toast('בפרויקט האמיתי: כניסה עם Google/Apple ואימות בקוד לטלפון ישראלי'));
