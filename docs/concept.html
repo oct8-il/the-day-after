@@ -7,7 +7,8 @@
     --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
     --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
     --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
-    --s1:#6f7986; --s2:#7fa1c4; --s3:#9d8fd6; --s4:#d9a54f; --s5:#6fbf8a; --s6:#d96a5f;
+    --s1:#6b7480; --s2:#6f8fb0; --s3:#5fa3c9; --s4:#4fb8a8; --s5:#6fc97f; --s6:#c0705f; --flag:#c9a45a;
+    --t-official:#b3ada4; --t-oversight:#b9a6d6; --t-press:#d29a7c; --t-research:#d19ab4; --t-civil:#e2b1a0;
     --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
     --shadow:0 1px 0 rgba(255,255,255,.03) inset;
     color-scheme:dark;
@@ -17,7 +18,8 @@
       --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
       --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
       --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
-      --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+      --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+      --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
       --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
       color-scheme:light;
     }
@@ -26,7 +28,8 @@
     --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
     --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
     --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
-    --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+    --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+    --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
     --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
     color-scheme:light;
   }
@@ -139,6 +142,21 @@
   .weeks .goal{font-weight:700;color:var(--text);margin-bottom:4px}
   .weeks p{font-size:15px;margin:0;color:var(--text-2)}
 
+  .swatch{display:grid;grid-template-columns:repeat(5,1fr) 10px 1fr;gap:0;max-width:620px;margin:10px 0 8px;direction:rtl}
+  .swatch span{padding:8px 4px;text-align:center;font-size:12.5px;font-weight:600;color:var(--text);border-top:4px solid var(--c);background:color-mix(in srgb,var(--c) 34%,var(--surface-2))}
+  .swatch span:first-child{border-start-start-radius:4px;border-end-start-radius:4px}
+  .swatch span:nth-child(5){border-start-end-radius:4px;border-end-end-radius:4px}
+  .swatch span.exit{border-radius:4px;border-top-style:dashed}
+  .swatch i{border-inline-start:1px dashed var(--line);margin:3px 0}
+  .dots{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--text-2);margin:6px 0 14px}
+  .dots i{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);margin-inline-end:6px;vertical-align:-1px}
+  .chapters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:900px;margin:12px 0 16px}
+  .chap{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);padding:14px 16px}
+  .chap .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--c)}
+  .chap .t{font-weight:700;color:var(--text);margin:2px 0 6px}
+  .chap .he{font-size:14px;color:var(--text-2);display:block;margin-bottom:8px}
+  .chap ul{padding-left:16px;margin:0;font-size:14px}
+  @media (max-width:860px){.chapters{grid-template-columns:1fr}}
   .risk td:nth-child(2){color:var(--text-2)}
   .sev{font-size:11px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;background:var(--c);color:var(--accent-ink);white-space:nowrap}
   .callout{border-left:3px solid var(--accent);padding:12px 18px;background:var(--accent-soft);max-width:68ch;margin:18px 0}
@@ -166,7 +184,7 @@
 <div class="frame">
 <header class="masthead">
   <div>
-    <div class="kicker">Concept &amp; product document · v0.2</div>
+    <div class="kicker">Concept &amp; product document · v0.3</div>
     <h1><span class="he">היום שאחרי</span></h1>
     <p class="subtitle">A civilian ledger of what failed on October 7, 2023 — and, item by item, what has been done about it since.</p>
   </div>
@@ -174,7 +192,7 @@
     <div><b>Decided</b> 1–2 September 2026</div>
     <div><b>Owner</b> Roy</div>
     <div><b>Target</b> MVP live 7 October 2026 (36 days)</div>
-    <div><b>Status</b> Interview complete · prototype next</div>
+    <div><b>Status</b> Prototype v0.3 in the repo · matches this document</div>
   </div>
 </header>
 
@@ -190,6 +208,7 @@
     <li><a href="#confidence">Public opinion</a></li>
     <li><a href="#editorial">Editorial policy</a></li>
     <li><a href="#product">Product</a></li>
+    <li><a href="#visual">Visual language</a></li>
     <li><a href="#arch">Architecture</a></li>
     <li><a href="#legal">Legal &amp; risk</a></li>
     <li><a href="#mvp">MVP &amp; plan</a></li>
@@ -206,7 +225,7 @@
   <p><span class="he">היום שאחרי</span> is that place. It is a structured, sourced, continuously updated ledger. Every entry is a failure someone credible documented; attached to it is every subsequent claim of acknowledgement, planning, implementation or independent verification — each with a link, a date and a source type. Beside the evidence sits a second, deliberately separate signal: how many verified Israelis believe the failure has been fixed.</p>
   <p>The project takes no position on blame. It takes one position on facts: a claim without a public source does not exist here.</p>
   <div class="grid2" style="margin-top:20px">
-    <div class="panel in"><h4>It is</h4><ul><li>A ledger of documented failures and documented follow-up.</li><li>A collection of the sources and testimonies that expose each failure — drawn on a map where they have a place.</li><li>One public question per failure, matched to its stage, kept separate from the evidence.</li><li>A public methodology with a visible corrections log.</li></ul></div>
+    <div class="panel in"><h4>It is</h4><ul><li>A ledger of documented failures and documented follow-up.</li><li>A collection of the sources and testimonies that expose each failure — drawn on a map where they have a place.</li><li>One public question per failure, matched to its stage, kept in its own chapter apart from the evidence.</li><li>A public methodology with a visible corrections log.</li></ul></div>
     <div class="panel out"><h4>It is not</h4><ul><li>A verdict on who is responsible.</li><li>A memorial, an archive of testimony, or a news site.</li><li>A place where votes decide what is true.</li><li>A poll about trust in institutions or the media — polarising questions are out of scope by design.</li><li>A publisher of anything that has not already cleared publication elsewhere.</li></ul></div>
   </div>
 </section>
@@ -332,6 +351,7 @@
   <p>One curator — Roy — approves every entry and every claim. An automated daily scan (Hebrew news feeds, Knesset committee agendas and protocols, State Comptroller publications, IDF Spokesperson) matches new material against open items and proposes claims into a review queue. Nothing publishes unreviewed. The bottleneck is deliberate at this stage; it buys a consistent standard while the rules bed in.</p>
   <h3>Naming</h3>
   <p>Institutions, units and systems only: "Gaza Division HQ", "Shin Bet–AMAN coordination", "Sderot police station", "the alert system". No individual commanders, officials or ministers, even when a source names them. Quotes are trimmed to remove names.</p>
+  <p><strong>One scoped exception.</strong> The analysts' table in chapter 3 names the <em>authors of published analysis</em> — a researcher, a columnist, an NGO's report author — with their affiliation, because an argument without an author is not a source. It never names anyone involved in the events. In the prototype these are invented names paired with generic institution descriptors, never invented people attached to real named institutions.</p>
   <h3>Victims and survivors</h3>
   <p>No names of victims or survivors. No graphic detail beyond what is necessary to state the failure. No testimony quotes unless already published with the speaker's evident consent, and then only as a linked claim, never as narrative.</p>
   <h3>Only already-public sources</h3>
@@ -345,37 +365,44 @@
 <section id="product">
   <h2>Product</h2>
   <p class="lede">Hebrew, right-to-left, mobile-first. Visual at the top, textual as you drill down.</p>
+  <h3>Entry: the intro page</h3>
+  <p>A first visit opens on <span class="he">על הפרויקט</span>: the name, the one-line thesis, and a single column of prose — why the site exists, what you are about to see on the failures page, what a failure drill-down contains, what the project will not do, who is behind it — with the full method folded underneath as a collapsible section and a call to action into <span class="he">הכשלים</span>. After that first visit the site opens on the failures page and the intro stays reachable as a deliberately secondary tab: smaller, muted, after a separator.</p>
   <h3>Home: the failure matrix</h3>
-  <p>The systemic failures laid out on two axes: <strong>who</strong> (military &amp; intelligence · home front &amp; civilian systems · society &amp; institutions) across, <strong>when</strong> (before · the day itself · after) down. Each failure is a tile with an icon, a two- or three-word label, its incident count, its average stage as a colour, and a small stage-distribution bar. Empty cells stay visible as dashed slots — the shape of the space is information too. Tapping a tile opens a drawer with the incidents; that is where text begins. A strip above the matrix carries the numbers that must be true before anything else: days since October 7, items tracked, share at each stage, and the size of the gap.</p>
+  <p>The systemic failures laid out on two axes: <strong>who</strong> (military &amp; intelligence · home front &amp; civilian systems · society &amp; institutions) across, <strong>when</strong> (before · the day itself · after) down. Each failure is a tile filled with its average stage's colour, with an icon in a tinted chip, a two- or three-word label, a stage-distribution bar and "x of y implemented" in its footer. Empty cells stay visible as dashed slots — the shape of the space is information too. Tapping a tile opens a drawer with the incidents; that is where text begins.</p>
+  <p>A strip above the matrix carries the numbers that must be true before anything else: days since October 7; items tracked, and how many systemic failures they group into; a six-cell <strong>stage ladder</strong> — the count in each stage, in order, coloured, with <span class="he">נסוג</span> set apart after a dashed divider as the exit rung, no legend; and the gap — how many items are reported implemented while the public rates the implementation below 2.5.</p>
+  <h3>The opening sequence</h3>
+  <p>On the first visit to the failures page only, the strip is the first and only thing on screen: centred, enlarged, fading in while every number in it counts up from zero over the same 1.8 seconds. It holds, then settles into its place at the top of the page. Only then does the matrix reveal itself, row by row, top to bottom, with a fade. The sequence runs once (a local flag), never under <span class="mono">prefers-reduced-motion</span>, and leaves no inline styles behind.</p>
   <h3>The map, demoted</h3>
   <p>There is no map page. A map appears inside an item, as an extension of "what failed", when the item's evidence has places: every testimony and place-specific report is a pin coloured by source type, so a hotline collapse pins to every town a resident was quoted from. Items whose evidence has no place — a commission of inquiry, an assessment culture — have no map. The map is a way of seeing the source collection; the collection is the thing.</p>
-  <h3>Item page</h3>
-  <p>Two columns, two lanes, labelled: <strong>facts · what was reported</strong> and <strong>opinion · what the public thinks</strong>. The facts lane: what failed with its evidence list and map; where it stands, with the stage ladder, the stage's summary (acknowledgement quote, plan summary, or implementation summary), the verification trace when there is one, and the full ledger folded away. The opinion lane: the stage's question, the two rows of arguments, the answer control, optional free text, the live distribution, and the frozen chapters of earlier stages.</p>
-  <div class="item">
-    <div class="crumb">התרעה מוקדמת שלא תורגמה לפעולה › נחל עוז</div>
-    <h5>אזהרות חוזרות של התצפיתניות בנחל עוז לא הועלו לדרג הפיקודי</h5>
-    <div class="row">
-      <div class="box"><div class="k">שלב על פי המקורות</div>
-        <div style="font-weight:700;color:var(--s4)">4 · יושם <span class="chip" style="--c:var(--s6);margin-right:6px;margin-left:0">במחלוקת</span></div>
-        <ul class="ledger" style="margin-top:10px">
-          <li><span class="st" style="--c:var(--s2)">הוכר</span><span>תחקיר צה״ל, אוגדה 143</span><span class="dt">02.2025</span></li>
-          <li><span class="st" style="--c:var(--s3)">תוכנית</span><span>תחקיר צה״ל — נוהל העלאה חדש</span><span class="dt">02.2025</span></li>
-          <li><span class="st" style="--c:var(--s4)">יושם</span><span>דובר צה״ל</span><span class="dt">2025</span></li>
-          <li><span class="st" style="--c:var(--s6)">חולק</span><span>ועדת הביטחון של הקיבוץ</span><span class="dt">2026</span></li>
-        </ul>
-      </div>
-      <div class="box"><div class="k">השאלה לשלב "יושם" · 3,214 מאומתים בטלפון</div>
-        <div style="font-family:'Frank Ruhl Libre',serif;font-size:17px;color:var(--text);margin-bottom:8px">עד כמה מה שיושם בפועל נותן מענה לבעיה?</div>
-        <div class="bar"><span style="width:31%;background:var(--s6)"></span><span style="width:27%;background:var(--s4)"></span><span style="width:24%;background:var(--s1)"></span><span style="width:12%;background:var(--s2)"></span><span style="width:6%;background:var(--s5)"></span></div>
-        <div class="legend"><span>ממוצע <b>2.3</b> / 5</span><span style="color:var(--muted)">1 → 5</span></div>
-        <div style="font-size:12.5px;color:var(--muted);margin-top:10px;border-top:1px solid var(--line-soft);padding-top:8px">פרק קודם · "תוכנית" · 2.1/5 · 1,870 · פרק ראשון · "דחיפות" · 4.5/5 · 4,100</div>
-        <p style="font-size:13px;color:var(--muted);margin:10px 0 0">המספרים כאן הם דוגמה להמחשה בלבד.</p>
-      </div>
-    </div>
+  <h3>Item page: one story in three chapters</h3>
+  <p>A single column, read top to bottom, in numbered chapters separated by a hairline with a coloured tick. A docked header (title, stage chip, back) follows the reader below the site header; on wide screens a fixed chapter rail with scroll-spy sits beside the text, and on narrower ones a tinted chapter line in the dock replaces it.</p>
+  <div class="chapters">
+    <div class="chap" style="--c:var(--s2)"><div class="n">1</div><div class="t">The problem</div><span class="he">הבעיה</span><ul><li>Short description.</li><li>Every exposing source with quote, type and place.</li><li>The evidence map, when any source has a place.</li></ul></div>
+    <div class="chap" style="--c:var(--s4)"><div class="n">2</div><div class="t">The progress</div><span class="he">ההתקדמות</span><ul><li>Computed stage and the six-rung ladder.</li><li>Stage summary: acknowledgement quote, plan, or implementation — editor-approved, sentence-footnoted.</li><li>Verification trace (stage 5) and the full ledger, folded.</li><li>Contest shown as a gold flag on the claim; the stage does not move.</li></ul></div>
+    <div class="chap" style="--c:var(--accent)"><div class="n">3</div><div class="t">Public opinion</div><span class="he">דעת הציבור</span><ul><li>The stage's question.</li><li>Analysts: a head-to-head table.</li><li>The public: a message thread.</li><li>Your answer, the distribution, past chapters.</li></ul></div>
   </div>
-  <p style="margin-top:14px">Every item page also has the parent's other incidents, the item's change history, a "submit a source" button, and a share card. The share card (Open Graph image) is generated per item and carries the title, the stage, and the current question's result — that image is the social launch.</p>
+  <p><strong>Analysts</strong> are a face-off table: a central spine with <span class="he">בעד</span> and <span class="he">נגד</span> headers carrying claim and writer counts, note-style bubbles stretched to their columns so both edges align down the page, monogram avatars on the outer flanks with a popover listing every writer and affiliation. <strong>The public</strong> is a WhatsApp-style thread on a recessed panel, three lanes: supportive bubbles on one side, critical on the other, and mixed answers centred, dashed and tailless, because they belong to neither side. Verbatim answers carry their rating as a chip ("rated 4 of 5"). Bubble tones are a softened sage and clay so stance reads as tone, not as a traffic light; the saturated pro/con colours stay on the yes/partial/no bar and legends.</p>
+  <p>The stage question is restated directly above the 1–5 scale so nobody rates without it in view. Results are review-style horizontal rows beside a large mean. Past chapters are derived, not stored: every stage the failure actually reached gets a row, and a stage that advanced without a voting window says so instead of vanishing.</p>
+  <p>The page closes with a single band: actions (submit a source, share, how the stage is computed) beside the parent's other incidents. The share card (Open Graph image) is generated per item and carries the title, the stage, and the current question's result — that image is the social launch.</p>
   <h3>Other views</h3>
-  <p>The <strong>gap view</strong> (stage 3–5 on one axis, the public's 1–5 rating of the plan or implementation on the other; the highlighted zone is "reported implemented, rated low"). The <strong>methodology</strong> and <strong>corrections</strong> pages. A browse-by-place view and a timeline are explicitly deferred.</p>
+  <p>The <strong>gap view</strong> (stage 3–5 on one axis, the public's 1–5 rating of the plan or implementation on the other; the highlighted zone is "reported implemented, rated low"). The <strong>corrections</strong> page. The method lives inside the intro page. A browse-by-place view and a timeline are explicitly deferred.</p>
+</section>
+
+<section id="visual">
+  <h2>Visual language</h2>
+  <p class="lede">Visual at the top level, textual as you drill down. Colour encodes exactly one thing per surface.</p>
+  <h3>Stage colours are an ordered ramp</h3>
+  <p>The six stages are one cool-to-green ramp — slate, blue, cyan, teal, green — with lightness and saturation rising with the stage, so "further along" reads without a legend. <span class="he">נסוג</span> is the only warm hue, a rust, because it is an exit, not a rung. The ramp survives a deuteranopia simulation where the earlier amber/green pairing collapsed into one olive.</p>
+  <div class="swatch"><span style="--c:var(--s1)">זוהה</span><span style="--c:var(--s2)">הוכר</span><span style="--c:var(--s3)">תוכנית</span><span style="--c:var(--s4)">יושם</span><span style="--c:var(--s5)">אומת</span><i></i><span class="exit" style="--c:var(--s6)">נסוג</span></div>
+  <h3>Amber is emphasis only</h3>
+  <p>The accent is reserved for calls to action and for the gap number, which makes the gap the single amber thing on the failures page — exactly where the accountability story is. No stage uses it.</p>
+  <h3>Contest is a flag, not a state</h3>
+  <p><span class="he">במחלוקת</span> has its own muted gold — an outline chip on the item and a tint on the contesting ledger row — so it can never be confused with <span class="he">נסוג</span>.</p>
+  <h3>Source types never borrow stage hues</h3>
+  <p>Evidence dots and map pins use a warm, quieter set that does not appear in the ramp, so a blue dot can never be misread as "acknowledged":</p>
+  <div class="dots"><span><i style="--c:var(--t-official)"></i>official</span><span><i style="--c:var(--t-oversight)"></i>independent oversight</span><span><i style="--c:var(--t-press)"></i>press</span><span><i style="--c:var(--t-research)"></i>research</span><span><i style="--c:var(--t-civil)"></i>civil society</span></div>
+  <h3>Type</h3>
+  <p>Frank Ruhl Libre for names, headings and large numbers; Assistant for everything else. Both carry Hebrew and Latin. Tabular figures wherever numbers line up.</p>
 </section>
 
 <section id="arch">
@@ -457,7 +484,8 @@ docs/
   <h2>Open questions</h2>
   <ol class="oq">
     <li><b>The eight parents.</b> Which systemic failures make the cut for v1? Proposed starting set: early warning not acted on; border defence architecture; Gaza Division command and readiness; reinforcement and response time; police coordination; emergency medicine and evacuation; alert and communication systems; community readiness squads. Government-process parents (hostage apparatus, NSC procedures) may wait for v1.1.</li>
-    <li><b>Map source.</b> Keep the schematic SVG from the prototype, or use real tiles inside the item page. Decide in week 1; the schematic is the default.</li>
+    <li><b>Map source.</b> The schematic SVG is the working default; real tiles inside the item page only if the schematic proves insufficient with real evidence.</li>
+    <li><b>Analyst naming.</b> The scoped exception (authors of published analysis are named) should get a line in the pre-launch legal review.</li>
     <li><b>Chapter transitions.</b> When a stage advances, does the new question open immediately with zero votes, or after the stage summary is approved? Proposed: after the summary — voters should have something to rate.</li>
     <li><b>Source-side arguments.</b> Which source types may appear in the "from published sources" argument row — research and civil society only, or press commentary too? Proposed: research, civil society, and investigative press with documentary basis; no opinion columns.</li>
     <li><b>Vote threshold.</b> The minimum number of phone-verified votes before a percentage is shown. 50 is a placeholder.</li>
@@ -470,7 +498,7 @@ docs/
 
 <section id="log">
   <h2>Decision log</h2>
-  <p class="lede">Every decision from the 1 September interview, in one place.</p>
+  <p class="lede">Every decision from the 1 September interview and the 2 September prototype rounds, in one place.</p>
   <div class="tablewrap"><table>
     <tr><th>Topic</th><th>Decision</th></tr>
     <tr><td>Name</td><td><span class="he">היום שאחרי</span> (working name, for now). Earlier candidates: <span class="he">השמונה באוקטובר</span>; <span class="he">היום אחרי</span> rejected — collides with "day after" Gaza-policy discourse.</td></tr>
@@ -486,11 +514,17 @@ docs/
     <tr><td>Summaries</td><td>AI-drafted, editor-approved, sentence-footnoted summaries of acknowledgement, plan and implementation in the factual panel. <em>(2 Sep)</em></td></tr>
     <tr><td>Verification</td><td>MVP: Google/Apple + Israeli phone OTP (hashed). Later: KYC provider token. Never ID upload to the project.</td></tr>
     <tr><td>Curation</td><td>Roy alone, AI-assisted daily scan → review queue (post-MVP).</td></tr>
-    <tr><td>Naming</td><td>Institutions and systems only.</td></tr>
+    <tr><td>Naming</td><td>Institutions and systems only; one scoped exception for authors of published analysis. <em>(2 Sep)</em></td></tr>
     <tr><td>Legal</td><td>Only already-public sources; pro-bono review; victim/survivor privacy rules; public methodology and corrections.</td></tr>
     <tr><td>Home</td><td>Failure matrix — who × when — of icon tiles; text begins one level down. Headline strip at its top. <em>(revised 1–2 Sep)</em></td></tr>
     <tr><td>Map</td><td>No map page. Map appears inside an item when its evidence has places; place is a property of the claim, not the incident. <em>(2 Sep)</em></td></tr>
-    <tr><td>Language</td><td>Hebrew only for v1.</td></tr>
+    <tr><td>Entry</td><td>First visit opens on an intro page (prose, method folded in, CTA); afterwards a muted secondary tab. <em>(2 Sep)</em></td></tr>
+    <tr><td>Opening sequence</td><td>First visit to the failures page: strip alone, centred, numbers count up; settles; matrix reveals top to bottom. Once only; not under reduced motion. <em>(2 Sep)</em></td></tr>
+    <tr><td>Strip</td><td>Stage shown as a contiguous six-cell ladder with counts, no legend, no click behaviour; נסוג apart after a divider. <em>(2 Sep)</em></td></tr>
+    <tr><td>Item page</td><td>One column, three numbered chapters (הבעיה · ההתקדמות · דעת הציבור), docked header and chapter rail. <em>(2 Sep)</em></td></tr>
+    <tr><td>Opinion UI</td><td>Analysts as a head-to-head table with named authors; public as a three-lane message thread with rating chips; review-style result rows; derived past chapters. <em>(2 Sep)</em></td></tr>
+    <tr><td>Colour</td><td>Stages as an ordered cool→green ramp; rust for regressed; gold flag for contested; amber reserved for emphasis; source types on a separate warm set. <em>(2 Sep)</em></td></tr>
+    <tr><td>Language</td><td>Hebrew only for v1. A Hebrew edition of this document accompanies it.</td></tr>
     <tr><td>Stack</td><td>Data-as-code in a public repo; static Next.js; Supabase for auth and votes only.</td></tr>
     <tr><td>Seed</td><td>IDF probes (Feb 2025), Comptroller and Knesset reports, Civil Commission and press investigations.</td></tr>
     <tr><td>MVP size</td><td>~8 parents, 25–40 incidents.</td></tr>
@@ -502,6 +536,6 @@ docs/
 </main>
 </div>
 
-<footer>Concept document v0.2 · decisions recorded 1–2 September 2026 · figures in the item mock-up are illustrative, not data.</footer>
+<footer>Concept document v0.3 · decisions recorded 1–2 September 2026 · figures in the mock-ups are illustrative, not data.</footer>
 </div>
 </body></html>
