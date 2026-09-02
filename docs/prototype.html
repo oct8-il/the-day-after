@@ -7,8 +7,8 @@
     --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
     --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
     --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
-    --s1:#6f7986; --s2:#7fa1c4; --s3:#9d8fd6; --s4:#d9a54f; --s5:#6fbf8a; --s6:#d96a5f;
-    --t-official:#7fa1c4; --t-oversight:#6fbf8a; --t-press:#d9a54f; --t-research:#9d8fd6; --t-civil:#e08a7a;
+    --s1:#6b7480; --s2:#6f8fb0; --s3:#5fa3c9; --s4:#4fb8a8; --s5:#6fc97f; --s6:#c0705f; --flag:#c9a45a;
+    --t-official:#b3ada4; --t-oversight:#b9a6d6; --t-press:#d29a7c; --t-research:#d19ab4; --t-civil:#e2b1a0;
     --pro:#6fbf8a; --con:#d96a5f;
     --land:#1b2027; --gaza:#262c34; --sea:#151b23; --road:#2f3740;
     color-scheme:dark;
@@ -18,8 +18,8 @@
       --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
       --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
       --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
-      --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
-      --t-official:#4d7fb0; --t-oversight:#2f8f5b; --t-press:#b97a1c; --t-research:#7a63c2; --t-civil:#c4483c;
+      --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+      --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
       --pro:#2f8f5b; --con:#c4483c;
       --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
       color-scheme:light;
@@ -29,8 +29,8 @@
     --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
     --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
     --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
-    --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
-    --t-official:#4d7fb0; --t-oversight:#2f8f5b; --t-press:#b97a1c; --t-research:#7a63c2; --t-civil:#c4483c;
+    --s1:#7b8590; --s2:#5b7ea3; --s3:#3f8fb8; --s4:#2f9d8f; --s5:#3f9f5a; --s6:#b8604f; --flag:#a8842e;
+    --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
     --pro:#2f8f5b; --con:#c4483c;
     --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
     color-scheme:light;
@@ -1202,7 +1202,7 @@ function renderItem(id){
   story.append(el('div',{class:'itemhero'},
     el('div',{class:'crumb',html:`<a href="#/home">הכשלים</a> › <a href="#/parent/${p.id}">${p.he}</a>`}),
     el('h1',{class:'item'},i.he),
-    el('div',{class:'itemmeta',html:`<span class="chip fill" style="--c:${S.c}">${st} · ${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--s6)">במחלוקת</span>`:''}<span>${places.length?places.join(' · '):'ארצי · ללא מיקום'}</span><span>·</span><span class="num">${i.claims.length} טענות במקורות</span>`})));
+    el('div',{class:'itemmeta',html:`<span class="chip fill" style="--c:${S.c}">${st} · ${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--flag)">במחלוקת</span>`:''}<span>${places.length?places.join(' · '):'ארצי · ללא מיקום'}</span><span>·</span><span class="num">${i.claims.length} טענות במקורות</span>`})));
 
   /* ---------- 01 · the problem ---------- */
   const c1=el('section',{class:'chap',id:'chap-1',style:'--c:var(--s2)'});
@@ -1232,7 +1232,7 @@ function renderItem(id){
   c2.append(el('div',{class:'eyebrow',html:`<span class="no">2</span><span class="kk">ההתקדמות</span><span class="side">מחושב מהמקורות, לא נקבע ידנית</span>`}),
     el('h3',{},'מה נעשה מאז'),
     el('p',{class:'chaplead'},'השלב הוא הגבוה ביותר שיש לו טענה ממקור. הציבור לא מזיז אותו, וגם מחלוקת לא מורידה אותו.'),
-    el('div',{class:'stagerow',html:`<span class="big">${st}</span><span style="font-weight:700;color:${S.c}">${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--s6)">במחלוקת</span>`:''}`}),
+    el('div',{class:'stagerow',html:`<span class="big">${st}</span><span style="font-weight:700;color:${S.c}">${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--flag)">במחלוקת</span>`:''}`}),
     el('div',{class:'ladder',html:[1,2,3,4,5,6].map(k=>`<span class="${(st===6?k===6:k<=st)?'on':''}" style="${(st===6&&k===6)?'--c:var(--s6)':''}"></span>`).join('')}));
   const ackSrc=i.claims.find(c=>c[0]===2), planSrc=i.claims.find(c=>c[0]===3), implSrc=i.claims.find(c=>c[0]===4);
   const fn=n=>`<sup><a href="#" onclick="return false">[${n}]</a></sup>`;
@@ -1260,7 +1260,7 @@ function renderItem(id){
   const led=el('details',{class:'trace',style:'--c:var(--muted)'});
   led.append(el('summary',{style:'color:var(--text-2)'},`כל הטענות במקורות · ${i.claims.length}`),
     el('div',{class:'in'},el('ul',{class:'ledger'},...i.claims.map(c=>{const isC=c[0]===0;const stg=isC?null:STAGES[c[0]];
-      return el('li',{class:isC?'contest':'',style:`--c:${isC?'var(--s6)':stg.c}`},
+      return el('li',{class:isC?'contest':'',style:`--c:${isC?'var(--flag)':stg.c}`},
         el('span',{class:'st'},isC?'חולק על':stg.he),
         el('div',{class:'src',html:`${c[2]}${isC?` <span style="color:var(--muted)">← על הטענה "${STAGES[c[4]].he}"</span>`:''}<small>${TYPES[c[1]].he}${c[5]?' · '+PLACES[c[5]].he:''} · <a href="#" onclick="return false">קישור למקור</a></small>`}),
         el('span',{class:'dt num'},c[3]));}))));
