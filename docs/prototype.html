@@ -1,0 +1,642 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>השמונה באוקטובר · אב-טיפוס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#6f7986; --s2:#7fa1c4; --s3:#9d8fd6; --s4:#d9a54f; --s5:#6fbf8a; --s6:#d96a5f;
+    --t-official:#7fa1c4; --t-oversight:#6fbf8a; --t-press:#d9a54f; --t-research:#9d8fd6; --t-civil:#e08a7a;
+    --pro:#6fbf8a; --con:#d96a5f;
+    --land:#1b2027; --gaza:#262c34; --sea:#151b23; --road:#2f3740;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+      --t-official:#4d7fb0; --t-oversight:#2f8f5b; --t-press:#b97a1c; --t-research:#7a63c2; --t-civil:#c4483c;
+      --pro:#2f8f5b; --con:#c4483c;
+      --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+    --t-official:#4d7fb0; --t-oversight:#2f8f5b; --t-press:#b97a1c; --t-research:#7a63c2; --t-civil:#c4483c;
+    --pro:#2f8f5b; --con:#c4483c;
+    --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html{direction:rtl}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  textarea{font:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .num{font-variant-numeric:tabular-nums}
+  [hidden]{display:none!important}
+
+  .proto{background:var(--accent);color:var(--accent-ink);font-size:12.5px;font-weight:700;text-align:center;padding:6px 12px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+  .brand{display:flex;align-items:baseline;gap:12px}
+  .brand .name{font-family:"Frank Ruhl Libre",serif;font-size:24px;font-weight:500;color:var(--text)}
+  .brand .tag{font-size:12.5px;color:var(--muted)}
+  nav.main{display:flex;gap:4px}
+  nav.main button{padding:6px 12px;border-radius:4px;color:var(--text-2);font-weight:600;font-size:15px}
+  nav.main button[aria-current="page"]{background:var(--surface-2);color:var(--text)}
+  .signin{font-size:13.5px;color:var(--muted);border:1px solid var(--line);padding:5px 10px;border-radius:4px}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+  .view{display:none} .view.active{display:block}
+
+  /* strip */
+  .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
+  .strip>div{background:var(--surface);padding:14px 16px}
+  .strip .k{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .strip .v{font-family:"Frank Ruhl Libre",serif;font-size:30px;line-height:1.1;margin-top:2px;color:var(--text)}
+  .strip .v small{font-family:"Assistant",sans-serif;font-size:14px;color:var(--text-2);margin-inline-start:6px}
+  .strip .gap .v{color:var(--accent)}
+  .stagebar{display:flex;height:8px;margin-top:10px;border-radius:2px;overflow:hidden;background:var(--line)}
+  .stagebar span{display:block;height:100%}
+  .lg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--text-2);margin-top:8px}
+  .lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-inline-end:5px}
+
+  .pagehead{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 12px;gap:12px;flex-wrap:wrap}
+  .pagehead h2{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:30px;margin:0}
+  .pagehead .sub{color:var(--muted);font-size:14px}
+
+  /* matrix */
+  .matrix{display:grid;grid-template-columns:72px repeat(3,minmax(0,1fr));gap:10px;align-items:stretch}
+  .matrix .colh{font-size:13px;font-weight:700;color:var(--text-2);text-align:center;padding:6px 0 2px}
+  .matrix .rowh{font-size:12.5px;font-weight:700;letter-spacing:.04em;color:var(--muted);padding:14px 0 0;line-height:1.3}
+  .cell{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;min-height:150px;padding:10px;background:var(--surface);border:1px solid var(--line-soft)}
+  .cell.empty{background:transparent;border-style:dashed;place-items:center;color:var(--line);font-size:22px}
+  .tile{position:relative;display:grid;grid-template-rows:auto 1fr auto;gap:8px;min-height:130px;padding:12px 12px 10px;background:var(--surface-2);border:1px solid var(--line);border-top:3px solid var(--c);text-align:start;transition:transform .12s,border-color .12s}
+  .tile:hover,.tile:focus-visible{transform:translateY(-2px);border-color:var(--muted);border-top-color:var(--c)}
+  .tile.on{border-color:var(--text);border-top-color:var(--c)}
+  .tile svg{width:30px;height:30px;stroke:var(--text);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tile .lab{font-weight:700;font-size:16px;line-height:1.2;color:var(--text)}
+  .tile .foot{display:grid;gap:5px}
+  .tile .foot .st{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+  .tile .foot .st b{color:var(--c);font-weight:700}
+  .tile .n{position:absolute;top:8px;inset-inline-start:10px;font-size:11.5px;color:var(--muted)}
+  .score{display:flex;height:5px;border-radius:2px;background:var(--line);overflow:hidden}
+  .score span{display:block;height:100%;background:var(--text-2)}
+  .drawer{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-inline-start:3px solid var(--c)}
+  .drawer .dh{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line-soft)}
+  .drawer .dh svg{width:28px;height:28px;stroke:var(--text);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .drawer .dh .t{font-family:"Frank Ruhl Libre",serif;font-size:22px;color:var(--text)}
+  .drawer .dh .d{font-size:13.5px;color:var(--muted)}
+  .drawer .close{color:var(--muted);font-size:20px;padding:4px 8px}
+  .kids .row{display:grid;grid-template-columns:1fr auto 140px;gap:16px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:15px}
+  .kids .row:last-child{border-bottom:0}
+  .kids .row:hover{background:var(--surface-2)}
+  .kids .row .pl{color:var(--muted);font-size:13px;margin-inline-start:8px}
+  .kids .row .sc{font-size:12px;color:var(--muted);display:grid;gap:3px}
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid var(--c);color:var(--c);white-space:nowrap}
+  .chip.fill{background:var(--c);color:var(--accent-ink);border-color:var(--c)}
+
+  /* item */
+  .crumb{font-size:13.5px;color:var(--muted);margin:22px 0 6px}
+  .crumb a{color:var(--muted)} .crumb a:hover{color:var(--text)}
+  h1.item{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:clamp(26px,4vw,38px);line-height:1.15;margin:0 0 8px;text-wrap:balance;max-width:28ch}
+  .itemmeta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13.5px;color:var(--text-2);margin-bottom:20px}
+  .itemgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+  .col{display:grid;gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);padding:18px 20px}
+  .card h4{margin:0 0 10px;font-size:12.5px;letter-spacing:.06em;color:var(--muted);font-weight:700;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .card h4 .side{font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)}
+  .card.fact{border-inline-start:3px solid var(--s2)}
+  .card.opinion{border-inline-start:3px solid var(--accent)}
+  .lane{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .lane::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+  .lane.f{color:var(--s2)} .lane.o{color:var(--accent)}
+  .summary{color:var(--text-2);font-size:16px;max-width:62ch;margin:0 0 12px}
+
+  /* evidence */
+  .ev{list-style:none;margin:0;padding:0}
+  .ev li{display:grid;grid-template-columns:10px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:14.5px;align-items:start}
+  .ev li:last-child{border-bottom:0}
+  .ev .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--c)}
+  .ev .src{color:var(--text)} .ev .src q{display:block;color:var(--text-2);font-style:italic;font-size:14px;margin-top:2px}
+  .ev .src q::before,.ev .src q::after{content:'"'}
+  .ev .src small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
+  .ev .pl{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .evmap{margin:12px 0 4px;border:1px solid var(--line-soft)}
+  svg.map{display:block;width:100%;height:auto;background:var(--land);direction:ltr}
+  .pin circle.core{stroke:var(--bg);stroke-width:1.5}
+  .pin text{font-family:"Assistant",sans-serif;font-size:10px;fill:var(--text-2);pointer-events:none}
+  .placelabel{font-family:"Assistant",sans-serif;font-size:9px;fill:var(--muted)}
+  .maplabel{font-family:"Frank Ruhl Libre",serif;font-size:11px;fill:var(--muted)}
+  .maplg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+  .maplg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:5px}
+
+  /* stage panel */
+  .stagerow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .stagerow .big{font-family:"Frank Ruhl Libre",serif;font-size:26px;font-weight:500;color:var(--c)}
+  .ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin:6px 0 14px}
+  .ladder span{height:6px;background:var(--line);border-radius:2px}
+  .ladder span.on{background:var(--c)}
+  .aisum{background:var(--surface-2);padding:12px 14px;margin:0 0 12px}
+  .aisum .lbl{font-size:11.5px;color:var(--muted);font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px}
+  .aisum p{margin:0 0 6px;font-size:14.5px;color:var(--text-2)}
+  .aisum sup a{font-size:11px;color:var(--accent);margin-inline-start:2px}
+  .ledger{list-style:none;margin:0;padding:0}
+  .ledger li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px;align-items:start}
+  .ledger li:last-child{border-bottom:0}
+  .ledger .st{font-weight:700;color:var(--c);white-space:nowrap;min-width:64px}
+  .ledger .src{color:var(--text)} .ledger .src small{display:block;color:var(--muted);font-size:12.5px}
+  .ledger .dt{color:var(--muted);white-space:nowrap}
+  .ledger li.contest{background:linear-gradient(90deg,transparent,var(--accent-soft));margin:0 -8px;padding:9px 8px}
+  details.trace{border:1px solid var(--line-soft);margin-top:10px}
+  details.trace summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:14px;color:var(--s5);list-style:none;display:flex;justify-content:space-between}
+  details.trace summary::after{content:"+";color:var(--muted)} details.trace[open] summary::after{content:"−"}
+  details.trace .in{padding:0 12px 10px}
+
+  /* opinion */
+  .q{font-family:"Frank Ruhl Libre",serif;font-size:21px;line-height:1.3;color:var(--text);margin:0 0 4px}
+  .qsub{font-size:13px;color:var(--muted);margin:0 0 14px}
+  .args{display:grid;gap:12px;margin:0 0 16px}
+  .argrow .who{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+  .argcols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .argcol{display:grid;gap:6px;align-content:start}
+  .argcol .h{font-size:11.5px;font-weight:700;color:var(--c);letter-spacing:.04em}
+  .cl{border:1px solid var(--line);border-inline-start:3px solid var(--c);padding:7px 10px;font-size:13.5px;color:var(--text);background:var(--surface-2);text-align:start;display:grid;gap:2px}
+  .cl small{color:var(--muted);font-size:11.5px}
+  .cl.open{border-color:var(--muted);border-inline-start-color:var(--c)}
+  .quotes{grid-column:1/-1;background:var(--surface-2);padding:10px 12px;font-size:13.5px;color:var(--text-2)}
+  .quotes q{display:block;margin-bottom:6px;font-style:italic} .quotes q::before{content:'"'} .quotes q::after{content:'"'}
+  .quotes small{color:var(--muted);font-style:normal}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+  .scale button{padding:12px 0;border:1px solid var(--line);border-radius:4px;font-weight:700;font-size:17px;color:var(--text-2);background:var(--surface-2)}
+  .scale button:hover{border-color:var(--accent);color:var(--accent)}
+  .scale button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .scalelbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+  .ypn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+  .ypn button{padding:11px 8px;border:1px solid var(--line);border-radius:4px;font-weight:700;color:var(--text-2);background:var(--surface-2)}
+  .ypn button:hover{border-color:var(--c);color:var(--c)}
+  .ypn button[aria-pressed="true"]{background:var(--c);color:var(--accent-ink);border-color:var(--c)}
+  .free{width:100%;min-height:64px;margin-top:12px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:4px;resize:vertical}
+  .free::placeholder{color:var(--muted)}
+  .submit{margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .submit button{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:8px 16px;border-radius:4px}
+  .submit small{color:var(--muted);font-size:12.5px}
+  .result{margin-top:18px;padding-top:14px;border-top:1px solid var(--line-soft)}
+  .result .mean{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+  .result .mean b{font-family:"Frank Ruhl Libre",serif;font-size:30px;font-weight:500;color:var(--text)}
+  .result .mean span{font-size:13px;color:var(--muted)}
+  .hist{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:end;height:56px}
+  .hist div{background:var(--text-2);opacity:.75;border-radius:2px 2px 0 0;position:relative}
+  .hist div::after{content:attr(data-v);position:absolute;top:-16px;inset-inline-start:0;inset-inline-end:0;text-align:center;font-size:10.5px;color:var(--muted)}
+  .histlbl{display:grid;grid-template-columns:repeat(5,1fr);font-size:11.5px;color:var(--muted);text-align:center;margin-top:4px}
+  .bar3{display:flex;height:14px;border-radius:2px;overflow:hidden;background:var(--line)}
+  .bar3 span{display:block;height:100%}
+  .chapters{margin-top:14px}
+  .chapters .ch{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--text-2)}
+  .chapters .ch b{color:var(--c);font-weight:700}
+  .chapters .ch .num{color:var(--text)}
+
+  .siblings{list-style:none;margin:0;padding:0;font-size:14.5px}
+  .siblings li{padding:8px 0;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:10px;cursor:pointer}
+  .siblings li:last-child{border-bottom:0}
+  .siblings li:hover .t{color:var(--accent)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .actions button{border:1px solid var(--line);padding:7px 12px;border-radius:4px;font-size:14px;color:var(--text-2)}
+  .actions button:hover{color:var(--text);border-color:var(--muted)}
+
+  /* gap */
+  .gapwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+  svg.gap{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);direction:ltr}
+  .gap .ax{stroke:var(--line);stroke-width:1}
+  .gap .lbl{font-family:"Assistant",sans-serif;font-size:11px;fill:var(--muted)}
+  .gap .dot{cursor:pointer} .gap .dot:hover circle{stroke:var(--text);stroke-width:2}
+  .gap .zone{fill:var(--accent-soft)}
+  .gap .zonelbl{font-family:"Frank Ruhl Libre",serif;font-size:12px;fill:var(--accent)}
+  .panel{background:var(--surface);border:1px solid var(--line)}
+  .panel h3{margin:0;padding:12px 16px;font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line-soft)}
+
+  /* method */
+  .prose{max-width:66ch;color:var(--text-2)}
+  .prose h2{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:30px;margin:22px 0 10px;color:var(--text)}
+  .prose h3{font-size:13px;letter-spacing:.06em;color:var(--accent);font-weight:700;margin:24px 0 8px}
+  .prose p{margin:0 0 12px}
+  .stages{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0}
+  .stages div{border-top:3px solid var(--c);padding:8px 8px 4px;font-size:13px;color:var(--text-2)}
+  .stages b{display:block;color:var(--text);font-size:14px}
+  .stages small{color:var(--c);font-weight:700}
+  table.qs{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0 12px}
+  table.qs td{padding:7px 8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  table.qs td:first-child{white-space:nowrap;font-weight:700;color:var(--c)}
+
+  .toast{position:fixed;bottom:20px;inset-inline-start:20px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 14px;font-size:14px;border-radius:4px;display:none;z-index:9;max-width:320px}
+
+  @media (max-width:900px){
+    header.top{flex-wrap:wrap;padding:10px 14px;gap:8px}
+    .brand .name{font-size:20px}
+    nav.main{order:3;width:100%;justify-content:space-between;border-top:1px solid var(--line-soft);padding-top:8px}
+    .signin{font-size:12.5px;padding:4px 8px}
+    .strip{grid-template-columns:repeat(2,1fr)}
+    .strip .v{font-size:26px} .strip .v small{display:block;margin:2px 0 0}
+    .matrix{grid-template-columns:1fr;gap:14px}
+    .matrix .colh{display:none}
+    .matrix .rowh{padding:0;margin-bottom:-8px}
+    .cell{min-height:0} .cell.empty{display:none}
+    .kids .row{grid-template-columns:1fr auto} .kids .row .sc{display:none}
+    .itemgrid{grid-template-columns:1fr}
+    .gapwrap{grid-template-columns:1fr}
+    .stages{grid-template-columns:repeat(3,1fr)}
+    .argcols{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){ .tile{transition:none} }
+</style>
+
+<div class="proto">אב-טיפוס · כל הכשלים, המקורות, הסיכומים והמספרים בעמוד זה הם <b>דוגמאות להמחשה בלבד</b> ואינם נתונים אמיתיים</div>
+<header class="top">
+  <div class="brand"><span class="name">השמונה באוקטובר</span><span class="tag">מה נכשל, ומה נעשה מאז</span></div>
+  <nav class="main" aria-label="ראשי">
+    <button data-nav="home" aria-current="page">הכשלים</button>
+    <button data-nav="gap">הפער</button>
+    <button data-nav="method">שיטה</button>
+  </nav>
+  <button class="signin" id="signin">כניסה · אימות טלפוני</button>
+</header>
+
+<div class="wrap">
+
+<!-- ================= HOME: matrix ================= -->
+<section class="view active" id="view-home">
+  <div class="strip">
+    <div><div class="k">ימים מאז 7.10.2023</div><div class="v num" id="days">—</div></div>
+    <div><div class="k">כשלים במעקב</div><div class="v num" id="count">—<small>ב־<span id="pcount"></span> כשלים מערכתיים</small></div></div>
+    <div><div class="k">היכן הם עומדים לפי המקורות</div><div class="stagebar" id="stagebar"></div><div class="lg" style="font-size:12px;margin-top:6px" id="stagelg"></div></div>
+    <div class="gap"><div class="k">הפער</div><div class="v num" id="gapn">—<small>כשלים שדווחו כמיושמים והציבור מדרג מתחת ל־2.5</small></div></div>
+  </div>
+  <div class="pagehead"><h2>מפת הכשלים</h2><span class="sub">מי נכשל × מתי · לחיצה על ריבוע פותחת את האירועים</span></div>
+  <div class="matrix" id="matrix"></div>
+  <div class="drawer" id="drawer" hidden></div>
+</section>
+
+<!-- ================= ITEM ================= -->
+<section class="view" id="view-item"></section>
+
+<!-- ================= GAP ================= -->
+<section class="view" id="view-gap">
+  <div class="pagehead"><h2>הפער</h2><span class="sub">מה המוסדות מדווחים, לעומת מה שהציבור מדרג</span></div>
+  <div class="gapwrap">
+    <svg class="gap" id="gapchart" viewBox="0 0 640 400" role="img" aria-label="שלב לפי המקורות מול ציון הציבור"></svg>
+    <div class="panel">
+      <h3>איך לקרוא</h3>
+      <div style="padding:14px 16px;font-size:14.5px;color:var(--text-2)">
+        <p style="margin:0 0 10px">רק כשלים שיש להם תוכנית, יישום או אימות. ימינה: שלב גבוה יותר לפי המקורות. למעלה: הציבור מדרג שהמענה טוב יותר (1–5).</p>
+        <p style="margin:0 0 10px">האזור המודגש — <b style="color:var(--accent)">דווח כמיושם, אבל הציבור מדרג נמוך</b> — הוא הסיפור.</p>
+        <p style="margin:0;color:var(--muted);font-size:13px">הציבור לא קובע את השלב. הוא מדרג את המענה שהשלב מציע.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= METHOD ================= -->
+<section class="view" id="view-method">
+  <div class="prose">
+    <h2>השיטה</h2>
+    <p>כל כשל באתר תועד על ידי מקור פומבי. כל טענה על מה שנעשה מאז נושאת קישור, תאריך וסוג מקור. בלי שלושתם — הטענה לא נכנסת. הפרויקט אינו קובע מי אשם; הוא מתעד מה דווח, ושואל את הציבור שאלה אחת מותאמת לשלב.</p>
+    <h3>שישה שלבים · כל שלב הוא אירוע שדווח, לא דעה</h3>
+    <div class="stages">
+      <div style="--c:var(--s1)"><small>1</small><b>זוהה</b>מקור אמין תיעד את הכשל</div>
+      <div style="--c:var(--s2)"><small>2</small><b>הוכר</b>המוסד האחראי הודה בו</div>
+      <div style="--c:var(--s3)"><small>3</small><b>הוכרזה תוכנית</b>החלטה, תקציב, נוהל, חוק</div>
+      <div style="--c:var(--s4)"><small>4</small><b>יושם</b>הגוף המבצע מדווח שהשינוי בתוקף</div>
+      <div style="--c:var(--s5)"><small>5</small><b>אומת עצמאית</b>גוף שאינו המבצע אישר</div>
+      <div style="--c:var(--s6)"><small>6</small><b>נסוג</b>מקור מאוחר מדווח על שחיקה</div>
+    </div>
+    <p>שלב הכשל הוא השלב הגבוה ביותר שיש לו לפחות טענה אחת ממקור. "במחלוקת" הוא דגל על טענה, לא שלב — השלב לא יורד בגלל מחלוקת.</p>
+    <h3>שאלה אחת לציבור, מותאמת לשלב</h3>
+    <table class="qs">
+      <tr style="--c:var(--s1)"><td>זוהה</td><td>עד כמה דחוף לתקן את הכשל הזה? · 1–5</td></tr>
+      <tr style="--c:var(--s2)"><td>הוכר</td><td>האם ההכרה בכשל תואמת את מה שקרה בפועל? · כן / חלקית / לא</td></tr>
+      <tr style="--c:var(--s3)"><td>תוכנית</td><td>האם התוכנית שהוכרזה נותנת מענה לבעיה? · 1–5</td></tr>
+      <tr style="--c:var(--s4)"><td>יושם</td><td>עד כמה מה שיושם בפועל נותן מענה לבעיה? · 1–5</td></tr>
+      <tr style="--c:var(--s5)"><td>אומת</td><td>אותה שאלה כמו "יושם". מסלול האימות מוצג לעיון; לא שואלים על אמון במאמת.</td></tr>
+    </table>
+    <p>כאשר כשל עובר שלב, תשובות השלב הקודם נסגרות ונשמרות כפרק. כך אפשר לראות: "את התוכנית הציבור דירג 2.1; את היישום — 3.4".</p>
+    <h3>לפני שעונים: הטיעונים</h3>
+    <p>לצד השאלה מוצגים טיעונים בעד ונגד, בשתי שורות נפרדות: מה נאמר <b>במקורות פומביים</b> (אנליסטים, ארגונים, עיתונות) ומה כתב <b>הציבור</b> בתשובות חופשיות. טיעוני הציבור מסוכמים אוטומטית לאשכולות, כל אשכול מציין מכמה תשובות הוא נבנה ומציג ציטוטים מייצגים שאושרו. אין פיד תגובות גולמי.</p>
+    <h3>סיכומים</h3>
+    <p>סיכום תוכנית או יישום נכתב בעזרת AI, מאושר על ידי העורך, וכל משפט בו מקושר למקור. הסיכום הוא נוחות; המקור הוא הסמכות.</p>
+    <h3>מפה</h3>
+    <p>למפה אין עמוד משלה. כאשר לעדויות ולמקורות של כשל יש מיקום, הן מוצגות גם על מפה בתוך עמוד הכשל — כלי ויזואלי לריכוז המקורות, לא יותר.</p>
+    <h3>מה לא יופיע כאן</h3>
+    <p>שמות של אנשים — מפקדים, פקידים, שרים. שמות של נרצחים וניצולים. פרטים גרפיים. שאלות על אמון במוסדות או בתקשורת. כל דבר שלא פורסם קודם במקור שנושא באחריות לפרסומו.</p>
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- placeholder data (clearly illustrative) ---------- */
+const STAGES=[null,{n:1,he:'זוהה',c:'var(--s1)'},{n:2,he:'הוכר',c:'var(--s2)'},{n:3,he:'הוכרזה תוכנית',c:'var(--s3)'},{n:4,he:'יושם',c:'var(--s4)'},{n:5,he:'אומת עצמאית',c:'var(--s5)'},{n:6,he:'נסוג',c:'var(--s6)'}];
+const TYPES={official:{he:'מקור רשמי',c:'var(--t-official)'},oversight:{he:'פיקוח עצמאי',c:'var(--t-oversight)'},press:{he:'עיתונות',c:'var(--t-press)'},research:{he:'מחקר',c:'var(--t-research)'},civil:{he:'חברה אזרחית',c:'var(--t-civil)'}};
+const Q={
+  1:{type:'scale',he:'עד כמה דחוף לתקן את הכשל הזה?',lo:'לא דחוף',hi:'דחוף מאוד',label:'דחיפות',sub:'לכשל עדיין אין הכרה או תוכנית. השאלה היחידה שיש טעם לשאול היא על סדר העדיפויות.'},
+  2:{type:'ypn',he:'האם ההכרה בכשל תואמת את מה שקרה בפועל?',label:'הכרה',sub:'המוסד הודה בכשל. האם ההודאה מכסה את מה שהעדויות מתארות?'},
+  3:{type:'scale',he:'האם התוכנית שהוכרזה נותנת מענה לבעיה?',lo:'לא נותנת מענה',hi:'מענה מלא',label:'מענה התוכנית',sub:'קראו את סיכום התוכנית והטיעונים, ואז דרגו.'},
+  4:{type:'scale',he:'עד כמה מה שיושם בפועל נותן מענה לבעיה?',lo:'כלל לא',hi:'מענה מלא',label:'מענה היישום',sub:'לא התוכנית — מה שקיים בשטח לפי הדיווחים.'},
+};
+Q[5]=Object.assign({},Q[4],{sub:'גוף עצמאי אימת את היישום. מסלול האימות פתוח לעיון למטה; השאלה נשארת על המענה עצמו.'});
+Q[6]=Object.assign({},Q[4],{he:'עד כמה מה שנותר מיושם נותן מענה לבעיה?',sub:'מקור מאוחר דיווח על שחיקה של התיקון.'});
+
+const ICONS={
+  radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6-6"/><path d="M12 3v2M3 12h2"/>',
+  fence:'<path d="M4 20V6l2-2 2 2v14M10 20V6l2-2 2 2v14M16 20V6l2-2 2 2v14"/><path d="M4 10h16M4 15h16"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2.5"/>',
+  link:'<path d="M9 15l6-6"/><path d="M10.5 6.5l1.5-1.5a4 4 0 0 1 5.5 5.5L16 12"/><path d="M13.5 17.5L12 19a4 4 0 0 1-5.5-5.5L8 12"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3.5 8-8 9-4.5-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  gavel:'<path d="M4 20h9"/><path d="M8 6l6 6"/><path d="M6 8l4-4 6 6-4 4z"/><path d="M13 13l6 6"/>',
+  home:'<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4M9 21h6"/>'
+};
+const DOMAINS=[{id:'mil',he:'צבא ומודיעין'},{id:'civ',he:'עורף ומערכות אזרחיות'},{id:'soc',he:'חברה ומוסדות'}];
+const PHASES=[{id:'before',he:'לפני'},{id:'during',he:'ביום עצמו'},{id:'after',he:'אחרי'}];
+const PARENTS=[
+  {id:'p1',short:'התרעה שלא פעלה',he:'התרעה שנאספה ולא תורגמה לפעולה',d:'איסוף, הערכה והעלאה של אזהרות לפני ובמהלך האירוע',dom:'mil',ph:'before',icon:'radar'},
+  {id:'p2',short:'הגנת הגדר',he:'ארכיטקטורת ההגנה על הגדר',d:'מכשול, אמצעי תצפית וירי, תלות בטכנולוגיה',dom:'mil',ph:'during',icon:'fence'},
+  {id:'p3',short:'זמן תגובה',he:'זמן תגובה ותגבור',d:'משך הזמן עד שכוח מספיק הגיע לכל יישוב',dom:'mil',ph:'during',icon:'clock'},
+  {id:'p4',short:'תיאום חירום',he:'תיאום בין גופי החירום',d:'משטרה, מד״א, כב״ה, פיקוד העורף ורשויות מקומיות',dom:'civ',ph:'during',icon:'link'},
+  {id:'p5',short:'כיתות כוננות',he:'כיתות הכוננות ביישובים',d:'חימוש, הכשרה, קשר לצבא',dom:'civ',ph:'during',icon:'shield'},
+  {id:'p6',short:'אזעקות ומידע',he:'מערכות התרעה ותקשורת לאזרח',d:'אזעקות, הודעות חירום, ערוצי מידע ביום האירוע',dom:'civ',ph:'during',icon:'bell'},
+  {id:'p7',short:'ועדות חקירה',he:'ועדות החקירה עצמן',d:'האם מנגנון הבדיקה הלאומי פועל',dom:'soc',ph:'after',icon:'gavel'},
+  {id:'p8',short:'מפונים ושיקום',he:'טיפול במפונים ושיקום היישובים',d:'דיור, חינוך, רווחה וחזרה הביתה',dom:'civ',ph:'after',icon:'home'},
+  {id:'p9',short:'התקשורת ביום',he:'תפקוד התקשורת ביום האירוע',d:'מידע מוטעה, פערי סיקור, קשר עם לכודים',dom:'soc',ph:'during',icon:'mic'}
+];
+const PLACES={
+  sderot:{he:'שדרות',lat:31.525,lon:34.596}, netiv:{he:'נתיב העשרה',lat:31.578,lon:34.548}, erez:{he:'מעבר ארז',lat:31.567,lon:34.566},
+  zikim:{he:'זיקים',lat:31.607,lon:34.523}, kfaraza:{he:'כפר עזה',lat:31.483,lon:34.535}, nahaloz:{he:'נחל עוז',lat:31.472,lon:34.497},
+  beeri:{he:'בארי',lat:31.424,lon:34.492}, reim:{he:'רעים',lat:31.385,lon:34.45}, nova:{he:'מתחם המסיבה',lat:31.372,lon:34.462},
+  kissufim:{he:'כיסופים',lat:31.374,lon:34.399}, niroz:{he:'ניר עוז',lat:31.311,lon:34.397}, holit:{he:'חולית',lat:31.239,lon:34.336},
+  kshalom:{he:'כרם שלום',lat:31.227,lon:34.285}, ofakim:{he:'אופקים',lat:31.314,lon:34.62}, netivot:{he:'נתיבות',lat:31.42,lon:34.59},
+  alumim:{he:'עלומים',lat:31.45,lon:34.51}, soroka:{he:'באר שבע',lat:31.258,lon:34.79,left:true}, road232:{he:'כביש 232',lat:31.33,lon:34.455},
+  ashkelon:{he:'אשקלון',lat:31.665,lon:34.575}, kirya:{he:'תל אביב',lat:32.07,lon:34.79}
+};
+/* claim: [stage, type, source, date, contests(idx|null), place(key|null), quote?] · stage 0 = contesting claim */
+const INCIDENTS=[
+  {id:'i01',p:'p1',he:'כשל לדוגמה: אזהרות מהשטח לא הועלו לדרג הפיקודי',sum:'טקסט דוגמה. בפרויקט האמיתי כאן יופיע תיאור קצר של הכשל כפי שתועד במקור, בלי שמות ובלי פרטים גרפיים.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'nahaloz','ציטוט קצר מהתחקיר (דוגמה)'],[1,'press','תחקיר עיתונאי (דוגמה)','2024',null,'nahaloz','עדות של חיילת שהוצבה בעמדה (דוגמה)'],[1,'press','כתבה (דוגמה)','2024',null,'kirya','דיווח על דיון במטה (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','דובר הגוף (דוגמה) — נוהל העלאה חדש','04.2025'],[4,'official','דובר הגוף (דוגמה)','11.2025'],[0,'civil','ועדת ביטחון יישובית (דוגמה)','03.2026',3,'nahaloz']],
+   op:{cur:[31,27,24,12,6],n:3214,prev:[{s:3,type:'scale',dist:[38,30,20,8,4],n:1870},{s:1,type:'scale',dist:[2,3,8,27,60],n:4100}]}},
+  {id:'i02',p:'p2',he:'כשל לדוגמה: אמצעי התצפית על הגדר נוטרלו ללא גיבוי',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'kfaraza','ציטוט (דוגמה)'],[1,'research','מכון מחקר (דוגמה)','2024',null,null,'ניתוח מערכתי (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','החלטת ממשלה (דוגמה)','07.2025']],
+   op:{cur:[29,33,25,9,4],n:2107,prev:[{s:1,type:'scale',dist:[1,2,6,25,66],n:3300}]}},
+  {id:'i03',p:'p3',he:'כשל לדוגמה: כוח מתגבר ראשון הגיע לאחר שעות',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'oversight','דוח מבקר (דוגמה)','2025',null,'beeri','ציטוט מהדוח (דוגמה)'],[1,'press','עדות תושב (דוגמה)','2023',null,'beeri','"חיכינו שעות" (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','תוכנית רב-שנתית (דוגמה)','2025'],[4,'official','דובר הגוף (דוגמה)','2026'],[5,'oversight','ועדת כנסת (דוגמה)','05.2026']],
+   op:{cur:[8,14,26,32,20],n:4820,prev:[{s:3,type:'scale',dist:[14,22,30,24,10],n:3900},{s:1,type:'scale',dist:[1,1,4,18,76],n:5200}]}},
+  {id:'i04',p:'p3',he:'כשל לדוגמה: היישוב נותר ללא כוח צבאי לאורך כל האירוע',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'niroz','ציטוט (דוגמה)'],[1,'civil','עדות ניצולים שפורסמה (דוגמה)','2024',null,'niroz','ציטוט שפורסם (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025']],
+   op:{cur:[71,19,10],type:'ypn',n:2950,prev:[{s:1,type:'scale',dist:[0,1,3,12,84],n:3800}]}},
+  {id:'i05',p:'p4',he:'כשל לדוגמה: היעדר תמונת מצב משותפת בין משטרה לצבא',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'press','תחקיר עיתונאי (דוגמה)','2024',null,'sderot','ציטוט (דוגמה)'],[1,'press','כתבה (דוגמה)','2024',null,'ofakim','ציטוט (דוגמה)'],[2,'official','הודעת המשטרה (דוגמה)','2025'],[3,'official','נוהל משותף (דוגמה)','2025'],[4,'official','הודעת המשטרה (דוגמה)','2026'],[0,'press','תחקיר עיתונאי (דוגמה)','2026',3,'sderot']],
+   op:{cur:[22,28,28,15,7],n:1780,prev:[{s:3,type:'scale',dist:[20,30,30,14,6],n:1500}]}},
+  {id:'i06',p:'p4',he:'כשל לדוגמה: קליטת נפגעים המונית ללא תיאום מקדים',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'oversight','דוח מבקר (דוגמה)','2025',null,'soroka','ציטוט (דוגמה)'],[2,'official','משרד הבריאות (דוגמה)','2025'],[3,'official','תקן חדש (דוגמה)','2025'],[4,'official','משרד הבריאות (דוגמה)','2026'],[5,'oversight','דוח מעקב מבקר (דוגמה)','2026']],
+   op:{cur:[5,9,20,36,30],n:1210,prev:[{s:3,type:'scale',dist:[8,16,30,30,16],n:900}]}},
+  {id:'i07',p:'p5',he:'כשל לדוגמה: כיתת הכוננות ללא ציוד מספיק ובלי קשר לכוח סדיר',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'civil','פורום יישובי (דוגמה)','2024',null,'alumim','ציטוט (דוגמה)'],[1,'press','כתבה (דוגמה)','2024',null,'kfaraza','ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','תוכנית חימוש והכשרה (דוגמה)','2025'],[4,'official','דובר הגוף (דוגמה)','2025']],
+   op:{cur:[10,18,30,27,15],n:2660,prev:[{s:3,type:'scale',dist:[12,20,32,26,10],n:2100}]}},
+  {id:'i08',p:'p5',he:'כשל לדוגמה: שער היישוב נותר ללא אבטחה בשעות הראשונות',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'holit','ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','תוכנית מיגון (דוגמה)','2025']],
+   op:{cur:[30,32,24,10,4],n:980,prev:[{s:1,type:'scale',dist:[1,2,7,28,62],n:1400}]}},
+  {id:'i09',p:'p2',he:'כשל לדוגמה: פריצה בנקודה שהוגדרה "מוגנת"',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'kshalom','ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','תוכנית מכשול (דוגמה)','2025'],[4,'official','דובר הגוף (דוגמה)','2026'],[6,'press','תחקיר עיתונאי (דוגמה) — חלק מהאמצעים הוסרו','07.2026',null,'kshalom']],
+   op:{cur:[44,30,16,7,3],n:1430,prev:[{s:4,type:'scale',dist:[20,26,30,16,8],n:1300},{s:3,type:'scale',dist:[18,28,32,15,7],n:1100}]}},
+  {id:'i10',p:'p3',he:'כשל לדוגמה: אין נוהל אבטחה לאירוע המוני סמוך לגדר',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'press','תחקיר עיתונאי (דוגמה)','2024',null,'nova','ציטוט (דוגמה)'],[1,'civil','ארגון משפחות (דוגמה)','2024',null,'nova','ציטוט (דוגמה)'],[2,'official','הודעת המשטרה (דוגמה)','2025'],[3,'official','נוהל רישוי חדש (דוגמה)','2025'],[4,'official','הודעת המשטרה (דוגמה)','2026']],
+   op:{cur:[14,22,32,22,10],n:5120,prev:[{s:3,type:'scale',dist:[16,26,32,18,8],n:4300}]}},
+  {id:'i11',p:'p4',he:'כשל לדוגמה: ציר מרכזי לא נחסם ולא הופץ מידע לנהגים',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'oversight','דוח מבקר (דוגמה)','2025',null,'road232','ציטוט (דוגמה)'],[1,'press','עדויות נהגים שפורסמו (דוגמה)','2023',null,'road232','ציטוט (דוגמה)'],[2,'official','הודעת המשטרה (דוגמה)','2025']],
+   op:{cur:[62,26,12],type:'ypn',n:870,prev:[{s:1,type:'scale',dist:[1,2,6,24,67],n:1200}]}},
+  {id:'i12',p:'p3',he:'כשל לדוגמה: מפקדה קדמית הותקפה ואיבדה שליטה',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,'reim','ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','שינוי פריסה (דוגמה)','2025'],[4,'official','דובר הגוף (דוגמה)','2025']],
+   op:{cur:[18,26,30,18,8],n:1990,prev:[{s:3,type:'scale',dist:[18,28,30,16,8],n:1600}]}},
+  {id:'i13',p:'p6',he:'כשל לדוגמה: הודעות החירום לתושבים הגיעו באיחור',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'oversight','דוח מבקר (דוגמה)','2025',null,'ofakim','ציטוט (דוגמה)'],[1,'press','עדות תושבת (דוגמה)','2023',null,'sderot','ציטוט (דוגמה)'],[1,'press','עדות תושב (דוגמה)','2023',null,'ashkelon','ציטוט (דוגמה)'],[2,'official','פיקוד העורף (דוגמה)','2025'],[3,'official','מערכת התרעה חדשה (דוגמה)','2025'],[4,'official','פיקוד העורף (דוגמה)','2026'],[5,'oversight','ועדת כנסת (דוגמה)','2026']],
+   op:{cur:[6,10,22,34,28],n:3390,prev:[{s:3,type:'scale',dist:[10,18,30,28,14],n:2800}]}},
+  {id:'i14',p:'p6',he:'כשל לדוגמה: קווי החירום קרסו תחת עומס',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'press','כתבה: תושבת שדרות שניסתה להתקשר (דוגמה)','10.2023',null,'sderot','"חייגתי שוב ושוב ואף אחד לא ענה" (דוגמה)'],[1,'press','כתבה: תושב נתיבות (דוגמה)','10.2023',null,'netivot','ציטוט (דוגמה)'],[1,'press','כתבה: משפחה מאופקים (דוגמה)','2023',null,'ofakim','ציטוט (דוגמה)'],[1,'oversight','דוח מבקר (דוגמה)','2025',null,null,'נתוני עומס על המוקדים (דוגמה)'],[2,'official','הודעת הגוף (דוגמה)','2025'],[3,'official','תוכנית הרחבה (דוגמה)','2025']],
+   op:{cur:[24,30,28,13,5],n:760,prev:[{s:1,type:'scale',dist:[1,2,7,26,64],n:1500}]}},
+  {id:'i15',p:'p1',he:'כשל לדוגמה: סימנים מקדימים בגזרה הצפונית לא קושרו לתמונה כוללת',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'research','מכון מחקר (דוגמה)','2024',null,'erez','ציטוט (דוגמה)'],[1,'press','כתבה (דוגמה)','2024',null,'zikim','ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025']],
+   op:{cur:[58,28,14],type:'ypn',n:2240,prev:[{s:1,type:'scale',dist:[1,1,5,22,71],n:2900}]}},
+  {id:'i16',p:'p7',he:'כשל לדוגמה: אין מנגנון בדיקה לאומי אחד עם סמכות ומועד סיום',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'research','מכון מחקר (דוגמה)','2024',null,null,'ציטוט (דוגמה)'],[1,'civil','ארגון משפחות (דוגמה)','2024',null,null,'ציטוט (דוגמה)']],
+   op:{cur:[1,2,5,14,78],n:6100,prev:[]}},
+  {id:'i17',p:'p1',he:'כשל לדוגמה: תרבות הערכה שדחתה מידע שסתר את ההנחה השלטת',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'official','תחקיר צבאי (דוגמה)','02.2025',null,null,'ציטוט (דוגמה)'],[2,'official','תחקיר צבאי (דוגמה)','02.2025'],[3,'official','שינוי מבני (דוגמה)','2025']],
+   op:{cur:[36,30,22,8,4],n:4400,prev:[{s:1,type:'scale',dist:[0,1,4,17,78],n:5000}]}},
+  {id:'i18',p:'p8',he:'כשל לדוגמה: אין גוף אחד שאחראי על המפונים מהיישוב',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'oversight','דוח מבקר (דוגמה)','2024',null,'kfaraza','ציטוט (דוגמה)'],[1,'press','כתבה על מפונים במלון (דוגמה)','2024',null,'soroka','ציטוט (דוגמה)'],[2,'official','משרד ראש הממשלה (דוגמה)','2024'],[3,'official','מנהלת שיקום (דוגמה)','2024'],[4,'official','מנהלת שיקום (דוגמה)','2025'],[5,'oversight','דוח מעקב מבקר (דוגמה)','2026']],
+   op:{cur:[7,12,26,33,22],n:2310,prev:[{s:3,type:'scale',dist:[10,20,32,26,12],n:1900}]}},
+  {id:'i19',p:'p9',he:'כשל לדוגמה: דיווחים לא מאומתים שודרו בזמן אמת',sum:'טקסט דוגמה לתיאור כשל.',
+   claims:[[1,'research','מכון מחקר (דוגמה)','2024',null,null,'ציטוט (דוגמה)'],[2,'official','גוף שידור (דוגמה)','2025']],
+   op:{cur:[40,38,22],type:'ypn',n:1500,prev:[{s:1,type:'scale',dist:[6,10,24,30,30],n:1800}]}}
+];
+/* generic argument clusters per stage (illustrative) */
+const ARGS={
+  1:{src:{pro:[['הכשל חוזר על עצמו במספר תחקירים (דוגמה)',3]],con:[['תלוי בכשלים אחרים שקודמים לו (דוגמה)',1]]},pub:{pro:[['בלי זה כל השאר לא רלוונטי (דוגמה)',412],['קרה שוב באירוע אחר (דוגמה)',96]],con:[['יש כשלים גדולים יותר לתקן קודם (דוגמה)',140]]},q:[['אני גר בעוטף ומה שהכי מפחיד אותי זה בדיוק זה. (דוגמה)','מצביע מאומת'],['חשוב, אבל לא לפני שמתקנים את ה... (דוגמה)','מצביע מאומת']]},
+  2:{src:{pro:[['ההודאה מפורשת ומפורטת (דוגמה)',2]],con:[['ההודאה מתייחסת לפרט ולא למערכת (דוגמה)',2]]},pub:{pro:[['סוף סוף מישהו אמר את זה בקול (דוגמה)',230]],con:[['הודו במה שכבר ידוע, לא במה שחשוב (דוגמה)',310]]},q:[['ההודאה עוסקת בתקלה טכנית. אנחנו דיברנו על משהו אחר. (דוגמה)','מצביע מאומת']]},
+  3:{src:{pro:[['התוכנית מתקצבת כוח אדם קבוע (דוגמה)',2],['מוגדר גוף אחראי (דוגמה)',1]],con:[['אין לוח זמנים מחייב (דוגמה)',3],['לא מטפל בשורש — התלות בטכנולוגיה (דוגמה)',2]]},pub:{pro:[['סוף סוף יש תוכנית כתובה (דוגמה)',380],['התקציב מספיק אם יבוצע (דוגמה)',120]],con:[['שמענו תוכניות דומות בעבר (דוגמה)',640],['אין מי שיוודא ביצוע (דוגמה)',290]]},q:[['התוכנית טובה על הנייר. אני אצביע 4 כשאראה אותה בשטח. (דוגמה)','מצביע מאומת'],['הבעיה לא היתה הנוהל, הבעיה היתה שלא הקשיבו. נוהל חדש לא פותר את זה. (דוגמה)','מצביע מאומת']]},
+  4:{src:{pro:[['הדיווח כולל מספרים ותאריכים (דוגמה)',2]],con:[['היישום דווח על ידי המבצע בלבד (דוגמה)',3],['היישום חלקי גיאוגרפית (דוגמה)',1]]},pub:{pro:[['רואים שינוי בשטח (דוגמה)',410],['התרגול האחרון עבד (דוגמה)',150]],con:[['אצלנו זה עדיין לא הגיע (דוגמה)',520],['יושם על הנייר בלבד (דוגמה)',330]]},q:[['אצלנו בקיבוץ הציוד הגיע, ההכשרה עוד לא. חלקית. (דוגמה)','מצביע מאומת'],['הייתי בתרגיל. עבד. 4. (דוגמה)','מצביע מאומת']]},
+};
+ARGS[5]=ARGS[4]; ARGS[6]=ARGS[4];
+
+/* ---------- computed ---------- */
+function stageOf(i){let peak=0,reg=false;for(const c of i.claims){if(c[0]===6)reg=true;else if(c[0]>peak)peak=c[0];}return reg?6:peak;}
+function contested(i){return i.claims.some(c=>c[4]!=null);}
+function qOf(i){return Q[stageOf(i)];}
+function curType(i){return i.op.type||qOf(i).type;}
+function mean(dist){const s=dist.reduce((a,b)=>a+b,0);return dist.reduce((a,v,k)=>a+v*(k+1),0)/s;}
+/* normalized 0–100 public score for current stage */
+function score(i){const d=i.op.cur;if(curType(i)==='scale')return (mean(d)-1)/4*100;const s=d.reduce((a,b)=>a+b,0);return (d[0]+d[1]*.5)/s*100;}
+function scoreLabel(i){const d=i.op.cur;if(curType(i)==='scale')return mean(d).toFixed(1)+'/5';const s=d.reduce((a,b)=>a+b,0);return Math.round(d[0]/s*100)+'% כן';}
+function parentAgg(pid){const kids=INCIDENTS.filter(i=>i.p===pid);const st=Math.round(kids.reduce((a,i)=>a+Math.min(stageOf(i),5),0)/kids.length);const sc=kids.reduce((a,i)=>a+score(i),0)/kids.length;return{kids,stage:Math.max(1,st),score:sc};}
+const $=s=>document.querySelector(s);
+const el=(t,a={},...ch)=>{const e=document.createElement(t);for(const k in a){k==='html'?e.innerHTML=a[k]:k.startsWith('on')?e.addEventListener(k.slice(2),a[k]):e.setAttribute(k,a[k]);}ch.flat().forEach(c=>c!=null&&e.append(c));return e;};
+const icon=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`;
+const scoreBar=(v,h)=>`<div class="score" style="${h?'height:'+h+'px':''}"><span style="width:${v}%"></span></div>`;
+const stageMini=kids=>{const cnt=[0,0,0,0,0,0,0];kids.forEach(i=>cnt[stageOf(i)]++);return `<div class="score" title="חלוקת האירועים לפי שלב">${[1,2,3,4,5,6].filter(s=>cnt[s]).map(s=>`<span style="width:${cnt[s]/kids.length*100}%;background:${STAGES[s].c}"></span>`).join('')}</div>`;};
+
+/* ---------- routing ---------- */
+function show(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('nav.main button').forEach(b=>{if(b.dataset.nav===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});window.scrollTo({top:0});}
+document.querySelectorAll('nav.main button').forEach(b=>b.addEventListener('click',()=>{location.hash='#/'+b.dataset.nav;}));
+function route(){const h=location.hash.replace(/^#\/?/,'')||'home';const [v,id]=h.split('/');
+  if(v==='item'&&id){renderItem(id);show('item');}
+  else if(v==='parent'&&id){const already=$('#view-home').classList.contains('active');show('home');openParent(id,already);}
+  else if(['home','gap','method'].includes(v))show(v); else show('home');}
+window.addEventListener('hashchange',route);
+
+/* ---------- strip ---------- */
+(function strip(){
+  const d0=new Date('2023-10-07T06:29:00+03:00');$('#days').textContent=Math.floor((Date.now()-d0)/864e5).toLocaleString('he-IL');
+  $('#count').firstChild.textContent=INCIDENTS.length;$('#pcount').textContent=PARENTS.length;
+  const cnt=[0,0,0,0,0,0,0];INCIDENTS.forEach(i=>cnt[stageOf(i)]++);
+  $('#stagebar').innerHTML=[1,2,3,4,5,6].map(s=>`<span style="width:${cnt[s]/INCIDENTS.length*100}%;background:${STAGES[s].c}"></span>`).join('');
+  $('#stagelg').innerHTML=[1,2,3,4,5,6].filter(s=>cnt[s]).map(s=>`<span><i style="background:${STAGES[s].c}"></i>${STAGES[s].he} ${cnt[s]}</span>`).join('');
+  const gap=INCIDENTS.filter(i=>stageOf(i)>=4&&curType(i)==='scale'&&mean(i.op.cur)<2.5).length;
+  $('#gapn').firstChild.textContent=gap;
+})();
+
+/* ---------- matrix ---------- */
+function openParent(pid,scroll){
+  const p=PARENTS.find(x=>x.id===pid);if(!p)return;const a=parentAgg(pid),S=STAGES[a.stage];
+  document.querySelectorAll('.tile').forEach(t=>t.classList.toggle('on',t.dataset.id===pid));
+  const d=$('#drawer');d.hidden=false;d.style.setProperty('--c',S.c);d.innerHTML='';
+  d.append(el('div',{class:'dh'},el('div',{html:icon(p.icon)}),
+      el('div',{},el('div',{class:'t'},p.he),el('div',{class:'d'},`${p.d} · ${a.kids.length} אירועים · שלב ממוצע ${a.stage} · ${S.he}`)),
+      el('button',{class:'close','aria-label':'סגירה',onclick:()=>{d.hidden=true;document.querySelectorAll('.tile').forEach(t=>t.classList.remove('on'));}},'×')),
+    el('div',{class:'kids'},...a.kids.map(i=>{const st=stageOf(i);const places=[...new Set(i.claims.filter(c=>c[5]).map(c=>PLACES[c[5]].he))];
+      return el('div',{class:'row',onclick:()=>{location.hash='#/item/'+i.id;}},
+        el('div',{},el('span',{},i.he),el('span',{class:'pl'},places.length?places.slice(0,3).join(', ')+(places.length>3?' +'+(places.length-3):''):'ארצי')),
+        el('span',{class:'chip',style:`--c:${STAGES[st].c}`},`${st} · ${STAGES[st].he}${contested(i)?' · במחלוקת':''}`),
+        el('div',{class:'sc',html:scoreBar(score(i))+`<span>${qOf(i).label} · ${scoreLabel(i)}</span>`}));})));
+  if(scroll)d.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+(function matrix(){
+  const m=$('#matrix');m.append(el('div',{}));DOMAINS.forEach(dm=>m.append(el('div',{class:'colh'},dm.he)));
+  PHASES.forEach(ph=>{m.append(el('div',{class:'rowh'},ph.he));
+    DOMAINS.forEach(dm=>{const ps=PARENTS.filter(p=>p.dom===dm.id&&p.ph===ph.id);
+      if(!ps.length){m.append(el('div',{class:'cell empty'},'·'));return;}
+      const cell=el('div',{class:'cell'});
+      ps.forEach(p=>{const a=parentAgg(p.id),S=STAGES[a.stage];
+        cell.append(el('button',{class:'tile','data-id':p.id,style:`--c:${S.c}`,onclick:()=>{if(location.hash==='#/parent/'+p.id)openParent(p.id,true);else location.hash='#/parent/'+p.id;}},
+          el('span',{class:'n'},`${a.kids.length}`),el('div',{html:icon(p.icon)}),el('div',{class:'lab'},p.short),
+          el('div',{class:'foot',html:stageMini(a.kids)+`<div class="st"><b>${S.he}</b><span class="num">${a.kids.filter(i=>stageOf(i)>=4&&stageOf(i)<6).length} מ־${a.kids.length} יושמו</span></div>`})));});
+      m.append(cell);});});
+})();
+
+/* ---------- gap chart ---------- */
+(function gap(){
+  const svg=$('#gapchart');const W=640,H=400,L=40,R=20,T=24,B=48;const X=s=>L+(s-2.5)/3*(W-L-R),Y=v=>T+(5-v)/4*(H-T-B);
+  let s='';s+=`<rect class="zone" x="${X(3.5)}" y="${Y(2.5)}" width="${X(5.5)-X(3.5)}" height="${Y(1)-Y(2.5)}"/>`;
+  s+=`<text class="zonelbl" x="${X(4.5)}" y="${Y(1.15)}" text-anchor="middle">דווח כמיושם, מדורג נמוך</text>`;
+  for(let v=1;v<=5;v++){s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="lbl" x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;}
+  for(let st=3;st<=5;st++){s+=`<text class="lbl" x="${X(st)}" y="${H-B+18}" text-anchor="middle">${st}</text><text class="lbl" x="${X(st)}" y="${H-B+32}" text-anchor="middle">${STAGES[st].he}</text>`;}
+  s+=`<text class="lbl" x="${L}" y="${T-10}" text-anchor="start">↑ ציון הציבור למענה (1–5)</text>`;
+  s+=`<text class="lbl" x="${W-R}" y="${H-B+32}" text-anchor="end">שלב לפי המקורות →</text>`;svg.innerHTML=s;
+  INCIDENTS.filter(i=>stageOf(i)>=3&&curType(i)==='scale').forEach((i,k)=>{const st=Math.min(stageOf(i),5),m=mean(i.op.cur),jit=((k*37)%11-5)*4;
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','dot');g.setAttribute('tabindex','0');
+    g.innerHTML=`<circle cx="${X(st)+jit}" cy="${Y(m)}" r="${5+Math.log10(i.op.n)*1.5}" fill="${STAGES[stageOf(i)].c}" fill-opacity=".85" stroke="var(--bg)"/><title>${i.he} · ${m.toFixed(1)}/5 · ${i.op.n.toLocaleString('he-IL')} מאומתים</title>`;
+    g.addEventListener('click',()=>{location.hash='#/item/'+i.id;});svg.appendChild(g);});
+})();
+
+/* ---------- evidence map (inside an item) ---------- */
+function drawMap(svg,pins){
+  const W=640,H=420;const lons=pins.map(p=>PLACES[p.place].lon),lats=pins.map(p=>PLACES[p.place].lat);
+  // frame: envelope by default; widen if evidence lies outside
+  let lon0=34.18,lon1=34.86,lat0=31.66,lat1=31.17;
+  const pad=.06;lon0=Math.min(lon0,...lons.map(v=>v-pad));lon1=Math.max(lon1,...lons.map(v=>v+pad));lat0=Math.max(lat0,...lats.map(v=>v+pad));lat1=Math.min(lat1,...lats.map(v=>v-pad));
+  // keep aspect
+  const kx=(lon1-lon0)*Math.cos(31.4*Math.PI/180),ky=lat0-lat1;const asp=W/H;
+  if(kx/ky>asp){const need=kx/asp;const c=(lat0+lat1)/2;lat0=c+need/2;lat1=c-need/2;}else{const need=ky*asp/Math.cos(31.4*Math.PI/180);const c=(lon0+lon1)/2;lon0=c-need/2;lon1=c+need/2;}
+  const X=lon=>(lon-lon0)/(lon1-lon0)*W,Y=lat=>(lat0-lat)/(lat0-lat1)*H;
+  const P=pts=>pts.map(([la,lo],i)=>(i?'L':'M')+X(lo).toFixed(1)+' '+Y(la).toFixed(1)).join(' ')+' Z';
+  const coast=[[32.6,34.85],[32.2,34.80],[31.9,34.70],[31.66,34.56],[31.62,34.52],[31.60,34.50],[31.56,34.48],[31.50,34.42],[31.42,34.33],[31.34,34.27],[31.30,34.23],[31.25,34.18],[31.0,34.0]];
+  const gaza=[[31.60,34.50],[31.59,34.53],[31.555,34.545],[31.50,34.50],[31.47,34.478],[31.42,34.45],[31.37,34.385],[31.31,34.37],[31.26,34.33],[31.22,34.28],[31.30,34.23],[31.34,34.27],[31.42,34.33],[31.50,34.42],[31.56,34.48],[31.60,34.50]];
+  let s=`<path d="${P([[33,33.5],...coast,[30.5,33.5]])}" fill="var(--sea)"/>`;
+  s+=`<path d="${P(gaza)}" fill="var(--gaza)" stroke="var(--line)" stroke-width="1"/>`;
+  s+=`<text class="maplabel" x="${X(34.36)}" y="${Y(31.42)}" text-anchor="middle">רצועת עזה</text>`;
+  const shown=new Set(pins.map(p=>p.place));
+  for(const k in PLACES){if(!shown.has(k)){const p=PLACES[k];const x=X(p.lon),y=Y(p.lat);if(x<0||x>W||y<0||y>H)continue;s+=`<circle cx="${x}" cy="${y}" r="1.8" fill="var(--muted)"/><text class="placelabel" x="${x+4}" y="${y+3}">${p.he}</text>`;}}
+  svg.innerHTML=s;
+  // group pins by place
+  const by={};pins.forEach(p=>{(by[p.place]=by[p.place]||[]).push(p);});
+  Object.entries(by).forEach(([k,arr])=>{const p=PLACES[k],x=X(p.lon),y=Y(p.lat);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','pin');
+    let inner='';arr.forEach((c,idx)=>{const ang=idx/arr.length*Math.PI*2,r=arr.length>1?6:0;inner+=`<circle class="core" cx="${x+Math.cos(ang)*r}" cy="${y+Math.sin(ang)*r}" r="6" fill="${TYPES[c.type].c}"><title>${c.src}</title></circle>`;});
+    inner+=`<text x="${p.left?x-12:x+12}" y="${y+4}" text-anchor="${p.left?'end':'start'}">${p.he}${arr.length>1?' · '+arr.length:''}</text>`;g.innerHTML=inner;svg.appendChild(g);});
+}
+
+/* ---------- item ---------- */
+let myAns={},myText={};
+function hist(dist){const mx=Math.max(...dist);return `<div class="hist">${dist.map(v=>`<div style="height:${Math.max(4,v/mx*100)}%" data-v="${v}%"></div>`).join('')}</div><div class="histlbl">${[1,2,3,4,5].map(n=>`<span>${n}</span>`).join('')}</div>`;}
+function bar3(d){const s=d.reduce((a,b)=>a+b,0);const p=d.map(v=>Math.round(v/s*100));return `<div class="bar3"><span style="width:${p[0]}%;background:var(--pro)"></span><span style="width:${p[1]}%;background:var(--s4)"></span><span style="width:${p[2]}%;background:var(--con)"></span></div><div class="lg num"><span><i style="background:var(--pro)"></i>כן ${p[0]}%</span><span><i style="background:var(--s4)"></i>חלקית ${p[1]}%</span><span><i style="background:var(--con)"></i>לא ${p[2]}%</span></div>`;}
+function clusterCol(list,c,title){const col=el('div',{class:'argcol',style:`--c:${c}`});col.append(el('div',{class:'h'},title));list.forEach(([t,n])=>col.append(el('button',{class:'cl',onclick:e=>{e.currentTarget.classList.toggle('open');toast('בפרויקט האמיתי: פתיחת הציטוטים והמקורות שמהם נבנה האשכול');}},t,el('small',{},typeof n==='number'&&n>20?`סוכם מ־${n} תשובות`:`${n} מקורות`))));return col;}
+function renderItem(id){
+  const i=INCIDENTS.find(x=>x.id===id);if(!i)return;const p=PARENTS.find(x=>x.id===i.p),st=stageOf(i),S=STAGES[st],q=qOf(i),type=curType(i);
+  const ev=i.claims.filter(c=>c[0]===1);const pins=i.claims.filter(c=>c[5]).map(c=>({place:c[5],type:c[1],src:c[2]}));
+  const sib=INCIDENTS.filter(x=>x.p===i.p&&x.id!==i.id);const A=ARGS[st];
+  const v=$('#view-item');v.innerHTML='';
+  const places=[...new Set(pins.map(x=>PLACES[x.place].he))];
+  /* ---- factual column ---- */
+  const fact=el('div',{class:'col'});
+  fact.append(el('div',{class:'lane f'},'עובדות · מה דווח'));
+  // what failed + evidence + map
+  const wf=el('div',{class:'card fact'});
+  wf.append(el('h4',{},el('span',{},'מה נכשל'),el('span',{class:'side'},`${ev.length} מקורות חושפים`)),el('p',{class:'summary'},i.sum));
+  wf.append(el('ul',{class:'ev'},...ev.map(c=>el('li',{style:`--c:${TYPES[c[1]].c}`},el('span',{class:'dot'}),
+    el('div',{class:'src',html:`${c[2]}${c[6]?`<q>${c[6]}</q>`:''}<small>${TYPES[c[1]].he} · <a href="#" onclick="return false">קישור למקור (דוגמה)</a> · <a href="#" onclick="return false">ארכיון</a></small>`}),
+    el('span',{class:'pl'},c[5]?PLACES[c[5]].he:'')))));
+  if(pins.length){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','map');svg.setAttribute('viewBox','0 0 640 420');svg.setAttribute('role','img');svg.setAttribute('aria-label','מיקומי המקורות');
+    const wrap=el('div',{class:'evmap'});wrap.append(svg);wf.append(wrap);drawMap(svg,pins);
+    wf.append(el('div',{class:'maplg',html:`<span style="color:var(--text-2)">המקורות על המפה ·</span>`+Object.entries(TYPES).filter(([k])=>pins.some(p=>p.type===k)).map(([k,t])=>`<span><i style="background:${t.c}"></i>${t.he}</span>`).join('')}));}
+  fact.append(wf);
+  // stage card
+  const sc=el('div',{class:'card fact',style:`--c:${S.c}`});
+  sc.append(el('h4',{},el('span',{},'איפה זה עומד · לפי המקורות'),el('span',{class:'side'},'מחושב, לא נקבע')),
+    el('div',{class:'stagerow',html:`<span class="big">${st}</span><span style="font-weight:700;color:${S.c}">${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--s6)">במחלוקת</span>`:''}`}),
+    el('div',{class:'ladder',html:[1,2,3,4,5,6].map(k=>`<span class="${(st===6?k===6:k<=st)?'on':''}" style="${(st===6&&k===6)?'--c:var(--s6)':''}"></span>`).join('')}));
+  if(st===2){sc.append(el('div',{class:'aisum',html:`<div class="lbl"><span>ההכרה בכשל</span><span>ציטוט מהמקור</span></div><p>"ציטוט ההודאה של המוסד, כפי שפורסם (דוגמה)."<sup><a href="#" onclick="return false">[1]</a></sup></p>`}));}
+  if(st===3){sc.append(el('div',{class:'aisum',html:`<div class="lbl"><span>התוכנית שהוכרזה · סיכום</span><span>נכתב בעזרת AI · אושר על ידי העורך · כל משפט מקושר</span></div><p>התוכנית מגדירה גוף אחראי ותקציב רב-שנתי (דוגמה).<sup><a href="#" onclick="return false">[1]</a></sup></p><p>היא קובעת נוהל חדש שייכנס לתוקף בתוך שנה (דוגמה).<sup><a href="#" onclick="return false">[1]</a></sup></p><p>לא נקבע מנגנון בקרה חיצוני (דוגמה).<sup><a href="#" onclick="return false">[2]</a></sup></p>`}));}
+  if(st>=4){sc.append(el('div',{class:'aisum',html:`<div class="lbl"><span>מה יושם בפועל · סיכום</span><span>נכתב בעזרת AI · אושר על ידי העורך · כל משפט מקושר</span></div><p>הגוף המבצע מדווח שהשינוי בתוקף מאז ${i.claims.find(c=>c[0]===4)?.[3]||'—'} (דוגמה).<sup><a href="#" onclick="return false">[1]</a></sup></p><p>הדיווח כולל היקף, לוח זמנים ומספרים (דוגמה).<sup><a href="#" onclick="return false">[1]</a></sup></p>${st===6?`<p style="color:var(--s6)">מקור מאוחר מדווח שחלק מהאמצעים הוסרו (דוגמה).<sup><a href="#" onclick="return false">[3]</a></sup></p>`:''}`}));
+    if(st===5){const tr=el('details',{class:'trace'});tr.append(el('summary',{},'מסלול האימות העצמאי'),el('div',{class:'in'},el('ul',{class:'ledger'},...i.claims.filter(c=>c[0]===5).map(c=>el('li',{style:`--c:var(--s5)`},el('span',{class:'st'},'אומת'),el('div',{class:'src',html:`${c[2]}<small>${TYPES[c[1]].he} · <a href="#" onclick="return false">קישור למקור (דוגמה)</a></small>`}),el('span',{class:'dt num'},c[3]))))));sc.append(tr);}}
+  // full ledger
+  const led=el('details',{class:'trace',style:'--c:var(--muted)'});led.querySelector;led.append(el('summary',{style:'color:var(--text-2)'},`כל הטענות במקורות · ${i.claims.length}`),el('div',{class:'in'},el('ul',{class:'ledger'},...i.claims.map(c=>{const isC=c[0]===0;const stg=isC?null:STAGES[c[0]];
+    return el('li',{class:isC?'contest':'',style:`--c:${isC?'var(--s6)':stg.c}`},el('span',{class:'st'},isC?'חולק על':stg.he),el('div',{class:'src',html:`${c[2]}${isC?` <span style="color:var(--muted)">← על הטענה "${STAGES[c[4]].he}"</span>`:''}<small>${TYPES[c[1]].he}${c[5]?' · '+PLACES[c[5]].he:''} · <a href="#" onclick="return false">קישור למקור (דוגמה)</a></small>`}),el('span',{class:'dt num'},c[3]));}))));
+  sc.append(led);fact.append(sc);
+  fact.append(el('div',{class:'card'},el('h4',{},el('span',{},`עוד ב"${p.he}"`)),el('ul',{class:'siblings'},...sib.map(x=>{const s2=stageOf(x);return el('li',{onclick:()=>{location.hash='#/item/'+x.id;}},el('span',{class:'t'},x.he),el('span',{class:'chip',style:`--c:${STAGES[s2].c}`},`${s2} · ${STAGES[s2].he}`));}))));
+
+  /* ---- opinion column ---- */
+  const op=el('div',{class:'col'});
+  op.append(el('div',{class:'lane o'},'דעות · מה הציבור חושב'));
+  const oc=el('div',{class:'card opinion'});
+  oc.append(el('h4',{},el('span',{},`השאלה לשלב "${S.he}"`),el('span',{class:'side'},`${i.op.n.toLocaleString('he-IL')} מאומתים`)),el('p',{class:'q'},q.he),el('p',{class:'qsub'},q.sub));
+  // arguments
+  const args=el('div',{class:'args'});
+  const r1=el('div',{class:'argrow'});r1.append(el('div',{class:'who',html:`<span>מה נאמר במקורות פומביים</span><span>אנליסטים · ארגונים · עיתונות</span>`}),el('div',{class:'argcols'},clusterCol(A.src.pro,'var(--pro)','בעד'),clusterCol(A.src.con,'var(--con)','נגד')));
+  const r2=el('div',{class:'argrow'});const pubcols=el('div',{class:'argcols'},clusterCol(A.pub.pro,'var(--pro)','בעד'),clusterCol(A.pub.con,'var(--con)','נגד'));
+  pubcols.append(el('div',{class:'quotes',html:`<small>ציטוטים מייצגים שאושרו · </small>`+A.q.map(([t,w])=>`<q>${t} <small>— ${w}</small></q>`).join('')}));
+  r2.append(el('div',{class:'who',html:`<span>מה כתב הציבור</span><span>מסוכם אוטומטית לאשכולות · בלי פיד גולמי</span>`}),pubcols);
+  args.append(r1,r2);oc.append(args);
+  // answer control
+  const ans=el('div',{});
+  if(type==='scale'){ans.append(el('div',{class:'scale'},...[1,2,3,4,5].map(n=>el('button',{'aria-pressed':String(myAns[id]===n),onclick:()=>{myAns[id]=n;renderItem(id);}},String(n)))),el('div',{class:'scalelbl'},el('span',{},q.lo),el('span',{},q.hi)));}
+  else{ans.append(el('div',{class:'ypn'},...[['כן','var(--pro)',0],['חלקית','var(--s4)',1],['לא','var(--con)',2]].map(([t,c,k])=>el('button',{style:`--c:${c}`,'aria-pressed':String(myAns[id]===k),onclick:()=>{myAns[id]=k;renderItem(id);}},t))));}
+  const ta=el('textarea',{class:'free',placeholder:'למה? (לא חובה) התשובה תסוכם לאשכול. לא מפרסמים שמות.'});ta.value=myText[id]||'';ta.addEventListener('input',e=>myText[id]=e.target.value);
+  ans.append(ta,el('div',{class:'submit'},el('button',{onclick:()=>toast(myAns[id]==null?'בחרו תשובה קודם':'התשובה נרשמה (דוגמה) · אפשר לשנות אותה בכל עת · הטקסט נכנס לתור סיכום')},'שליחה'),el('small',{},'נספרים רק מצביעים מאומתים בטלפון · המספר נשמר כגיבוב בלבד')));
+  oc.append(ans);
+  // results
+  const res=el('div',{class:'result'});
+  if(type==='scale'){res.append(el('div',{class:'mean',html:`<b class="num">${mean(i.op.cur).toFixed(1)}</b><span>ממוצע מתוך 5 · ${q.label}</span>`}),el('div',{html:hist(i.op.cur)}));}
+  else{res.append(el('div',{html:bar3(i.op.cur)}));}
+  if(i.op.prev.length){const ch=el('div',{class:'chapters'});ch.append(el('div',{style:'font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px'},'פרקים קודמים · השאלה של כל שלב שהכשל עבר'));
+    i.op.prev.forEach(pv=>{const PS=STAGES[pv.s],pq=Q[pv.s];const val=pv.type==='scale'?mean(pv.dist).toFixed(1)+'/5':Math.round(pv.dist[0]/pv.dist.reduce((a,b)=>a+b,0)*100)+'% כן';
+      ch.append(el('div',{class:'ch',style:`--c:${PS.c}`},el('b',{},PS.he),el('span',{},pq.he),el('span',{class:'num'},`${val} · ${pv.n.toLocaleString('he-IL')}`)));});res.append(ch);}
+  oc.append(res);op.append(oc);
+  op.append(el('div',{class:'card'},el('h4',{},el('span',{},'פעולות')),el('div',{class:'actions'},el('button',{onclick:()=>toast('בפרויקט האמיתי: טופס הגשת מקור → תור בדיקה')},'הגשת מקור או תיקון'),el('button',{onclick:()=>toast('בפרויקט האמיתי: כרטיס שיתוף עם השלב והציון')},'שיתוף'),el('button',{onclick:()=>{location.hash='#/method';}},'איך מחושב השלב?'))));
+
+  v.append(el('div',{class:'crumb',html:`<a href="#/home">הכשלים</a> › <a href="#/parent/${p.id}">${p.he}</a>`}),el('h1',{class:'item'},i.he),
+    el('div',{class:'itemmeta',html:`<span class="chip fill" style="--c:${S.c}">${st} · ${S.he}</span>${contested(i)?`<span class="chip" style="--c:var(--s6)">במחלוקת</span>`:''}<span>${places.length?places.join(' · '):'ארצי · ללא מיקום'}</span><span>·</span><span class="num">${i.claims.length} טענות במקורות</span>`}),
+    el('div',{class:'itemgrid'},fact,op));
+}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',3000);}
+$('#signin').addEventListener('click',()=>toast('בפרויקט האמיתי: כניסה עם Google/Apple ואימות בקוד לטלפון ישראלי'));
+route();
+</script>
+</body></html>

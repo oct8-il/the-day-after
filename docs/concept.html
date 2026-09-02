@@ -1,0 +1,507 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>השמונה באוקטובר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#6f7986; --s2:#7fa1c4; --s3:#9d8fd6; --s4:#d9a54f; --s5:#6fbf8a; --s6:#d96a5f;
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    --shadow:0 1px 0 rgba(255,255,255,.03) inset;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#8a939e; --s2:#4d7fb0; --s3:#7a63c2; --s4:#b97a1c; --s5:#2f8f5b; --s6:#c4483c;
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .display{font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .frame{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:64px 0 40px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:10px 0 6px;text-wrap:balance}
+  h1 .he{direction:rtl;unicode-bidi:isolate}
+  .subtitle{font-size:20px;color:var(--text-2);max-width:60ch;margin:0;text-wrap:balance}
+  .meta{display:grid;grid-auto-flow:row;gap:6px;text-align:right;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .meta b{color:var(--text-2);font-weight:600}
+
+  .layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;margin-top:48px}
+  nav.toc{position:sticky;top:24px;align-self:start;font-size:14px}
+  nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  nav.toc a{color:var(--muted);border:0;display:block;padding:2px 0 2px 12px;border-left:2px solid var(--line-soft)}
+  nav.toc a:hover{color:var(--text);border-left-color:var(--accent)}
+  nav.toc .toc-h{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:600}
+
+  main{min-width:0}
+  section{padding:40px 0;border-bottom:1px solid var(--line-soft)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:32px;line-height:1.15;margin:0 0 6px;text-wrap:balance}
+  .lede{color:var(--text-2);font-size:18px;margin:0 0 24px;max-width:66ch}
+  h3{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:32px 0 10px}
+  p{max-width:68ch;margin:0 0 14px}
+  ul,ol{max-width:68ch;margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:6px}
+  li::marker{color:var(--muted)}
+  strong{color:var(--text);font-weight:600}
+  em{font-style:italic}
+  .he{direction:rtl;unicode-bidi:isolate;font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;color:var(--text)}
+
+  .rule{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;max-width:68ch;padding:14px 0;border-top:1px solid var(--line-soft)}
+  .rule:last-child{border-bottom:1px solid var(--line-soft)}
+  .rule .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:3px;margin-top:4px;white-space:nowrap}
+  .rule p{margin:0}
+
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:900px}
+  .panel{background:var(--surface);border:1px solid var(--line);padding:20px 22px;box-shadow:var(--shadow)}
+  .panel h4{margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .panel p,.panel ul{font-size:15.5px;margin-bottom:8px}
+  .panel ul{padding-left:18px}
+  .panel.out h4{color:var(--s6)}
+  .panel.in h4{color:var(--s5)}
+
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  .tablewrap{overflow-x:auto;max-width:900px;margin:8px 0 16px}
+  th{text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--text-2)}
+  td:first-child{color:var(--text);font-weight:600}
+  tr:last-child td{border-bottom:0}
+
+  /* lifecycle */
+  .stages{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;max-width:900px;margin:12px 0 20px;counter-reset:st}
+  .stage{position:relative;padding:14px 12px 14px 14px;border-top:3px solid var(--st);background:var(--surface);border-right:1px solid var(--line-soft)}
+  .stage:last-child{border-right:0}
+  .stage .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--st);font-weight:500}
+  .stage .name{font-weight:700;font-size:14px;margin:2px 0 2px;color:var(--text);overflow-wrap:anywhere;line-height:1.25}
+  .stage .hname{direction:rtl;font-family:"Frank Ruhl Libre",serif;color:var(--text-2);font-size:14px;margin-bottom:6px}
+  .stage .what{font-size:13.5px;color:var(--text-2);line-height:1.45}
+  .stage.regress{background:transparent;border-top-style:dashed}
+
+  /* tree diagram */
+  .tree{max-width:900px;background:var(--surface);border:1px solid var(--line);padding:22px 24px;font-size:15px}
+  .node{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:8px 0}
+  .node .dot{width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--accent)}
+  .node.child{margin-left:28px;border-left:1px solid var(--line);padding-left:16px}
+  .node.child .dot{background:var(--s2)}
+  .node.claim{margin-left:56px;border-left:1px solid var(--line-soft);padding-left:16px}
+  .node.claim .dot{width:8px;height:8px;background:var(--muted);margin-top:9px}
+  .node .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block}
+  .node .t{color:var(--text)}
+  .node .d{color:var(--text-2);font-size:14px}
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:3px;border:1px solid var(--c);color:var(--c);vertical-align:middle;margin-left:6px}
+
+  /* item mock */
+  .item{max-width:900px;background:var(--surface);border:1px solid var(--line);padding:22px 24px;direction:rtl;text-align:right}
+  .item .crumb{font-size:13px;color:var(--muted)}
+  .item h5{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:24px;margin:6px 0 12px;color:var(--text)}
+  .item .row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px}
+  .item .box{background:var(--surface-2);padding:14px 16px}
+  .item .box .k{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .bar{display:flex;height:12px;overflow:hidden;border-radius:2px;background:var(--line)}
+  .bar span{display:block;height:100%}
+  .legend{display:flex;gap:16px;font-size:13px;color:var(--text-2);margin-top:8px;font-variant-numeric:tabular-nums}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-inline-end:6px;vertical-align:middle}
+  .ledger{list-style:none;padding:0;margin:0;font-size:14px}
+  .ledger li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-soft);color:var(--text-2)}
+  .ledger li:last-child{border-bottom:0}
+  .ledger .st{font-weight:700;color:var(--c)}
+  .ledger .dt{color:var(--muted);font-variant-numeric:tabular-nums}
+
+  pre{background:var(--surface);border:1px solid var(--line);padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.5;max-width:900px;color:var(--text-2);margin:8px 0 18px}
+  pre .c{color:var(--muted)}
+  pre .k{color:var(--accent)}
+
+  .weeks{display:grid;grid-template-columns:120px 1fr;max-width:900px;border-top:1px solid var(--line)}
+  .weeks>div{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .weeks .w{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .weeks .w small{display:block;color:var(--muted);font-family:"Assistant",sans-serif;font-size:13px}
+  .weeks .goal{font-weight:700;color:var(--text);margin-bottom:4px}
+  .weeks p{font-size:15px;margin:0;color:var(--text-2)}
+
+  .risk td:nth-child(2){color:var(--text-2)}
+  .sev{font-size:11px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;background:var(--c);color:var(--accent-ink);white-space:nowrap}
+  .callout{border-left:3px solid var(--accent);padding:12px 18px;background:var(--accent-soft);max-width:68ch;margin:18px 0}
+  .callout p{margin:0}
+  .oq li{margin-bottom:10px}
+  .oq b{color:var(--text)}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:24px}
+    nav.toc{position:static}
+    nav.toc ol{grid-template-columns:repeat(2,1fr)}
+    header.masthead{grid-template-columns:1fr}
+    .meta{text-align:left}
+    .grid2{grid-template-columns:1fr}
+    .stages{grid-template-columns:repeat(2,1fr)}
+    .stage{border-right:0;border-bottom:1px solid var(--line-soft)}
+    .item .row{grid-template-columns:1fr}
+    .weeks{grid-template-columns:1fr}
+    .weeks .w{padding-bottom:0}
+  }
+  @media (prefers-reduced-motion:no-preference){ a{transition:border-color .15s} }
+</style>
+
+<div class="frame">
+<header class="masthead">
+  <div>
+    <div class="kicker">Concept &amp; product document · v0.2</div>
+    <h1><span class="he">השמונה באוקטובר</span></h1>
+    <p class="subtitle">A civilian ledger of what failed on October 7, 2023 — and, item by item, what has been done about it since.</p>
+  </div>
+  <div class="meta">
+    <div><b>Decided</b> 1–2 September 2026</div>
+    <div><b>Owner</b> Roy</div>
+    <div><b>Target</b> MVP live 7 October 2026 (36 days)</div>
+    <div><b>Status</b> Interview complete · prototype next</div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol>
+    <li><a href="#thesis">Thesis</a></li>
+    <li><a href="#purpose">Purpose, audience, stance</a></li>
+    <li><a href="#scope">Scope</a></li>
+    <li><a href="#model">Data model</a></li>
+    <li><a href="#lifecycle">Evidence lifecycle</a></li>
+    <li><a href="#confidence">Public opinion</a></li>
+    <li><a href="#editorial">Editorial policy</a></li>
+    <li><a href="#product">Product</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#legal">Legal &amp; risk</a></li>
+    <li><a href="#mvp">MVP &amp; plan</a></li>
+    <li><a href="#open">Open questions</a></li>
+    <li><a href="#log">Decision log</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="thesis">
+  <h2>Thesis</h2>
+  <p class="lede">Israel has produced an unusual volume of documentation about the failures of October 7 — IDF probes, State Comptroller audits, Knesset hearings, a civil commission, years of investigative journalism. What does not exist is a single place where a citizen can see, for each documented failure, what has actually changed since — and say whether they believe it.</p>
+  <p><span class="he">השמונה באוקטובר</span> is that place. It is a structured, sourced, continuously updated ledger. Every entry is a failure someone credible documented; attached to it is every subsequent claim of acknowledgement, planning, implementation or independent verification — each with a link, a date and a source type. Beside the evidence sits a second, deliberately separate signal: how many verified Israelis believe the failure has been fixed.</p>
+  <p>The project takes no position on blame. It takes one position on facts: a claim without a public source does not exist here.</p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="panel in"><h4>It is</h4><ul><li>A ledger of documented failures and documented follow-up.</li><li>A collection of the sources and testimonies that expose each failure — drawn on a map where they have a place.</li><li>One public question per failure, matched to its stage, kept separate from the evidence.</li><li>A public methodology with a visible corrections log.</li></ul></div>
+    <div class="panel out"><h4>It is not</h4><ul><li>A verdict on who is responsible.</li><li>A memorial, an archive of testimony, or a news site.</li><li>A place where votes decide what is true.</li><li>A poll about trust in institutions or the media — polarising questions are out of scope by design.</li><li>A publisher of anything that has not already cleared publication elsewhere.</li></ul></div>
+  </div>
+</section>
+
+<section id="purpose">
+  <h2>Purpose, audience, stance</h2>
+  <h3>Purpose</h3>
+  <p>Three goals, in priority order. <strong>Accountability pressure</strong>: make it hard for an institution to leave a documented failure quietly unfixed — "1,096 days later, still at stage 2" is a sentence the site should be able to produce automatically. <strong>Civic education</strong>: let an ordinary reader see the systemic picture rather than the headline of the week. <strong>Public memory</strong>: a durable, well-sourced record that is hard to rewrite because every line points somewhere.</p>
+  <h3>Audience</h3>
+  <p>The general Israeli public, Hebrew-first. Journalists, researchers and decision-makers are welcome second-order users — the data model is built so they can cite it — but the reading experience is designed for someone who has ten minutes and a phone.</p>
+  <h3>Stance</h3>
+  <p>Descriptive on facts, neutral on blame, explicit about method. The project never says "X is to blame". It does say "source A documented this failure; source B says it was acknowledged; source C says it was implemented; nobody independent has verified it yet". Where the project exercises judgment — the lifecycle stage an item sits at — the rule producing that judgment is published and mechanical.</p>
+  <div class="callout"><p><strong>The credibility rule.</strong> Anyone from any political camp should be able to read the methodology page and fail to find a lever. If a critic can point at a rule and say "this is where your bias lives", the rule is wrong, not the critic.</p></div>
+</section>
+
+<section id="scope">
+  <h2>Scope</h2>
+  <p class="lede">Four domains in v1. The fourth is deliberately narrowed.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Domain</th><th>In v1</th><th>Examples of systemic parents</th></tr>
+    <tr><td>Military &amp; intelligence</td><td>Yes</td><td>Early-warning and assessment; border defence architecture; Gaza Division readiness and command; response time and reinforcement; force structure and doctrine.</td></tr>
+    <tr><td>Civilian systems &amp; home front</td><td>Yes</td><td>Police readiness and coordination; MDA / ZAKA / hospitals; Home Front Command alerts; community readiness squads (<span class="he">כיתות כוננות</span>); evacuee handling; rebuilding the envelope.</td></tr>
+    <tr><td>Societal &amp; institutional</td><td>Yes</td><td>Commissions of inquiry themselves; media performance on the day; public trust; civil-society response filling state gaps.</td></tr>
+    <tr><td>Government &amp; decision-making</td><td>Process failures only</td><td>Hostage-negotiation apparatus; National Security Council procedures; emergency legislation and budgeting mechanisms. <em>Not</em> pre-war Hamas policy, cabinet politics, or personal responsibility of ministers.</td></tr>
+  </table></div>
+  <p>The narrowing of the fourth domain is a credibility decision, not an evasion, and the methodology page should say so plainly: the project tracks <em>mechanisms</em> that failed and whether they were repaired. Judging pre-war policy is a legitimate task for others.</p>
+</section>
+
+<section id="model">
+  <h2>Data model</h2>
+  <p class="lede">A two-level tree of failures, with a ledger of sourced claims hanging off every leaf. Status is computed, never typed in.</p>
+  <div class="tree">
+    <div class="node"><span class="dot"></span><div><span class="lbl">Systemic failure · parent</span><span class="t">Early warning was collected but not acted on</span><div class="d">~8 in the MVP. Sits in one cell of the who × when matrix. Shows its children's stage distribution; never averages their scores.</div></div></div>
+    <div class="node child"><span class="dot"></span><div><span class="lbl">Incident · leaf</span><span class="t">Field observers' repeated warnings at Nahal Oz were not escalated</span> <span class="chip" style="--c:var(--s4)">Stage 4 · Implemented</span> <span class="chip" style="--c:var(--s6)">Contested</span><div class="d">Carries the ledger of claims and one public question per stage. Has no place of its own — its places are wherever its evidence comes from. 25–40 in the MVP.</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">Claim · evidence</span><span class="t">News report, 2024 — a soldier posted at the position describes warnings going unanswered</span><div class="d">source type: press · asserts: stage 1 · place: Nahal Oz · quote · url · date. Evidence claims are what the item's map plots.</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">Claim</span><span class="t">IDF probe, Feb 2025 — acknowledged the failure and described a new escalation protocol</span><div class="d">source type: official · asserts: stage 2 and stage 3 · url · date · no place (a document, not a testimony)</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">Claim</span><span class="t">IDF Spokesperson, 2025 — protocol in force across the division</span><div class="d">source type: official (implementer) · asserts: stage 4</div></div></div>
+    <div class="node claim"><span class="dot"></span><div><span class="lbl">Claim · contesting</span><span class="t">Kibbutz security committee statement — observers still lack a direct line to the division</span><div class="d">source type: civil society · contests: the stage-4 claim above</div></div></div>
+  </div>
+  <h3>Fields on an incident</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Field</th><th>Meaning</th></tr>
+    <tr><td>id, slug</td><td>Stable identifier; slug is Hebrew-transliterated for URLs.</td></tr>
+    <tr><td>parent</td><td>Exactly one systemic parent.</td></tr>
+    <tr><td>title, summary</td><td>What failed, in one line and in one paragraph. Institutions and systems only; no individuals, no victims' names.</td></tr>
+    <tr><td>domain, phase</td><td>Inherited from the parent: one of three domains (military &amp; intelligence · home front &amp; civilian systems · society &amp; institutions) and one of three phases (before · the day itself · after). These two axes are the home-page matrix.</td></tr>
+    <tr><td>claims[]</td><td>The ledger. Each: source, source_type, url, archive_url, date, quote (≤ 40 words), asserts_stage, <strong>place</strong> (optional: community, base, road, city with coordinates — set on testimonies and place-specific reports, not on documents), contests (optional reference to another claim).</td></tr>
+    <tr><td>places</td><td><em>Computed</em>: the distinct places of the item's claims. Drives the item's evidence map; an item with no placed claims has no map.</td></tr>
+    <tr><td>stage</td><td><em>Computed</em>: highest stage with at least one claim. See lifecycle rules.</td></tr>
+    <tr><td>contested</td><td><em>Computed</em>: true if any claim at the current stage has a contesting claim.</td></tr>
+    <tr><td>summaries{}</td><td>Per stage where relevant: an editor-approved summary of the acknowledgement (2), the plan (3), or what was implemented (4–6). Drafted by AI, every sentence footnoted to a claim.</td></tr>
+    <tr><td>opinion{}</td><td><em>From Supabase</em>: one chapter per stage the item has passed through — the stage's question, answer distribution, verified-voter count, and argument clusters. The current stage's chapter is open; earlier chapters are frozen.</td></tr>
+    <tr><td>history[]</td><td>Every change to the item with date and reason — the public corrections trail.</td></tr>
+  </table></div>
+</section>
+
+<section id="lifecycle">
+  <h2>Evidence lifecycle</h2>
+  <p class="lede">Six stages. Each one is an <em>event</em> a source reported, not an opinion the project holds. That is what stops the ledger collapsing into "disputed" along political lines.</p>
+  <div class="stages">
+    <div class="stage" style="--st:var(--s1)"><div class="n">1</div><div class="name">Identified</div><div class="hname">זוהה</div><div class="what">A credible source documented the failure.</div></div>
+    <div class="stage" style="--st:var(--s2)"><div class="n">2</div><div class="name">Acknowledged</div><div class="hname">הוכר</div><div class="what">The responsible institution itself admitted it.</div></div>
+    <div class="stage" style="--st:var(--s3)"><div class="n">3</div><div class="name">Plan announced</div><div class="hname">הוכרזה תוכנית</div><div class="what">A concrete decision exists: budget, resolution, unit, doctrine, bill.</div></div>
+    <div class="stage" style="--st:var(--s4)"><div class="n">4</div><div class="name">Implemented</div><div class="hname">יושם</div><div class="what">The implementing body reports the change is in place.</div></div>
+    <div class="stage" style="--st:var(--s5)"><div class="n">5</div><div class="name">Independently verified</div><div class="hname">אומת עצמאית</div><div class="what">A body other than the implementer confirmed it.</div></div>
+    <div class="stage regress" style="--st:var(--s6)"><div class="n">6</div><div class="name">Regressed</div><div class="hname">נסוג</div><div class="what">A later source reports the fix eroded or was reversed.</div></div>
+  </div>
+  <h3>Rules</h3>
+  <div class="rule"><span class="tag">Compute</span><p>An item's stage is the highest stage for which at least one claim exists. Nobody has to agree for this to be calculated. "The IDF says it is implemented" moves the item to stage 4 — that is a fact about what the IDF said.</p></div>
+  <div class="rule"><span class="tag">Independence</span><p>Stage 5 requires a source whose type is <em>independent</em> — State Comptroller, Knesset committee, court, or an investigative report with named documentary basis. The implementer can never verify itself.</p></div>
+  <div class="rule"><span class="tag">Contest</span><p>"Disputed" is a flag, not a stage. A contesting claim attaches to the specific claim it disputes. The item shows a <em>contested</em> badge and the contesting link; the stage does not move down. Politics can add a link; it cannot stall the ledger.</p></div>
+  <div class="rule"><span class="tag">Regress</span><p>Stage 6 is the one exception to monotonicity: a sourced report of erosion or reversal sets the item to Regressed and preserves the prior peak stage in history. A later implementation claim moves it back up.</p></div>
+  <div class="rule"><span class="tag">No URL, no claim</span><p>Every claim carries a URL to an already-published source, a date, and a source type. A claim missing any of the three is not entered. This is the entire anti-politics mechanism, and it is meant to be boring.</p></div>
+  <h3>Source types and their role</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Type</th><th>Examples</th><th>Can assert</th></tr>
+    <tr><td>Official</td><td>IDF probes and Spokesperson, government resolutions, ministry statements, police, MDA</td><td>Stages 1–4, 6. Not 5 for its own reforms.</td></tr>
+    <tr><td>Independent oversight</td><td>State Comptroller, Knesset committees, courts, a state commission of inquiry</td><td>All stages, including 5.</td></tr>
+    <tr><td>Press</td><td>Haaretz, Ynet, N12, Kan, Calcalist, Shomrim, The Seventh Eye</td><td>Stages 1–4 and 6 on a single outlet; stage 5 only for investigative work citing documents, and preferably corroborated by a second outlet.</td></tr>
+    <tr><td>Research</td><td>INSS, IDI, Misgav, university work, the Civil Commission of Inquiry</td><td>Stages 1 and 5 primarily; useful for framing parents.</td></tr>
+    <tr><td>Civil society</td><td>Bereaved and hostage family organisations, kibbutz committees, survivor groups, NGOs</td><td>Stage 1, stage 6, and contesting claims. Essential for "is it really fixed".</td></tr>
+  </table></div>
+</section>
+
+<section id="confidence">
+  <h2>Public opinion, one question per stage</h2>
+  <p class="lede">Opinion lives here and nowhere else. The public does not set the stage; it rates what the current stage offers. Because a plan and an implementation are different things, the question changes as the item moves.</p>
+  <h3>The questions</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Stage</th><th>Question</th><th>Answer</th><th>What the factual panel shows beside it</th></tr>
+    <tr><td>1 Identified</td><td><span class="he">עד כמה דחוף לתקן את הכשל הזה?</span> — How urgent is fixing this?</td><td>1–5</td><td>The evidence: every source and testimony that exposes the failure, with its map.</td></tr>
+    <tr><td>2 Acknowledged</td><td><span class="he">האם ההכרה בכשל תואמת את מה שקרה בפועל?</span> — Does the acknowledgement match what happened?</td><td>Yes / Partially / No</td><td>The acknowledgement, quoted from its source.</td></tr>
+    <tr><td>3 Plan announced</td><td><span class="he">האם התוכנית שהוכרזה נותנת מענה לבעיה?</span> — Does the plan address the problem?</td><td>1–5</td><td>An editor-approved summary of the plan, every sentence footnoted.</td></tr>
+    <tr><td>4 Implemented</td><td><span class="he">עד כמה מה שיושם בפועל נותן מענה לבעיה?</span> — How far does what was actually implemented address the problem?</td><td>1–5</td><td>A summary of what was implemented — data, not the plan.</td></tr>
+    <tr><td>5 Independently verified</td><td>Same question as stage 4.</td><td>1–5</td><td>Same as stage 4, plus the verification trace open for inspection. <strong>No question about trust in the verifier</strong> — trust in institutions and media is polarising, and polarising questions are out of scope.</td></tr>
+    <tr><td>6 Regressed</td><td><span class="he">עד כמה מה שנותר מיושם נותן מענה?</span> — How far does what remains address it?</td><td>1–5</td><td>The implementation summary with the regression report appended.</td></tr>
+  </table></div>
+  <h3>Chapters</h3>
+  <p>When an item advances a stage, the open question closes and its results are frozen as a chapter. The item page shows the current question with its live distribution, then the earlier chapters underneath: "the public rated the plan 2.1 of 5 (1,870 verified); after implementation, 3.4 (4,820 verified)". A vote can be changed while its chapter is open. Parents do not average scores across chapters — the questions differ — they show the stage distribution of their incidents instead.</p>
+  <h3>Before the answer: the arguments</h3>
+  <p>The voter sees the arguments before the buttons. Two rows, never blended. <strong>From published sources</strong>: what analysts, family organisations and investigative reports have said for and against the plan or implementation — each a claim with a link. <strong>From the public</strong>: the free-text explanations voters left, clustered automatically into a handful of for/against arguments. Each cluster states how many answers it summarises and can be opened to show two or three representative quotes the editor approved. There is no raw comment feed: clustering keeps the moderation load survivable for one person and removes the defamation surface.</p>
+  <p>Free text is optional, anonymous, and enters a summarisation queue. The AI never invents an argument that is not in the answers; the editor reviews clusters before they publish, exactly as with claims.</p>
+  <h3>Verification tiers</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Tier</th><th>Mechanism</th><th>When</th><th>What is stored</th></tr>
+    <tr><td>Signed in</td><td>Google or Apple sign-in, one vote per account</td><td>MVP</td><td>Provider user id only.</td></tr>
+    <tr><td>Phone-verified</td><td>Israeli mobile number, one-time code, one vote per number</td><td>MVP</td><td>A salted hash of the number. Never the number.</td></tr>
+    <tr><td>Identity-verified</td><td>A KYC provider (e.g. AU10TIX, Persona, Veriff) checks a document and returns only <em>valid + unique</em> and a dedupe token</td><td>v1.1, if the numbers start to matter</td><td>The token. The document never touches the project's servers.</td></tr>
+  </table></div>
+  <div class="callout"><p><strong>Decision: no ID upload to the project, at any stage.</strong> Holding scans of <span class="he">תעודות זהות</span> would be the single largest liability in the project (Israel's Privacy Protection Law, strengthened by the 2024 amendment in force since August 2025, treats such a database as sensitive with registration, DPO and breach duties), would suppress participation on the most loaded topic in the country, and would not stop a determined actor anyway. Identity assurance, when wanted, is bought from a provider that keeps the document.</p></div>
+  <h3>Display rules</h3>
+  <ul>
+    <li>Always show the breakdown openly: "12,400 votes · 9,100 phone-verified". Transparency about imperfection beats pretending to have solved Sybil resistance.</li>
+    <li>No numbers shown below a minimum (say 50 phone-verified votes) — a percentage of 7 people is noise dressed as data.</li>
+    <li>The headline figure is the phone-verified share; signed-in-only votes are shown but labelled.</li>
+    <li>The single most important view in the product is the <strong>gap</strong>: items at stage 4–5 whose implementation the public rates below 2.5 of 5. That is where the accountability story is, and it is a headline neither an institution nor a mob can manufacture alone.</li>
+  </ul>
+</section>
+
+<section id="editorial">
+  <h2>Editorial policy</h2>
+  <h3>Curation</h3>
+  <p>One curator — Roy — approves every entry and every claim. An automated daily scan (Hebrew news feeds, Knesset committee agendas and protocols, State Comptroller publications, IDF Spokesperson) matches new material against open items and proposes claims into a review queue. Nothing publishes unreviewed. The bottleneck is deliberate at this stage; it buys a consistent standard while the rules bed in.</p>
+  <h3>Naming</h3>
+  <p>Institutions, units and systems only: "Gaza Division HQ", "Shin Bet–AMAN coordination", "Sderot police station", "the alert system". No individual commanders, officials or ministers, even when a source names them. Quotes are trimmed to remove names.</p>
+  <h3>Victims and survivors</h3>
+  <p>No names of victims or survivors. No graphic detail beyond what is necessary to state the failure. No testimony quotes unless already published with the speaker's evident consent, and then only as a linked claim, never as narrative.</p>
+  <h3>Only already-public sources</h3>
+  <p>The project publishes nothing that has not already appeared in a source that carries its own responsibility for clearance. Every claim links to its original. This sidesteps the military-censor question by design and keeps the project out of the business of breaking news.</p>
+  <h3>Summaries</h3>
+  <p>Plan and implementation summaries are drafted by AI from the claims, approved by the editor, and footnoted sentence by sentence. The summary is a convenience; the source is the authority, and the label on every summary says so.</p>
+  <h3>Methodology and corrections</h3>
+  <p>A public methodology page states the lifecycle rules, the per-stage questions, source types, naming and privacy policy, and the verification tiers in plain Hebrew. A corrections log lists every stage change, reversal and error with date and reason. Anyone can submit a correction or a candidate source through a form; submissions enter the same review queue as the automated scan.</p>
+</section>
+
+<section id="product">
+  <h2>Product</h2>
+  <p class="lede">Hebrew, right-to-left, mobile-first. Visual at the top, textual as you drill down.</p>
+  <h3>Home: the failure matrix</h3>
+  <p>The systemic failures laid out on two axes: <strong>who</strong> (military &amp; intelligence · home front &amp; civilian systems · society &amp; institutions) across, <strong>when</strong> (before · the day itself · after) down. Each failure is a tile with an icon, a two- or three-word label, its incident count, its average stage as a colour, and a small stage-distribution bar. Empty cells stay visible as dashed slots — the shape of the space is information too. Tapping a tile opens a drawer with the incidents; that is where text begins. A strip above the matrix carries the numbers that must be true before anything else: days since October 7, items tracked, share at each stage, and the size of the gap.</p>
+  <h3>The map, demoted</h3>
+  <p>There is no map page. A map appears inside an item, as an extension of "what failed", when the item's evidence has places: every testimony and place-specific report is a pin coloured by source type, so a hotline collapse pins to every town a resident was quoted from. Items whose evidence has no place — a commission of inquiry, an assessment culture — have no map. The map is a way of seeing the source collection; the collection is the thing.</p>
+  <h3>Item page</h3>
+  <p>Two columns, two lanes, labelled: <strong>facts · what was reported</strong> and <strong>opinion · what the public thinks</strong>. The facts lane: what failed with its evidence list and map; where it stands, with the stage ladder, the stage's summary (acknowledgement quote, plan summary, or implementation summary), the verification trace when there is one, and the full ledger folded away. The opinion lane: the stage's question, the two rows of arguments, the answer control, optional free text, the live distribution, and the frozen chapters of earlier stages.</p>
+  <div class="item">
+    <div class="crumb">התרעה מוקדמת שלא תורגמה לפעולה › נחל עוז</div>
+    <h5>אזהרות חוזרות של התצפיתניות בנחל עוז לא הועלו לדרג הפיקודי</h5>
+    <div class="row">
+      <div class="box"><div class="k">שלב על פי המקורות</div>
+        <div style="font-weight:700;color:var(--s4)">4 · יושם <span class="chip" style="--c:var(--s6);margin-right:6px;margin-left:0">במחלוקת</span></div>
+        <ul class="ledger" style="margin-top:10px">
+          <li><span class="st" style="--c:var(--s2)">הוכר</span><span>תחקיר צה״ל, אוגדה 143</span><span class="dt">02.2025</span></li>
+          <li><span class="st" style="--c:var(--s3)">תוכנית</span><span>תחקיר צה״ל — נוהל העלאה חדש</span><span class="dt">02.2025</span></li>
+          <li><span class="st" style="--c:var(--s4)">יושם</span><span>דובר צה״ל</span><span class="dt">2025</span></li>
+          <li><span class="st" style="--c:var(--s6)">חולק</span><span>ועדת הביטחון של הקיבוץ</span><span class="dt">2026</span></li>
+        </ul>
+      </div>
+      <div class="box"><div class="k">השאלה לשלב "יושם" · 3,214 מאומתים בטלפון</div>
+        <div style="font-family:'Frank Ruhl Libre',serif;font-size:17px;color:var(--text);margin-bottom:8px">עד כמה מה שיושם בפועל נותן מענה לבעיה?</div>
+        <div class="bar"><span style="width:31%;background:var(--s6)"></span><span style="width:27%;background:var(--s4)"></span><span style="width:24%;background:var(--s1)"></span><span style="width:12%;background:var(--s2)"></span><span style="width:6%;background:var(--s5)"></span></div>
+        <div class="legend"><span>ממוצע <b>2.3</b> / 5</span><span style="color:var(--muted)">1 → 5</span></div>
+        <div style="font-size:12.5px;color:var(--muted);margin-top:10px;border-top:1px solid var(--line-soft);padding-top:8px">פרק קודם · "תוכנית" · 2.1/5 · 1,870 · פרק ראשון · "דחיפות" · 4.5/5 · 4,100</div>
+        <p style="font-size:13px;color:var(--muted);margin:10px 0 0">המספרים כאן הם דוגמה להמחשה בלבד.</p>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:14px">Every item page also has the parent's other incidents, the item's change history, a "submit a source" button, and a share card. The share card (Open Graph image) is generated per item and carries the title, the stage, and the current question's result — that image is the social launch.</p>
+  <h3>Other views</h3>
+  <p>The <strong>gap view</strong> (stage 3–5 on one axis, the public's 1–5 rating of the plan or implementation on the other; the highlighted zone is "reported implemented, rated low"). The <strong>methodology</strong> and <strong>corrections</strong> pages. A browse-by-place view and a timeline are explicitly deferred.</p>
+</section>
+
+<section id="arch">
+  <h2>Architecture</h2>
+  <p class="lede">Data as code, so the record is auditable. A static site, so it is cheap and hard to take down. A small backend only where state is unavoidable.</p>
+  <h3>Content repository (public)</h3>
+<pre><span class="c"># the-next-day/</span>
+data/
+  parents/                 <span class="c"># one file per systemic failure</span>
+    early-warning.json
+  incidents/               <span class="c"># one file per leaf; claims inline</span>
+    nahal-oz-observers.json
+  sources.json             <span class="c"># registry of outlets/bodies with source_type</span>
+  places.json              <span class="c"># gazetteer: community → coordinates</span>
+schema/
+  incident.schema.json     <span class="c"># validated in CI; a claim without url/date/type fails the build</span>
+scripts/
+  compute-stage.ts         <span class="c"># the published rule, as code</span>
+  build-og-cards.ts
+site/                      <span class="c"># Next.js (static export) · Hebrew RTL</span>
+monitor/                   <span class="c"># daily scan → review-queue issues/PRs</span>
+docs/
+  methodology.md</pre>
+  <p>Every stage change is a commit. The git history <em>is</em> the corrections log, and the corrections page renders from it. A pull request is the natural shape for a proposed claim, whether it comes from the monitor or from a human.</p>
+  <h3>Runtime</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Concern</th><th>Choice</th><th>Why</th></tr>
+    <tr><td>Site</td><td>Next.js static export, deployed to Vercel or Cloudflare Pages</td><td>Roy's stack; no server to defend; free at this scale.</td></tr>
+    <tr><td>Map</td><td>Inline schematic SVG of the envelope (as in the prototype), or Leaflet/MapLibre inside the item page if real tiles prove worth it</td><td>The map is small and secondary now; a schematic is fully controlled, needs no tiles, no billing, no Hebrew-label fights.</td></tr>
+    <tr><td>Auth &amp; votes</td><td>Supabase: Auth (Google, Apple, phone OTP), Postgres with row-level security, one row per (user, incident, stage) plus optional free text</td><td>Only stateful part. Phone stored as salted hash via an edge function; raw number never persisted. Stage in the key is what makes chapters work.</td></tr>
+    <tr><td>Aggregates</td><td>Nightly job materialises per-(item, stage) distributions to a public JSON the static site reads</td><td>Site stays static; votes can't be scraped per user.</td></tr>
+    <tr><td>Clustering</td><td>Scheduled job embeds new free-text answers, clusters them per (item, stage, for/against), drafts a label and picks candidate quotes → review queue</td><td>Proposes, never publishes. Same rule as claims.</td></tr>
+    <tr><td>Monitor</td><td>Scheduled job: RSS/HTML fetch of a fixed source list → embedding match against open items → LLM-drafted claim with quote → GitHub issue or draft PR</td><td>Proposes, never publishes. Roy merges.</td></tr>
+    <tr><td>Share cards</td><td>Build-time OG image per item</td><td>The social launch is these images.</td></tr>
+  </table></div>
+</section>
+
+<section id="legal">
+  <h2>Legal &amp; risk</h2>
+  <p class="lede">A civilian project on this subject will be attacked on method, on law, and on motive. Most of the defence is design, done before launch.</p>
+  <div class="tablewrap"><table class="risk">
+    <tr><th>Risk</th><th>Mitigation</th><th>Severity</th></tr>
+    <tr><td>Defamation claim by an individual</td><td>Institutions-only naming; quotes trimmed of names; pro-bono legal review before launch.</td><td><span class="sev" style="--c:var(--s4)">Medium</span></td></tr>
+    <tr><td>Military censorship exposure</td><td>Only already-published sources, always linked. The project originates nothing.</td><td><span class="sev" style="--c:var(--s1)">Low</span></td></tr>
+    <tr><td>Privacy law (voter data)</td><td>No ID documents ever. Phone hashed. Minimal retention. Written privacy notice. Check registration duties with counsel once user counts are known.</td><td><span class="sev" style="--c:var(--s4)">Medium</span></td></tr>
+    <tr><td>Vote manipulation / brigading</td><td>Tiers displayed openly; thresholds; rate limits; phone tier as headline; anomaly alerts on sudden swings; votes are opinion, labelled as such.</td><td><span class="sev" style="--c:var(--s4)">Medium</span></td></tr>
+    <tr><td>Perceived partisanship</td><td>Published mechanical rules; government domain narrowed to process; corrections log; invite critics from both sides to audit the method before launch.</td><td><span class="sev" style="--c:var(--s6)">High</span></td></tr>
+    <tr><td>Harm to victims' families</td><td>No victim names, no graphic detail; outreach to family organisations <em>before</em> launch, not after.</td><td><span class="sev" style="--c:var(--s6)">High</span></td></tr>
+    <tr><td>Curator burnout / abandonment</td><td>Scope held to 25–40 items; monitor does the reading; the repo is public so the record survives the curator.</td><td><span class="sev" style="--c:var(--s4)">Medium</span></td></tr>
+    <tr><td>Source rot (links die)</td><td>Store archive.org snapshot URL alongside every claim URL at entry time.</td><td><span class="sev" style="--c:var(--s1)">Low</span></td></tr>
+  </table></div>
+  <p>Organisation: solo side project now; register a nonprofit (<span class="he">עמותה</span>) once the site is live and the method has survived first contact — the entity should exist before any donations are accepted or any identity-verification provider is contracted.</p>
+</section>
+
+<section id="mvp">
+  <h2>MVP &amp; five-week plan</h2>
+  <p class="lede">Live on 7 October 2026. Small, sourced, and honest about what it does not yet cover.</p>
+  <h3>In the MVP</h3>
+  <ul>
+    <li>~8 systemic parents, 25–40 incidents, every claim with URL, date and type. Seeded from the IDF's published probes (February 2025 wave), State Comptroller and Knesset committee reports, the Civil Commission of Inquiry, and press investigations.</li>
+    <li>Matrix home with headline strip; item pages with evidence list, evidence map, stage summary and ledger; gap view; methodology and corrections pages.</li>
+    <li>Per-stage questions with Google/Apple sign-in and Israeli phone OTP; thresholds and tier labels; free text collected. Argument clusters from published sources at launch; public clusters once enough answers exist to cluster honestly.</li>
+    <li>Share cards per item. Hebrew only.</li>
+  </ul>
+  <h3>Not in the MVP</h3>
+  <p>Identity-verified tier, English, timeline view, open contributor accounts, the automated monitor (manual scanning until the item set is stable — the monitor is week 6+).</p>
+  <h3>Weeks</h3>
+  <div class="weeks">
+    <div class="w">Week 1<small>1–7 Sep</small></div><div><div class="goal">Method and skeleton</div><p>Schema, lifecycle as code, repo layout, methodology draft. Prototype of map + item page. Choose the 8 parents. Begin the source pass on the IDF probes.</p></div>
+    <div class="w">Week 2<small>8–14 Sep</small></div><div><div class="goal">First 15 incidents, sourced</div><p>Gaza Division and five communities to a high standard. Site renders from data. Places gazetteer. Contact a lawyer for the pre-launch review.</p></div>
+    <div class="w">Week 3<small>15–21 Sep</small></div><div><div class="goal">Remaining incidents + votes</div><p>Comptroller, Knesset, civil-commission and press items. Supabase auth and vote schema; hashing edge function; aggregate job. Share-card generator.</p></div>
+    <div class="w">Week 4<small>22–28 Sep</small></div><div><div class="goal">Credibility pass</div><p>Legal review. Send the methodology and the dataset to two or three readers from different camps and to one family organisation; fix what they find. Corrections page live. Privacy notice.</p></div>
+    <div class="w">Week 5<small>29 Sep – 6 Oct</small></div><div><div class="goal">Launch prep</div><p>Performance and mobile QA in Hebrew. Seed social posts and cards. Outreach to community councils and family forums. Freeze data on 5 Oct.</p></div>
+    <div class="w">7 Oct<small>Launch</small></div><div><div class="goal">Publish</div><p>Go live in the morning. Watch votes for anomalies. Log everything to corrections. Rest.</p></div>
+  </div>
+</section>
+
+<section id="open">
+  <h2>Open questions</h2>
+  <ol class="oq">
+    <li><b>The eight parents.</b> Which systemic failures make the cut for v1? Proposed starting set: early warning not acted on; border defence architecture; Gaza Division command and readiness; reinforcement and response time; police coordination; emergency medicine and evacuation; alert and communication systems; community readiness squads. Government-process parents (hostage apparatus, NSC procedures) may wait for v1.1.</li>
+    <li><b>Map source.</b> Keep the schematic SVG from the prototype, or use real tiles inside the item page. Decide in week 1; the schematic is the default.</li>
+    <li><b>Chapter transitions.</b> When a stage advances, does the new question open immediately with zero votes, or after the stage summary is approved? Proposed: after the summary — voters should have something to rate.</li>
+    <li><b>Source-side arguments.</b> Which source types may appear in the "from published sources" argument row — research and civil society only, or press commentary too? Proposed: research, civil society, and investigative press with documentary basis; no opinion columns.</li>
+    <li><b>Vote threshold.</b> The minimum number of phone-verified votes before a percentage is shown. 50 is a placeholder.</li>
+    <li><b>Contest weight.</b> Does a contesting claim from an <em>independent oversight</em> source (not just civil society) do anything beyond flagging? Proposed: still a flag — but the flag's colour reflects the contesting source type.</li>
+    <li><b>Domain and handle.</b> Candidates around <span class="mono">oct8</span> / <span class="mono">8october</span> / <span class="he">השמונה</span>; check availability across .il, .org.il, and the social platforms in week 1.</li>
+    <li><b>Who reads the method before launch.</b> Names of two or three credible readers from different camps, and one family organisation contact.</li>
+    <li><b>What "day zero" looks like publicly.</b> Whether to state on the home page that the dataset is partial and invite sources, or to present only what is complete.</li>
+  </ol>
+</section>
+
+<section id="log">
+  <h2>Decision log</h2>
+  <p class="lede">Every decision from the 1 September interview, in one place.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Topic</th><th>Decision</th></tr>
+    <tr><td>Name</td><td><span class="he">השמונה באוקטובר</span>. <span class="he">היום אחרי</span> rejected — collides with "day after" Gaza-policy discourse.</td></tr>
+    <tr><td>Purpose</td><td>Accountability pressure, civic education, public memory.</td></tr>
+    <tr><td>Audience</td><td>General Israeli public, Hebrew-first.</td></tr>
+    <tr><td>Stance</td><td>Descriptive, neutral on blame; status judgment via published mechanical rules.</td></tr>
+    <tr><td>Scope</td><td>Military &amp; intelligence; civilian systems &amp; home front; societal &amp; institutional; government limited to non-partisan process failures.</td></tr>
+    <tr><td>Unit</td><td>Two-level tree: systemic parents → placed incidents; status rolls up.</td></tr>
+    <tr><td>Sources</td><td>Official (primary), independent oversight, press, research, civil society — each with a defined role.</td></tr>
+    <tr><td>Status</td><td>Six-stage event lifecycle, computed from claims; "contested" is a flag, not a stage.</td></tr>
+    <tr><td>Public layer</td><td>One question per stage (urgency 1–5 → acknowledgement Y/P/N → plan 1–5 → implementation 1–5; verified items keep the implementation question). Frozen chapters per stage. No trust-in-verifier or trust-in-media questions. <em>(2 Sep)</em></td></tr>
+    <tr><td>Arguments</td><td>For/against clusters from published sources and from public free text, in separate labelled rows; clusters plus approved representative quotes, no raw feed. <em>(2 Sep)</em></td></tr>
+    <tr><td>Summaries</td><td>AI-drafted, editor-approved, sentence-footnoted summaries of acknowledgement, plan and implementation in the factual panel. <em>(2 Sep)</em></td></tr>
+    <tr><td>Verification</td><td>MVP: Google/Apple + Israeli phone OTP (hashed). Later: KYC provider token. Never ID upload to the project.</td></tr>
+    <tr><td>Curation</td><td>Roy alone, AI-assisted daily scan → review queue (post-MVP).</td></tr>
+    <tr><td>Naming</td><td>Institutions and systems only.</td></tr>
+    <tr><td>Legal</td><td>Only already-public sources; pro-bono review; victim/survivor privacy rules; public methodology and corrections.</td></tr>
+    <tr><td>Home</td><td>Failure matrix — who × when — of icon tiles; text begins one level down. Headline strip at its top. <em>(revised 1–2 Sep)</em></td></tr>
+    <tr><td>Map</td><td>No map page. Map appears inside an item when its evidence has places; place is a property of the claim, not the incident. <em>(2 Sep)</em></td></tr>
+    <tr><td>Language</td><td>Hebrew only for v1.</td></tr>
+    <tr><td>Stack</td><td>Data-as-code in a public repo; static Next.js; Supabase for auth and votes only.</td></tr>
+    <tr><td>Seed</td><td>IDF probes (Feb 2025), Comptroller and Knesset reports, Civil Commission and press investigations.</td></tr>
+    <tr><td>MVP size</td><td>~8 parents, 25–40 incidents.</td></tr>
+    <tr><td>Launch</td><td>7 October 2026; social with per-item cards; outreach to family and community organisations.</td></tr>
+    <tr><td>Organisation</td><td>Solo side project; register a nonprofit after launch.</td></tr>
+  </table></div>
+</section>
+
+</main>
+</div>
+
+<footer>Concept document v0.2 · decisions recorded 1–2 September 2026 · figures in the item mock-up are illustrative, not data.</footer>
+</div>
+</body></html>
