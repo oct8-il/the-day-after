@@ -60,12 +60,11 @@
   /* ===== first-visit opening sequence on הכשלים ===== */
   .prehide{opacity:0}
   #view-home .strip{position:relative;z-index:2;transform-origin:center top}
-  #view-home .strip.settle{transition:transform 1.15s cubic-bezier(.2,.7,.15,1)}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   .reveal{animation:fadeUp .9s ease both;animation-delay:var(--d,0s)}
   .matrix.reveal{animation:none}
   .matrix.reveal>*{animation:fadeUp .9s ease both;animation-delay:var(--d,0s)}
-  @media (prefers-reduced-motion:reduce){.strip.settle{transition:none}.reveal,.matrix.reveal>*{animation:none}}
+  @media (prefers-reduced-motion:reduce){.reveal,.matrix.reveal>*{animation:none}}
 
   /* ===== about / onboarding ===== */
   .about{max-width:880px;margin:0 auto}
@@ -927,14 +926,20 @@ function runHomeIntro(){
   const scale=Math.min(1.3,(window.innerWidth-48)/r.width);
   const ty=window.innerHeight/2-(r.top+r.height*scale/2);
   strip.style.opacity='0';strip.style.transform=`translateY(${ty}px) scale(${scale})`;
-  // days count up while the strip fades in
-  const days=$('#days'),target=parseInt(days.textContent.replace(/\D/g,''),10)||0,t0=performance.now();
-  (function tick(now){const k=Math.min(1,(now-t0)/1800),e=1-Math.pow(1-k,3);days.textContent=Math.round(target*e).toLocaleString('he-IL');if(k<1)requestAnimationFrame(tick);})(t0);
+  // every number in the strip counts up in parallel while it fades in
+  const nodes=[];
+  const addNode=(n)=>{if(!n)return;const t=parseInt((n.textContent||'').replace(/\D/g,''),10);if(!isNaN(t))nodes.push({n,t});};
+  addNode($('#days').firstChild);addNode($('#count').firstChild);addNode($('#pcount').firstChild);addNode($('#gapn').firstChild);
+  strip.querySelectorAll('.ladder6 .c').forEach(c=>addNode(c.firstChild));
+  const t0=performance.now();
+  (function tick(now){const k=Math.min(1,(now-t0)/1800),e=1-Math.pow(1-k,3);
+    nodes.forEach(({n,t})=>{n.textContent=Math.round(t*e).toLocaleString('he-IL');});
+    if(k<1)requestAnimationFrame(tick);})(t0);
   requestAnimationFrame(()=>{strip.style.transition='opacity 1.4s ease';strip.style.opacity='1';});
-  setTimeout(()=>{strip.classList.add('settle');strip.style.transform='none';},3400);
+  setTimeout(()=>{strip.style.transition='transform 1.15s cubic-bezier(.2,.7,.15,1), opacity 1.4s ease';strip.style.transform='none';},3400);
   setTimeout(()=>{ph.classList.remove('prehide');ph.classList.add('reveal');},4500);
   setTimeout(()=>{[...mx.children].forEach((c,i)=>c.style.setProperty('--d',(Math.floor(i/4)*.5)+'s'));mx.classList.remove('prehide');mx.classList.add('reveal');},4700);
-  setTimeout(()=>{strip.classList.remove('settle');strip.style.transition='';strip.style.transform='';},5000);
+  setTimeout(()=>{strip.style.transition='';strip.style.transform='';strip.style.opacity='';},5000);
 }
 /* first visit lands on the intro; any move into the site remembers that */
 function hasSeen(){try{return localStorage.getItem('hy_seen')==='1';}catch(e){return true;}}
