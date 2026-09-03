@@ -68,6 +68,7 @@
 
   /* ===== first drill-down: chapters gated, evidence rolls, ladder climbs ===== */
   .gate{display:none!important}
+  .hold{visibility:hidden}
   .roll{animation:fadeUp .7s ease both;animation-delay:var(--d,0s)}
   .chapin{animation:fadeUp 1s ease both}
   .morehint{position:fixed;bottom:18px;left:50%;z-index:6;font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:6px 14px;border-radius:20px;animation:hintpulse 1.6s ease-in-out infinite;pointer-events:none}
@@ -1363,8 +1364,8 @@ function renderItem(id){
   runItemIntro(i,st);
 }
 
-/* ---------- first drill-down ever: evidence rolls in, chapters 2 and 3 are gated behind the scroll,
-   the ladder climbs to the current stage, the ledger opens itself, chapter 3 arrives as a conversation ---------- */
+/* ---------- first drill-down ever: evidence rolls in, chapters gate behind the scroll, and every animated part
+   waits until the reader has scrolled down to it — so each reveal is seen in full ---------- */
 function itemIntroDone(){try{return localStorage.getItem('hy_item_intro')==='1';}catch(e){return true;}}
 function runItemIntro(i,st){
   if(itemIntroDone()||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1374,93 +1375,103 @@ function runItemIntro(i,st){
   const secs=[...story.querySelectorAll('section.chap')];const [c1,c2,c3,c4]=secs;
   const hint=el('div',{class:'morehint','aria-hidden':'true'},'המשך ↓');
   let done=false;
-  window.stopItemIntro=()=>{if(done)return;done=true;timers.forEach(clearTimeout);obs.forEach(o=>o.disconnect());hint.remove();window.removeEventListener('scroll',onScroll);window.itemIntroRevealUpTo=null;window.stopItemIntro=null;};
+  window.stopItemIntro=()=>{if(done)return;done=true;timers.forEach(clearTimeout);obs.forEach(o=>o.disconnect());hint.remove();window.removeEventListener('scroll',onScroll);window.removeEventListener('wheel',onScroll);window.removeEventListener('touchmove',onScroll);window.itemIntroRevealUpTo=null;window.stopItemIntro=null;};
+  /* fire once the element's top has scrolled past the lower third of the viewport — i.e. the reader has really arrived at it */
+  const whenReached=(elm,f)=>{if(!elm){f();return;}const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){io.disconnect();f();}});},{rootMargin:'0px 0px -32% 0px',threshold:0});obs.push(io);io.observe(elm);};
+  const hold=x=>x&&x.classList.add('hold'), unhold=x=>x&&x.classList.remove('hold');
+  const complete={1:false,2:false,3:false};
+  const finish=n=>{complete[n]=true;T(onScroll,50);};
 
-  /* 1 · the evidence rolls in, then the map appears whole */
+  /* ---- chapter 1: the evidence rolls in now; the map waits for the scroll ---- */
   const evItems=[...c1.querySelectorAll('.ev li')];const STEP=280;
   evItems.forEach((li,k)=>{li.classList.add('roll');li.style.setProperty('--d',(k*STEP/1000).toFixed(2)+'s');});
   const mapBlock=c1.querySelector('.evmap')?.closest('.block');
-  let t1=evItems.length*STEP+200;
-  if(mapBlock){mapBlock.classList.add('prehide');T(()=>{mapBlock.classList.remove('prehide');mapBlock.classList.add('chapin');},t1);t1+=600;}
+  if(mapBlock){hold(mapBlock);T(()=>whenReached(mapBlock,()=>{unhold(mapBlock);mapBlock.classList.add('chapin');T(()=>finish(1),700);}),evItems.length*STEP);}
+  else T(()=>finish(1),evItems.length*STEP+300);
 
-  /* 2 · chapters 2, 3 and the closing band do not exist yet */
+  /* ---- chapters 2, 3 and the closing band do not exist yet ---- */
   [c2,c3,c4].forEach(c=>c&&c.classList.add('gate'));
   let next=2;
-  T(()=>{if(!done&&next<=3)document.body.append(hint);},t1);
+  T(()=>{if(!done&&next<=3)document.body.append(hint);},evItems.length*STEP+400);
   const nearEnd=()=>window.scrollY+window.innerHeight>document.documentElement.scrollHeight-window.innerHeight*.35;
-  const onScroll=()=>{if(done)return;if(next<=3&&nearEnd())reveal(next);};
+  const onScroll=()=>{if(done)return;if(next<=3&&complete[next-1]&&nearEnd())reveal(next);};
   window.addEventListener('scroll',onScroll,{passive:true});
-  window.itemIntroRevealUpTo=n=>{while(!done&&next<=n)reveal(next);};
+  window.addEventListener('wheel',onScroll,{passive:true});window.addEventListener('touchmove',onScroll,{passive:true});
+  window.itemIntroRevealUpTo=n=>{while(!done&&next<=n)reveal(next,true);};
 
-  const whenSeen=(elm,f,th)=>{if(!elm){f();return;}const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){io.disconnect();f();}});},{threshold:th||.5});obs.push(io);io.observe(elm);};
-  function reveal(n){
-    if(n!==next)return;next=n+1;
+  /* a chapter materialises with only its lead-in; the animated parts stay held until the reader scrolls to them */
+  function reveal(n,force){
+    if(n!==next)return;if(!force&&!complete[n-1])return;next=n+1;
     const c=n===2?c2:c3;if(!c)return;
     c.classList.remove('gate');c.classList.add('chapin');
-    if(n===2)climb();else{c4&&c4.classList.remove('gate');c4&&c4.classList.add('chapin');conversation();hint.remove();}
-    if(next>3)T(()=>hint.remove(),400);
+    if(n===2)armClimb();else{c4&&c4.classList.remove('gate');armConversation();}
+    if(next>3)T(()=>hint.remove(),300);
   }
 
-  /* 2 · the ladder climbs, stage by stage, to where the failure stands */
-  function climb(){
-    const row=c2.querySelector('.stagerow'),lad=[...c2.querySelectorAll('.ladder span')];if(!row)return;
+  /* ---- chapter 2: the ladder climbs once the reader reaches it; the rest follows ---- */
+  function armClimb(){
+    const row=c2.querySelector('.stagerow'),ladder=c2.querySelector('.ladder'),lad=[...c2.querySelectorAll('.ladder span')];
+    if(!row){finish(2);return;}
     const big=row.children[0],nm=row.children[1],chip=row.children[2];
-    const rest=[...c2.children].filter(x=>x!==row&&!x.classList.contains('eyebrow')&&x.tagName!=='H3'&&!x.classList.contains('chaplead')&&!x.classList.contains('ladder'));
-    rest.forEach(x=>x.classList.add('prehide'));if(chip)chip.classList.add('prehide');
-    const peak=st===6?Math.max(...i.claims.filter(c=>c[0]>0&&c[0]<6).map(c=>c[0]),1):st;
+    const rest=[...c2.children].filter(x=>x!==row&&x!==ladder&&!x.classList.contains('eyebrow')&&x.tagName!=='H3'&&!x.classList.contains('chaplead'));
+    rest.forEach(hold);if(chip)hold(chip);
     lad.forEach(sp=>{sp.classList.remove('on');sp.style.background='';});
     big.textContent='·';nm.textContent='';
+    const peak=st===6?Math.max(...i.claims.filter(c=>c[0]>0&&c[0]<6).map(c=>c[0]),1):st;
     const setStage=k=>{big.textContent=String(k);nm.textContent=STAGES[k].he;nm.style.color=STAGES[k].c;big.style.color=STAGES[k].c;};
-    whenSeen(row,()=>{
-    let t=500;const STEPMS=460;
-    for(let k=1;k<=peak;k++){T(()=>{setStage(k);lad[k-1].style.background=STAGES[k].c;lad[k-1].classList.add('on');},t);t+=STEPMS;}
-    if(st===6){t+=500;T(()=>{lad.forEach((sp,k)=>{if(k<5){sp.classList.remove('on');sp.style.background='';}});setStage(6);lad[5].style.background=STAGES[6].c;lad[5].classList.add('on');},t);t+=STEPMS;}
-    T(()=>{lad.forEach(sp=>sp.style.background='');big.style.color='';nm.style.color=STAGES[st].c;if(chip)chip.classList.remove('prehide');
-      rest.forEach((x,k)=>{x.classList.remove('prehide');x.classList.add('roll');x.style.setProperty('--d',(k*.25).toFixed(2)+'s');});},t+300);
-    /* the full ledger opens itself when the reader reaches it */
-    const led=[...c2.querySelectorAll('details.trace')].pop();
-    if(led)T(()=>whenSeen(led,()=>{if(!led.open){led.classList.add('autoopen');led.open=true;}},.6),t+600);
-    },.6);
+    whenReached(ladder,()=>{
+      let t=400;const STEPMS=460;
+      for(let k=1;k<=peak;k++){T(()=>{setStage(k);lad[k-1].style.background=STAGES[k].c;lad[k-1].classList.add('on');},t);t+=STEPMS;}
+      if(st===6){t+=500;T(()=>{lad.forEach((sp,k)=>{if(k<5){sp.classList.remove('on');sp.style.background='';}});setStage(6);lad[5].style.background=STAGES[6].c;lad[5].classList.add('on');},t);t+=STEPMS;}
+      T(()=>{lad.forEach(sp=>sp.style.background='');big.style.color='';nm.style.color=STAGES[st].c;if(chip){unhold(chip);chip.classList.add('popin');}
+        rest.forEach((x,k)=>{unhold(x);x.classList.add('roll');x.style.setProperty('--d',(k*.25).toFixed(2)+'s');});
+        T(()=>finish(2),rest.length*250+500);},t+300);
+      /* the full ledger opens itself when the reader reaches it */
+      const led=[...c2.querySelectorAll('details.trace')].pop();
+      if(led)T(()=>whenReached(led,()=>{if(!led.open){led.classList.add('autoopen');led.open=true;}}),t+600);
+    });
   }
 
-  /* 3 · analysts enter as a debate, the public thread arrives message by message, results grow in */
-  function conversation(){
-    const head=[...c3.children].filter(x=>x.classList.contains('eyebrow')||x.tagName==='H3'||x.classList.contains('chaplead'));
+  /* ---- chapter 3: the debate and the thread arrive when reached; the results grow when reached ---- */
+  function armConversation(){
     const args=c3.querySelector('.args'),box=c3.querySelector('.answerbox'),res=c3.querySelector('.result');
-    [args,box,res].forEach(x=>x&&x.classList.add('prehide'));
-    whenSeen(head[head.length-1]||c3,()=>{
-    let t=400;
-    T(()=>{args.classList.remove('prehide');},t);
-    /* analysts: pro rows from the right, con rows from the left, alternating top to bottom */
+    [args,box,res].forEach(hold);
     const pro=[...c3.querySelectorAll('.argcol.pro .acl')],con=[...c3.querySelectorAll('.argcol.con .acl')];
     const order=[];for(let k=0;k<Math.max(pro.length,con.length);k++){if(pro[k])order.push([pro[k],'slideR']);if(con[k])order.push([con[k],'slideL']);}
-    order.forEach(([row,cls],k)=>{row.style.opacity='0';T(()=>{row.style.opacity='';row.classList.add(cls);},t+k*350);});
-    t+=order.length*350+600;
-    /* the thread: a typing indicator in the lane, then the message pops in */
+    order.forEach(([row])=>{row.style.opacity='0';});
     const msgs=[...c3.querySelectorAll('.thread .msg')];const th=c3.querySelector('.thread');
-    msgs.forEach(m=>m.classList.add('gate'));
-    msgs.forEach((m,k)=>{
-      const lane=['pro','con','mid'].find(l=>m.classList.contains(l))||'mid';
-      T(()=>{if(done)return;const ty=el('div',{class:'msg '+lane,style:`--c:${laneColor(lane)}`},el('div',{class:'mb typing'},el('i'),el('i'),el('i')));th.insertBefore(ty,m);
-        T(()=>{ty.remove();m.classList.remove('gate');m.classList.add('popin');},k===0?900:650);},t);
-      t+=k===0?1100:850;
+    msgs.forEach(hold);
+    whenReached(args,()=>{
+      unhold(args);
+      let t=300;
+      order.forEach(([row,cls],k)=>T(()=>{row.style.opacity='';row.classList.add(cls);},t+k*350));
+      t+=order.length*350+400;
+      /* the thread waits for its own arrival on screen */
+      T(()=>whenReached(th,()=>{
+        let u=200;
+        msgs.forEach((m,k)=>{
+          const lane=['pro','con','mid'].find(l=>m.classList.contains(l))||'mid';
+          T(()=>{if(done)return;const ty=el('div',{class:'msg '+lane,style:`--c:${laneColor(lane)}`},el('div',{class:'mb typing'},el('i'),el('i'),el('i')));th.insertBefore(ty,m);
+            T(()=>{ty.remove();unhold(m);m.classList.add('popin');},k===0?900:650);},u);
+          u+=k===0?1100:850;
+        });
+        T(()=>{unhold(box);box.classList.add('chapin');},u);
+        T(()=>{unhold(res);armResults();},u+300);
+      }),t);
     });
-    T(()=>{box.classList.remove('prehide');box.classList.add('chapin');},t);t+=500;
-    T(()=>{res.classList.remove('prehide');armResults();},t);
-    },.9);
   }
   function armResults(){
     const res=c3.querySelector('.result');if(!res)return;
     const bars=[...res.querySelectorAll('.rdrow .t i, .bar3 span')].map(b=>({b,w:b.style.width}));bars.forEach(({b})=>{b.style.transition='none';b.style.width='0%';});
     const meanEl=res.querySelector('.rdmean b'),cnt=res.querySelector('.rdmean .cnt');const chs=[...res.querySelectorAll('.chapters .ch')];
-    chs.forEach(x=>x.classList.add('prehide'));
-    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;io.disconnect();
+    chs.forEach(hold);
+    whenReached(res,()=>{
       requestAnimationFrame(()=>{bars.forEach(({b,w})=>{b.style.transition='';b.style.width=w;});});
       if(meanEl){const target=parseFloat(meanEl.textContent)||0,t0=performance.now();(function tick(now){const k=Math.min(1,(now-t0)/1400),e=1-Math.pow(1-k,3);meanEl.textContent=(target*e).toFixed(1);if(k<1)requestAnimationFrame(tick);})(t0);}
       if(cnt){const target=parseInt(cnt.textContent.replace(/\D/g,''),10)||0,t0=performance.now();(function tick(now){const k=Math.min(1,(now-t0)/1400),e=1-Math.pow(1-k,3);cnt.textContent=Math.round(target*e).toLocaleString('he-IL')+' מצביעים';if(k<1)requestAnimationFrame(tick);})(t0);}
-      chs.forEach((x,k)=>T(()=>{x.classList.remove('prehide');x.classList.add('roll');x.style.setProperty('--d','0s');},900+k*300));
-      T(()=>{window.stopItemIntro&&window.stopItemIntro();},900+chs.length*300+800);
-    });},{threshold:.4});obs.push(io);io.observe(res);
+      chs.forEach((x,k)=>T(()=>{unhold(x);x.classList.add('roll');x.style.setProperty('--d','0s');},900+k*300));
+      T(()=>{complete[3]=true;window.stopItemIntro&&window.stopItemIntro();},900+chs.length*300+800);
+    });
   }
 }
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',3000);}
