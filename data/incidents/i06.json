@@ -1,0 +1,65 @@
+{
+  "id": "i06",
+  "parent": "p4",
+  "he": "קליטת נפגעים המונית ללא תיאום מקדים בין בתי החולים",
+  "summary": "מערך האשפוז בדרום קלט נפגעים בהיקף חריג בלי נוהל חלוקה מסודר בין המרכזים הרפואיים. ההסדרה נעשתה בזמן אמת.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i06-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "דוח מבקר המדינה — היערכות מערכת הבריאות",
+      "date": "2025",
+      "place": "soroka",
+      "quote": "לא היה נוהל לחלוקת נפגעים בין מרכזים רפואיים",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i06-c02",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "משרד הבריאות",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i06-c03",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "משרד הבריאות — תקן חלוקת נפגעים באירוע רב-נפגעים",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i06-c04",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "דיווח משרד הבריאות על הטמעת התקן",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i06-c05",
+      "asserts_stage": 5,
+      "source_type": "oversight",
+      "source": "דוח מעקב של מבקר המדינה",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

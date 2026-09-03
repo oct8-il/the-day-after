@@ -1,0 +1,66 @@
+{
+  "id": "i10",
+  "parent": "p3",
+  "he": "אין נוהל אבטחה לאירוע המוני בסמוך לגבול",
+  "summary": "אירוע המוני מאושר התקיים בסמוך לגבול בלי נוהל אבטחה ייעודי ובלי דרישה לתיאום ביטחוני מוקדם.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i10-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "תחקיר עיתונאי — רישוי האירוע",
+      "date": "2024",
+      "place": "nova",
+      "quote": "לא נדרש תיאום ביטחוני מקדים",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i10-c02",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון משפחות — מסמך שהוגש",
+      "date": "2024",
+      "place": "nova",
+      "quote": "אין נוהל ייעודי לאירוע המוני במרחב גבול",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i10-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת משטרת ישראל",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i10-c04",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "נוהל רישוי אירועים במרחבי גבול",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i10-c05",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "הודעת משטרת ישראל על הטמעת הנוהל",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

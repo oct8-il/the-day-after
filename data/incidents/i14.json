@@ -1,0 +1,79 @@
+{
+  "id": "i14",
+  "parent": "p6",
+  "he": "קווי החירום קרסו תחת עומס",
+  "summary": "מוקדי החירום קיבלו נפח פניות חריג בשעות הראשונות. חלק גדול מהפניות לא נענה, ולא הופעל מערך מענה חלופי.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i14-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — פניות שלא נענו",
+      "date": "10.2023",
+      "place": "sderot",
+      "quote": "פניות חוזרות למוקדים לא נענו",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i14-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — עומס במוקדים",
+      "date": "10.2023",
+      "place": "netivot",
+      "quote": "המוקדים לא עמדו בנפח הפניות",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i14-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי",
+      "date": "2023",
+      "place": "ofakim",
+      "quote": "המענה התקבל באיחור רב",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i14-c04",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "דוח מבקר המדינה — מוקדי החירום",
+      "date": "2025",
+      "quote": "נפח הפניות חרג מכושר המענה של המוקדים",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i14-c05",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת הגופים המפעילים",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i14-c06",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "תוכנית הרחבת מוקדי החירום",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

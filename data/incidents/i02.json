@@ -1,0 +1,55 @@
+{
+  "id": "i02",
+  "parent": "p2",
+  "he": "אמצעי התצפית על הגדר נוטרלו ללא מענה חלופי",
+  "summary": "עמדות תצפית ואמצעי שליטה מרחוק לאורך המכשול הושבתו בפתיחת האירוע. לא נכנס לפעולה מערך גיבוי — אנושי או טכנולוגי — שיחליף אותם.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i02-c01",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר צה״ל — ארכיטקטורת ההגנה על המכשול",
+      "date": "02.2025",
+      "place": "kfaraza",
+      "quote": "האמצעים הושבתו בזמן קצר ולא היה להם גיבוי",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i02-c02",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר — התלות באמצעים מרחוק",
+      "date": "2024",
+      "quote": "הגנה הנשענת על חיישנים בלי רזרבה אנושית",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i02-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i02-c04",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "החלטת ממשלה — תוכנית מכשול ותצפית",
+      "date": "07.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

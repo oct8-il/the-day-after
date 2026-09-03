@@ -1,0 +1,77 @@
+{
+  "id": "i18",
+  "parent": "p8",
+  "he": "אין גוף אחד שאחראי על המפונים",
+  "summary": "הטיפול במפונים התחלק בין משרדים ורשויות בלי כתובת אחת. משפחות נדרשו לפנות לגופים שונים לכל נושא.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i18-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "דוח מבקר המדינה — הטיפול במפונים",
+      "date": "2024",
+      "place": "kfaraza",
+      "quote": "אין גוף אחד שמרכז את הטיפול",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i18-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — מפונים בבתי מלון",
+      "date": "2024",
+      "place": "soroka",
+      "quote": "משפחות הופנו בין גופים שונים",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i18-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "משרד ראש הממשלה",
+      "date": "2024",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i18-c04",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "הקמת מנהלת תקומה",
+      "date": "2024",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i18-c05",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "דיווח מנהלת תקומה על היקף הפעילות",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i18-c06",
+      "asserts_stage": 5,
+      "source_type": "oversight",
+      "source": "דוח מעקב של מבקר המדינה",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

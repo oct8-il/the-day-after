@@ -1,0 +1,66 @@
+{
+  "id": "i09",
+  "parent": "p2",
+  "he": "פריצה בנקודה שהוגדרה מוגנת",
+  "summary": "חדירה התרחשה דרך מקטע שהוגדר כמוגן ברמה גבוהה. אמצעי ההגנה במקטע לא עיכבו אותה.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i09-c01",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "place": "kshalom",
+      "quote": "המקטע הוגדר מוגן ולא עיכב את החדירה",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i09-c02",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i09-c03",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "תוכנית שדרוג המכשול",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i09-c04",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "דיווח צה״ל על השלמת העבודות",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i09-c05",
+      "asserts_stage": 6,
+      "source_type": "press",
+      "source": "תחקיר עיתונאי — הסרת אמצעים במקטעים",
+      "date": "07.2026",
+      "place": "kshalom",
+      "quote": "חלק מהאמצעים שהותקנו הוסרו או אינם מתוחזקים",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

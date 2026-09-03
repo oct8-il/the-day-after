@@ -1,0 +1,77 @@
+{
+  "id": "i05",
+  "parent": "p4",
+  "he": "לא היתה תמונת מצב משותפת בין המשטרה לצבא",
+  "summary": "משטרה וצבא פעלו על בסיס תמונות מצב נפרדות, בלי ערוץ תיאום אחד. כוחות הגיעו לאותם מרחבים בלי ידיעה הדדית.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i05-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "תחקיר עיתונאי — התיאום בין הגופים",
+      "date": "2024",
+      "place": "sderot",
+      "quote": "שני הגופים פעלו בלי ערוץ משותף",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i05-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — כוחות באותו מרחב",
+      "date": "2024",
+      "place": "ofakim",
+      "quote": "כוחות פעלו באותו אזור בלי ידיעה הדדית",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i05-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת משטרת ישראל",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i05-c04",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "נוהל תיאום משותף משטרה–צה״ל",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i05-c05",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "הודעת משטרת ישראל על הטמעת הנוהל",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i05-c06",
+      "asserts_stage": 0,
+      "source_type": "press",
+      "source": "תחקיר עיתונאי — הטמעה חלקית",
+      "date": "2026",
+      "contests": "i05-c04",
+      "place": "sderot",
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

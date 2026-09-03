@@ -1,0 +1,55 @@
+{
+  "id": "i20",
+  "parent": "p6",
+  "he": "אין ערוץ מידע רשמי אחד לתושבים בזמן אמת",
+  "summary": "התושבים קיבלו מידע ממקורות שונים — הודעות רשמיות, רשתות חברתיות וקבוצות יישוביות — בלי ערוץ רשמי אחד שריכז תמונת מצב מאומתת ומתעדכנת.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i20-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — מקורות המידע של התושבים",
+      "date": "2024",
+      "place": "sderot",
+      "quote": "המידע המהיר ביותר הגיע מקבוצות יישוביות ולא מערוץ רשמי",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i20-c02",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "פורום הרשויות המקומיות בעוטף",
+      "date": "2024",
+      "place": "netivot",
+      "quote": "לא היה ערוץ רשמי אחד שריכז תמונת מצב",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i20-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת פיקוד העורף",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i20-c04",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "תוכנית להקמת ערוץ מידע לאומי בחירום",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

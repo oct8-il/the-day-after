@@ -1,0 +1,43 @@
+{
+  "id": "i17",
+  "parent": "p1",
+  "he": "תרבות הערכה שדחתה מידע שסתר את ההנחה הרווחת",
+  "summary": "מידע שסתר את הנחת העבודה הרווחת לגבי כוונות האויב סווג כחריג, ולא הוביל לבחינה מחדש של ההנחה.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i17-c01",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר צה״ל — תהליכי הערכה",
+      "date": "02.2025",
+      "quote": "מידע סותר סווג כחריג ולא הוביל לבחינה מחדש",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i17-c02",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i17-c03",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "שינוי מבני במערך ההערכה",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

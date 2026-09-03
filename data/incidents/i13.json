@@ -1,0 +1,123 @@
+{
+  "id": "i13",
+  "parent": "p6",
+  "he": "ההתרעה וההודעות לתושבים הגיעו באיחור, ובחלק מהיישובים לא הגיעו כלל",
+  "summary": "מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i13-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור",
+      "date": "2025",
+      "place": "ofakim",
+      "quote": "לא הופעלה התרעה ייעודית על חדירה קרקעית ביישובים שבהם התרחשה",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "תחקיר עיתונאי — ההודעות לתושבים בשעות הראשונות",
+      "date": "2024",
+      "place": "sderot",
+      "quote": "המידע שהגיע לתושבים היה חלקי ומאוחר",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "סיקור עיתונאי — פערי מידע בערי הדרום",
+      "date": "2023",
+      "place": "ashkelon",
+      "quote": "ההודעות לא הבחינו בין ירי לחדירה",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c04",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר פיקוד העורף",
+      "date": "2025",
+      "place": "netivot",
+      "quote": "ערוצי ההודעות לציבור עמדו בעומס חריג",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c05",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת פיקוד העורף",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c06",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "החלטת ממשלה — שדרוג מערך ההתרעה לציבור",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c07",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "נוהל מעודכן להודעות לציבור באירוע חדירה",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c08",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "דיווח פיקוד העורף על השלמת הפריסה",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c09",
+      "asserts_stage": 5,
+      "source_type": "oversight",
+      "source": "ועדת הכנסת לביקורת המדינה — דיון מעקב",
+      "date": "2026",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i13-c10",
+      "asserts_stage": 0,
+      "source_type": "civil",
+      "source": "פורום הרשויות המקומיות בעוטף",
+      "date": "2026",
+      "contests": "i13-c05",
+      "place": "beeri",
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

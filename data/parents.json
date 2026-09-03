@@ -1,0 +1,92 @@
+[
+  {
+    "id": "p1",
+    "short": "התרעה שלא פעלה",
+    "he": "התרעה שנאספה ולא תורגמה לפעולה",
+    "description": "איסוף, הערכה והעלאה של אזהרות לפני ובמהלך האירוע",
+    "domain": "mil",
+    "phase": "before",
+    "icon": "radar",
+    "illustrative": true
+  },
+  {
+    "id": "p2",
+    "short": "הגנת הגדר",
+    "he": "ארכיטקטורת ההגנה על הגדר",
+    "description": "מכשול, אמצעי תצפית וירי, תלות בטכנולוגיה",
+    "domain": "mil",
+    "phase": "during",
+    "icon": "fence",
+    "illustrative": true
+  },
+  {
+    "id": "p3",
+    "short": "זמן תגובה",
+    "he": "זמן תגובה ותגבור",
+    "description": "משך הזמן עד שכוח מספיק הגיע לכל יישוב",
+    "domain": "mil",
+    "phase": "during",
+    "icon": "clock",
+    "illustrative": true
+  },
+  {
+    "id": "p4",
+    "short": "תיאום חירום",
+    "he": "תיאום בין גופי החירום",
+    "description": "משטרה, מד״א, כב״ה, פיקוד העורף ורשויות מקומיות",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "link",
+    "illustrative": true
+  },
+  {
+    "id": "p5",
+    "short": "כיתות כוננות",
+    "he": "כיתות הכוננות ביישובים",
+    "description": "חימוש, הכשרה, קשר לצבא",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "shield",
+    "illustrative": true
+  },
+  {
+    "id": "p6",
+    "short": "אזעקות ומידע",
+    "he": "מערכות התרעה ותקשורת לאזרח",
+    "description": "אזעקות, הודעות חירום, ערוצי מידע ביום האירוע",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "bell",
+    "illustrative": true
+  },
+  {
+    "id": "p7",
+    "short": "ועדות חקירה",
+    "he": "ועדות החקירה עצמן",
+    "description": "האם מנגנון הבדיקה הלאומי פועל",
+    "domain": "soc",
+    "phase": "after",
+    "icon": "gavel",
+    "illustrative": true
+  },
+  {
+    "id": "p8",
+    "short": "מפונים ושיקום",
+    "he": "טיפול במפונים ושיקום היישובים",
+    "description": "דיור, חינוך, רווחה וחזרה הביתה",
+    "domain": "civ",
+    "phase": "after",
+    "icon": "home",
+    "illustrative": true
+  },
+  {
+    "id": "p9",
+    "short": "התקשורת ביום",
+    "he": "תפקוד התקשורת ביום האירוע",
+    "description": "מידע מוטעה, פערי סיקור, קשר עם לכודים",
+    "domain": "soc",
+    "phase": "during",
+    "icon": "mic",
+    "illustrative": true
+  }
+]

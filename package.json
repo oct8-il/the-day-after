@@ -1,0 +1,33 @@
+{
+  "name": "the-next-day",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "npx serve out",
+    "validate": "node --experimental-strip-types scripts/validate.ts",
+    "export:prototype": "node scripts/export-prototype.mjs",
+    "sync:css": "node scripts/sync-globals-css.mjs",
+    "fidelity": "playwright test",
+    "fidelity:update": "playwright test --update-snapshots",
+    "validate:strict": "node --experimental-strip-types scripts/validate.ts --strict"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.18.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2"
+  }
+}

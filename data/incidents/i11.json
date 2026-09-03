@@ -1,0 +1,44 @@
+{
+  "id": "i11",
+  "parent": "p4",
+  "he": "ציר מרכזי לא נחסם ומידע לא הופץ לנהגים",
+  "summary": "ציר תנועה ראשי נותר פתוח בשעות הראשונות, ולא הופצה בעניינו התרעה ייעודית לנהגים.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i11-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "דוח מבקר המדינה — חסימת צירים",
+      "date": "2025",
+      "place": "road232",
+      "quote": "הציר לא נחסם ולא הופצה התרעה",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i11-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "עדויות נהגים שפורסמו",
+      "date": "2023",
+      "place": "road232",
+      "quote": "נהגים נכנסו לאזור בלי לדעת",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i11-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת משטרת ישראל",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

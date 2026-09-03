@@ -1,0 +1,44 @@
+{
+  "id": "i04",
+  "parent": "p3",
+  "he": "יישוב נותר ללא כוח צבאי לאורך כל האירוע",
+  "summary": "ביישוב אחד לפחות לא הגיע כוח צבאי במשך כל שעות האירוע. ההתמודדות נותרה בידי כיתת הכוננות והתושבים.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i04-c01",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "place": "niroz",
+      "quote": "לא הגיע כוח צבאי במהלך האירוע",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i04-c02",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "עדויות שפורסמו מטעם ועד היישוב",
+      "date": "2024",
+      "place": "niroz",
+      "quote": "ההתמודדות נותרה בידי התושבים",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i04-c03",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

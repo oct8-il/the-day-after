@@ -1,0 +1,32 @@
+{
+  "id": "i19",
+  "parent": "p9",
+  "he": "דיווחים לא מאומתים שודרו בזמן אמת",
+  "summary": "בשעות הראשונות שודרו דיווחים שלא אומתו, ובהם מידע שגוי על מיקומים ועל היקף האירוע.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i19-c01",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר — סיקור בזמן אמת",
+      "date": "2024",
+      "quote": "שודרו דיווחים שלא אומתו לפני השידור",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i19-c02",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "הודעת גוף שידור",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

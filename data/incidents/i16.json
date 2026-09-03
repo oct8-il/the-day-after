@@ -1,0 +1,33 @@
+{
+  "id": "i16",
+  "parent": "p7",
+  "he": "אין מנגנון בדיקה לאומי אחד עם סמכות ומועד סיום",
+  "summary": "הבדיקות מתנהלות במקביל בגופים נפרדים, בלי גוף אחד בעל סמכות מלאה, מנדט אחיד ולוח זמנים מחייב.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i16-c01",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר — מנגנוני בדיקה לאומיים",
+      "date": "2024",
+      "quote": "אין גוף אחד עם סמכות מלאה ומועד סיום",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i16-c02",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגוני משפחות — פנייה שפורסמה",
+      "date": "2024",
+      "quote": "הבדיקות מפוצלות בין גופים ללא מנדט אחיד",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}

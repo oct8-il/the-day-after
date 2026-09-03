@@ -1,0 +1,54 @@
+{
+  "id": "i12",
+  "parent": "p3",
+  "he": "מפקדה קדמית הותקפה ואיבדה שליטה",
+  "summary": "מוקד פיקוד קדמי הותקף בשלב מוקדם ואיבד את היכולת לנהל את הכוחות בגזרה. לא הופעל מוקד חלופי במהירות.",
+  "illustrative": true,
+  "claims": [
+    {
+      "id": "i12-c01",
+      "asserts_stage": 1,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "place": "reim",
+      "quote": "אובדן שליטה מבצעית בשלב מוקדם",
+      "contests": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i12-c02",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "תחקיר צה״ל",
+      "date": "02.2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i12-c03",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "שינוי פריסת מוקדי הפיקוד",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    },
+    {
+      "id": "i12-c04",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "דיווח צה״ל על השלמת השינוי",
+      "date": "2025",
+      "contests": null,
+      "place": null,
+      "url": null,
+      "archive_url": null
+    }
+  ]
+}
