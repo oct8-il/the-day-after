@@ -4,9 +4,14 @@
  *   npm run validate          shape + rules (dev)
  *   npm run validate:strict   + publishable (staging, prod)
  *
- * strict is what staging and prod run: it additionally refuses illustrative
- * records and claims with no source URL. dev may carry illustrative data while
- * the port is in progress; staging may not.
+ * strict is what staging and prod run. It judges what the site PUBLISHES, not
+ * what happens to sit in data/: an incident appears on the site only if its id
+ * is in data/published.json, and every published incident must be fully sourced
+ * - no illustrative flag, a live URL on every claim. Incidents not yet
+ * published may be as rough as they like, because nobody can see them.
+ *
+ * So Phase 2 is a loop: source an incident, add its id to published.json,
+ * promote. That commit is the "published" event the corrections page reads.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -23,6 +28,10 @@ const warnings: string[] = [];
 const fail = (where: string, msg: string) => errors.push(`${where}: ${msg}`);
 const warn = (where: string, msg: string) => warnings.push(`${where}: ${msg}`);
 const read = (rel: string) => JSON.parse(readFileSync(join(DATA, rel), 'utf8'));
+
+/** The incidents the site shows. Everything else is work in progress. */
+const published: string[] = read('published.json');
+const isPublished = (id: string) => published.includes(id);
 const issues = (e: { issues: { path: PropertyKey[]; message: string }[] }) =>
   e.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ');
 
@@ -98,8 +107,8 @@ for (const file of files) {
     }
 
     if (!c.url) {
-      if (inc.illustrative) warn(cw, 'no source URL (illustrative)');
-      else fail(cw, 'no source URL - a claim without a link is not admissible');
+      if (isPublished(inc.id)) fail(cw, 'published with no source URL - a claim without a link is not admissible');
+      else warn(cw, 'no source URL (not published yet)');
     } else publishable++;
 
     if (c.place && !placeIds.has(c.place)) fail(cw, `unknown place "${c.place}"`);
@@ -118,14 +127,18 @@ for (const file of files) {
   if (stageOf(inc) === 5 && !hasIndependentVerification(inc)) {
     fail(where, 'computed stage is 5 without an independent verifying source');
   }
-  if (STRICT && inc.illustrative) fail(where, 'still marked illustrative - illustrative records do not reach staging or prod');
+  if (STRICT && isPublished(inc.id) && inc.illustrative) {
+    fail(where, 'published but still marked illustrative - take it out of published.json until it is sourced');
+  }
 }
 
-if (STRICT) for (const p of parents) if (p.illustrative) fail(`parents/${p.id}`, 'still marked illustrative');
+for (const id of published) {
+  if (!seen.has(id)) fail('published.json', `${id} is published but has no file in data/incidents/`);
+}
 
 const label = STRICT ? 'strict (staging/prod)' : 'permissive (dev)';
 console.log(`\n  hayom-shaacharei . data validation . ${label}`);
-console.log(`  ${parents.length} parents in ${cells.size} matrix cells | ${files.length} incidents | ${claimCount} claims | ${publishable} with a source URL | ${places.length} places | ${taxonomy.stages.length} stages\n`);
+console.log(`  ${parents.length} parents in ${cells.size} matrix cells | ${published.length} of ${files.length} incidents published | ${claimCount} claims, ${publishable} with a source URL | ${places.length} places | ${taxonomy.stages.length} stages\n`);
 for (const w of warnings.slice(0, 6)) console.log(`  warn  ${w}`);
 if (warnings.length > 6) console.log(`  warn  ... and ${warnings.length - 6} more`);
 for (const e of errors) console.log(`  FAIL  ${e}`);

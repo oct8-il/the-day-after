@@ -38,9 +38,15 @@ The ledger is files in this repository. `data/schema/index.ts` is its shape and
 - every incident needs a stage-1 claim;
 - institutions, units and systems only — never individuals.
 
+`data/published.json` names the incidents the site actually shows. An incident
+that is not in it exists in the repository but nowhere on the site, so it may
+be as rough as it likes. `npm run validate:strict` -- what staging and prod run
+-- judges only what is published: no `illustrative` flag, a live URL on every
+claim. Sourcing an incident therefore ends with adding its id to that file, and
+that commit is the "published" event the corrections page reads.
+
 Records still carrying `illustrative: true` came from the prototype and are
-placeholders. `npm run validate:strict` refuses them, and that is what stands
-between `dev` and `staging`.
+placeholders. None of them is published.
 
 Data changes go in by pull request, even solo: the PR is the review queue, and
 the commit landing on `prod` is the "published" event the corrections page
