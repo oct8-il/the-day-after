@@ -22,6 +22,8 @@ specification. It is not a place to work any more.
 3. **Every view is compared against the prototype, pixel for pixel.** Sixteen
    baselines — four views × two themes × two widths — captured on the CI runner
    and diffed there. Never captured on a laptop: fonts rasterise differently.
+   A view is only checked once its name is in `tests/fidelity/ported.json`, so
+   turning the gate on for a view is a deliberate line in a commit.
 4. **Ported against real data, not the prototype's.** Layouts that survive a
    90-character title and an incident with one claim are the ones that ship.
 

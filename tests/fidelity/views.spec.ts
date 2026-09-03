@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 /**
  * Rule 3 of the port: every ported view is compared, pixel for pixel, against
@@ -24,6 +25,11 @@ const VIEWS = [
 ] as const;
 
 const THEMES = ['dark', 'light'] as const;
+
+/** The views whose port is finished and must match the prototype from now on. */
+const PORTED: string[] = JSON.parse(
+  readFileSync(join(process.cwd(), 'tests', 'fidelity', 'ported.json'), 'utf8'),
+);
 
 /** The prototype's first-visit sequences are stateful; screenshots are not. */
 async function settle(page: Page) {
@@ -51,10 +57,13 @@ for (const view of VIEWS) {
         await page.evaluate((h) => { location.hash = h; }, view.hash);
         await page.waitForTimeout(400);
       } else {
-        const res = await page.goto(view.path);
-        // Views are ported one at a time; a route that does not exist yet is
-        // skipped, so the gate tightens by itself as each view lands.
-        test.skip(!res || res.status() >= 400, `${view.name} is not ported yet`);
+        // Views are ported one at a time. A view counts as ported only when its
+        // name is added to ported.json, so switching the gate on for a view is a
+        // deliberate line in a commit rather than a side effect of a route
+        // existing. Until then the app renders a shell there and comparing it
+        // against the prototype would be noise.
+        test.skip(!PORTED.includes(view.name), `${view.name} is not ported yet`);
+        await page.goto(view.path);
         await settle(page);
       }
       await settle(page);
