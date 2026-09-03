@@ -53,10 +53,14 @@ fails on every other machine forever, because fonts rasterise differently.
 
 <https://vercel.com/new> → import the repo (grant access to the org).
 
-- **Production Branch**: `prod`.
-- **Environment Variables**, one name, three values:
-  `NEXT_PUBLIC_ENV` = `prod` (Production), `staging` (Preview, branch
-  `staging`), `dev` (Preview, branch `dev`).
+- **Settings -> Environments -> Production**: set the tracked branch to `prod`.
+  Vercel defaults it to the repository's default branch, which is `dev`, so
+  without this the apex domain serves dev.
+- **Environment variables: none.** The build reads the branch name from
+  `VERCEL_GIT_COMMIT_REF` and decides for itself, so there is nothing to set in
+  Production, Preview or Development, and nothing that can drift out of sync
+  with the branch model. `prod` is the only environment without a ribbon and
+  the only one search engines are allowed to index.
 - **Domains**: apex on `prod`, `staging.` and `dev.` on their branches — once
   the domain exists.
 
