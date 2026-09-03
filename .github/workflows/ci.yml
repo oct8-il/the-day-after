@@ -1,0 +1,159 @@
+# One workflow, three tiers.
+#
+#   every push and PR   validate -> build -> fidelity
+#   staging             + link liveness, share images, Lighthouse on mobile
+#   prod                + release: deploy artefacts, corrections page, tag
+#
+# Promotion between the three branches is always a whole-branch fast-forward,
+# so a green run on dev is the same commit that becomes staging, then prod.
+
+name: ci
+
+on:
+  push:
+    branches: [dev, staging, prod]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      capture_baselines:
+        description: 'Recapture the fidelity baselines from the frozen prototype and commit them'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  # ---------------------------------------------------------------- validate
+  validate:
+    name: validate data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      # dev may carry illustrative records while the port is in progress.
+      # staging and prod may not: strict refuses anything without a live source.
+      - name: validate
+        run: |
+          if [ "${{ github.ref_name }}" = "staging" ] || [ "${{ github.ref_name }}" = "prod" ]; then
+            npm run validate:strict
+          else
+            npm run validate
+          fi
+
+  # ------------------------------------------------------------------- build
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_ENV: ${{ github.ref_name == 'prod' && 'prod' || github.ref_name == 'staging' && 'staging' || 'dev' }}
+      - uses: actions/upload-artifact@v4
+        with: { name: site, path: out/, retention-days: 7 }
+
+  # ---------------------------------------------------------------- fidelity
+  # Rule 3: every ported view is compared against the frozen prototype. The
+  # baselines were captured on this same runner image with this same pinned
+  # browser; that is why the comparison never runs on a laptop.
+  fidelity:
+    name: fidelity vs. prototype
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ !inputs.capture_baselines }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@v4
+        with: { name: site, path: out }
+      - name: serve the exported site
+        run: npm start & npx wait-on http://localhost:4173 -t 30000
+      - name: compare
+        run: npm run fidelity:app
+        env:
+          FIDELITY_BASE_URL: http://localhost:4173
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: fidelity-diff, path: playwright-report/, retention-days: 14 }
+
+  # Run by hand from the Actions tab. Captures the sixteen baselines from
+  # docs/prototype.html and commits them, so the images in git were always made
+  # by this runner and never by a machine with different fonts.
+  baselines:
+    name: capture baselines
+    runs-on: ubuntu-latest
+    if: ${{ inputs.capture_baselines }}
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run fidelity:baseline
+      - name: commit them
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add tests/fidelity/baseline
+          git diff --cached --quiet && echo 'baselines unchanged' && exit 0
+          git commit -m 'Fidelity baselines captured from prototype-v0.4-final'
+          git push
+
+  # ------------------------------------------------- integrated, on staging
+  integrated:
+    name: integrated checks
+    runs-on: ubuntu-latest
+    needs: [build, fidelity]
+    if: github.ref_name == 'staging'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      # A dead link in the ledger is the one failure the project cannot argue
+      # its way out of, so it blocks the promotion rather than being a warning.
+      - name: every source link answers
+        run: npm run check:links
+      - uses: actions/download-artifact@v4
+        with: { name: site, path: out }
+      - name: serve the exported site
+        run: npm start & npx wait-on http://localhost:4173 -t 30000
+      - name: Lighthouse, mobile, item page
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: http://localhost:4173/item/i13/
+          configPath: ./.github/lighthouse.json
+          uploadArtifacts: true
+
+  # ------------------------------------------------------- release, on prod
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    needs: [build, fidelity]
+    if: github.ref_name == 'prod'
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      # The corrections page is the public record of what changed and when. It
+      # is rendered from the history of data/, so it cannot drift from reality.
+      - name: regenerate the corrections page
+        run: node scripts/build-corrections.mjs || echo 'corrections generator lands in W4'

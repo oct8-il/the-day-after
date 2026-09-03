@@ -9,13 +9,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "npx serve out",
+    "start": "node scripts/serve-out.mjs",
     "validate": "node --experimental-strip-types scripts/validate.ts",
-    "export:prototype": "node scripts/export-prototype.mjs",
-    "sync:css": "node scripts/sync-globals-css.mjs",
+    "validate:strict": "node --experimental-strip-types scripts/validate.ts --strict",
+    "check:links": "node scripts/check-links.mjs",
     "fidelity": "playwright test",
-    "fidelity:update": "playwright test --update-snapshots",
-    "validate:strict": "node --experimental-strip-types scripts/validate.ts --strict"
+    "fidelity:baseline": "FIDELITY_TARGET=prototype playwright test --update-snapshots",
+    "fidelity:app": "FIDELITY_TARGET=app playwright test",
+    "export:prototype": "node scripts/export-prototype.mjs",
+    "sync:css": "node scripts/sync-globals-css.mjs"
   },
   "dependencies": {
     "next": "16.3.4",
