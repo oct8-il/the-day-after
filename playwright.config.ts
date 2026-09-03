@@ -32,7 +32,7 @@ export default defineConfig({
     locale: 'he-IL',
     timezoneId: 'Asia/Jerusalem',
     colorScheme: 'dark',
-    reducedMotion: 'reduce',
+    contextOptions: { reducedMotion: 'reduce' },
     trace: 'off',
   },
   projects: [
