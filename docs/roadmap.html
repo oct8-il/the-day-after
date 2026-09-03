@@ -1,0 +1,554 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43; --flag:#c9a45a;
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    --hol:rgba(217,165,79,.10);
+    --shadow:0 1px 0 rgba(255,255,255,.03) inset;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      --hol:rgba(185,122,28,.10);
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    --hol:rgba(185,122,28,.10);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .frame{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:64px 0 40px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:10px 0 6px;text-wrap:balance}
+  h1 .he{direction:rtl;unicode-bidi:isolate}
+  .subtitle{font-size:20px;color:var(--text-2);max-width:60ch;margin:0;text-wrap:balance}
+  .meta{display:grid;grid-auto-flow:row;gap:6px;text-align:right;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .meta b{color:var(--text-2);font-weight:600}
+  .meta .big{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:44px;line-height:1;color:var(--accent);font-weight:500}
+
+  .layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;margin-top:48px}
+  nav.toc{position:sticky;top:24px;align-self:start;font-size:14px}
+  nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  nav.toc a{color:var(--muted);border:0;display:block;padding:2px 0 2px 12px;border-left:2px solid var(--line-soft)}
+  nav.toc a:hover{color:var(--text);border-left-color:var(--accent)}
+  nav.toc .toc-h{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:600}
+
+  main{min-width:0}
+  section{padding:40px 0;border-bottom:1px solid var(--line-soft)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:32px;line-height:1.15;margin:0 0 6px;text-wrap:balance}
+  .lede{color:var(--text-2);font-size:18px;margin:0 0 24px;max-width:66ch}
+  h3{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:32px 0 10px}
+  p{max-width:68ch;margin:0 0 14px}
+  ul,ol{max-width:68ch;margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:6px}
+  li::marker{color:var(--muted)}
+  strong{color:var(--text);font-weight:600}
+  .he{direction:rtl;unicode-bidi:isolate;font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;color:var(--text)}
+  code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em;background:var(--surface-2);padding:1px 6px;border-radius:3px;color:var(--text)}
+
+  .rule{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;max-width:68ch;padding:14px 0;border-top:1px solid var(--line-soft)}
+  .rule:last-child{border-bottom:1px solid var(--line-soft)}
+  .rule .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:3px;margin-top:4px;white-space:nowrap}
+  .rule p{margin:0}
+  .rule p+p{margin-top:6px;color:var(--text-2);font-size:15.5px}
+
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:900px}
+  .panel{background:var(--surface);border:1px solid var(--line);padding:20px 22px;box-shadow:var(--shadow)}
+  .panel h4{margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .panel p,.panel ul{font-size:15.5px;margin-bottom:8px}
+  .panel ul{padding-left:18px}
+  .panel.out h4{color:var(--s6)}
+  .panel.in h4{color:var(--s5)}
+
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  .tablewrap{overflow-x:auto;max-width:900px;margin:8px 0 16px}
+  th{text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--text-2)}
+  td:first-child{color:var(--text);font-weight:600}
+  tr:last-child td{border-bottom:0}
+
+  /* phases */
+  .phase{max-width:900px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--st,var(--accent));padding:20px 24px 18px;margin:0 0 18px;box-shadow:var(--shadow)}
+  .phase .head{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+  .phase .n{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--st,var(--accent));font-weight:500;letter-spacing:.06em}
+  .phase h4{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:24px;margin:0;color:var(--text)}
+  .phase .when{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .phase p,.phase ul{font-size:15.5px}
+  .phase ul{padding-left:18px;margin-bottom:10px}
+  .phase .gate{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-top:12px;padding:12px 14px;background:var(--surface-2);font-size:15px}
+  .phase .gate b{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--st,var(--accent));font-weight:700;margin-top:3px;white-space:nowrap}
+  .phase .gate span{color:var(--text)}
+  .phase.post{border-top-style:dashed;background:transparent}
+
+  /* calendar */
+  .cal{max-width:900px;border-top:1px solid var(--line);font-size:14.5px}
+  .cal .wk{display:grid;grid-template-columns:118px 1fr;gap:0 18px;padding:16px 0;border-bottom:1px solid var(--line-soft)}
+  .cal .d{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--accent);line-height:1.45;font-variant-numeric:tabular-nums}
+  .cal .d small{display:block;color:var(--muted);font-size:11.5px;margin-top:6px;line-height:1.4}
+  .cal .d small.hol{color:var(--partial)}
+  .cal .tracks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .cal .tr{min-width:0}
+  .cal .tr b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .cal .tr.b b{color:var(--s3)} .cal .tr.dt b{color:var(--s5)} .cal .tr.l b{color:var(--s2)}
+  .cal .tr ul{margin:0;padding-left:16px;font-size:14px;color:var(--text-2)}
+  .cal .tr li{margin-bottom:3px}
+  .cal .gate{grid-column:2;margin-top:10px;font-size:14px;color:var(--text);padding:8px 12px;background:var(--surface-2);display:grid;grid-template-columns:auto 1fr;gap:10px}
+  .cal .gate b{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:3px}
+  .cal .wk.launch{background:linear-gradient(90deg,var(--accent-soft),transparent 60%);padding:16px 0 16px 10px;border-left:2px solid var(--accent)}
+
+  /* cut order */
+  ol.cut{list-style:none;padding:0;max-width:68ch;counter-reset:c}
+  ol.cut li{counter-increment:c;display:grid;grid-template-columns:34px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft);margin:0}
+  ol.cut li::before{content:counter(c);font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--s6);margin-top:3px}
+  ol.cut li span{color:var(--text-2);font-size:15px;display:block}
+
+  /* tree */
+  pre{background:var(--surface);border:1px solid var(--line);padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.5;max-width:900px;color:var(--text-2);margin:8px 0 18px;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+  pre .c{color:var(--muted)}
+  pre .k{color:var(--accent)}
+
+  .flow{max-width:900px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:12px 0 20px;border:1px solid var(--line);background:var(--surface)}
+  .env{padding:16px 18px;border-right:1px solid var(--line-soft);border-top:3px solid var(--st)}
+  .env:last-child{border-right:0}
+  .env .b{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--st);font-weight:500}
+  .env .u{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin:2px 0 8px;overflow-wrap:anywhere}
+  .env .w{font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.4}
+  .env ul{margin:0;padding-left:16px;font-size:13.5px;color:var(--text-2)}
+  .env li{margin-bottom:3px}
+  .env .lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:10px 0 4px}
+  @media (max-width:860px){.flow{grid-template-columns:1fr}.env{border-right:0;border-bottom:1px solid var(--line-soft)}.env:last-child{border-bottom:0}}
+  .risk{display:grid;grid-template-columns:auto 1fr;gap:14px;max-width:68ch;padding:12px 0;border-top:1px solid var(--line-soft)}
+  .risk:last-child{border-bottom:1px solid var(--line-soft)}
+  .risk .lv{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;margin-top:5px;white-space:nowrap}
+  .risk .lv.hi{color:var(--s6)} .risk .lv.md{color:var(--partial)} .risk .lv.lo{color:var(--muted)}
+  .risk p{margin:0} .risk p+p{margin-top:4px;color:var(--text-2);font-size:15px}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:24px}
+    nav.toc{position:static}
+    header.masthead{grid-template-columns:1fr}
+    .meta{text-align:left}
+    .grid2{grid-template-columns:1fr}
+    .cal .wk{grid-template-columns:1fr}
+    .cal .tracks{grid-template-columns:1fr}
+    .cal .gate{grid-column:1}
+    .phase .when{margin-left:0;width:100%}
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head><body>
+<div class="frame">
+<header class="masthead">
+  <div>
+    <div class="kicker">Roadmap · v0.3 · 3 September 2026</div>
+    <h1>From prototype to launch<br><span class="he">היום שאחרי</span></h1>
+    <p class="subtitle">The prototype is finished as a design. From today it is a specification. This is the plan for turning it into a public site by 7 October 2026 without losing what makes it good.</p>
+  </div>
+  <div class="meta">
+    <div class="big">34<span style="font-size:18px;color:var(--muted)"> days</span></div>
+    <div>Launch <b>Wed 7 Oct 2026</b> · fixed</div>
+    <div>Ships <b>read-only ledger, real data</b></div>
+    <div>Built by <b>one person</b></div>
+    <div>Method <b>port the prototype</b></div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol>
+    <li><a href="#now">What changes now</a></li>
+    <li><a href="#scope">Launch-day product</a></li>
+    <li><a href="#fidelity">Keeping the prototype's UI</a></li>
+    <li><a href="#social">Social layer</a></li>
+    <li><a href="#arch">Architecture at launch</a></li>
+    <li><a href="#repo">Repo, CI and deploy</a></li>
+    <li><a href="#phases">Phases and gates</a></li>
+    <li><a href="#calendar">Five weeks</a></li>
+    <li><a href="#cut">Cut order</a></li>
+    <li><a href="#risks">Risks</a></li>
+    <li><a href="#open">Open questions</a></li>
+    <li><a href="#log">Decision log</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="now">
+  <h2>What changes now</h2>
+  <p class="lede">The hard part of leaving the prototype phase is not technical. It is deciding that the prototype is done, and then treating it as a source of truth rather than a thing to keep polishing.</p>
+  <p>Three things come out of the prototype, and nothing else counts as "the design":</p>
+  <ul>
+    <li><strong>A stylesheet.</strong> The 35 tokens and every rule in its <code>&lt;style&gt;</code> block. Copied, not translated.</li>
+    <li><strong>A set of behaviours.</strong> Its render functions (<code>renderItem</code>, <code>openParent</code>, <code>drawMap</code>, <code>publicThread</code>, the intro sequences) are the component list, one to one.</li>
+    <li><strong>A screenshot baseline.</strong> Four views, two themes, two widths, captured once from the frozen prototype. Every ported view is compared against it.</li>
+  </ul>
+  <p>From today, work runs on three parallel tracks. <strong>Build</strong> moves the prototype into a real codebase. <strong>Data</strong> replaces illustrative content with real sourced claims — this is the long pole, and it starts this week, not after the build. <strong>Launch</strong> covers legal review, outreach and social. The date is fixed, so each week ends with a gate and, if necessary, a cut from the ordered list at the bottom of this document.</p>
+</section>
+
+<section id="scope">
+  <h2>Launch-day product</h2>
+  <p class="lede">A read-only ledger with real data. Sign-in and voting come after launch; on 7 October the opinion chapter shows the stage question and says the vote opens soon.</p>
+  <div class="grid2">
+    <div class="panel in">
+      <h4>Ships on 7 October</h4>
+      <ul>
+        <li>Failure matrix home (<span class="he">הכשלים</span>) with headline strip and first-visit opening sequence</li>
+        <li>Gap view (<span class="he">הפער</span>)</li>
+        <li>Item pages: chapters 1–2 fully live; chapter 3 shows the current-stage question with <span class="he">ההצבעה תיפתח בקרוב</span></li>
+        <li>Evidence map inside items that have placed claims</li>
+        <li>Methodology / about page in prose, corrections page</li>
+        <li>Real data: 9 parents, ≥ 20 incidents, every incident with at least one linked stage-1 claim</li>
+        <li>Share images made by the site itself: a link-preview card per item, plus Instagram post and story formats behind a share button (low priority within the MVP — see <a href="#social">Social layer</a>)</li>
+        <li>Hebrew, RTL, mobile-first, light and dark</li>
+      </ul>
+    </div>
+    <div class="panel out">
+      <h4>Deliberately after launch</h4>
+      <ul>
+        <li>Google/Apple sign-in and Israeli phone OTP</li>
+        <li>Per-stage votes, thresholds, frozen chapters, results</li>
+        <li>Free-text answers, AI clustering, representative quotes</li>
+        <li>AI-drafted stage summaries with footnotes (launch uses editor-written summaries for the deepest items only)</li>
+        <li>Archive snapshots for claim URLs (the field exists in the schema; filled after launch)</li>
+        <li>Daily source scan and review queue</li>
+        <li>Timeline, browse-by-place, <span class="he">עמותה</span> registration</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:18px">The reason to leave voting out is not that it is hard to build — it is that it cannot be half built. A vote button that exists implies verification, thresholds, a privacy story and a moderation story, all of which have to be right on day one or they become the story. A ledger with no vote is complete; a ledger with a broken vote is not.</p>
+</section>
+
+<section id="social">
+  <h2>Social layer</h2>
+  <p class="lede">The site produces its own share images. Not a screenshot someone takes of it — an image the site renders, in its own typography and colours, that looks right in an Instagram feed and links back to the item.</p>
+  <h3>What it is</h3>
+  <ul>
+    <li>Three formats per item and per parent: <strong>link card</strong> 1200 × 630 (the Open Graph image every WhatsApp, X and Facebook preview shows), <strong>post</strong> 1080 × 1350 and <strong>story</strong> 1080 × 1920.</li>
+    <li>Content is what the tile already carries: icon, name, the stage ladder with the current stage lit, one sentence the site can produce automatically — <span class="he">1,096 ימים אחרי, עדיין בשלב 2</span> — and the site mark. Institutions only, no photographs, no individuals: the editorial rule applies to images exactly as to text.</li>
+    <li>A share button (<span class="he">שיתוף</span>) on item and parent pages opens a sheet with the three formats; on a phone it hands the image to the system share sheet (Web Share API with files), which is how it reaches Instagram. On desktop it downloads.</li>
+  </ul>
+  <h3>How it is built without a second design</h3>
+  <p>Rule 1 applies here too. The share image is a page — <code>/share/[id]/[format]</code> — styled by the same <code>globals.css</code>, rendered at build time by the same pinned Playwright browser the fidelity gate uses, and saved as PNGs under <code>public/share/</code>. The site stays static, Hebrew and RTL render exactly as they do in the browser, and every image is regenerated whenever the data changes. The obvious alternative, Next.js's built-in image generation (satori), is rejected: its right-to-left text handling is unreliable and it would mean a second stylesheet.</p>
+  <h3>Priority</h3>
+  <p>In the MVP, but scheduled last: the link-card format comes with the share route in W3 because every shared URL needs it; the post and story formats and the share sheet are W4 work and sit second on the cut list. If they are cut, the route and the CSS stay and they ship the week after launch.</p>
+</section>
+
+<section id="fidelity">
+  <h2>Keeping the prototype's UI</h2>
+  <p class="lede">Prototypes lose their quality in production for four predictable reasons. Each has a rule that prevents it.</p>
+  <p>Fidelity is lost at the seams: tokens get <em>re-created</em> instead of copied ("close enough" colours, spacing rounded to a framework's scale); markup gets <em>re-invented</em> to fit a component library (a library card is not your card); the parts that were never written down — hover, focus, empty and loading states, first-visit motion — are never ported because they were not in "the spec"; and real data breaks layouts that were designed on ideal data. None of these is a skill problem. They are a process problem, and the process below is the fix.</p>
+
+  <div class="rule"><span class="tag">Rule 1</span><div><p>The prototype's stylesheet becomes the app's global stylesheet, verbatim, on day one.</p><p>No Tailwind, no CSS-in-JS, no design-token "translation". Tokens keep their names (<code>--s1</code>…<code>--s6</code>, <code>--bub-pro</code>, <code>--t-press</code>), classes keep their names. The framework is plumbing under the design, never a second opinion on it.</p></div></div>
+  <div class="rule"><span class="tag">Rule 2</span><div><p>Components are the prototype's render functions moved, not redesigned.</p><p>One function becomes one component and must emit the same DOM. <code>renderItem</code> → <code>ItemPage</code>, <code>openParent</code> → <code>ParentPanel</code>, <code>publicThread</code> → <code>PublicThread</code>. The port test is a DOM diff, not an opinion.</p></div></div>
+  <div class="rule"><span class="tag">Rule 3</span><div><p>A screenshot baseline is captured before the port starts and every view must match it.</p><p>Playwright renders the frozen prototype: home, gap, item (i13), about × dark, light × 390 px, 1280 px — 16 images committed to the repo. The same script renders the app; a pixel diff above a small threshold fails the check. This is the fidelity gate, and it runs in CI.</p></div></div>
+  <div class="rule"><span class="tag">Rule 4</span><div><p>The prototype is frozen at a git tag the day the port begins. Design changes after that happen in the app.</p><p>Two living copies diverge within days and one of them becomes the lie. After <code>prototype-v0.4-final</code>, <code>docs/prototype.html</code> is a reference and a baseline, not a place to work. The urge to keep tinkering with it is the single biggest schedule risk in this document.</p></div></div>
+  <div class="rule"><span class="tag">Rule 5</span><div><p>Port with real data, not the prototype's data, and fix what breaks in the one stylesheet.</p><p>A 90-character incident title, an incident with one claim, an incident with forty, a parent with two incidents in a cell — the layouts that survive these are the layouts that ship. Fixes go into <code>globals.css</code>, so the design stays in one file the way it does today.</p></div></div>
+  <div class="rule"><span class="tag">Rule 6</span><div><p>Motion and states are features with tickets, ported last but never dropped silently.</p><p>The opening sequence, the chapter gating on scroll, the ladder climb, the docked header and chapter rail, hover and focus states, <code>prefers-reduced-motion</code>. They are listed in the cut order so a decision to skip them is explicit and recorded, not something that just didn't happen.</p></div></div>
+
+  <h3>What this looks like on day one</h3>
+  <ol>
+    <li>Tag the prototype. Commit the uncommitted stage-colour change first or discard it; either is fine, but the tag must be deliberate.</li>
+    <li>Run one script that extracts the prototype's JS constants (<code>PARENTS</code>, <code>INCIDENTS</code>, <code>PLACES</code>, <code>STAGES</code>, <code>TYPES</code>, <code>Q</code>) to JSON. That JSON is the seed of the data repo and its shape is the first draft of the schema.</li>
+    <li>Scaffold Next.js (static export), paste the <code>&lt;style&gt;</code> block into <code>globals.css</code>, add the Google Fonts link, deploy the empty shell to the real domain.</li>
+    <li>Capture the 16 baseline screenshots and commit them.</li>
+  </ol>
+  <p>After that day the design is safe: it lives in a stylesheet, a data file and sixteen pictures, and nothing about the build can lose it without a red check.</p>
+</section>
+
+<section id="arch">
+  <h2>Architecture at launch</h2>
+  <p class="lede">As small as the concept doc allows. No database, no server, no auth. Everything is a file in a public repo and a static site built from it.</p>
+<pre><span class="c">the-next-day/</span>
+├── data/                      <span class="c">the ledger — public, reviewable, diffable</span>
+│   ├── parents.json
+│   ├── incidents/<span class="k">i13.json</span>      <span class="c">one file per incident, claims inline</span>
+│   ├── places.json
+│   ├── analysts.json           <span class="c">published-analysis authors only</span>
+│   └── schema/                 <span class="c">zod schema; CI fails on any invalid claim</span>
+├── scripts/
+│   ├── export-prototype.ts     <span class="c">one-off: prototype constants → data/</span>
+│   ├── validate.ts             <span class="c">schema + "no URL, no date, no type → no claim"</span>
+│   ├── compute-stage.ts        <span class="c">stage = highest stage with a claim; 5 needs a non-implementer source</span>
+│   └── render-share.ts         <span class="c">Playwright renders /share/… → public/share/*.png at build</span>
+├── app/                        <span class="c">Next.js, output: 'export'</span>
+│   ├── globals.css             <span class="c">= the prototype's &lt;style&gt;, verbatim</span>
+│   ├── page.tsx                <span class="c">/            matrix home</span>
+│   ├── gap/page.tsx            <span class="c">/gap</span>
+│   ├── item/[id]/page.tsx      <span class="c">/item/i13    three chapters</span>
+│   ├── share/[id]/[format]/page.tsx  <span class="c">card · post · story, same globals.css</span>
+│   ├── about/page.tsx          <span class="c">methodology, prose</span>
+│   └── corrections/page.tsx    <span class="c">rendered from git history of data/</span>
+├── public/share/               <span class="c">generated PNGs, committed by CI</span>
+├── tests/fidelity/             <span class="c">Playwright: 16 baselines + diff</span>
+├── .github/workflows/ci.yml    <span class="c">validate → build → fidelity → share images</span>
+└── docs/                       <span class="c">concept, prototype (frozen), this roadmap</span></pre>
+  <p>Hosting is Vercel (decided below). When voting arrives after launch, Supabase attaches to this without changing it: auth and votes live there, a nightly job writes aggregates back into <code>data/</code> as public JSON, and the site stays static.</p>
+</section>
+
+<section id="repo">
+  <h2>Repo, CI and deploy</h2>
+  <p class="lede">The repo is currently local only, on <code>master</code>, with no remote. Putting it on GitHub with three branches and a pipeline is week-one work, and it is what makes "data as code" mean something.</p>
+  <h3>GitHub</h3>
+  <ul>
+    <li>One repository, <code>the-next-day</code>, created and pushed in W1. Three long-lived branches, each one an environment: <code>dev</code>, <code>staging</code>, <code>prod</code>. <code>dev</code> is the default branch.</li>
+    <li>Private until the content freeze on 4 October, public on launch day. The methodology promises a public ledger, and the corrections page is rendered from the repo's history — but a public repo full of illustrative data before launch can be screenshotted out of context.</li>
+    <li>Code goes straight to <code>dev</code> in small commits — one person, no ceremony. <strong>Data goes through pull requests, even solo,</strong> targeting <code>dev</code> like everything else. A PR is the review queue: CI validates the claim, the diff is the audit trail, and the commit landing on <code>prod</code> is the "published" event the corrections page reads. After launch the daily scan opens these PRs by itself and nothing about the process changes.</li>
+    <li><strong>Promotion is always the whole branch, never a cherry-pick:</strong> <code>dev → staging</code> when a gate passes, <code>staging → prod</code> when the integrated check is green. Because nothing is skipped, the three branches never diverge and each promotion is a fast-forward — three commands, no conflicts. A correction after launch is a PR to <code>dev</code> followed by two promotions; if promoting everything on <code>dev</code> is not acceptable at that moment, a hotfix branch off <code>prod</code> is merged to <code>prod</code> and immediately back into <code>staging</code> and <code>dev</code>.</li>
+    <li>Tags mark the moments the document refers to: <code>prototype-v0.4-final</code> when the port begins, <code>v1.0.0</code> on <code>prod</code> on 7 October.</li>
+  </ul>
+  <h3>Three branches, three deployments</h3>
+  <div class="flow">
+    <div class="env" style="--st:var(--s3)">
+      <div class="b">dev</div>
+      <div class="u">dev.&lt;domain&gt;</div>
+      <div class="w">Where code changes happen. Whatever data is on the branch — illustrative until real data lands.</div>
+      <div class="lbl">CI on every push and PR</div>
+      <ul><li>validate data</li><li>build</li><li>fidelity diff vs. baselines</li></ul>
+      <div class="lbl">Promote when</div>
+      <ul><li>a phase gate passes</li></ul>
+    </div>
+    <div class="env" style="--st:var(--s4)">
+      <div class="b">staging</div>
+      <div class="u">staging.&lt;domain&gt;</div>
+      <div class="w">The fully integrated site with real data, as it would be published. Legal review, the stranger test and phone checks happen here.</div>
+      <div class="lbl">CI on every promotion</div>
+      <ul><li>everything dev runs</li><li>every claim URL answers 200</li><li>share images rendered and diffed</li><li>Lighthouse on the item page, mobile</li><li><code>noindex</code>, robots disallow</li></ul>
+      <div class="lbl">Promote when</div>
+      <ul><li>the integrated check is green and you have looked at it on a phone</li></ul>
+    </div>
+    <div class="env" style="--st:var(--s5)">
+      <div class="b">prod</div>
+      <div class="u">&lt;domain&gt;</div>
+      <div class="w">The public site. Nothing is ever committed here directly except a hotfix.</div>
+      <div class="lbl">CI on every promotion</div>
+      <ul><li>build and deploy</li><li>share images committed</li><li>corrections page regenerated from data history</li><li>tag on release</li></ul>
+      <div class="lbl">Promote when</div>
+      <ul><li>never further — this is the end of the line</li></ul>
+    </div>
+  </div>
+  <p>One honesty about this model for a static site: "real data" is not a property of an environment, it is a property of the branch, because the data ships inside the build. So <code>staging</code> is real-data by discipline — it is the branch that only ever receives whole promotions from <code>dev</code>, and the integrated checks (link liveness, share images, Lighthouse) are what make it worth a separate environment. The moment real data lands on <code>dev</code>, <code>dev</code> is "real data" too; the difference between the two is which checks have run and whether a human has looked. Before launch, <code>prod</code> is an empty shell behind the domain, and <code>staging</code> is where the site actually lives for five weeks.</p>
+  <h3>GitHub Actions</h3>
+  <p>One workflow, three tiers: the first three jobs run on every push and pull request to any branch; the integrated jobs run on <code>staging</code>; the release jobs run on <code>prod</code>.</p>
+  <ol>
+    <li><strong>Validate</strong> — every file in <code>data/</code> against the zod schema and the rules: no URL, date or type → no claim; stage 5 needs a non-implementer source; place only on claims; no names of individuals in any text field (a denylist check, not a guarantee).</li>
+    <li><strong>Build</strong> — Next.js static export. A broken build never reaches a preview.</li>
+    <li><strong>Fidelity</strong> — Playwright renders the four views at 390 and 1280, light and dark, in a pinned browser, and diffs against the sixteen baselines. Threshold per image; a failing diff is uploaded as an artifact so the difference is visible without checking out the branch.</li>
+    <li><strong>Integrated, on <code>staging</code></strong> — every claim URL is fetched and must answer; the same browser renders <code>/share/…</code> to PNGs and diffs them against the previous set; Lighthouse runs on the item page at mobile settings and fails below an agreed score.</li>
+    <li><strong>Release, on <code>prod</code></strong> — build, commit the share PNGs back so the deploy is fully static, regenerate the corrections page from the data history, tag.</li>
+  </ol>
+  <h3>Vercel</h3>
+  <p>Chosen over Cloudflare Pages because it runs Next.js with nothing to configure, deploys every branch on its own URL, and takes custom domains with automatic TLS in minutes. <code>prod</code> is the Production branch on the apex domain; <code>staging</code> and <code>dev</code> are branch deployments each assigned a subdomain, plus a preview URL for every pull request. An environment variable per branch tells the build which it is, so <code>staging</code> and <code>dev</code> render a small environment ribbon and a <code>noindex</code> tag and <code>prod</code> does not. The free Hobby tier covers a non-commercial civic site; password-protecting the non-production URLs is a paid feature, so before launch they are simply unlisted and unindexed, which is enough for the risk involved. No secrets exist at launch; when Supabase arrives its keys live in Vercel's per-environment settings, which map onto the same three branches. Because the output is a static folder, moving hosts later is an afternoon, not a project.</p>
+  <h3>Reproducibility</h3>
+  <p>One person is a bus factor of one. The mitigation is that everything is in the repo and <code>npm ci && npm run build</code> reproduces the whole site, images included, on any machine.</p>
+</section>
+
+<section id="phases">
+  <h2>Phases and gates</h2>
+  <p class="lede">Five phases to launch, three afterwards. Each closes with a gate: a sentence that is either true or not.</p>
+
+  <div class="phase" style="--st:var(--s1)">
+    <div class="head"><span class="n">PHASE 0</span><h4>Freeze and scaffold</h4><span class="when">3 – 9 Sep</span></div>
+    <ul>
+      <li>Tag the prototype; export its constants to <code>data/</code>; write the zod schema from what came out.</li>
+      <li>Commit the stage-colour ramp, then tag <code>prototype-v0.4-final</code>. Create the GitHub repo; rename <code>master</code> to <code>dev</code>, create <code>staging</code> and <code>prod</code> from it, push all three.</li>
+      <li>Scaffold Next.js static export with <code>globals.css</code> = prototype styles; connect Vercel; three deployments live — <code>prod</code> on the domain, <code>staging</code> and <code>dev</code> on their subdomains.</li>
+      <li>Capture and commit the 16 baseline screenshots; GitHub Actions running validate, build and fidelity.</li>
+      <li>Data track starts: the admissible-source list and the inclusion rule written down as a checklist.</li>
+    </ul>
+    <div class="gate"><b>Gate</b><span>Three empty deployments, one per branch, reached by promotion through CI; the prototype's fonts and tokens load on each; the data validates; sixteen baseline images are in git.</span></div>
+  </div>
+
+  <div class="phase" style="--st:var(--s2)">
+    <div class="head"><span class="n">PHASE 1</span><h4>Port, one view at a time</h4><span class="when">10 – 23 Sep</span></div>
+    <p>Order matters: the item page first, because it carries the argument and most of the CSS; then the matrix home, then gap, then about. Each view is done when its component emits the prototype's DOM, renders real data, and passes the fidelity check at both widths and both themes.</p>
+    <ul>
+      <li>Item page: three chapters, docked header, chapter rail, ledger, evidence map, argument rows as static content, chapter 3 in "opens soon" state.</li>
+      <li>Matrix home: tiles, stage-distribution bars, headline strip; opening sequence ported last within this phase.</li>
+      <li>Gap view; about page from the concept doc's prose.</li>
+      <li>Share route <code>/share/[id]/card</code> in the site's own CSS, rendered to PNG by CI; wired as the Open Graph image of every page.</li>
+    </ul>
+    <div class="gate"><b>Gate</b><span>All four views pass the fidelity gate on <code>dev</code>, then promoted to <code>staging</code> and looked at on a phone, in both themes.</span></div>
+  </div>
+
+  <div class="phase" style="--st:var(--s3)">
+    <div class="head"><span class="n">PHASE 2</span><h4>Real data</h4><span class="when">3 Sep – 30 Sep, parallel</span></div>
+    <p>The long pole, so it runs the whole way through. Editorial work, not code: for each incident, find the published source that documents it, the source that acknowledged it, the plan if any, the implementation if any, and an independent verification if one exists. Each claim gets a URL, a date, a source type and a quote of at most forty words; archive snapshots come after launch. Places go on claims.</p>
+    <ul>
+      <li>Week 1: source list, inclusion checklist, the 9 parents confirmed against the matrix cells.</li>
+      <li>Week 2: first 10 incidents with complete stage-1 claims; i13 hydrated with real sources to the depth of the prototype's showcase.</li>
+      <li>Week 3: 20 incidents, each added by pull request through CI; contested flags where sources disagree.</li>
+      <li>Week 4: cross-check every URL, write the editor summaries for the five deepest items, seed the corrections page with the first entry ("v1 published").</li>
+    </ul>
+    <div class="gate"><b>Gate</b><span>Every incident on the site has at least one stage-1 claim with a live link; no incident without one exists in <code>data/</code>.</span></div>
+  </div>
+
+  <div class="phase" style="--st:var(--s4)">
+    <div class="head"><span class="n">PHASE 3</span><h4>Launch readiness</h4><span class="when">24 – 30 Sep</span></div>
+    <ul>
+      <li>Legal review pass on <code>staging</code> with real data: sourcing, naming rule, victim-privacy rule, methodology wording.</li>
+      <li>Accessibility pass: keyboard through the item page, contrast in both themes, reduced motion, RTL edge cases in numbers and dates.</li>
+      <li>Performance on a mid-range phone: Lighthouse, font loading, map SVG weight.</li>
+      <li>Post and story share formats and the share sheet — the last build item, first on the cut list after the animations.</li>
+      <li>404, sitemap, robots, favicon; link-card check on WhatsApp and X; no analytics.</li>
+      <li>Outreach drafts to family organisations and community councils; social posts and the launch thread written and scheduled.</li>
+    </ul>
+    <div class="gate"><b>Gate</b><span>A stranger with a phone and ten minutes can read five items and explain the method back to you.</span></div>
+  </div>
+
+  <div class="phase" style="--st:var(--s5)">
+    <div class="head"><span class="n">PHASE 4</span><h4>Launch week</h4><span class="when">1 – 7 Oct</span></div>
+    <ul>
+      <li>Sun 4 Oct: content freeze; <code>staging</code> is final. Only corrections after this.</li>
+      <li>Mon 5 Oct: quiet launch to the outreach list; fix what they find.</li>
+      <li>Wed 7 Oct, morning: promote <code>staging → prod</code>, tag <code>v1.0.0</code>, repo public. Posts go out with per-item cards; the corrections page is the place to send critics.</li>
+    </ul>
+    <div class="gate"><b>Gate</b><span>Live, sourced, shareable, and the first correction handled in public within a day.</span></div>
+  </div>
+
+  <div class="phase post" style="--st:var(--muted)">
+    <div class="head"><span class="n">AFTER LAUNCH</span><h4>Phases 5 – 7</h4><span class="when">Oct – Dec</span></div>
+    <ul>
+      <li><strong>5 · The public question.</strong> Supabase auth (Google/Apple), Israeli phone OTP with salted hash, votes keyed by (user, incident, stage), threshold, nightly aggregate to public JSON, frozen past chapters. Two to four weeks.</li>
+      <li><strong>6 · Arguments.</strong> Free text, clustering job, review queue, representative quotes, the analyst row with named authors.</li>
+      <li><strong>7 · Institution.</strong> Daily source scan into the review queue; <span class="he">עמותה</span> registration; the first "N days later, still at stage 2" automated sentence.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="calendar">
+  <h2>Five weeks</h2>
+  <p class="lede">Week by week, three tracks and a gate. The holidays are marked because they decide when a solo builder actually has time — treat them as either lost days or free days, but decide which.</p>
+  <div class="cal">
+    <div class="wk">
+      <div class="d">W1<br>Thu 3 – Wed 9 Sep</div>
+      <div class="tracks">
+        <div class="tr b"><b>Build</b><ul><li>Commit colours, tag prototype, GitHub repo: <code>dev</code> / <code>staging</code> / <code>prod</code></li><li>Export data, schema; Next.js shell, globals.css</li><li>Vercel: three deployments + domain; Actions: validate, build, fidelity; 16 baselines</li></ul></div>
+        <div class="tr dt"><b>Data</b><ul><li>Source list and inclusion checklist</li><li>Confirm the 9 parents</li></ul></div>
+        <div class="tr l"><b>Launch</b><ul><li>Ask for the pro-bono legal review slot in W4</li></ul></div>
+      </div>
+      <div class="gate"><b>Gate</b>Empty app at the real URL with the prototype's tokens; baselines in git.</div>
+    </div>
+    <div class="wk">
+      <div class="d">W2<br>Thu 10 – Wed 16 Sep<small class="hol">Rosh Hashanah Fri 11 – Sun 13</small></div>
+      <div class="tracks">
+        <div class="tr b"><b>Build</b><ul><li>Item page: chapters 1–2, dock, rail, ledger</li><li>Evidence map</li></ul></div>
+        <div class="tr dt"><b>Data</b><ul><li>10 incidents with stage-1 claims</li><li>i13 to showcase depth with real sources</li></ul></div>
+        <div class="tr l"><b>Launch</b><ul><li>Domain and hosting decided</li></ul></div>
+      </div>
+      <div class="gate"><b>Gate</b>Item page passes fidelity with real i13 data.</div>
+    </div>
+    <div class="wk">
+      <div class="d">W3<br>Thu 17 – Wed 23 Sep<small class="hol">Yom Kippur Sun 20 – Mon 21</small></div>
+      <div class="tracks">
+        <div class="tr b"><b>Build</b><ul><li>Matrix home, gap view, about</li><li>Chapter 3 "opens soon" state</li><li>Share route, card format, wired as OG image</li></ul></div>
+        <div class="tr dt"><b>Data</b><ul><li>20 incidents, by PR through CI</li><li>Contested flags</li></ul></div>
+        <div class="tr l"><b>Launch</b><ul><li>Outreach list drafted</li></ul></div>
+      </div>
+      <div class="gate"><b>Gate</b>All four views pass fidelity; site navigable end to end with real data.</div>
+    </div>
+    <div class="wk">
+      <div class="d">W4<br>Thu 24 – Wed 30 Sep<small class="hol">Sukkot from Fri 25</small></div>
+      <div class="tracks">
+        <div class="tr b"><b>Build</b><ul><li>Opening sequence and item intro</li><li>Post + story formats, share sheet</li><li>Accessibility, performance, corrections page</li></ul></div>
+        <div class="tr dt"><b>Data</b><ul><li>Cross-check every link</li><li>Editor summaries for the 5 deepest items</li></ul></div>
+        <div class="tr l"><b>Launch</b><ul><li>Legal review on the preview</li><li>Posts and thread written</li></ul></div>
+      </div>
+      <div class="gate"><b>Gate</b>The stranger test passes.</div>
+    </div>
+    <div class="wk launch">
+      <div class="d">W5<br>Thu 1 – Wed 7 Oct<small class="hol">Simchat Torah Sat 3 — the Hebrew-calendar anniversary; coverage starts then</small></div>
+      <div class="tracks">
+        <div class="tr b"><b>Build</b><ul><li>Fixes only</li></ul></div>
+        <div class="tr dt"><b>Data</b><ul><li>Freeze Sun 4 Oct; repo goes public</li><li>Corrections only</li></ul></div>
+        <div class="tr l"><b>Launch</b><ul><li>Mon 5: quiet launch of <code>staging</code> to outreach list</li><li>Wed 7: <code>staging → prod</code>, public</li></ul></div>
+      </div>
+      <div class="gate"><b>Gate</b>Live.</div>
+    </div>
+  </div>
+</section>
+
+<section id="cut">
+  <h2>Cut order</h2>
+  <p class="lede">If a weekly gate fails, cut from the top of this list, never from the bottom. Cutting is a decision, so it gets a line in the decision log.</p>
+  <ol class="cut">
+    <li><div>First-visit opening sequence and item intro animation<span>Ship the pages at rest; the sequences return in v1.1. Everything else about the design survives.</span></div></li>
+    <li><div>Instagram post and story formats and the share sheet<span>The link card stays, because every shared URL needs one. The route and CSS stay too; the formats ship the week after launch.</span></div></li>
+    <li><div>Gap view<span>Its data is already visible on the tiles; the view is a second way in.</span></div></li>
+    <li><div>Evidence map inside items<span>The source list stays; the map is its visual aid.</span></div></li>
+    <li><div>Editor summaries for the deepest items<span>The ledger alone is still complete and honest.</span></div></li>
+    <li><div>Number of incidents<span>Twelve fully sourced incidents beat twenty-five with gaps. Quality of sourcing is never cut.</span></div></li>
+  </ol>
+  <p><strong>Never cut:</strong> a linked source on every claim; CI on every change; the methodology page; the item page's three-chapter structure; mobile quality; both themes.</p>
+</section>
+
+<section id="risks">
+  <h2>Risks</h2>
+  <div class="risk"><span class="lv hi">HIGH</span><div><p>Data curation takes longer than the build.</p><p>Mitigation: it starts in week 1 in parallel, incident count is last on the cut list, and the inclusion rule is strict enough that "not enough incidents" is an honest state, not a failure.</p></div></div>
+  <div class="risk"><span class="lv hi">HIGH</span><div><p>Continuing to refine the prototype instead of porting it.</p><p>Mitigation: Rule 4. The tag is the line. Design ideas after the tag go into an issue list for the app.</p></div></div>
+  <div class="risk"><span class="lv md">MED</span><div><p>Holidays remove working days from three of the five weeks.</p><p>Mitigation: the calendar above assumes they are lost; if they turn out to be free days, the gap view and the animations come back off the cut list.</p></div></div>
+  <div class="risk"><span class="lv md">MED</span><div><p>Legal review finds a problem late.</p><p>Mitigation: review happens on the live preview with real data in W4, and the sourcing rules are the defence — nothing on the site is not already published elsewhere.</p></div></div>
+  <div class="risk"><span class="lv md">MED</span><div><p>Launching into the anniversary news cycle, which begins on 3 October this year.</p><p>Mitigation: the quiet launch on the 5th to people who will care is the real launch; the 7th is the public date.</p></div></div>
+  <div class="risk"><span class="lv lo">LOW</span><div><p>Three branches drift because something was cherry-picked or committed to <code>staging</code> directly.</p><p>Mitigation: branch protection on <code>staging</code> and <code>prod</code> allows merges only; the promotion is a two-line script in the repo so it is never done by hand.</p></div></div>
+  <div class="risk"><span class="lv lo">LOW</span><div><p>Fidelity check is too strict and blocks on font rendering noise.</p><p>Mitigation: threshold per image, and the comparison runs in one pinned browser in CI, never on a laptop.</p></div></div>
+</section>
+
+<section id="open">
+  <h2>Open questions</h2>
+  <ul>
+    <li>Domain name — in progress, needed by end of W1 for the share cards and the legal review.</li>
+    <li>GitHub: under the personal account, or an organisation created now for the future <span class="he">עמותה</span>. An org is free and transferring later is annoying; lean org.</li>
+    <li>Repo visibility before launch: private until the 4 October freeze is the current plan; say so if it should be public from day one.</li>
+    <li>What the share image is allowed to say: the stage sentence and counts only, or also the incident's one-line description. Lean stage sentence only — it is the site's voice, not a claim.</li>
+    <li>The name-denylist check in CI: worth building for launch, or an editorial checklist item until the daily scan exists.</li>
+  </ul>
+</section>
+
+<section id="log">
+  <h2>Decision log</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Date</th><th>Decision</th><th>Why</th></tr>
+    <tr><td>3 Sep 2026</td><td>7 October is a hard date; scope is cut, not the date.</td><td>The date is the point. A later launch is a different project.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Launch-day MVP is a read-only ledger with real data; voting follows.</td><td>A vote cannot ship half-built; a ledger can be complete without it.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Port the prototype rather than rebuild it: stylesheet verbatim, render functions become components, screenshot baseline as the gate.</td><td>Every previous project lost its prototype's quality at the rebuild seam. Remove the seam.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Prototype frozen at a tag when the port starts; design changes move to the app.</td><td>Two living copies diverge and one becomes wrong.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Roadmap lives here, in <code>docs/</code>; no ticket tracker for now.</td><td>One person, five weeks. The document is the tracker.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Social layer is in the MVP at low priority: the site renders its own link cards and Instagram post/story images.</td><td>Launch is a social launch; a shareable image is the unit of distribution. Built in the site's own CSS so it costs no second design.</td></tr>
+    <tr><td>3 Sep 2026</td><td>GitHub + GitHub Actions + Vercel. Code to <code>dev</code> directly; data by pull request; repo public on launch day.</td><td>Native Next.js hosting with a deployment per branch and no configuration; PRs make the data review queue real.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Three long-lived branches as environments: <code>dev</code> (code changes) → <code>staging</code> (integrated tests with real data) → <code>prod</code> (public). Whole-branch promotions only; hotfixes off <code>prod</code> merged back down.</td><td>Roy's call. Kept cheap for one person by forbidding cherry-picks, so promotions are fast-forwards and the branches cannot drift.</td></tr>
+    <tr><td>3 Sep 2026</td><td>No archive snapshots, no analytics in the MVP.</td><td>Both are post-launch; the schema keeps the <code>archive_url</code> field.</td></tr>
+    <tr><td>3 Sep 2026</td><td>Chapter 3 shows the stage question with "opens soon" at launch. The warm stage-colour ramp is kept and committed before the tag.</td><td>The structure is part of the argument; the colours were Roy's call.</td></tr>
+  </table></div>
+</section>
+
+</main>
+</div>
+</div>
+
+</body></html>
