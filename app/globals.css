@@ -675,3 +675,66 @@
   /* ---- the gap chart before voting opens (Phase 5) ---- */
   .gapsoon{fill:var(--muted);font-size:15px;font-weight:600}
   .gapsoon.sub{font-size:12.5px;font-weight:400}
+
+  /* ---------------------------------------------------------------------
+     The drawer as a tray inside the grid.
+
+     It is a full-width row of .matrix, inserted under the row of tiles it
+     belongs to, with a notch pointing at the tile that opened it - so the grid
+     opens rather than pushing a panel to the end of the page.
+     --------------------------------------------------------------------- */
+  .matrix > .drawer{grid-column:1/-1;position:relative;margin:0;
+    background:color-mix(in srgb,var(--surface) 88%,var(--text) 3%);
+    border:1px solid var(--line);border-inline-start:3px solid var(--c);
+    box-shadow:0 10px 28px -18px rgba(0,0,0,.85);
+    animation:trayopen .26s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes trayopen{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+  /* The notch sits in a mirror of the matrix's own columns, so it lands under
+     the right domain whatever the column widths resolve to. */
+  .notchrow{position:absolute;inset-block-start:-1px;inset-inline:0;height:0;
+    display:grid;grid-template-columns:72px repeat(3,minmax(0,1fr));gap:10px;pointer-events:none}
+  .notchrow > div{display:grid;place-items:center}
+  .notch{display:block;width:14px;height:14px;background:inherit;
+    background-color:color-mix(in srgb,var(--surface) 88%,var(--text) 3%);
+    border-inline-start:1px solid var(--line);border-block-start:1px solid var(--line);
+    transform:translateY(-7px) rotate(45deg)}
+
+  .drawer .dh .ico{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--c) 22%,var(--surface-2));border:1px solid var(--line)}
+  .drawer .dh .ico svg{width:22px;height:22px}
+  .drawer .close{border-radius:50%;width:30px;height:30px;display:grid;place-items:center;padding:0;
+    border:1px solid transparent}
+  .drawer .close:hover{color:var(--text);border-color:var(--line);background:var(--surface-2)}
+
+  /* Rows: a stage-coloured leading edge, the title over its own metadata line,
+     and a chevron so the row reads as navigable before anyone hovers it. The
+     colour edge is the ledger's, deliberately - the two lists are one system. */
+  .kids .row{grid-template-columns:1fr auto auto;gap:12px;position:relative;
+    padding-inline-start:20px;animation:fadeUp .3s ease both;animation-delay:var(--d,0s)}
+  .kids .row::before{content:"";position:absolute;inset-block:8px;inset-inline-start:0;
+    width:3px;border-radius:2px;background:var(--c)}
+  .kids .row .tx{display:grid;gap:3px;min-width:0}
+  .kids .row .tx .t{color:var(--text);line-height:1.35}
+  .kids .row .tx small{font-size:12.5px;color:var(--muted)}
+  .kids .row .tx .since{font-weight:600;color:var(--text-2)}
+  .kids .row .chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .kids .row .go{color:var(--line);font-size:19px;line-height:1;transition:transform .12s,color .12s}
+  .kids .row:hover .go{color:var(--accent);transform:translateX(3px)}
+  .kids .row:hover .tx .t{color:var(--accent)}
+  .kids.empty{padding:18px 16px;font-size:14px;color:var(--muted)}
+
+  @media (max-width:760px){
+    /* One column: the tray follows the tile that opened it, so the notch has
+       nothing to point at. */
+    .notchrow{display:none}
+    .kids .row{grid-template-columns:1fr auto;row-gap:8px}
+    .kids .row .go{display:none}
+    .kids .row .chips{grid-column:2}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .matrix > .drawer,.kids .row{animation:none}
+    .kids .row:hover .go{transform:none}
+  }
+  a.brand{color:inherit}
+  a.brand:hover .name{color:var(--accent)}

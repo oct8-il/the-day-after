@@ -15,10 +15,11 @@ export function Header({ current }: { current?: 'home' | 'gap' | 'about' }) {
         </div>
       )}
       <header className="top">
-        <div className="brand">
+        {/* The name is the way home, as it is on every site a reader has used. */}
+        <Link className="brand" href="/">
           <span className="name">היום שאחרי</span>
           <span className="tag">מה נכשל, ומה נעשה מאז</span>
-        </div>
+        </Link>
         <nav className="main" aria-label="ראשי">
           <Link href="/" {...(current === 'home' ? { 'aria-current': 'page' as const } : {})}>
             הכשלים

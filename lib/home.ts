@@ -15,7 +15,47 @@ export type ParentCell = {
   children: {
     id: string; he: string; stage: number; color: string; stageHe: string;
     contested: boolean; places: string[];
+    claims: number;
+    /** The most recent date any source in this incident carries, as ISO. */
+    lastSource: string | null;
   }[];
+  /** What the distribution actually says, for the drawer's header line. */
+  verified: number;
+  regressed: number;
+  atStageOne: number;
+};
+
+/**
+ * A claim's date as published: a year, a month, or a day. Resolved to the END
+ * of whatever period it names, so "how long since anything moved" understates
+ * rather than overstates - the project should never make the gap look worse
+ * than the sources support.
+ */
+function claimDate(date: string): Date | null {
+  const parts = date.split('.').map(Number);
+  if (parts.some(Number.isNaN)) return null;
+  if (parts.length === 1) return new Date(Date.UTC(parts[0], 11, 31));
+  if (parts.length === 2) return new Date(Date.UTC(parts[1], parts[0], 0));
+  return new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+}
+
+/** The most recent thing any source said about this incident. */
+function lastSourceOf(inc: Incident): string | null {
+  const dates = inc.claims.map((c) => claimDate(c.date)).filter(Boolean) as Date[];
+  if (!dates.length) return null;
+  return new Date(Math.max(...dates.map((d) => d.getTime()))).toISOString();
+}
+
+/**
+ * Worst first. A failure that regressed leads, then the ones furthest from
+ * being fixed, and within a stage the one nothing has been said about for
+ * longest. A drawer that opens on what is stuck answers a question; one in
+ * file order only lists.
+ */
+const worstFirst = (a: { stage: number; lastSource: string | null }, b: typeof a) => {
+  const rank = (s: number) => (s === 6 ? -1 : s);
+  if (rank(a.stage) !== rank(b.stage)) return rank(a.stage) - rank(b.stage);
+  return (a.lastSource ?? '').localeCompare(b.lastSource ?? '');
 };
 
 /** A parent's stage is the mean of its children's, never below 1, 6 capped to 5. */
@@ -51,6 +91,9 @@ export function buildMatrix(placeName: (id: string) => string | undefined): {
           color: taxonomy.stages.find((x) => x.n === s)!.color,
           share: kids.length ? (n / kids.length) * 100 : 0,
         })),
+      verified: kids.filter((i) => stageOf(i) === 5).length,
+      regressed: kids.filter((i) => stageOf(i) === 6).length,
+      atStageOne: kids.filter((i) => stageOf(i) === 1).length,
       children: kids.map((i) => {
         const st = stageOf(i);
         return {
@@ -59,8 +102,10 @@ export function buildMatrix(placeName: (id: string) => string | undefined): {
           stageHe: taxonomy.stages.find((s) => s.n === st)!.he,
           contested: isContested(i),
           places: [...new Set(i.claims.filter((c) => c.place).map((c) => placeName(c.place!)).filter(Boolean) as string[])],
+          claims: i.claims.length,
+          lastSource: lastSourceOf(i),
         };
-      }),
+      }).sort(worstFirst),
     };
     const key = `${p.domain}/${p.phase}`;
     cells[key] = [...(cells[key] ?? []), cell];
