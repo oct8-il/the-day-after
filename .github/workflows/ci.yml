@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       # dev may carry illustrative records while the port is in progress.
       # staging and prod may not: strict refuses anything without a live source.
@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       # The environment comes from the branch name, which GITHUB_REF_NAME
       # already carries. Nothing to configure here or in Vercel.
@@ -75,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@v4
@@ -101,7 +101,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run fidelity:baseline
@@ -123,7 +123,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       # A dead link in the ledger is the one failure the project cannot argue
       # its way out of, so it blocks the promotion rather than being a warning.
@@ -151,7 +151,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
-        with: { node-version: '22', cache: npm }
+        with: { node-version: '24', cache: npm }
       - run: npm ci
       # The corrections page is the public record of what changed and when. It
       # is rendered from the history of data/, so it cannot drift from reality.
