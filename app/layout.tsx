@@ -34,9 +34,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             view. This has to run before the home page's own DOM paints, so
             it is a blocking script rather than a React effect: an effect
             would flash the matrix for a frame first. Deep links (gap, an
-            item, about itself) are never touched - only a bare "/". */}
+            item, about itself) are never touched - only a bare "/".
+
+            location.replace() does not stop the browser mid-flight: on a
+            real network (unlike a local dev server) the current document
+            keeps parsing and hydrating while the new one loads, so the
+            failures page's own effects - marking the site "seen", and
+            especially the one-time opening animation - can still fire
+            during that in-between moment. window.__hyRedirecting flags
+            that a redirect is already under way so those effects (see
+            MarkSeen and HomeIntro) can no-op instead of silently burning
+            their one-time flag on a page the reader never actually saw. */}
         <Script id="first-visit-gate" strategy="beforeInteractive">
-          {`try{if(location.pathname==='/'&&localStorage.getItem('hy_seen')!=='1'){location.replace('/about/');}}catch(e){}`}
+          {`try{if(location.pathname==='/'&&localStorage.getItem('hy_seen')!=='1'){window.__hyRedirecting=true;location.replace('/about/');}}catch(e){}`}
         </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
