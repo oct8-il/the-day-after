@@ -41,6 +41,21 @@ export const Claim = z.object({
   quote: z.string().max(280).optional(),
 });
 
+/**
+ * An editor-written summary of what the sources say at one stage: the wording
+ * of the acknowledgement, what the announced plan actually covers, what was
+ * implemented. Every sentence cites the claims it rests on, so the summary is a
+ * convenience and the sources remain the authority. Optional - an incident
+ * without one is complete, just terser.
+ */
+export const Summary = z.object({
+  stage: STAGE,
+  lines: z.array(z.object({
+    text: z.string().min(10).max(400),
+    cites: z.array(z.string()).min(1, 'a summary sentence with no citation is an opinion'),
+  })).min(1),
+});
+
 export const Incident = z.object({
   id: z.string().regex(/^i\d{2,}$/),
   parent: z.string().regex(/^p\d+$/),
@@ -48,6 +63,7 @@ export const Incident = z.object({
   summary: z.string().min(20),
   illustrative: z.boolean().default(false),
   claims: z.array(Claim).min(1, 'an incident with no claim is not a record of anything'),
+  summaries: z.array(Summary).optional(),
 });
 
 export const Parent = z.object({
@@ -77,6 +93,7 @@ export const Taxonomy = z.object({
   questions: z.record(z.string(), z.object({}).loose()),
 });
 
+export type Summary = z.infer<typeof Summary>;
 export type Claim = z.infer<typeof Claim>;
 export type Incident = z.infer<typeof Incident>;
 export type Parent = z.infer<typeof Parent>;

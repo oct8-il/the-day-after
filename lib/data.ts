@@ -24,9 +24,11 @@ export type Claim = {
   place: string | null;
   quote?: string;
 };
+export type SummaryLine = { text: string; cites: string[] };
+export type Summary = { stage: number; lines: SummaryLine[] };
 export type Incident = {
   id: string; parent: string; he: string; summary: string;
-  illustrative: boolean; claims: Claim[];
+  illustrative: boolean; claims: Claim[]; summaries?: Summary[];
 };
 export type Parent = {
   id: string; short: string; he: string; description: string;

@@ -73,7 +73,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
       {/* ---------- docked failure header and chapter rail ---------- */}
       <div className="dock" id="dock">
         <div className="in">
-          <Link className="bk" href="/" aria-label="חזרה לכשל המערכתי">›</Link>
+          <Link className="bk" href={`/#${parent.id}`} aria-label="חזרה לכשל המערכתי">›</Link>
           <div className="tt">{inc.he}</div>
           <span className="chip fill" style={{ ['--c' as string]: S.color }}>{st} · {S.he}</span>
         </div>
@@ -96,7 +96,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             {/* ---------- hero ---------- */}
             <div className="itemhero">
               <div className="crumb">
-                <Link href="/">הכשלים</Link> › <Link href="/">{parent.he}</Link>
+                <Link href="/">הכשלים</Link> › <Link href={`/#${parent.id}`}>{parent.he}</Link>
               </div>
               <h1 className="item">{inc.he}</h1>
               <div className="itemmeta">
@@ -187,6 +187,8 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                   />
                 ))}
               </div>
+
+              <StageSummary inc={inc} stage={st} />
 
               {st === 5 && (
                 <details className="trace">
@@ -282,6 +284,7 @@ function Ledger({ inc }: { inc: Incident }) {
             return (
               <li
                 key={c.id}
+                id={c.id}
                 className={isContest ? 'contest' : ''}
                 style={{ ['--c' as string]: isContest ? 'var(--flag)' : meta!.color }}
               >
@@ -329,5 +332,45 @@ function NothingPublished() {
         </section>
       </div>
     </>
+  );
+}
+
+
+/**
+ * What the sources say at the incident's current stage, in the editor's words,
+ * with every sentence citing the claims it rests on. A port of the prototype's
+ * aisum block. It renders only when such a summary exists: an incident without
+ * one is complete, just terser, and an empty summary box would be worse than
+ * none.
+ */
+function StageSummary({ inc, stage }: { inc: Incident; stage: number }) {
+  const summary = inc.summaries?.find((s) => s.stage === stage);
+  if (!summary) return null;
+
+  const heading =
+    stage === 2 ? ['ההכרה בכשל', 'בלשון המקור']
+    : stage === 3 ? ['התוכנית שהוכרזה · סיכום', 'כל משפט מקושר למקור']
+    : stage === 6 ? ['הנסיגה · סיכום', 'כל משפט מקושר למקור']
+    : ['מה יושם בפועל · סיכום', 'כל משפט מקושר למקור'];
+
+  // Footnote numbers are per summary and follow the order the claims are cited.
+  const order: string[] = [];
+  const noteOf = (id: string) => {
+    if (!order.includes(id)) order.push(id);
+    return order.indexOf(id) + 1;
+  };
+
+  return (
+    <div className="aisum">
+      <div className="lbl"><span>{heading[0]}</span><span>{heading[1]}</span></div>
+      {summary.lines.map((line, n) => (
+        <p key={n}>
+          {line.text}
+          {line.cites.map((id) => (
+            <sup key={id}><a href={`#${id}`}>[{noteOf(id)}]</a></sup>
+          ))}
+        </p>
+      ))}
+    </div>
   );
 }

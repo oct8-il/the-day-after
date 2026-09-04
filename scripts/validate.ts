@@ -124,6 +124,19 @@ for (const file of files) {
     }
   }
 
+  for (const sum of inc.summaries ?? []) {
+    const sw = `${where} summary(stage ${sum.stage})`;
+    if (!inc.claims.some((c) => c.asserts_stage === sum.stage)) {
+      fail(sw, 'summarises a stage no claim asserts');
+    }
+    sum.lines.forEach((line, n) => {
+      checkNames(`${sw} line ${n + 1}`, line.text);
+      for (const id of line.cites) {
+        if (!claimIds.has(id)) fail(sw, `line ${n + 1} cites "${id}", which is not a claim of this incident`);
+      }
+    });
+  }
+
   if (stageOf(inc) === 5 && !hasIndependentVerification(inc)) {
     fail(where, 'computed stage is 5 without an independent verifying source');
   }
