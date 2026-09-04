@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   parentById, placeById, childrenOf, visibleIncidents,
-  stageOf, isContested, stageMeta, TYPES, QUESTIONS,
+  stageOf, isContested, stageMeta, taxonomy, TYPES, QUESTIONS,
   type Claim, type Incident,
 } from '@/lib/data';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { ItemDock } from '@/app/components/ItemDock';
+import { ItemIntro } from '@/app/components/ItemIntro';
 import { Header } from '@/app/components/Header';
 import { SourceLink } from '@/app/components/SourceLink';
 
@@ -89,6 +90,17 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
         ))}
       </nav>
       <ItemDock chapters={chapters.map(({ n, color, d }) => ({ n, color, d }))} />
+      <ItemIntro
+        stage={st}
+        peak={
+          // A regressed failure climbs to the highest stage it ever reached
+          // before the ladder drops it to 6 - the climb is the story.
+          st === 6
+            ? Math.max(1, ...inc.claims.filter((c) => c.asserts_stage > 0 && c.asserts_stage < 6).map((c) => c.asserts_stage))
+            : st
+        }
+        stages={taxonomy.stages}
+      />
 
       <div className="wrap">
         <section className="view active">

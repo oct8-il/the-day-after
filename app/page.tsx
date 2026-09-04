@@ -1,6 +1,6 @@
 import { Header } from './components/Header';
 import { Matrix } from './components/Matrix';
-import { DaysSince } from './components/DaysSince';
+import { HomeIntro } from './components/HomeIntro';
 import { daysSince } from '@/lib/days';
 import { buildMatrix, buildStrip } from '@/lib/home';
 import { placeById } from '@/lib/data';
@@ -17,19 +17,20 @@ export default function Home() {
   return (
     <>
       <Header current="home" />
+      <HomeIntro />
       <div className="wrap">
         <section className="view active">
           <div className="strip">
-            <div>
+            <div className="days">
               <div className="k">ימים מאז 7.10.2023</div>
-              <div className="data"><div className="v num"><DaysSince initial={daysSince()} /></div></div>
+              <div className="data"><div className="v num">{daysSince().toLocaleString('he-IL')}</div></div>
             </div>
             <div>
               <div className="k">כשלים במעקב</div>
               <div className="data">
                 <div className="v num">
                   {strip.incidents}
-                  <small>ב־{strip.parents} כשלים מערכתיים</small>
+                  <small>ב־<span id="pcount">{strip.parents}</span> כשלים מערכתיים</small>
                 </div>
               </div>
             </div>

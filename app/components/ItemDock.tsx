@@ -56,6 +56,8 @@ export function ItemDock({ chapters }: { chapters: { n: number; color: string; d
       const a = (e.target as HTMLElement).closest('a[data-ch]') as HTMLAnchorElement | null;
       if (!a) return;
       e.preventDefault();
+      // A gated chapter has no height yet; reveal up to it before scrolling.
+      window.itemIntroRevealUpTo?.(Number(a.dataset.ch));
       const t = document.getElementById(`chap-${a.dataset.ch}`);
       if (!t) return;
       const off = (parseInt(getComputedStyle(root).getPropertyValue('--hdrh')) || 60) + 60;
