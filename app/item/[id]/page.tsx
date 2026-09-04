@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   parentById, placeById, childrenOf, visibleIncidents,
-  stageOf, isContested, stageMeta, taxonomy, TYPES, QUESTIONS,
+  stageOf, isContested, stageMeta, taxonomy, TYPES, QUESTIONS, firstDocumented,
   type Claim, type Incident,
 } from '@/lib/data';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
@@ -135,7 +135,14 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
               <p className="chaplead">
                 מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.
               </p>
-              <p className="lead">{inc.summary}</p>
+              <div className="clip">
+                <div className="kick">
+                  <span>{parent.he}</span>
+                  <span className="num">תועד לראשונה · {firstDocumented(inc)}</span>
+                </div>
+                <p>{inc.summary}</p>
+                <div className="by">תיאור הכשל · נכתב על ידי העורך מתוך המקורות המתועדים למטה</div>
+              </div>
 
               <div className="block">
                 <div className="bh">

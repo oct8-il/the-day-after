@@ -84,6 +84,28 @@ export { stageOf, isContested };
 export type { Stage };
 
 /**
+ * The earliest source date among an incident's stage-1 ("identified") claims -
+ * printed under the failure description as "תועד לראשונה · <date>".
+ * Mirrors firstDocumented() in the frozen prototype: dates are "DD.MM.YYYY",
+ * sorted by year then month: a claim whose date doesn't parse that way sorts
+ * after any that do, rather than breaking the page.
+ */
+export function firstDocumented(incident: { claims: Pick<Claim, 'asserts_stage' | 'date'>[] }): string {
+  const dated = incident.claims
+    .filter((c) => c.asserts_stage === 1)
+    .map((c) => c.date)
+    .filter(Boolean)
+    .map((d) => {
+      const m = d.match(/(\d{2})\.(\d{4})/);
+      return m ? ([Number(m[2]), Number(m[1]), d] as [number, number, string])
+        : ([parseInt(d, 10) || 9999, 13, d] as [number, number, string]);
+    });
+  if (!dated.length) return '—';
+  dated.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return dated[0][2];
+}
+
+/**
  * Does this build contain anything not fully sourced?
  *
  * On dev it does - every incident is rendered, including the ones still being
