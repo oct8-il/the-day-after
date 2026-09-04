@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { ENV, IS_PROD } from './env';
 import { SITE_NAME, SITE_URL } from './site';
 import './globals.css';
@@ -27,6 +28,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl">
       <head>
+        {/* A reader's very first visit lands on the about page, not the
+            failures matrix - ported from the prototype's route(), which
+            checked the same localStorage flag before it ever painted a
+            view. This has to run before the home page's own DOM paints, so
+            it is a blocking script rather than a React effect: an effect
+            would flash the matrix for a frame first. Deep links (gap, an
+            item, about itself) are never touched - only a bare "/". */}
+        <Script id="first-visit-gate" strategy="beforeInteractive">
+          {`try{if(location.pathname==='/'&&localStorage.getItem('hy_seen')!=='1'){location.replace('/about/');}}catch(e){}`}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link

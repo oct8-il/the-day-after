@@ -113,8 +113,7 @@
   .figure6 span:nth-child(5){border-start-end-radius:4px;border-end-end-radius:4px}
   .figure6 span.exit{border-radius:4px;border-top-style:dashed}
   .figure6 i{border-inline-start:1px dashed var(--line);margin:3px 0}
-  details.method{max-width:66ch;margin-inline:auto}
-  details.method{border:1px solid var(--line);border-radius:10px;background:var(--surface);margin:0 0 26px}
+  details.method{max-width:66ch;margin:0 auto 26px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
   details.method summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;font-weight:700;font-size:16px;color:var(--text)}
   details.method summary::-webkit-details-marker{display:none}
   details.method summary .hint{font-weight:400;font-size:13px;color:var(--muted)}
@@ -181,7 +180,11 @@
   .drawer .dh .t{font-family:"Frank Ruhl Libre",serif;font-size:22px;color:var(--text)}
   .drawer .dh .d{font-size:13.5px;color:var(--muted)}
   .drawer .close{color:var(--muted);font-size:20px;padding:4px 8px}
-  .kids .row{display:grid;grid-template-columns:1fr auto 140px;gap:16px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:15px}
+  /* Third column (140px) was reserved for a public-rating summary between
+     the title and the stage chip; until voting ships there is nothing to put
+     there, so the chip sits right after the title instead of stranded past
+     an empty track. Restore the 140px column when that summary returns. */
+  .kids .row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:15px}
   .kids .row:last-child{border-bottom:0}
   .kids .row:hover{background:var(--surface-2)}
   .kids .row .pl{color:var(--muted);font-size:13px;margin-inline-start:8px}
@@ -241,6 +244,8 @@
   .ledger .src{color:var(--text)} .ledger .src small{display:block;color:var(--muted);font-size:12.5px}
   .ledger .dt{color:var(--muted);white-space:nowrap}
   .ledger li.contest{background:linear-gradient(90deg,transparent,var(--accent-soft));margin:0 -8px;padding:9px 8px}
+  .ledger li.flash{animation:citeflash 1.6s ease}
+  @keyframes citeflash{0%,100%{background:transparent}15%{background:var(--accent-soft)}}
   details.trace{border:1px solid var(--line-soft);margin-top:10px}
   details.trace summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:14px;color:var(--s5);list-style:none;display:flex;justify-content:space-between}
   details.trace summary::after{content:"+";color:var(--muted)} details.trace[open] summary::after{content:"−"}
@@ -291,7 +296,7 @@
 
   .siblings{list-style:none;margin:0;padding:0;font-size:14.5px}
   .siblings li{border-bottom:1px solid var(--line-soft)}
-  .siblings li>a{padding:8px 0;display:flex;justify-content:space-between;gap:10px;cursor:pointer;color:inherit}
+  .siblings li>a{padding:8px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;color:inherit}
   .siblings li:last-child{border-bottom:0}
   .siblings li:hover .t{color:var(--accent)}
   .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -339,7 +344,7 @@
     .matrix .colh{display:none}
     .matrix .rowh{padding:0;margin-bottom:-8px}
     .cell{min-height:0} .cell.empty{display:none}
-    .kids .row{grid-template-columns:1fr auto} .kids .row .sc{display:none}
+    .kids .row .sc{display:none}
     .itemgrid{grid-template-columns:1fr}
     .gapwrap{grid-template-columns:1fr}
     .stages{grid-template-columns:repeat(3,1fr)}

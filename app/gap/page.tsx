@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '@/app/components/Header';
 import { GapChart } from '@/app/components/GapChart';
+import { MarkSeen } from '@/app/components/MarkSeen';
 import { taxonomy, visibleIncidents, stageOf } from '@/lib/data';
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function GapPage() {
   return (
     <>
       <Header current="gap" />
+      <MarkSeen />
       <div className="wrap">
         <section className="view active">
           <div className="pagehead">

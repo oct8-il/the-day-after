@@ -8,6 +8,7 @@ import {
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { ItemDock } from '@/app/components/ItemDock';
 import { ItemIntro } from '@/app/components/ItemIntro';
+import { CitationLinks } from '@/app/components/CitationLinks';
 import { Header } from '@/app/components/Header';
 import { SourceLink } from '@/app/components/SourceLink';
 
@@ -90,6 +91,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
         ))}
       </nav>
       <ItemDock chapters={chapters.map(({ n, color, d }) => ({ n, color, d }))} />
+      <CitationLinks />
       <ItemIntro
         stage={st}
         peak={
