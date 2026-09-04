@@ -1,0 +1,81 @@
+{
+  "id": "i21",
+  "parent": "p8",
+  "he": "שיקום יישובי העוטף: רוב התושבים שבו, אך תושבי חמישה קיבוצים עדיין מחוץ לבתיהם",
+  "summary": "מנהלת תקומה הוקמה בהחלטת ממשלה 980 באוקטובר 2023. עד ספטמבר 2025 שבו מעל 90% מתושבי העוטף, אך תושבי בארי, כפר עזה, ניר עוז, חולית וכיסופים נותרו בדיור זמני עם יעדי חזרה ב-2026–2027. מבקר המדינה מצא כי תוכנית החומש פורסמה באיחור וכי טרם גובש פתרון ממשלתי לתושבים שאינם מסוגלים לשוב לבתיהם.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i21-c01",
+      "asserts_stage": 3,
+      "source_type": "civil",
+      "source": "החלטת ממשלה 980 — הקמת מנהלת תקומה (מראה: מפתח התקציב)",
+      "date": "19.10.2023",
+      "url": "https://next.obudget.org/i/gov_decisions/15b4135a-b9a9-4e59-9ead-184a1040d8b4",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "להקים מנהלת ייעודית, שתישא באחריות ובכלל הסמכויות הנדרשות לצורך ניהול וביצוע פעולות לשיקום ולחיזוק חבל 'התקומה' ואוכלוסייתו"
+    },
+    {
+      "id": "i21-c02",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "כאן חדשות — נתוני מנהלת תקומה לשנתיים",
+      "date": "17.09.2025",
+      "url": "https://www.kan.org.il/content/kan-news/local/951992/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "על פי הנתונים שהוצגו בדוח, מתוך 62,000 תושבי העוטף הרשומים בנתוני הלמ\"ס, מעל ל-90% שבו לחיות בחבל"
+    },
+    {
+      "id": "i21-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלכליסט — השיקום המתארך של חמישה קיבוצים",
+      "date": "05.10.2025",
+      "url": "https://www.calcalist.co.il/local_news/article/s1mn0ca2gg",
+      "archive_url": null,
+      "contests": null,
+      "place": "niroz",
+      "quote": "השיקום שלהם הולך ומתארך ויסתיים רק בשנה הבאה או אולי אפילו ב־2027"
+    },
+    {
+      "id": "i21-c04",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "מבקר המדינה — דוח מיוחד: שיקום חבל תקומה",
+      "date": "10.02.2026",
+      "url": "https://www.mevaker.gov.il/newsroom/2026-02-10-special-report",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "לא ניתן לקבל את העובדה שטרם גובש פתרון ממשלתי לתושבים שאינם מסוגלים לשוב לבתיהם"
+    },
+    {
+      "id": "i21-c05",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלכליסט — השיקום המתארך של חמישה קיבוצים",
+      "date": "05.10.2025",
+      "url": "https://www.calcalist.co.il/local_news/article/s1mn0ca2gg",
+      "archive_url": null,
+      "contests": null,
+      "place": "kfaraza",
+      "quote": "כפר עזה הוא אחד מחמישה קיבוצים בעוטף עזה שבהם כ־6,200 תושבים כבר שנתיים לא גרים בביתם"
+    },
+    {
+      "id": "i21-c06",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "וואלה — החזרה לבארי",
+      "date": "31.03.2026",
+      "url": "https://news.walla.co.il/item/3827711",
+      "archive_url": null,
+      "contests": null,
+      "place": "beeri",
+      "quote": "יש משפחות שממש לאחרונה חזרו לכאן מהמגורים הזמניים שלהן בקיבוץ חצרים"
+    }
+  ]
+}

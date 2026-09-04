@@ -1,43 +1,105 @@
 {
   "id": "i17",
   "parent": "p1",
-  "he": "תרבות הערכה שדחתה מידע שסתר את ההנחה הרווחת",
-  "summary": "מידע שסתר את הנחת העבודה הרווחת לגבי כוונות האויב סווג כחריג, ולא הוביל לבחינה מחדש של ההנחה.",
-  "illustrative": true,
+  "he": "תוכנית המתקפה של חמאס הייתה בידי המערכת, וסימנים מעידים פורשו כך שיתאימו לתפיסה הקיימת",
+  "summary": "גרסה מפורטת של תוכנית המתקפה של חמאס הוחזקה בידי המערכת עוד ב-2022, אך נדחקה כ\"לא סבירה\" ולא נבנה לה מענה מבצעי. תחקיר אמ\"ן קבע כי חטיבת המחקר פספסה לפחות עשרה סימנים מעידים בשנתיים שלפני המלחמה וחיפשה אישושים לתפיסה הקיימת. גופים אזרחיים טוענים כי הגורמים שמנעו חשיבת עומק קיימים גם היום.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i17-c01",
       "asserts_stage": 1,
-      "source_type": "official",
-      "source": "תחקיר צה״ל — תהליכי הערכה",
-      "date": "02.2025",
-      "quote": "מידע סותר סווג כחריג ולא הוביל לבחינה מחדש",
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר אמ\"ן",
+      "date": "27.02.2025",
+      "url": "https://www.ynet.co.il/news/article/rkzbfn6c1l",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "בחטיבת המחקר, שאמורה לנפק התרעות אסטרטגיות למלחמה, פספסו לפחות 10 סימנים מעידים בשנתיים שקדמו למלחמה"
     },
     {
       "id": "i17-c02",
       "asserts_stage": 2,
-      "source_type": "official",
-      "source": "תחקיר צה״ל",
-      "date": "02.2025",
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר אמ\"ן",
+      "date": "27.02.2025",
+      "url": "https://www.ynet.co.il/news/article/rkzbfn6c1l",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "באמ\"ן חיפשו רק הסברים ואישושים לכל מיני סימנים מחשידים כדי שיתאימו לתפיסה"
     },
     {
       "id": "i17-c03",
-      "asserts_stage": 3,
-      "source_type": "official",
-      "source": "שינוי מבני במערך ההערכה",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "המכון לחקר המתודולוגיה של המודיעין — 7 באוקטובר: הכשל המודיעיני",
       "date": "2025",
+      "url": "https://www.intelligence-research.org.il/userfiles/image/cat11/05.11.25_Seven_October_internet.pdf",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "הסימנים המטרידים שהתקבלו בשנה שלפני המלחמה, וביתר עוצמה ביממות שלפני מתקפת הפתע של חמאס, פורשו באופן שגוי"
+    },
+    {
+      "id": "i17-c04",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "דובר צה\"ל — סיכום דוח צוות המומחים לבדיקת תחקירי צה\"ל",
+      "date": "10.11.2025",
+      "url": "https://www.idf.il/אתרי-יחידות/יומן-המלחמה/כל-הכתבות/הפצות/סיכום-הרמטכ-ל-לדו-ח-צוות-המומחים-שמינה-לבדיקת-איכות-תחקירי-צה-ל-והפקת-הלקחים-האינטגרטיביים-מאירועי-ה-7-באוקטובר/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "לא קיימה תהליכי עומק לזיהוי השתנות האויב, לא פעלה לעיסוק מודיעיני ומבצעי מתמשך בתכנית 'חומת יריחו'"
+    },
+    {
+      "id": "i17-c05",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כאן חדשות — ממצאי צוות הבדיקה לתוכנית \"חומת יריחו\"",
+      "date": "04.07.2026",
+      "url": "https://www.kan.org.il/content/kan-news/defense/1070142/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בצוות סבורים כי הבעיה לא הייתה מחסור במידע, אלא פרשנותו: המפקדים היו שבויים בתפיסה קיימת"
+    },
+    {
+      "id": "i17-c06",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ועדת החקירה האזרחית — מסקנות (סיקור כאן חדשות)",
+      "date": "26.11.2024",
+      "url": "https://www.kan.org.il/content/kan-news/local/828790/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "נמצא כי גם כיום מתקיימים במלוא העוז כל אותם גורמים שאינם מייצרים חשיבת עומק אסטרטגית באשר להתפתחויות ביטחוניות אפשריות"
+    },
+    {
+      "id": "i17-c07",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "מועצת אוקטובר — דוח (סיקור וואלה)",
+      "date": "24.08.2026",
+      "url": "https://news.walla.co.il/item/3862848",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הקונספציה לא נעלמה, היא שינתה צורה"
+    },
+    {
+      "id": "i17-c08",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "ynet — שינויים באגף המודיעין",
+      "date": "02.01.2025",
+      "url": "https://www.ynet.co.il/news/article/yokra14210460",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "כעת יוטל עליה לאתגר את מודל ההתרעה המודיעינית בפיקוד הדרום, את המחקר הצבאי על ארגוני טרור וגם את המודיעין שנאסף מהשטח"
     }
   ]
 }

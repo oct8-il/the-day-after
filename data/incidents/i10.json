@@ -1,66 +1,69 @@
 {
   "id": "i10",
   "parent": "p3",
-  "he": "אין נוהל אבטחה לאירוע המוני בסמוך לגבול",
-  "summary": "אירוע המוני מאושר התקיים בסמוך לגבול בלי נוהל אבטחה ייעודי ובלי דרישה לתיאום ביטחוני מוקדם.",
-  "illustrative": true,
+  "he": "לא היה נוהל אבטחה לאירוע המוני סמוך לגבול: כוחות הקו לא ידעו על מסיבת הנובה",
+  "summary": "תחקיר צה\"ל קבע שכוחות הקרקע בגבול עזה לא ידעו כלל על קיום המסיבה, שאוגדת עזה לא שלחה נציגים לדיוני האישור ושלא התקיימה הערכת מצב ייעודית. כוח צבאי סדור הגיע למתחם לראשונה סביב 11:20. התחקיר המליץ על נוהל לאומי מחייב לאירועי המונים ליד הגבול לצד פקודה מטכ\"לית.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i10-c01",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "תחקיר עיתונאי — רישוי האירוע",
-      "date": "2024",
-      "place": "nova",
-      "quote": "לא נדרש תיאום ביטחוני מקדים",
+      "source": "זמן ישראל — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.zman.co.il/577943/popup/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "nova",
+      "quote": "כוחות הקרקע שנפרסו בגבול עזה בבוקר מתקפת חמאס לא ידעו כלל על קיומה של המסיבה"
     },
     {
       "id": "i10-c02",
       "asserts_stage": 1,
-      "source_type": "civil",
-      "source": "ארגון משפחות — מסמך שהוגש",
-      "date": "2024",
-      "place": "nova",
-      "quote": "אין נוהל ייעודי לאירוע המוני במרחב גבול",
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.ynet.co.il/news/article/hyqs0u9ayl",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "nova",
+      "quote": "אוגדת עזה לא שלחה נציגים לדיוני ההכנות והאישורים"
     },
     {
       "id": "i10-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת משטרת ישראל",
-      "date": "2025",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.ynet.co.il/news/article/hyqs0u9ayl",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "nova",
+      "quote": "11:20 - במתחם הנובה נותרו כמה עשרות בודדות של מחבלים. לזירה מגיע לראשונה כוח צבאי סדור"
     },
     {
       "id": "i10-c04",
-      "asserts_stage": 3,
-      "source_type": "official",
-      "source": "נוהל רישוי אירועים במרחבי גבול",
-      "date": "2025",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כלכליסט — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.calcalist.co.il/local_news/article/r16b94npkg",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "nova",
+      "quote": "מבחינת צה\"ל, מסיבת הנובה נשכחה"
     },
     {
       "id": "i10-c05",
-      "asserts_stage": 4,
-      "source_type": "official",
-      "source": "הודעת משטרת ישראל על הטמעת הנוהל",
-      "date": "2026",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "ynet — המלצות תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.ynet.co.il/news/article/hyqs0u9ayl",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "יש להגדיר נוהל לאומי מחייב ואחוד לצד פקודה מטכ\"לית"
     }
   ]
 }

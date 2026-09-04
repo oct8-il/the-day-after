@@ -1,77 +1,45 @@
 {
   "id": "i05",
   "parent": "p4",
-  "he": "לא היתה תמונת מצב משותפת בין המשטרה לצבא",
-  "summary": "משטרה וצבא פעלו על בסיס תמונות מצב נפרדות, בלי ערוץ תיאום אחד. כוחות הגיעו לאותם מרחבים בלי ידיעה הדדית.",
-  "illustrative": true,
+  "he": "לא הוקם חפ\"ק משותף ולא התנהל שיח בין צה\"ל למשטרה גם בשעות הגורליות",
+  "summary": "תחקירי צה\"ל קבעו כי בשדרות לא הוקם חפ\"ק משותף בין כוח צה\"ל האחראי על העיר לבין המשטרה ומג\"ב, וכי גם בשעה גורלית לא התנהל שיח בין צה\"ל למשטרה בנושא מסיבת הנובה. המשטרה הציגה כוונה להקים מרכז מידע משותף לזרועות הביטחון בעת חירום.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i05-c01",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "תחקיר עיתונאי — התיאום בין הגופים",
-      "date": "2024",
-      "place": "sderot",
-      "quote": "שני הגופים פעלו בלי ערוץ משותף",
+      "source": "כאן חדשות — סיקור תחקיר צה\"ל על שדרות",
+      "date": "09.04.2025",
+      "url": "https://www.kan.org.il/content/kan-news/defense/880715/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "sderot",
+      "quote": "לא הוקם חפ\"ק משותף בין כוח צה\"ל האחראי על העיר לבין משטרת ישראל ומג\"ב"
     },
     {
       "id": "i05-c02",
-      "asserts_stage": 1,
+      "asserts_stage": 2,
       "source_type": "press",
-      "source": "סיקור עיתונאי — כוחות באותו מרחב",
-      "date": "2024",
-      "place": "ofakim",
-      "quote": "כוחות פעלו באותו אזור בלי ידיעה הדדית",
+      "source": "כלכליסט — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.calcalist.co.il/local_news/article/r16b94npkg",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "nova",
+      "quote": "גם בשעה גורלית זו, לא מתנהל שיח בין צה\"ל לבין משטרה בנושא מסיבת הנובה"
     },
     {
       "id": "i05-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת משטרת ישראל",
-      "date": "2025",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i05-c04",
       "asserts_stage": 3,
-      "source_type": "official",
-      "source": "נוהל תיאום משותף משטרה–צה״ל",
-      "date": "2025",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i05-c05",
-      "asserts_stage": 4,
-      "source_type": "official",
-      "source": "הודעת משטרת ישראל על הטמעת הנוהל",
-      "date": "2026",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i05-c06",
-      "asserts_stage": 0,
       "source_type": "press",
-      "source": "תחקיר עיתונאי — הטמעה חלקית",
-      "date": "2026",
-      "contests": "i05-c04",
-      "place": "sderot",
-      "url": null,
-      "archive_url": null
+      "source": "מקור ראשון — מוקד 100 במחוז דרום",
+      "date": "14.01.2024",
+      "url": "https://www.makorrishon.co.il/news/722121/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בניית מרכז מידע משותף לכלל זרועות הביטחון שיפעל בעת חירום"
     }
   ]
 }

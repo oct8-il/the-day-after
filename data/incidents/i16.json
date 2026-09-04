@@ -1,33 +1,105 @@
 {
   "id": "i16",
   "parent": "p7",
-  "he": "אין מנגנון בדיקה לאומי אחד עם סמכות ומועד סיום",
-  "summary": "הבדיקות מתנהלות במקביל בגופים נפרדים, בלי גוף אחד בעל סמכות מלאה, מנדט אחיד ולוח זמנים מחייב.",
-  "illustrative": true,
+  "he": "כמעט שלוש שנים אחרי, אין גוף חקירה לאומי אחד עם סמכות ומועד סיום",
+  "summary": "בדצמבר 2024 הוצג בבג\"ץ כי ועדת חקירה ממלכתית היא הכלי המשפטי המתאים בחוק; בנובמבר 2025 הוציא בג\"ץ צו על תנאי. באותו חודש החליטה הממשלה על ועדה \"בלתי תלויה\" שאינה ממלכתית, וחוק הוועדה אושר בקריאה ראשונה ביולי 2026 אך לא הושלם לפני פיזור הכנסת. בינתיים פרסם מבקר המדינה 44 דוחות על המלחמה, אך צו ביניים של בג\"ץ משהה את הביקורת על שמונה נושאי ליבה. ועדת חקירה אזרחית פרטית פרסמה מסקנות בנובמבר 2024.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i16-c01",
       "asserts_stage": 1,
-      "source_type": "research",
-      "source": "מכון מחקר — מנגנוני בדיקה לאומיים",
-      "date": "2024",
-      "quote": "אין גוף אחד עם סמכות מלאה ומועד סיום",
+      "source_type": "press",
+      "source": "כלכליסט — הדיון בבג\"ץ על ועדת חקירה ממלכתית",
+      "date": "11.12.2024",
+      "url": "https://www.calcalist.co.il/local_news/article/bjvu9rwnyx",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "ועדת חקירה ממלכתית היא באופן מובהק, הכלי המשפטי המתאים בחוק לחקירת אירועי 7 באוקטובר ומלחמת חרבות ברזל"
     },
     {
       "id": "i16-c02",
       "asserts_stage": 1,
       "source_type": "civil",
-      "source": "ארגוני משפחות — פנייה שפורסמה",
-      "date": "2024",
-      "quote": "הבדיקות מפוצלות בין גופים ללא מנדט אחיד",
+      "source": "ועדת החקירה האזרחית — מסקנות (סיקור כאן חדשות)",
+      "date": "26.11.2024",
+      "url": "https://www.kan.org.il/content/kan-news/local/828790/",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "חובה להקים ועדת חקירה ממלכתית שתחקור את האסון לאלתר"
+    },
+    {
+      "id": "i16-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "וואלה — צו על תנאי בעתירות לוועדת חקירה ממלכתית",
+      "date": "19.11.2025",
+      "url": "https://news.walla.co.il/item/3795598",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בית המשפט הגבוהה לצדק הוציא היום (רביעי) צו על תנאי המורה על הממשלה לספר הסבר מדוע אינה מקיימת ועדת חקירה ממלכתית לאירועי השבעה באוקטובר"
+    },
+    {
+      "id": "i16-c04",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "מבקר המדינה — דוחות \"חרבות ברזל\" וצו הביניים",
+      "date": "30.06.2026",
+      "url": "https://www.mevaker.gov.il/newsroom/2026-06-30-1",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "צו ביניים שהוציא בג\"ץ ב-29.12.25 משהה את הביקורת על שמונה מהנושאים הללו"
+    },
+    {
+      "id": "i16-c05",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כאן חדשות — צו הביניים נגד ביקורת המבקר",
+      "date": "31.12.2025",
+      "url": "https://www.kan.org.il/content/kan-news/local/985434/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הוציאו שופטי בג\"ץ צו ביניים שמקפיא את פעילותו של המבקר בשורה של נושאים הנוגעים לליבת הביקורת על מחדלי 7 באוקטובר"
+    },
+    {
+      "id": "i16-c06",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "גלובס — החלטת הממשלה על ועדת חקירה \"בלתי תלויה\"",
+      "date": "16.11.2025",
+      "url": "https://www.globes.co.il/news/article.aspx?did=1001526492",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הממשלה החליטה על הקמת ועדה חקירה \"בלתי תלויה\" לאירועי טבח ה-7 באוקטובר"
+    },
+    {
+      "id": "i16-c07",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "וואלה — חוק ועדת החקירה אושר בקריאה ראשונה",
+      "date": "06.07.2026",
+      "url": "https://news.walla.co.il/item/3851421",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "59 חברי כנסת תמכו בהצעת החוק - ללא מתנגדים או נמנעים"
+    },
+    {
+      "id": "i16-c08",
+      "asserts_stage": 0,
+      "source_type": "press",
+      "source": "ynet — הודעת הממשלה לבג\"ץ על אי-השלמת החקיקה",
+      "date": "22.07.2026",
+      "url": "https://www.ynet.co.il/news/article/bydy11i0vfx",
+      "archive_url": null,
+      "contests": "i16-c07",
+      "place": null,
+      "quote": "בשל אילוצי לוח הזמנים של הכנסת, לא עלה בידי הכנסת להשלים את הליכי החקיקה"
     }
   ]
 }

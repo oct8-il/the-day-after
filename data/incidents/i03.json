@@ -1,77 +1,81 @@
 {
   "id": "i03",
   "parent": "p3",
-  "he": "כוח מתגבר ראשון הגיע ליישובים לאחר שעות",
-  "summary": "בחלק מהיישובים חלפו שעות עד שהגיע כוח צבאי מסודר בהיקף שאיפשר השתלטות. הכוחות שהגיעו ראשונים היו קטנים, לא מתואמים ולא הכירו את מרחב היישוב.",
-  "illustrative": true,
+  "he": "בכפר עזה לא נכנס אף לוחם עד 08:30, ובבארי נשענה הלחימה על כיתת הכוננות עד 13:30",
+  "summary": "תחקירי צה\"ל קבעו כי בכפר עזה לא נכנס אף לוחם לקיבוץ עד השעה 08:30, וכי בבארי התנהלה הלחימה בתוך הקיבוץ עד 13:30 על בסיס כיתת הכוננות והתושבים, בהיעדר פיקוד ושליטה. צה\"ל הודה שנכשל במשימת ההגנה על שני הקיבוצים. מאז הוקמו יחידות התערבות מהירה בגזרות הגבול.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i03-c01",
       "asserts_stage": 1,
-      "source_type": "oversight",
-      "source": "דוח מבקר המדינה — מוכנות כוחות התגבור",
-      "date": "2025",
-      "place": "beeri",
-      "quote": "פער של שעות בין תחילת האירוע להגעת כוח בהיקף מספק",
+      "source_type": "press",
+      "source": "כאן חדשות — סיקור תחקיר כפר עזה",
+      "date": "03.03.2025",
+      "url": "https://www.kan.org.il/content/kan-news/defense/866541/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "kfaraza",
+      "quote": "עד השעה 08:30 בבוקר לא נכנס אף לוחם של צה\"ל לתוך הקיבוץ"
     },
     {
       "id": "i03-c02",
-      "asserts_stage": 1,
+      "asserts_stage": 2,
       "source_type": "press",
-      "source": "תחקיר עיתונאי — סדר הגעת הכוחות",
-      "date": "2023",
-      "place": "beeri",
-      "quote": "הכוחות הראשונים הגיעו בקבוצות קטנות ולא מתואמות",
+      "source": "כאן חדשות — סיקור תחקיר כפר עזה",
+      "date": "03.03.2025",
+      "url": "https://www.kan.org.il/content/kan-news/defense/866541/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "kfaraza",
+      "quote": "צה\"ל נכשל במשימתו בהגנה על הקיבוץ"
     },
     {
       "id": "i03-c03",
-      "asserts_stage": 2,
+      "asserts_stage": 1,
       "source_type": "official",
-      "source": "תחקיר צה״ל",
-      "date": "02.2025",
+      "source": "צה\"ל — תחקיר הקרב בקיבוץ בארי",
+      "date": "11.07.2024",
+      "url": "https://www.idf.il/אתרי-יחידות/710-התחקירים-המבצעיים/תחקירי-הקרבות/תחקיר-הקרב-בקיבוץ-בארי/",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "beeri",
+      "quote": "עד השעה 13:30 הלחימה בתוך הקיבוץ התנהלה על בסיס כיתות הכוננות והתושבים"
     },
     {
       "id": "i03-c04",
-      "asserts_stage": 3,
+      "asserts_stage": 2,
       "source_type": "official",
-      "source": "תוכנית רב-שנתית — כוחות מוכנות בפריסה קדמית",
-      "date": "2025",
+      "source": "צה\"ל — תחקיר הקרב בקיבוץ בארי",
+      "date": "11.07.2024",
+      "url": "https://www.idf.il/אתרי-יחידות/710-התחקירים-המבצעיים/תחקירי-הקרבות/תחקיר-הקרב-בקיבוץ-בארי/",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "beeri",
+      "quote": "צה\"ל נכשל במשימתו להגן על תושבי קיבוץ בארי"
     },
     {
       "id": "i03-c05",
-      "asserts_stage": 4,
-      "source_type": "official",
-      "source": "דיווח צה״ל על השלמת הפריסה",
-      "date": "2026",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "Ynetnews — הודעת צה\"ל על יחידת הלוט\"ר בעוטף",
+      "date": "05.06.2024",
+      "url": "https://www.ynetnews.com/article/rye1txan0",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "The Gaza Envelope LOTAR unit in Division 143 will be made up of reservists and veteran elite unit operatives living in or near the border communities"
     },
     {
       "id": "i03-c06",
-      "asserts_stage": 5,
-      "source_type": "oversight",
-      "source": "ועדת הכנסת לביקורת המדינה — דיון מעקב",
-      "date": "05.2026",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "מעריב — יחידות ההתערבות המהירה",
+      "date": "17.12.2025",
+      "url": "https://www.maariv.co.il/news/military/article-1263110",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "אחד מלקחי 7 באוקטובר של צה״ל היה הקמת חמש יחידות התערבות מהירות"
     }
   ]
 }

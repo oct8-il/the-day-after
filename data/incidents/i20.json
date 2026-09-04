@@ -1,55 +1,57 @@
 {
   "id": "i20",
   "parent": "p6",
-  "he": "אין ערוץ מידע רשמי אחד לתושבים בזמן אמת",
-  "summary": "התושבים קיבלו מידע ממקורות שונים — הודעות רשמיות, רשתות חברתיות וקבוצות יישוביות — בלי ערוץ רשמי אחד שריכז תמונת מצב מאומתת ומתעדכנת.",
-  "illustrative": true,
+  "he": "בשעות הראשונות שתקו כל הדוברויות הרשמיות, ולתושבים לא היה ערוץ מידע רשמי אחד",
+  "summary": "בבוקר 7 באוקטובר לא מסרו דוברות צה\"ל, המשטרה והממשלה מידע סדור, והציבור ניזון מרשתות חברתיות ומסרטוני חמאס; פיקוד העורף הנחה להישאר ליד מרחבים מוגנים רק סביב 07:40. נציב תלונות הציבור קבע שחסר גורם מתכלל למידע ולסיוע. גם ב-2026 מצא תחקיר עיתונאי שמידע ביטחוני מגיע לקבוצות טלגרם אזרחיות לפני הערוצים הרשמיים.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i20-c01",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "סיקור עיתונאי — מקורות המידע של התושבים",
-      "date": "2024",
-      "place": "sderot",
-      "quote": "המידע המהיר ביותר הגיע מקבוצות יישוביות ולא מערוץ רשמי",
+      "source": "העין השביעית — קריסת ההסברה ביום הראשון",
+      "date": "08.10.2023",
+      "url": "https://www.the7eye.org.il/498767",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "דוברות צה\"ל נותרת בשתיקתה, וכך גם דוברות ממשלת ישראל, דוברות המשטרה ומשרד ההסברה"
     },
     {
       "id": "i20-c02",
       "asserts_stage": 1,
-      "source_type": "civil",
-      "source": "פורום הרשויות המקומיות בעוטף",
-      "date": "2024",
-      "place": "netivot",
-      "quote": "לא היה ערוץ רשמי אחד שריכז תמונת מצב",
+      "source_type": "press",
+      "source": "כאן חדשות — ציר הזמן של ההודעות לציבור",
+      "date": "20.10.2023",
+      "url": "https://www.kan.org.il/content/kan-news/defense/574306/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "כ-40 דקות מרגע הישמע האזעקות הראשונות הודיע דובר צה\"ל כי על הציבור בדרום הארץ ובמרכז להישאר בסמוך למרחבים מוגנים"
     },
     {
       "id": "i20-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת פיקוד העורף",
-      "date": "2025",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "נציב תלונות הציבור — תלונות על פיקוד העורף במלחמה",
+      "date": "19.12.2023",
+      "url": "https://www.mevaker.gov.il/newsroom/2023-12-19",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "חסר גורם מתכלל שאליו ניתן לפנות ולקבל סיוע ומידע בכלל התחומים השונים"
     },
     {
       "id": "i20-c04",
-      "asserts_stage": 3,
-      "source_type": "official",
-      "source": "תוכנית להקמת ערוץ מידע לאומי בחירום",
-      "date": "2026",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "שומרים — קבוצות הטלגרם שעוקפות את פיקוד העורף",
+      "date": "31.03.2026",
+      "url": "https://www.shomrim.news/hebrew/telegram-war-groups",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "מידע ביטחוני שמיועד למערכות סגורות מוצא את דרכו למאות אלפי משתמשים, עוד לפני האזעקות"
     }
   ]
 }

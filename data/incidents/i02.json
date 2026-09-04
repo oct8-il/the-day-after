@@ -1,55 +1,93 @@
 {
   "id": "i02",
   "parent": "p2",
-  "he": "אמצעי התצפית על הגדר נוטרלו ללא מענה חלופי",
-  "summary": "עמדות תצפית ואמצעי שליטה מרחוק לאורך המכשול הושבתו בפתיחת האירוע. לא נכנס לפעולה מערך גיבוי — אנושי או טכנולוגי — שיחליף אותם.",
-  "illustrative": true,
+  "he": "אמצעי התצפית והירי מרחוק על הגדר נוטרלו ברחפנים בדקות הראשונות, ללא מענה חלופי",
+  "summary": "במכת הפתיחה הטילו רחפני חמאס מטענים על מגדלי התצפית ונטרלו את כולם פרט לאחד, כולל מערכות הירי מרחוק. הגדר נפרצה ב-114 נקודות מול כ-767 חיילים שהחזיקו את הקו בבוקר החג. דוחות מבקר המדינה מ-2017 ו-2021 כבר הצביעו על פערי מוכנות לאיום הרחפנים. מאז הוכרזה תפיסת הגנה חדשה של מערך שני בתוך שטח האויב, וצה\"ל אישר הקמת מכשול פיזי לאורך הקו הצהוב.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i02-c01",
       "asserts_stage": 1,
-      "source_type": "official",
-      "source": "תחקיר צה״ל — ארכיטקטורת ההגנה על המכשול",
-      "date": "02.2025",
-      "place": "kfaraza",
-      "quote": "האמצעים הושבתו בזמן קצר ולא היה להם גיבוי",
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר אוגדת עזה",
+      "date": "27.02.2025",
+      "url": "https://www.timesofisrael.com/767-troops-faced-5000-terrorists-gaza-division-was-overrun-for-hours-idf-oct-7-probe/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "neutralized all but one of the IDF's sentry towers on the border by dropping explosives on them from drones"
     },
     {
       "id": "i02-c02",
       "asserts_stage": 1,
-      "source_type": "research",
-      "source": "מכון מחקר — התלות באמצעים מרחוק",
-      "date": "2024",
-      "quote": "הגנה הנשענת על חיישנים בלי רזרבה אנושית",
+      "source_type": "press",
+      "source": "וואלה — הרחפנים במכת הפתיחה",
+      "date": "14.06.2024",
+      "url": "https://news.walla.co.il/item/3670806",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "הפעילה הזרוע הצבאית של חמאס עשרות רחפנים שהטילו חומרי נפץ קטנים על מגדלי התצפיות"
     },
     {
       "id": "i02-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "תחקיר צה״ל",
-      "date": "02.2025",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "וואלה — דוחות המבקר על איום הרחפנים",
+      "date": "14.06.2024",
+      "url": "https://news.walla.co.il/item/3670806",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "דו\"חות מבקר המדינה בשנים 2017 ו-2021 הצביעו על הפערים והמוכנות בישראל לאיום הרחפנים"
     },
     {
       "id": "i02-c04",
-      "asserts_stage": 3,
+      "asserts_stage": 2,
       "source_type": "official",
-      "source": "החלטת ממשלה — תוכנית מכשול ותצפית",
-      "date": "07.2025",
+      "source": "דובר צה\"ל — סיכום דוח צוות המומחים לבדיקת תחקירי צה\"ל",
+      "date": "10.11.2025",
+      "url": "https://www.idf.il/אתרי-יחידות/יומן-המלחמה/כל-הכתבות/הפצות/סיכום-הרמטכ-ל-לדו-ח-צוות-המומחים-שמינה-לבדיקת-איכות-תחקירי-צה-ל-והפקת-הלקחים-האינטגרטיביים-מאירועי-ה-7-באוקטובר/",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "תפיסת האיסוף ברצועה התבססה על נגישות צרה שאינה מאפשרת מתן התרעה"
+    },
+    {
+      "id": "i02-c05",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "ynet — אסטרטגיית הגנת הגבול החדשה",
+      "date": "24.02.2025",
+      "url": "https://www.ynet.co.il/news/article/b1btcz5q1g",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ברצועת עזה יהיה מערך בעל מאפיינים דומים שיחצוץ בין שטח הרצועה לבין יישובי עוטף עזה"
+    },
+    {
+      "id": "i02-c06",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "Times of Israel — שינוי מערך ההגנה בגבול עזה",
+      "date": "21.03.2024",
+      "url": "https://www.timesofisrael.com/on-both-sides-of-gazas-border-the-idf-is-remaking-security-from-the-underground-up/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "On the morning of October 7, there were four IDF battalions stationed along the border with Gaza, comprising a few thousand soldiers. That number will now double, if not more."
+    },
+    {
+      "id": "i02-c07",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "Times of Israel / AP — אישור צה\"ל על המכשול בקו הצהוב",
+      "date": "21.07.2026",
+      "url": "https://www.timesofisrael.com/photos-show-israel-building-miles-long-earthen-barrier-inside-area-it-holds-in-gaza/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "The Israel Defense Forces confirmed to The Associated Press it has built a physical barrier in the area of the Yellow Line"
     }
   ]
 }

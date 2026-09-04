@@ -1,44 +1,45 @@
 {
   "id": "i11",
   "parent": "p4",
-  "he": "ציר מרכזי לא נחסם ומידע לא הופץ לנהגים",
-  "summary": "ציר תנועה ראשי נותר פתוח בשעות הראשונות, ולא הופצה בעניינו התרעה ייעודית לנהגים.",
-  "illustrative": true,
+  "he": "כביש 232 לא נחסם ולא נשלחו אליו כוחות; מוקד מד\"א הנחה לא להיכנס אליו",
+  "summary": "תחקיר צה\"ל על הנובה קבע ששוטרים בודדים חסמו בעצמם את כביש 232 לאחר שהבינו שמחבלים השתלטו על הצמתים. תחקיר עיתונאי מצא שמעולם לא נשלחו כוחות לציר. מבקר המדינה קבע כי חצי שעה אחרי תחילת המתקפה הנחה מוקד מד\"א את כוחותיו לא להיכנס לכביש 232, וכי לא הופעלו נקודות חבירה לאורך כביש 25.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i11-c01",
       "asserts_stage": 1,
-      "source_type": "oversight",
-      "source": "דוח מבקר המדינה — חסימת צירים",
-      "date": "2025",
-      "place": "road232",
-      "quote": "הציר לא נחסם ולא הופצה התרעה",
+      "source_type": "press",
+      "source": "חדשות 13 — המיגוניות בכביש 232",
+      "date": "11.01.2025",
+      "url": "https://13tv.co.il/item/news/politics/security/pr2gt-904413827/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "road232",
+      "quote": "למרות הקריאות הרבות למוקד 100, מעולם לא נשלחו כוחות לציר 232 המדמם"
     },
     {
       "id": "i11-c02",
-      "asserts_stage": 1,
+      "asserts_stage": 2,
       "source_type": "press",
-      "source": "עדויות נהגים שפורסמו",
-      "date": "2023",
-      "place": "road232",
-      "quote": "נהגים נכנסו לאזור בלי לדעת",
+      "source": "כלכליסט — סיקור תחקיר הנובה",
+      "date": "03.04.2025",
+      "url": "https://www.calcalist.co.il/local_news/article/r16b94npkg",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "road232",
+      "quote": "השוטרים שנותרו במתחם המסיבה חוסמים את הדרכים צפונה ודרומה על כביש 232 כי הם מבינים שמחבלים השתלטו על הצמתים"
     },
     {
       "id": "i11-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת משטרת ישראל",
-      "date": "2025",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור דוח המבקר על פינוי הפצועים",
+      "date": "30.06.2026",
+      "url": "https://www.ynet.co.il/news/article/s1lx3c2fge",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "road232",
+      "quote": "חצי שעה לאחר תחילת המתקפה הנחה מוקד מד\"א את כוחות הארגון לא להיכנס לכביש 232"
     }
   ]
 }

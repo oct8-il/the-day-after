@@ -1,44 +1,57 @@
 {
   "id": "i04",
   "parent": "p3",
-  "he": "יישוב נותר ללא כוח צבאי לאורך כל האירוע",
-  "summary": "ביישוב אחד לפחות לא הגיע כוח צבאי במשך כל שעות האירוע. ההתמודדות נותרה בידי כיתת הכוננות והתושבים.",
-  "illustrative": true,
+  "he": "לניר עוז לא הגיע אף כוח צבאי במהלך הטבח; הכוח הראשון נכנס אחרי שהמחבלים עזבו",
+  "summary": "תחקיר צה\"ל קבע כי כוחות הביטחון הגיעו לניר עוז כ-40 דקות אחרי הזיהוי האחרון של מחבלים בקיבוץ ולא נתקלו בהם כלל; הכוח הראשון נכנס ב-13:10. במפקדות לא גובשה תמונת מצב של המתרחש בקיבוץ, והכשל הוגדר מערכתי, מרמת המטכ\"ל ועד השטח.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i04-c01",
       "asserts_stage": 1,
-      "source_type": "official",
-      "source": "תחקיר צה״ל",
-      "date": "02.2025",
-      "place": "niroz",
-      "quote": "לא הגיע כוח צבאי במהלך האירוע",
+      "source_type": "press",
+      "source": "כאן חדשות — תחקיר צה\"ל על ניר עוז",
+      "date": "14.03.2025",
+      "url": "https://www.kan.org.il/content/kan-news/defense/870296/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "niroz",
+      "quote": "כוחות הביטחון הגיעו לשטח ניר עוז כ-40 דקות לאחר הזיהוי האחרון של מחבלים בקיבוץ ולא נתקלו במחבלים בעת פעולות סריקה וחילוץ"
     },
     {
       "id": "i04-c02",
       "asserts_stage": 1,
-      "source_type": "civil",
-      "source": "עדויות שפורסמו מטעם ועד היישוב",
-      "date": "2024",
-      "place": "niroz",
-      "quote": "ההתמודדות נותרה בידי התושבים",
+      "source_type": "press",
+      "source": "וואלה — תחקיר צה\"ל על ניר עוז",
+      "date": "14.03.2025",
+      "url": "https://news.walla.co.il/item/3734266",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": "niroz",
+      "quote": "13:10 - כניסת כוח ראשון של יחידת המסתערבים לקיבוץ"
     },
     {
       "id": "i04-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "תחקיר צה״ל",
-      "date": "02.2025",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כאן חדשות — תחקיר צה\"ל על ניר עוז",
+      "date": "14.03.2025",
+      "url": "https://www.kan.org.il/content/kan-news/defense/870296/",
+      "archive_url": null,
       "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
+      "place": "niroz",
+      "quote": "במפקדות לא הצליחו לגבש תמונת מצב ברורה של המתרחש בניר עוז"
+    },
+    {
+      "id": "i04-c04",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "וואלה — תחקיר צה\"ל על ניר עוז",
+      "date": "14.03.2025",
+      "url": "https://news.walla.co.il/item/3734266",
+      "archive_url": null,
+      "contests": null,
+      "place": "niroz",
+      "quote": "צוות התחקיר קבע כי מדובר בכשל מערכתי מרמת המטכ\"ל ועד השטח ולא כשל טקטי"
     }
   ]
 }

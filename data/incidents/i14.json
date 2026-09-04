@@ -1,79 +1,57 @@
 {
   "id": "i14",
   "parent": "p6",
-  "he": "קווי החירום קרסו תחת עומס",
-  "summary": "מוקדי החירום קיבלו נפח פניות חריג בשעות הראשונות. חלק גדול מהפניות לא נענה, ולא הופעל מערך מענה חלופי.",
-  "illustrative": true,
+  "he": "מוקדי החירום 100 ו-101 הגיעו לסף הכלה תחת עשרות אלפי שיחות",
+  "summary": "מוקד 100 של מחוז דרום קיבל ב-7 באוקטובר כ-24 אלף שיחות, ובכל המשטרה 140 אלף לעומת כ-35 אלף ביום רגיל; השיחות מהדרום נותבו לכל הארץ. מבקר המדינה קבע כי במוקד הארצי של מד\"א התקבלו כ-24 אלף שיחות, פי חמישה משבת רגילה. המשטרה הציגה כוונה להקים מרכז מידע משותף לזרועות הביטחון בחירום.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i14-c01",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "סיקור עיתונאי — פניות שלא נענו",
-      "date": "10.2023",
-      "place": "sderot",
-      "quote": "פניות חוזרות למוקדים לא נענו",
+      "source": "מקור ראשון — מוקד 100 במחוז דרום",
+      "date": "14.01.2024",
+      "url": "https://www.makorrishon.co.il/news/722121/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "ביום שבת רגיל, מתקבלות ביממה סביב 35 אלף שיחות בכל משטרת ישראל. ביום הזה, רק אצלי התקבלו 24 אלף שיחות ובכל המשטרה 140 אלף"
     },
     {
       "id": "i14-c02",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "סיקור עיתונאי — עומס במוקדים",
-      "date": "10.2023",
-      "place": "netivot",
-      "quote": "המוקדים לא עמדו בנפח הפניות",
+      "source": "חדשות 13 — ניתוב שיחות 100 מהדרום",
+      "date": "24.10.2024",
+      "url": "https://13tv.co.il/item/news/domestic/internal/hkyuh-904308030/",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "המוקד שלי כבר הגיע לסף הכלה... החלטתי שכל השיחות ל-100 שמתקבלות מהדרום פשוט ינותבו לכל הארץ"
     },
     {
       "id": "i14-c03",
       "asserts_stage": 1,
       "source_type": "press",
-      "source": "סיקור עיתונאי",
-      "date": "2023",
-      "place": "ofakim",
-      "quote": "המענה התקבל באיחור רב",
+      "source": "ynet — סיקור דוח המבקר על פינוי הפצועים",
+      "date": "30.06.2026",
+      "url": "https://www.ynet.co.il/news/article/s1lx3c2fge",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "במוקד הארצי של מד\"א התקבלו ב-7 באוקטובר כ-24 אלף שיחות"
     },
     {
       "id": "i14-c04",
-      "asserts_stage": 1,
-      "source_type": "oversight",
-      "source": "דוח מבקר המדינה — מוקדי החירום",
-      "date": "2025",
-      "quote": "נפח הפניות חרג מכושר המענה של המוקדים",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i14-c05",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת הגופים המפעילים",
-      "date": "2025",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i14-c06",
       "asserts_stage": 3,
-      "source_type": "official",
-      "source": "תוכנית הרחבת מוקדי החירום",
-      "date": "2025",
+      "source_type": "press",
+      "source": "מקור ראשון — מוקד 100 במחוז דרום",
+      "date": "14.01.2024",
+      "url": "https://www.makorrishon.co.il/news/722121/",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "בניית מרכז מידע משותף לכלל זרועות הביטחון שיפעל בעת חירום"
     }
   ]
 }

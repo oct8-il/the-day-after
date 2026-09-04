@@ -1,32 +1,57 @@
 {
   "id": "i19",
   "parent": "p9",
-  "he": "דיווחים לא מאומתים שודרו בזמן אמת",
-  "summary": "בשעות הראשונות שודרו דיווחים שלא אומתו, ובהם מידע שגוי על מיקומים ועל היקף האירוע.",
-  "illustrative": true,
+  "he": "בהיעדר מידע רשמי שודרו בזמן אמת דיווחים לא מאומתים והערכות שגויות של היקף האסון",
+  "summary": "בשעות הראשונות קרס מערך ההסברה הרשמי והציבור ניזון מסרטוני חמאס ומרשתות חברתיות. עובדי המכון לרפואה משפטית העידו שבטלוויזיה דובר על עשרות גופות כשבשטח כבר ידעו על מאות. מחקרים מאוחרים קבעו שהתקשורת התגייסה ונשטפה בקונפורמיזם שהפך לצנזורה עצמית.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i19-c01",
       "asserts_stage": 1,
-      "source_type": "research",
-      "source": "מכון מחקר — סיקור בזמן אמת",
-      "date": "2024",
-      "quote": "שודרו דיווחים שלא אומתו לפני השידור",
+      "source_type": "press",
+      "source": "העין השביעית — קריסת ההסברה ביום הראשון",
+      "date": "08.10.2023",
+      "url": "https://www.the7eye.org.il/498767",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "אזרחי ישראל ניזונו מדיווחי חמאס על הזוועות"
     },
     {
       "id": "i19-c02",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "הודעת גוף שידור",
-      "date": "2025",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — עדויות המכון לרפואה משפטית",
+      "date": "07.10.2024",
+      "url": "https://www.ynet.co.il/health/article/syy6pgg1kx",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "בטלוויזיה אמרו שיש 30-20 גופות. אנחנו כבר ידענו שאנחנו מדברים ברגעים האלה על 400-300 גופות"
+    },
+    {
+      "id": "i19-c03",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "INSS — עדכן אסטרטגי: התקשורת במלחמה",
+      "date": "03.2024",
+      "url": "https://www.inss.org.il/he/strategic_assessment/press/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "גם התקשורת הישראלית העצמאית נשטפה בגל של קונפורמיזם חסר תקדים ביחס לאירועים ביטחוניים"
+    },
+    {
+      "id": "i19-c04",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "כתב העת \"הזירה\" — התקשורת המשודרת במלחמה",
+      "date": "26.09.2024",
+      "url": "https://www.arenajournal.org.il/single-post/karniel-broadcast-media",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "המאמץ להישאר בקונצנזוס הפך עם הזמן לצנזורה עצמית, המונעת מאזרחי ישראל לקבל תמונת מצב מלאה על המלחמה"
     }
   ]
 }

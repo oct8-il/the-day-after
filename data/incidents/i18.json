@@ -1,77 +1,69 @@
 {
   "id": "i18",
   "parent": "p8",
-  "he": "אין גוף אחד שאחראי על המפונים",
-  "summary": "הטיפול במפונים התחלק בין משרדים ורשויות בלי כתובת אחת. משפחות נדרשו לפנות לגופים שונים לכל נושא.",
-  "illustrative": true,
+  "he": "לא היה גורם מרכזי אחד שניהל את פינוי התושבים וקליטתם — \"אי-סדר מוחלט\"",
+  "summary": "דוח מיוחד של מבקר המדינה קבע כי במקום גורם מרכזי אחד לניהול העורף בחירום פעלו גופים רבים שגלגלו אחריות זה על זה; משרד הפנים לא הפעיל את מערך פס\"ח, התוכנית הלאומית \"מרחק בטוח\" נותרה טיוטה, וכחצי שנה אחרי פרוץ המלחמה נאסף מידע עדכני רק על כמחצית מהמפונים. משרד החינוך נכנס לפעולה מלאה רק בנובמבר 2023.",
+  "illustrative": false,
   "claims": [
     {
       "id": "i18-c01",
       "asserts_stage": 1,
       "source_type": "oversight",
-      "source": "דוח מבקר המדינה — הטיפול במפונים",
-      "date": "2024",
-      "place": "kfaraza",
-      "quote": "אין גוף אחד שמרכז את הטיפול",
+      "source": "מבקר המדינה — דוח מיוחד: קליטת האוכלוסייה שפונתה",
+      "date": "24.02.2026",
+      "url": "https://www.mevaker.gov.il/newsroom/2026-02-24-special-report",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "במקום שיהיה גורם מרכזי אחד שינהל את הטיפול בעורף במצבי חירום, יש גופים רבים, כל אחד מהם מטיל את האחריות על משנהו"
     },
     {
       "id": "i18-c02",
       "asserts_stage": 1,
-      "source_type": "press",
-      "source": "סיקור עיתונאי — מפונים בבתי מלון",
-      "date": "2024",
-      "place": "soroka",
-      "quote": "משפחות הופנו בין גופים שונים",
+      "source_type": "oversight",
+      "source": "מבקר המדינה — דוח מיוחד: קליטת האוכלוסייה שפונתה",
+      "date": "24.02.2026",
+      "url": "https://www.mevaker.gov.il/newsroom/2026-02-24-special-report",
+      "archive_url": null,
       "contests": null,
-      "url": null,
-      "archive_url": null
+      "place": null,
+      "quote": "בחלוף כחצי שנה מאז פרוץ המלחמה נאסף מידע עדכני רק על כ-50% בלבד מהמפונים והמתפנים"
     },
     {
       "id": "i18-c03",
-      "asserts_stage": 2,
-      "source_type": "official",
-      "source": "משרד ראש הממשלה",
-      "date": "2024",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "מבקר המדינה — דוח מיוחד: קליטת האוכלוסייה שפונתה",
+      "date": "24.02.2026",
+      "url": "https://www.mevaker.gov.il/newsroom/2026-02-24-special-report",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "התוכנית הלאומית \"מרחק בטוח\" נותרה כטיוטה בלתי מאושרת"
     },
     {
       "id": "i18-c04",
-      "asserts_stage": 3,
-      "source_type": "official",
-      "source": "הקמת מנהלת תקומה",
-      "date": "2024",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "מבקר המדינה — דוח מיוחד: קליטת האוכלוסייה שפונתה (הדוח המלא)",
+      "date": "02.2026",
+      "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-101.pdf",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "התמונה העולה מלוח הזמנים של פינוי הישובים שנבדקו היא של אי סדר מוחלט"
     },
     {
       "id": "i18-c05",
-      "asserts_stage": 4,
-      "source_type": "official",
-      "source": "דיווח מנהלת תקומה על היקף הפעילות",
-      "date": "2025",
-      "contests": null,
-      "place": null,
-      "url": null,
-      "archive_url": null
-    },
-    {
-      "id": "i18-c06",
-      "asserts_stage": 5,
+      "asserts_stage": 1,
       "source_type": "oversight",
-      "source": "דוח מעקב של מבקר המדינה",
-      "date": "2026",
+      "source": "מבקר המדינה — תקציר פרק שירותי החינוך למפונים",
+      "date": "02.2026",
+      "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-209-Taktzir.pdf",
+      "archive_url": null,
       "contests": null,
       "place": null,
-      "url": null,
-      "archive_url": null
+      "quote": "בשלושת השבועות הראשונים - המלונות, הרשויות המקומיות הקולטות והמפונות, בשיתוף החברה האזרחית ומתנדבים, הם שהעניקו מסגרות חינוך לילדי המפונים, ומעורבות משרד החינוך הייתה נמוכה"
     }
   ]
 }
