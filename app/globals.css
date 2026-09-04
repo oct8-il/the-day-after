@@ -635,3 +635,7 @@
 
   /* ---- a claim whose source link has not been filled in (dev only) ---- */
   .nolink{color:var(--muted);font-style:italic}
+
+  /* ---- the gap chart before voting opens (Phase 5) ---- */
+  .gapsoon{fill:var(--muted);font-size:15px;font-weight:600}
+  .gapsoon.sub{font-size:12.5px;font-weight:400}
