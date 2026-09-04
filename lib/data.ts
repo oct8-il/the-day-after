@@ -80,3 +80,17 @@ export const QUESTIONS = taxonomy.questions as Record<
 
 export { stageOf, isContested };
 export type { Stage };
+
+/**
+ * Does this build contain anything not fully sourced?
+ *
+ * On dev it does - every incident is rendered, including the ones still being
+ * worked on. On staging and prod it must not, because only published incidents
+ * are built and the validator refuses to publish one with a claim that has no
+ * link. The banner warning readers that the data is illustrative is shown only
+ * when this is true, so the site never tells a reader its data is provisional
+ * when it is not - or that it is sound when it is not.
+ */
+export const hasUnsourcedData = visibleIncidents.some(
+  (i) => i.illustrative || i.claims.some((c) => !c.url),
+);

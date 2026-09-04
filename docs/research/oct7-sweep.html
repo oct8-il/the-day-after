@@ -1,0 +1,1175 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>סריקת מקורות — 7 באוקטובר 2023</title><style>
+:root{--bg:#12131a;--pan:#1a1c25;--pan2:#21242f;--bd:#2e3240;--tx:#e6e8ef;--dim:#9aa1b4;--acc:#7aa2f7;--ok:#67c185;--warn:#e0af68;--bad:#db4f43;--mid:#c17367}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.65 "Segoe UI",Rubik,Arial,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 18px 80px}
+h1{font-size:26px;margin:0 0 6px}.sub{color:var(--dim);margin:0 0 20px;font-size:14px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 20px}
+.stat{background:var(--pan);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;min-width:110px}
+.stat b{display:block;font-size:22px}.stat span{color:var(--dim);font-size:12px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--pan);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.chip.on{background:var(--acc);color:#0d1017;border-color:var(--acc);font-weight:600}
+.chip i{font-style:normal;color:var(--dim);font-size:11px}.chip.on i{color:#0d1017}
+.card{background:var(--pan);border:1px solid var(--bd);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.card header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;margin-bottom:8px}
+.id{color:var(--dim);font-family:ui-monospace,monospace}
+.tier{padding:1px 8px;border-radius:6px;font-weight:700}
+.tier-A{background:rgba(103,193,133,.16);color:var(--ok)}.tier-B{background:rgba(122,162,247,.16);color:var(--acc)}.tier-C{background:rgba(224,175,104,.16);color:var(--warn)}
+.dd{padding:1px 8px;border-radius:6px;background:var(--pan2);color:var(--dim)}
+.dd-new{color:var(--ok)}.dd-ext{color:var(--warn)}
+.cl{margin-inline-start:auto;color:var(--dim)}
+.card h3{font-size:17px;margin:0 0 4px;line-height:1.5}
+.en{color:var(--dim);font-size:13px;margin:0 0 12px;direction:ltr;text-align:left}
+.meta{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 12px;padding:10px 12px;background:var(--pan2);border-radius:8px}
+.meta div{min-width:150px}.meta dt{color:var(--dim);font-size:11px}.meta dd{margin:0;font-size:13px}
+.src{border-inline-start:2px solid var(--bd);padding:0 12px;margin:0 0 10px}
+.q{font-size:14px}.sm{color:var(--dim);font-size:12px;margin-top:3px}
+.sm a{color:var(--acc)}
+.t{padding:0 6px;border-radius:4px;background:var(--pan2);font-size:11px}
+.t-oversight,.t-official{color:var(--ok)}.t-knesset{color:var(--ok)}.t-court{color:var(--acc)}.t-ngo{color:var(--warn)}
+.rem,.notes{font-size:13px;color:var(--dim);margin-top:8px}
+.rem b,.notes b{color:var(--tx)}
+.flags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.fl{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--pan2);color:var(--dim)}
+.fl-strong{color:var(--ok)}.fl-gap{color:var(--ok)}.fl-contested,.fl-political,.fl-sensitive,.fl-sensitive-framing{color:var(--mid)}
+.fl-weak-source,.fl-unverified,.fl-single-source,.fl-opinion-source,.fl-needs-corroboration{color:var(--warn)}
+.dec{display:flex;gap:6px;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)}
+.dec button{background:var(--pan2);color:var(--dim);border:1px solid var(--bd);border-radius:7px;padding:4px 14px;font:inherit;font-size:13px;cursor:pointer}
+.dec button.on[data-v=yes]{background:var(--ok);color:#0d1017;border-color:var(--ok)}
+.dec button.on[data-v=maybe]{background:var(--warn);color:#0d1017;border-color:var(--warn)}
+.dec button.on[data-v=no]{background:var(--bad);color:#fff;border-color:var(--bad)}
+.mark{color:var(--dim);font-size:12px}
+.exp{position:fixed;inset-block-end:16px;inset-inline-start:16px;z-index:9}
+.exp button{background:var(--acc);color:#0d1017;border:0;border-radius:9px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+dialog{background:var(--pan);color:var(--tx);border:1px solid var(--bd);border-radius:12px;max-width:640px;width:92%}
+dialog textarea{width:100%;height:300px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;font:12px ui-monospace,monospace;padding:8px}
+.note{background:var(--pan2);border:1px solid var(--bd);border-inline-start:3px solid var(--warn);border-radius:8px;padding:12px 14px;margin:0 0 20px;font-size:13px;color:var(--dim)}
+</style></head><body><div class="wrap">
+<h1>סריקת מקורות — כשלים מתועדים ב-7 באוקטובר 2023</h1>
+<p class="sub">מרשם מחקר, לא נתוני אתר. חלון: 7–10.10.2023 (היום עצמו ו-72 השעות הראשונות), בתוספת חלון ההתרעה שקדם לו והליך האחריותיות שאחריו. נוצר 4.9.2026.</p>
+<div class="note">כל ממצא כאן דורש החלטה שלך לפני שהוא הופך לאירוע. הדירוג: <b>A</b> מקור ראשוני (מבקר, כנסת, או״ם, רשמי) · <b>B</b> עיתונות מבוססת על תחקיר מוסדי · <b>C</b> מקור יחיד, מאמר דעה, או טענה שנויה במחלוקת. ממצא בדירוג C אינו כשיר לאירוע ללא אימות נוסף.</div>
+<div class="stats">
+<div class="stat"><b>108</b><span>ממצאים</span></div>
+<div class="stat"><b>142</b><span>ציטוטים מאומתים</span></div>
+<div class="stat"><b>122</b><span>כתובות מקור</span></div>
+<div class="stat"><b>78</b><span>קרקע חדשה</span></div>
+<div class="stat"><b>29</b><span>מרחיבים אירוע קיים</span></div>
+<div class="stat"><b>24/55/29</b><span>A / B / C</span></div>
+</div>
+<div class="bar"><div class="chips">
+<button class="chip on" data-f="all" data-v="all">הכול</button>
+<button class="chip" data-f="cluster" data-v="warning">התרעה ומודיעין <i>4</i></button><button class="chip" data-f="cluster" data-v="barrier">המכשול והחדירה <i>7</i></button><button class="chip" data-f="cluster" data-v="command">פיקוד, שליטה וזמן תגובה <i>20</i></button><button class="chip" data-f="cluster" data-v="squads">כיתות כוננות והגנה מרחבית <i>7</i></button><button class="chip" data-f="cluster" data-v="medical">פינוי, רפואה וחירום <i>8</i></button><button class="chip" data-f="cluster" data-v="police">משטרה וכוחות מיוחדים <i>3</i></button><button class="chip" data-f="cluster" data-v="alerts">התרעה, מידע ותקשורת לאזרח <i>11</i></button><button class="chip" data-f="cluster" data-v="shelter">מיגון ומקלוט <i>5</i></button><button class="chip" data-f="cluster" data-v="evacuation">פינוי, קליטה ורווחה <i>7</i></button><button class="chip" data-f="cluster" data-v="documentation">תיעוד, זיהוי וראיות <i>23</i></button><button class="chip" data-f="cluster" data-v="accountability">חקירה ואחריותיות <i>12</i></button><button class="chip" data-f="cluster" data-v="legal">מבנה סמכויות בחירום <i>1</i></button>
+<button class="chip" data-f="tier" data-v="A">רק A</button>
+<button class="chip" data-f="tier" data-v="C">רק C</button>
+<button class="chip" data-f="dd" data-v="new">רק חדשים</button>
+<button class="chip" data-f="flag" data-v="gap">פערים</button>
+<button class="chip" data-f="flag" data-v="political">טעונים</button>
+<button class="chip" data-f="flag" data-v="remedy-signal">אותות תיקון</button>
+</div></div>
+<article class="card" data-cluster="warning" data-tier="B" data-dd="ext" data-flags="" id="S001">
+<header><span class="id">S001</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i17</span><span class="cl">התרעה ומודיעין</span></header>
+<h3>תרבות ארגונית באמ״ן מנעה בחינה מחדש של אינדיקציות שהצטברו לאורך שנתיים</h3>
+<p class="en">Intelligence Directorate culture prevented reassessment of accumulated warning signs over two years</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אמ״ן — אגף המודיעין</dd></div><div><dt>מתי</dt><dd>מצטבר עד ליל 6–7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p1</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">קראנו, אבל לא ראינו מה כתוב בשורות</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 27.02.2025 · <a href="https://www.ynet.co.il/news/article/rjst7snckg" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מנגנון ארגוני חוזר (עשר הזדמנויות שהוחמצו), להבדיל מקריאה שגויה של מסמך יחיד</div>
+<div class="flags"></div>
+<div class="dec" data-id="S001"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="new" data-flags="meta" id="S002">
+<header><span class="id">S002</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>פאנל מומחים חיצוני קבע כי רוב תחקירי המטכ״ל על 7 באוקטובר אינם מספקים</h3>
+<p class="en">External expert panel found most General Staff Oct 7 investigations inadequate</p>
+<dl class="meta"><div><dt>גוף</dt><dd>המטכ״ל — צוות בדיקה חיצוני</dd></div><div><dt>מתי</dt><dd>דוח פורסם 11.2025</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">provide a solid factual foundation, but do not identify the points of failure or necessary changes</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 10.11.2025 · <a href="https://www.timesofisrael.com/external-panel-appointed-by-idf-chief-finds-most-of-armys-oct-7-probes-inadequate/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> הרמטכ״ל קיבל את הדוח והתחייב לבצע מחדש תחקירים שנמצאו בלתי מספקים</div>
+<div class="notes"><b>הערות:</b> מטא-ממצא על אמינות מנגנון התחקירים עצמו. 10 מתוך 24 דורגו כתום, 5 כאדום. נושאים מסוימים לא נחקרו כלל</div>
+<div class="flags"><span class="fl fl-meta">מטא</span></div>
+<div class="dec" data-id="S002"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S003">
+<header><span class="id">S003</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i10</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>אישור פסטיבל נובה טופל בדרגי ביניים ללא מעורבות פיקוד בכיר, והסתייגות מפקד חטיבה בדבר מחסור בכוחות נדחתה</h3>
+<p class="en">Nova festival approval handled by mid-level officers; brigade troop-shortage objection overruled</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אוגדת עזה — חטיבה צפונית / פיקוד דרום</dd></div><div><dt>מתי</dt><dd>בתהליך האישור שקדם ל-06:29</dd></div><div><dt>איפה</dt><dd>רעים — מתחם נובה</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">the request was handled by mid-level officers, and senior commanders were mostly not consulted with</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 03.04.2025 · <a href="https://www.timesofisrael.com/idf-okayed-nova-music-festival-but-didnt-inform-troops-deployed-at-border-probe-finds/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">no IDF units in the area were informed about the event, and no military personnel were assigned to secure it</div><div class="sm"><span class="t t-press">press</span> <b>Ynetnews</b> · 03.04.2025 · <a href="https://www.ynetnews.com/article/by00khoqpkg" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מרחיב את i10 משאלת ״לא ידעו״ לשאלת שרשרת האישור עצמה</div>
+<div class="flags"></div>
+<div class="dec" data-id="S003"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S004">
+<header><span class="id">S004</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i03</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בכפר עזה לחמו לפחות 20 יחידות צה״ל ללא מפקד מכליל</h3>
+<p class="en">At Kfar Aza at least 20 IDF units fought without a unified commander</p>
+<dl class="meta"><div><dt>גוף</dt><dd>כוחות מגיבים בכפר עזה / אוגדת עזה</dd></div><div><dt>מתי</dt><dd>בוקר–צהריים 7.10.2023</dd></div><div><dt>איפה</dt><dd>כפר עזה</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">at least 20 different IDF battalions and other elite units were present in the area, fighting without the direction of a commanding officer</div><div class="sm"><span class="t t-press">press</span> <b>Ynetnews</b> · 15.07.2024 · <a href="https://www.ynetnews.com/article/rjplvlmdr" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">גם כשנכנסו החיילים האמיצים להילחם זה היה ללא שליטה וללא פיקוד</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 26.02.2025 · <a href="https://www.maariv.co.il/news/israel/article-1175861" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> i03 עוסק בזמן התגובה; זה עוסק בהיעדר פיקוד מאחד בין הכוחות שכן הגיעו, כולל אירועי דו-צדדי</div>
+<div class="flags"></div>
+<div class="dec" data-id="S004"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S005">
+<header><span class="id">S005</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i04</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בניר עוז ובנירים הניחו בטעות שכוחות כבר בשטח, ולא זוהה שהגנת היישוב קודמת להגנת המוצבים</h3>
+<p class="en">At Nirim/Nir Oz command wrongly assumed troops present and prioritised outposts over communities</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד אוגדת עזה</dd></div><div><dt>מתי</dt><dd>06:29–13:10 7.10.2023</dd></div><div><dt>איפה</dt><dd>נירים, ניר עוז</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מפקדים התקשו להבין שמה שחשוב ברקע החדירות הרבות הוא ההגנה על היישובים ולא על המוצבים</div><div class="sm"><span class="t t-press">press</span> <b>וואלה</b> · 14.03.2025 · <a href="https://news.walla.co.il/item/3734266" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">across-the-board failure to defend the residents</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 04.04.2025 · <a href="https://www.jpost.com/israel-news/defense-news/article-848841" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> הסיבה שהתחקיר נותן לכשל של i04 — שגיאת תעדוף והנחה, לא מרחק או תזמון</div>
+<div class="flags"></div>
+<div class="dec" data-id="S005"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S006">
+<header><span class="id">S006</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i12</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בסיס אוגדת עזה סבל מפרצות אבטחת מידע והתייחסו אליו כמתקן עורפי חרף חשיפתו</h3>
+<p class="en">Gaza Division HQ base had information-security breaches and was treated as a rear facility</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מפקדת אוגדת עזה — בסיס רעים</dd></div><div><dt>מתי</dt><dd>מ-06:29 7.10.2023</dd></div><div><dt>איפה</dt><dd>רעים</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Large breaches of information security gave Hamas significant knowledge on the base ahead of its attack</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 13.06.2025 · <a href="https://www.timesofisrael.com/despite-vulnerabilities-troops-blocked-capture-of-gaza-division-base-on-oct-7-probe/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מוסיף ל-i12: הבסיס 6.5 ק״מ מהגבול סווג כעורפי, תשתית הגנה מזערית, חלון של 30 דקות לא נוצל</div>
+<div class="flags"></div>
+<div class="dec" data-id="S006"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="" id="S007">
+<header><span class="id">S007</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בסופה אבדן שרשרת מפקדים בדרגי פלוגה, גדוד וחטיבה בשעות הראשונות שיתק את ההגנה בגזרה</h3>
+<p class="en">At Sufa cascading loss of officers across four echelons crippled sector defence</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חטיבת הנח״ל / חטיבה דרומית / אוגדת עזה</dd></div><div><dt>מתי</dt><dd>שעות הבוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>סופה</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The IDF&#x27;s Gaza Division, including its Southern Brigade, was out of action for several hours, which disrupted the army&#x27;s ability to defend the area</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 28.07.2025 · <a href="https://www.jpost.com/israel-news/defense-news/article-862411" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> ארבעה דרגי פיקוד נהרגו בשעות הראשונות באותה גזרה</div>
+<div class="flags"></div>
+<div class="dec" data-id="S007"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="new" data-flags="strong" id="S008">
+<header><span class="id">S008</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>בכיסופים תרחיש הייחוס שאליו הוכשרו הכוחות היה שגוי מיסודו, והם לא הוכשרו להילחם ביישוב רווי מחבלים</h3>
+<p class="en">At Kissufim the reference scenario trained against was fundamentally wrong</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מחנה כיסופים / כיתת הכוננות</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>כיסופים</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">תרחיש הייחוס אליו נערכו הכוחות היה שגוי מיסודו</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 22.05.2025 · <a href="https://www.maariv.co.il/news/military/article-1198365" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">הכוחות לא הוכשרו להילחם ביישוב ישראלי רווי מחבלים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 22.05.2025 · <a href="https://www.maariv.co.il/news/military/article-1198365" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> האמירה הברורה ביותר שנמצאה על היעדר תרחיש פלישה קרקעית באימונים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S008"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="new" data-flags="" id="S009">
+<header><span class="id">S009</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>בחולית שער סגור מנע כניסת רכבים משוריינים, ותנועת כוח לא מתואמת כמעט גרמה לאש כוחותינו</h3>
+<p class="en">At Holit a closed gate kept armoured reinforcement outside; uncoordinated movement nearly caused friendly fire</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חטיבת גולני / חטיבת פארן</dd></div><div><dt>מתי</dt><dd>מ-06:56; ~16:15 7.10.2023</dd></div><div><dt>איפה</dt><dd>חולית</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The gate, however, remained closed, and the vehicles remained outside the kibbutz</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 27.04.2026 · <a href="https://www.jpost.com/israel-news/defense-news/article-894205" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> התמונה ההפוכה של i08 — כאן דווקא בקרת הכניסה הייתה המכשול</div>
+<div class="flags"></div>
+<div class="dec" data-id="S009"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="strong gap" id="S010">
+<header><span class="id">S010</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>לאופקים לא הייתה כיתת כוננות קבועה ולא חמ״ל עירוני, וכוחות צה״ל הופנו למקום שגוי</h3>
+<p class="en">Ofakim had no standing alert squad, no urban command centre, and forces were misdirected</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד דרום / תחנת משטרה / רשות מקומית</dd></div><div><dt>מתי</dt><dd>7.10.2023, ~06:30–14:30</dd></div><div><dt>איפה</dt><dd>אופקים</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">צה״ל נכשל במשימתו להגן על העיר אופקים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 14.07.2025 · <a href="https://www.maariv.co.il/news/military/article-1214362" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">לתחנת משטרה אין אמצעים לייצר תמונת מצב כמו חמ״ל עירוני</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 14.07.2025 · <a href="https://www.ynet.co.il/news/article/rk00mlszuxe" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> עיר אזרחית מחוץ לטבעת הקיבוצים — לא מכוסה כלל בסט הקיים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S010"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="new" data-flags="sensitive-framing" id="S011">
+<header><span class="id">S011</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>בנתיב העשרה הורה רבש״צ לכיתת הכוננות להסתגר בבתים, ומפקד הגזרה לא הורה לו לצאת</h3>
+<p class="en">At Netiv HaAsara the armed standby squad was ordered to shelter in place and the sector commander did not override</p>
+<dl class="meta"><div><dt>גוף</dt><dd>רבש״צ יישוב / פיקוד גדוד גזרתי / חטיבת גולני</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>נתיב העשרה</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">הרבש״צ הורה ל-25 חברי כיתת הכוננות להסתגר בבתיהם, ולא לצאת</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 04.03.2025 · <a href="https://www.ynet.co.il/news/article/h1wqvhxskg" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> 37 לוחמים בשטח לא מנעו הרג של 17 אזרחים בידי 3 מחבלים. נדרשת ניסוח מוסדי — לא אישי</div>
+<div class="flags"><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S011"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="ext" data-flags="split-candidate" id="S012">
+<header><span class="id">S012</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i07</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>בשדרות הועברו רובים לאוגדת עזה ללא סמכות והכיתה נותרה עם אקדחים; מיגונית אוטומטית נכשלה להיפתח</h3>
+<p class="en">In Sderot rifles were transferred to the Gaza Division without authorisation and an automated shelter failed to unlock</p>
+<dl class="meta"><div><dt>גוף</dt><dd>שרשרת אספקת כיתות כוננות / מערכת מיגוניות עירונית</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>שדרות</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">22 חברי כיתת כוננות שנותרו עם אקדחים בלבד מול עשרות מחבלים</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 29.01.2025 · <a href="https://www.ynet.co.il/news/article/byihutwujg" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">בעיר לא הופעלה אזעקה של חדירת מחבלים, אלא רק אזעקת צבע אדום</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 09.04.2025 · <a href="https://www.kan.org.il/content/kan-news/defense/880715/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> שני כשלים נפרדים בממצא אחד — לשקול פיצול</div>
+<div class="flags"><span class="fl fl-split-candidate">מועמד לפיצול</span></div>
+<div class="dec" data-id="S012"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="sensitive-framing" id="S013">
+<header><span class="id">S013</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בזיקים לא הוצאה ספינת סיור חרף אזהרות, וכוח קרקעי נסוג והשאיר רכב פעיל שבו השתמשו המחבלים</h3>
+<p class="en">At Zikim a naval base commander did not deploy a patrol vessel and a ground force disengaged leaving a running vehicle</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל הים — בסיס אשדוד / חטיבת גולני</dd></div><div><dt>מתי</dt><dd>בוקר מוקדם 7.10.2023</dd></div><div><dt>איפה</dt><dd>זיקים</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מפקד הבסיס מחליט שלא להוציא את ספינת הדבורה לים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 27.02.2025 · <a href="https://www.maariv.co.il/news/military/article-1176309" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">הכוח לא פעל בחירוף נפש לחצוץ בין המחבלים לאזרחים</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 04.05.2025 · <a href="https://www.kan.org.il/content/kan-news/defense/894501/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> התחקיר המליץ על יחידות ימי-יבשה ייעודיות ושיפור פרוטוקולי קשר</div>
+<div class="notes"><b>הערות:</b> שרשרת סיבתית בין-זרועית — נדרשת ניסוח מוסדי ולא אישי</div>
+<div class="flags"><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S013"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="new" data-flags="" id="S014">
+<header><span class="id">S014</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>בסיס באזור מעבר ארז היה בפיקוד סמל, מאויש בעיקר בכוח תומך, וכשל ההנדסה בחיזוק השער הוגדר ככשל מקצועי ומוסרי</h3>
+<p class="en">Erez-area base commanded by a sergeant, staffed by support personnel; engineering failure to reinforce the gate</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מרכז שליטה ארז / חיל ההנדסה</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>מעבר ארז — מחנה יפתח</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The entire base that Saturday morning was under the command of a sergeant</div><div class="sm"><span class="t t-press">press</span> <b>Ynetnews</b> · 02.09.2025 · <a href="https://www.ynetnews.com/article/sjzczjnqle" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> פער דרגה/סמכות ואמירה מפורשת של ״כשל מוסרי״ בתחקיר עצמו</div>
+<div class="flags"></div>
+<div class="dec" data-id="S014"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="warning" data-tier="C" data-dd="ext" data-flags="single-source needs-corroboration" id="S015">
+<header><span class="id">S015</span><span class="tier tier-C">C</span><span class="dd dd-ext">EXTENDS i01</span><span class="cl">התרעה ומודיעין</span></header>
+<h3>הוראות הרמטכ״ל מהלילה לחיזוק ההגנה האווירית ולהעלאת כוננות ימית לא בוצעו</h3>
+<p class="en">Chief of Staff night-before directives on air defence and maritime alert were not carried out</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל האוויר — מערך הגנה אווירית / חיל הים / אג״ם</dd></div><div><dt>מתי</dt><dd>ליל 6–7.10.2023, מ~04:30</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p1</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">His instruction to the Air Force to increase alert levels in the air-defense array and to add an Iron Dome battery was also not carried out</div><div class="sm"><span class="t t-press">press</span> <b>ערוץ 7</b> · 07.12.2025 · <a href="https://www.israelnationalnews.com/news/418920" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקור יחיד, מוטה פוליטית — דורש אימות במקור שני לפני שימוש</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S015"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="ext" data-flags="strong" id="S016">
+<header><span class="id">S016</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i06</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>פיקוד הדרום ואוגדת עזה פעלו ללא פיקוד ובקרה מסודרים בפינוי פצועים, ותיאום נקודות השחלוף מול מד״א התעכב כשמונה שעות</h3>
+<p class="en">No organised command and control for casualty evacuation; MDA handoff points coordinated ~8 hours late</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד דרום / אוגדת עזה / מד״א</dd></div><div><dt>מתי</dt><dd>06:29 עד ~14:23, 7.10.2023</dd></div><div><dt>איפה</dt><dd>מרחב הנגב המערבי</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">תיאום מאוחר של נקודות השחלוף מול מד״א - קרוב לשמונה שעות לאחר תחילת מתקפת הטרור</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 30.06.2026 · <a href="https://www.mevaker.gov.il/newsroom/2026-06-30-1" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">הרשות העליונה לאשפוז...התכנסה לראשונה רק בשעה 14:00. עד אותה שעה כבר הגיעו לסורוקה ולברזילי 501 פצועים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 30.06.2026 · <a href="https://www.maariv.co.il/news/law/article-1339133" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל הודיע כי החל לשלב את מערכות הנתונים של מד״א בחפ״קים הרפואיים; אין אימות עצמאי</div>
+<div class="notes"><b>הערות:</b> מספור מדויק של העיכוב מדוח המבקר עצמו — חזק</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S016"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="strong" id="S017">
+<header><span class="id">S017</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>מערכת מד״א למעקב בזמן אמת שהוצבה באוגדת עזה לא שומשה כלל בידי גורמי הרפואה הצבאיים</h3>
+<p class="en">MDA real-time casualty system installed at Gaza Division was never used by military medical staff</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מערך הרפואה הצבאית / מד״א</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>מפקדת אוגדת עזה</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מד״א הציב באוגדת עזה מערכת אשר משקפת בזמן אמת את כלל האירועים המתקבלים במוקדי מד״א, לא השתמשו גורמי הרפואה הצבאיים במערכת</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 30.06.2026 · <a href="https://www.mevaker.gov.il/newsroom/2026-06-30-1" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל אישר שילוב נתוני מד״א בחמ״לים הצבאיים</div>
+<div class="notes"><b>הערות:</b> כשל מערכות מידע ספציפי — המערכת הותקנה ונבדקה ימים קודם</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S017"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="strong" id="S018">
+<header><span class="id">S018</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>צי האמבולנסים הממוגנים עמד על 48% מהתקן שקבע המבקר ב-2016, ואמבולנס ממוגן אחד בלבד הוצב דרך קבע בעוטף</h3>
+<p class="en">Armoured ambulance fleet at 48% of the Comptroller&#x27;s own 2016 standard; one stationed near the envelope</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מד״א / משרד הביטחון</dd></div><div><dt>מתי</dt><dd>מצב קיים ב-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">ערב המתקפה היו למד״א רק 24 אמבולנסים כאלה בכל הארץ, 48% מהכמות שנדרשה</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 30.06.2026 · <a href="https://www.maariv.co.il/news/law/article-1339133" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">באוקטובר 2023 היו ברשות מד״א 24 אמבולנסים ממוגני ירי, לעומת 50 שהיו דרושים על פי ההמלצות</div><div class="sm"><span class="t t-press">press</span> <b>גלובס</b> · 30.06.2026 · <a href="https://www.globes.co.il/news/article.aspx?did=1001547379" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> פער שהמבקר עצמו זיהה ב-2016 ולא נסגר — דפוס מסוג ״זוהה ולא תוקן״</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S018"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="strong" id="S019">
+<header><span class="id">S019</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>אספקת מנות דם לבתי החולים הקולטים התעכבה בשעות, ובחדר הטראומה בסורוקה כמעט אזלו מנות מסוג O בצהריים</h3>
+<p class="en">Blood supply to receiving hospitals delayed hours; Soroka trauma room near zero O-type at midday</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מד״א — שירותי הדם / משרד הבריאות / סורוקה</dd></div><div><dt>מתי</dt><dd>08:40–12:15 ו~12:00, 7.10.2023</dd></div><div><dt>איפה</dt><dd>סורוקה, ברזילי</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">בשעה 12:00 של 7 באוקטובר, אחרי שמאות פצועים פונו לסורוקה, היו בבנק הדם של בית החולים אפס מנות דם מסוג O</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 12.05.2026 · <a href="https://www.ynet.co.il/health/article/bj008d3przg" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">בבוקר 7 באוקטובר החזיק בנק הדם של מגן דוד אדום רק 534 מנות דם מסוג O, במקום 750 כנדרש</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 12.05.2026 · <a href="https://www.kan.org.il/content/kan-news/local/1040393/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> המבקר המליץ על תקן מלאי מחייב ומערכת מלאי בזמן אמת בין בתי חולים; יושמה כ-18 חודשים אחרי</div>
+<div class="notes"><b>הערות:</b> שני דיווחים עצמאיים על אותו דוח מבקר. מקור mako נוסף אותר אך מוחלף במקורות נגישים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S019"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="A" data-dd="ext" data-flags="needs-date" id="S020">
+<header><span class="id">S020</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i18</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>לא הייתה תוכנית אופרטיבית לפינוי תושבי יישובי הספר; פינוי יישובים נמשך בין 14 ל-36 שעות</h3>
+<p class="en">No operational plan to evacuate border communities; evacuations took 14–36 hours</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ממשלת ישראל / צה״ל</dd></div><div><dt>מתי</dt><dd>7–8.10.2023</dd></div><div><dt>איפה</dt><dd>מפלסים, ניר עם, נחל עוז, כפר עזה</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">פינוי מפלסים החל רק לאחר 17 שעות, ניר עם לאחר 20 שעות, נחל עוז לאחר 14 שעות, ופינוי כפר עזה נמשך כ-36 שעות</div><div class="sm"><span class="t t-press">press</span> <b>וואלה</b> · — · <a href="https://news.walla.co.il/item/3818330" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">הליך הפינוי התנהל ב׳אי סדר מוחלט׳ שהגיע לרמה המסכנת את חיי התושבים</div><div class="sm"><span class="t t-press">press</span> <b>וואלה</b> · — · <a href="https://news.walla.co.il/item/3818330" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תגובת משרד הביטחון הפנתה אחריות למשרדי הממשלה — לא התחייבות לתיקון</div>
+<div class="notes"><b>הערות:</b> i18 עוסק בקליטה; זה בהוצאה מאזור הסכנה. תאריך הפרסום חסר בעמוד — לאמת</div>
+<div class="flags"><span class="fl fl-needs-date">חסר תאריך</span></div>
+<div class="dec" data-id="S020"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="A" data-dd="ext" data-flags="" id="S021">
+<header><span class="id">S021</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i18</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>הרשויות הקולטות לא קיבלו מידע מוקדם על צורכי הרווחה של המפונים וסבלו ממחסור חמור בעובדים סוציאליים</h3>
+<p class="en">Receiving municipalities got no advance data on evacuees&#x27; welfare needs and were critically understaffed</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הרווחה / רשויות מקומיות קולטות</dd></div><div><dt>מתי</dt><dd>7–10.10.2023 והימים שאחרי</dd></div><div><dt>איפה</dt><dd>אילת, טבריה, ערים קולטות</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">היעדר מיפוי הצרכים</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 02.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">היעדר נוכחות של נציגים ממחלקות הרווחה</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 02.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found; הפערים נותרו חרף נהלים קיימים (פח 21, ״אורח במלון״)</div>
+<div class="notes"><b>הערות:</b> אילת: 10 תקני עו״ס לכ-60,000 מפונים</div>
+<div class="flags"></div>
+<div class="dec" data-id="S021"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="shelter" data-tier="A" data-dd="new" data-flags="strong" id="S022">
+<header><span class="id">S022</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">מיגון ומקלוט</span></header>
+<h3>פיקוד העורף הקפיא ב-2018 את אכיפת תכנון המיגון ברשויות, וכשליש מהאוכלוסייה נותר ללא מיגון תקני</h3>
+<p class="en">Home Front Command froze municipal shelter-planning enforcement in 2018; a third of the population lacked standard protection</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד העורף / רשויות מקומיות</dd></div><div><dt>מתי</dt><dd>החלטה 2018; מצב בתוקף ב-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">בשנת 2018 החליט פקע״ר להקפיא את ביצועו של שלב ב׳ (גיבוש המענה על ידי הרשויות המקומיות)</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 01.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">נכון לינואר 2025 לכ-3.2 מיליון תושבים (33.6%) אין מיגון תקני</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 01.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תוכנית מיגון של 4 מיליארד ש״ח קיבלה כ-10% מהתקציב — ראיה לאי-סגירה</div>
+<div class="notes"><b>הערות:</b> מקור ראשוני ישיר מהדוח</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S022"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="A" data-dd="new" data-flags="strong" id="S023">
+<header><span class="id">S023</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>לא היה אומדן מוקדם למספר העצורים, ומשבר התפוסה פגע ביכולת המעצר והחקירה</h3>
+<p class="en">No advance estimate of detainee volume; detention-capacity crisis harmed interrogation capability</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל / שב״כ / שב״ס</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023 והלאה</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The arrest of thousands of terrorists without prior preparation exacerbated the gap in terms of the lack of space and harmed the Shin Bet&#x27;s ability to carry out arrests and interrogations</div><div class="sm"><span class="t t-oversight">oversight</span> <b>Times of Israel</b> · 09.06.2026 · <a href="https://www.timesofisrael.com/comptroller-prison-overcrowding-has-harmed-shin-bet-delayed-oct-7-terror-trials/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">מחסור במקומות כליאה בבתי הכלא של שב״ס גרם לפגיעה ניכרת ביכולתו של שב״כ לבצע מעצרים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 09.06.2026 · <a href="https://www.maariv.co.il/news/israel/article-1331014" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found; קיבולת גדלה בלחץ אך לא כתיקון מערכתי</div>
+<div class="notes"><b>הערות:</b> קיים נוהל משותף מ-2006 שלא הופעל. השלכה על העמדה לדין</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S023"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="contested needs-date" id="S024">
+<header><span class="id">S024</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>מערך בריאות הנפש הציבורי קרס בימים הראשונים למלחמה והסתמך כמעט לחלוטין על מתנדבים</h3>
+<p class="en">Public mental-health system collapsed in the first days and relied almost entirely on volunteers</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הבריאות</dd></div><div><dt>מתי</dt><dd>הימים הראשונים מ-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מערך בריאות הנפש, שהתקשה לתפקד עוד לפני 7 באוקטובר - קרס בימים הראשונים למלחמה</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · — · <a href="https://www.ynet.co.il/health/article/s1mqq0rtkl" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> משרד הבריאות דחה את הדוח — התכחשות, לא הכרה</div>
+<div class="notes"><b>הערות:</b> מרבית הדוח חורג מחלון 72 השעות; רק ״קרס בימים הראשונים״ בתחום. תאריך פרסום חסר</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span><span class="fl fl-needs-date">חסר תאריך</span></div>
+<div class="dec" data-id="S024"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="A" data-dd="ext" data-flags="strong political" id="S025">
+<header><span class="id">S025</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>צה״ל, השב״כ והיועמ״שית עתרו לחסום את ביקורת המבקר על ההתנהלות ב-7 באוקטובר; בג״ץ קיבל חלק מהעתירה</h3>
+<p class="en">IDF, Shin Bet and the Attorney General petitioned to block the Comptroller&#x27;s audit; the court partially upheld</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל / שב״כ / היועמ״שית / הפצ״ר</dd></div><div><dt>מתי</dt><dd>2024–2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מבקר המדינה אינו מוסמך לבחון סוגיות מובהקות של מדיניות ואסטרטגיה בתחומי החוץ והביטחון</div><div class="sm"><span class="t t-court">court</span> <b>גלובס</b> · 29.06.2026 · <a href="https://www.globes.co.il/news/article.aspx?did=1001547375" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — הפסיקה מצמצמת פיקוח</div>
+<div class="notes"><b>הערות:</b> ארבעה מתוך שמונה מסלולי ביקורת נחסמו, כולל ממד ההנהגה</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S025"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="ext" data-flags="political" id="S026">
+<header><span class="id">S026</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>בכירים בצבא ביקשו ממבקר המדינה להוריד את פרק האחריות מהתחקירים; המבקר סירב</h3>
+<p class="en">Senior military officials asked the Comptroller to remove the responsibility chapter; he refused</p>
+<dl class="meta"><div><dt>גוף</dt><dd>בכירים במערכת הביטחון / משרד מבקר המדינה</dd></div><div><dt>מתי</dt><dd>נחשף 06.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">חלק מהבכירים ביקשו ממני להוריד את הפרק של האחריות בתחקירים - לא הסכמתי בשום צורה</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 06.2026 · <a href="https://www.ynet.co.il/news/article/bkd5owfmme" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> n/a — המבקר סירב</div>
+<div class="notes"><b>הערות:</b> המקור עצמו אינו נוקב בשמות; מנוסח ברמת מוסד</div>
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S026"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="A" data-dd="ext" data-flags="strong" id="S027">
+<header><span class="id">S027</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i18</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>לא הייתה תוכנית פינוי מאושרת; מערכת הביטחון החליטה בפועל והממשלה אישרה בדיעבד</h3>
+<p class="en">No approved state evacuation plan existed; the security establishment decided and government approved after the fact</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הביטחון / ממשלת ישראל</dd></div><div><dt>מתי</dt><dd>7–10.10.2023</dd></div><div><dt>איפה</dt><dd>עוטף עזה וגבול הצפון</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">החלטות הממשלה בנושא פינוי אוכלוסייה למעשה אישרו בדיעבד את ההחלטות שהתקבלו בפועל על ידי מערכת הביטחון</div><div class="sm"><span class="t t-knesset">knesset</span> <b>מרכז המחקר והמידע של הכנסת</b> · 12.11.2023 · <a href="https://fs.knesset.gov.il/globaldocs/MMM/ac8ae5e4-d97b-ee11-815f-005056aac6c3/2_ac8ae5e4-d97b-ee11-815f-005056aac6c3_11_20278.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">בדוח משנת 2016 כתב המבקר כי התוכנית אינה בת-ביצוע</div><div class="sm"><span class="t t-knesset">knesset</span> <b>מרכז המחקר והמידע של הכנסת</b> · 22.11.2023 · <a href="https://fs.knesset.gov.il/globaldocs/MMM/e83f8692-1e77-ee11-815f-005056aac6c3/2_e83f8692-1e77-ee11-815f-005056aac6c3_11_20270.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תוכניות ״מרחק בטוח״ ו״משב רוח״ גובשו בדיעבד</div>
+<div class="notes"><b>הערות:</b> מסמך כנסת בן חודש מהאירוע — מקור ראשוני חזק</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S027"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="A" data-dd="new" data-flags="strong gap" id="S028">
+<header><span class="id">S028</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>לא היה חדר מצב ממשלתי אזרחי לעורף שריכז נתונים באופן מערכתי</h3>
+<p class="en">No civilian government situation room existed to collect and coordinate home-front data</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד ראש הממשלה / ממשלת ישראל</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אין חדר מצב ממשלתי אזרחי לעורף המרכז נתונים באופן מערכתי</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 16.09.2025 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2025/Government-Management/2025-Government-Management.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> רחב יותר מ-i18 — תיאום נתונים ממשלתי כולל, לא ניהול מפונים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S028"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="legal" data-tier="B" data-dd="new" data-flags="dated-source" id="S029">
+<header><span class="id">S029</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">מבנה סמכויות בחירום</span></header>
+<h3>לרח״ל אין סמכות חוקית להורות לגופים אחרים, ואין ״חוק מערך העורף״ המאחד סמכויות בחירום</h3>
+<p class="en">NEMA has no statutory power to direct other bodies and no Home Front Law unifies emergency authority</p>
+<dl class="meta"><div><dt>גוף</dt><dd>רח״ל / משרד הביטחון</dd></div><div><dt>מתי</dt><dd>מצב מבני בתוקף ב-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אין לרח״ל סמכות לתת פקודות והנחיות לגופים אחרים, והיא אינה מחליפה שום גורם</div><div class="sm"><span class="t t-knesset">knesset</span> <b>מרכז המחקר והמידע של הכנסת</b> · 22.10.2012 · <a href="https://fs.knesset.gov.il/globaldocs/MMM/a34c6b58-e9f7-e411-80c8-00155d010977/2_a34c6b58-e9f7-e411-80c8-00155d010977_11_9002.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — חוק מערך העורף הוצע ולא נחקק</div>
+<div class="notes"><b>הערות:</b> המסמך מ-2012; ההמשכיות מאומתת בדוח המבקר 2025 (S028). לציין את הפער בתאריך בגלוי</div>
+<div class="flags"><span class="fl fl-dated-source">מקור מיושן</span></div>
+<div class="dec" data-id="S029"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="political" id="S030">
+<header><span class="id">S030</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>הוכרזו שתי הכרזות חירום נפרדות ולא מתואמות, ולא הייתה מסגרת אחת של מצב חירום אזרחי</h3>
+<p class="en">Two separate uncoordinated emergency declarations were made, with no single civilian state-of-emergency framework</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הביטחון / המשרד לביטחון לאומי</dd></div><div><dt>מתי</dt><dd>7.10.2023, 08:00 ו-18:00</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">יש להבחין בין הכרזה על ׳מצב מיוחד בעורף׳ ובין ׳הכרזה על מצב חירום׳</div><div class="sm"><span class="t t-knesset">knesset</span> <b>הכנסת — הצוות המשפטי של ועדת חוץ וביטחון</b> · 12.05.2021 · <a href="https://fs.knesset.gov.il/24/Committees/24_ci_bg_600301.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">ההכרזה שניתנה על ידי השר לביטחון לאומי תמוהה מעט, שכן לא לחלוטין ברור אם הייתה נחוצה</div><div class="sm"><span class="t t-ngo">ngo</span> <b>המכון הישראלי לדמוקרטיה</b> · 10.10.2023 · <a href="https://www.idi.org.il/articles/51062" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> ניתוח משפטי מ-10.10.2023 — בתוך חלון האירוע. יש בו ממד פוליטי — לשקול ניסוח</div>
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S030"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="shelter" data-tier="A" data-dd="new" data-flags="sensitive-framing gap" id="S031">
+<header><span class="id">S031</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">מיגון ומקלוט</span></header>
+<h3>פערי המיגון חריפים במיוחד בכפרים הבדואים הלא-מוכרים בנגב, שאין בהם תשתית מיגון מוכרת</h3>
+<p class="en">Shelter gaps most severe in Negev Bedouin unrecognised villages, which have no recognised shelter infrastructure</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הביטחון / רשויות מקומיות / הרשות לפיתוח והתיישבות הבדואים</dd></div><div><dt>מתי</dt><dd>מצב בתוקף 7–10.10.2023</dd></div><div><dt>איפה</dt><dd>הפזורה הבדואית בנגב</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">משנת 2020, פערי המיגון לא צומצמו ואף גדלו (בכ-5.6%)</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 01.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> כ-165,000 תושבי כפרים לא-מוכרים ללא תשתית מיגון ממשלתית. נושא רגיש פוליטית — לנסח כפער תשתיתי בלבד</div>
+<div class="flags"><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S031"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="strong" id="S032">
+<header><span class="id">S032</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>בית חולים בדרום קלט 241 פצועים בעודו סופג מטחי רקטות, מה שחשף פערי מיגון בחדרי טיפול</h3>
+<p class="en">A southern hospital received 241 casualties while under direct rocket fire, exposing protected-capacity gaps</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הבריאות / מיגון בתי חולים</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>בית חולים בדרום (״ד׳״ בדוח)</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">לביה״ח ד׳ הגיעו ביממה הראשונה ללחימה, 7.10.23 241 פצועים, תוך שהוא סופג מטחי רקטות כבדים</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 01.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-103-Hospitals.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> משרד הבריאות אמד ב-12.2023 את עלות סגירת הפער בכ-4.8 מיליארד ש״ח</div>
+<div class="notes"><b>הערות:</b> אזהרות קודמות של המבקר מ-2007 ו-2014 לא יושמו</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S032"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="A" data-dd="new" data-flags="strong gap" id="S033">
+<header><span class="id">S033</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>לא היה מאגר טרום-מלחמתי לזיהוי תושבים עם מוגבלות או קשישים הזקוקים לסיוע בפינוי</h3>
+<p class="en">No pre-war register identified residents with disabilities or elderly needing evacuation assistance</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הרווחה / משרד הפנים / מחלקות רווחה ברשויות</dd></div><div><dt>מתי</dt><dd>7–10.10.2023 והשבועות שאחרי</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אנשים שאינם מטופלים בזמן שגרה במש״ח, ולכן הם אינם מוכרים בהכרח לרשות</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה (חומר רקע לוועדת כנסת)</b> · 07.2025 · <a href="https://fs.knesset.gov.il/25/Committees/25_cs_bg_9693455.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">חלפו שבועיים בטרם זו הצליחה לייצר מענים מקיפים ושיטתיים לצרכים שנתגלו</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 02.2026 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> משרד הרווחה הגדיר איסוף נתונים כזה כ״רחבה ואינה בת יישום״ — דחייה, לא תיקון</div>
+<div class="notes"><b>הערות:</b> שלוש תקנות נגישות שנדרשו עד 2018 יושמו באיחור של 4–6 שנים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S033"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="A" data-dd="new" data-flags="strong" id="S034">
+<header><span class="id">S034</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>לא היה נוהל אחיד לזיהוי חללים וחטופים לפני קבורה; הבשורה למשפחות נמסרה בשלבים</h3>
+<p class="en">No standardised protocol for identifying the dead and hostages before burial; notification delivered in stages</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הבריאות / המרכז הלאומי לרפואה משפטית / מטה החטופים והנעדרים</dd></div><div><dt>מתי</dt><dd>7–10.10.2023 והימים שאחרי</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">העדר זיהוי החלל לפני הקבורה</div><div class="sm"><span class="t t-official">official</span> <b>מטה החטופים והנעדרים — חטיבת מערכת הבריאות</b> · 19.02.2025 · <a href="https://fs.knesset.gov.il/25/Committees/25_cs_bg_5964234.pdf" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">במקרים מסוימים קבלת הבשורה נעשתה בשלבים לפי דרגת החשש לחיים</div><div class="sm"><span class="t t-official">official</span> <b>מטה החטופים והנעדרים</b> · 19.02.2025 · <a href="https://fs.knesset.gov.il/25/Committees/25_cs_bg_5964234.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> המסמך עצמו קובע נהלי זיהוי מבוססי DNA מתוקנים</div>
+<div class="notes"><b>הערות:</b> מסמך מוסדי רשמי — אחד המקורות החזקים לאשכול הזיהוי</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S034"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="police" data-tier="B" data-dd="new" data-flags="gap" id="S035">
+<header><span class="id">S035</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">משטרה וכוחות מיוחדים</span></header>
+<h3>תחנת המשטרה בשדרות הייתה נצורה כ-26 שעות ללא פיקוד ובקרה מאוחדים, ורובי כיתת הכוננות של העיר נלקחו עוד לפני המתקפה</h3>
+<p class="en">Sderot police station besieged ~26 hours with no unified operational control; town&#x27;s squad disarmed pre-attack</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל — תחנת שדרות / כיתת כוננות עירונית</dd></div><div><dt>מתי</dt><dd>06:58 7.10 עד 09:30 8.10.2023</dd></div><div><dt>איפה</dt><dd>שדרות</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">באוגוסט 2022 נשללו מחברי כיתת הכוננות של שדרות הרובים הארוכים על רקע מחלוקות בירוקרטיות</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 09.04.2025 · <a href="https://www.ynet.co.il/news/article/bjoua1xake" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> נשען על תחקיר צה״ל, לא על תחקיר המשטרה (שטרם פורסם)</div>
+<div class="flags"><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S035"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="strong gap" id="S036">
+<header><span class="id">S036</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>כ-1,000 כוחות ביטחון התרכזו בשדרות בעוד יישובים סמוכים נותרו ללא הגנה</h3>
+<p class="en">~1,000 security personnel concentrated in Sderot while nearby communities went undefended</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / צה״ל — הקצאת כוחות</dd></div><div><dt>מתי</dt><dd>06:58 7.10 עד 09:30 8.10.2023</dd></div><div><dt>איפה</dt><dd>שדרות</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Nearly 1,000 Israeli security forces ended up in Sderot...even after no further terrorists were invading</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 09.04.2025 · <a href="https://www.timesofisrael.com/1000-troops-were-in-sderot-on-oct-7-even-as-no-further-terrorists-invaded-city-probe-finds/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">If a warning was sent...it would have been possible to place police roadblocks...and foil the enemy&#x27;s attack</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 09.04.2025 · <a href="https://www.timesofisrael.com/1000-troops-were-in-sderot-on-oct-7-even-as-no-further-terrorists-invaded-city-probe-finds/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> שאלת הקצאת כוחות — לא זמן תגובה. משלים את S035</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S036"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S037">
+<header><span class="id">S037</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i10</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>לא הוקצה כוח הגנה ייעודי ולא קצין קישור צה״ל–משטרה לפסטיבל נובה</h3>
+<p class="en">No dedicated protective force or IDF-police liaison assigned to the Nova festival</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אוגדת עזה / חמ״ל משטרתי דרומי</dd></div><div><dt>מתי</dt><dd>ליל 6–7.10 ובוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>רעים</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מבחינת צה״ל, מסיבת הנובה נשכחה</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 03.04.2025 · <a href="https://www.ynet.co.il/news/article/hyqs0u9ayl" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> הכוח המאורגן הראשון (11 חיילים) הגיע ב-11:20, כחמש שעות אחרי תחילת המתקפה</div>
+<div class="flags"></div>
+<div class="dec" data-id="S037"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="police" data-tier="C" data-dd="new" data-flags="single-source" id="S038">
+<header><span class="id">S038</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">משטרה וכוחות מיוחדים</span></header>
+<h3>כוח מילואים של יחידה מיוחדת שגויס ב-7.10 לא הורשה לרדת דרומה במשך יומיים בשל מגבלת גזרה</h3>
+<p class="en">A mobilised Border Police special reserve unit was blocked from deploying south for two days</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / מג״ב — יחידה מיוחדת</dd></div><div><dt>מתי</dt><dd>7–9.10.2023</dd></div><div><dt>איפה</dt><dd>ירושלים; יעד — עוטף עזה</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">ביקשנו לרדת דרומה והתברר ששלחו רכב אחד לחלץ לוחם שלנו שגר בדרום ורכב נוסף שנסע דרומה – הוחזר</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 29.01.2025 · <a href="https://www.kan.org.il/content/kan-news/defense/853388/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> המשטרה טענה כי החזקת הכוח בירושלים מנעה הסלמה שם — הצדקה, לא תיקון</div>
+<div class="notes"><b>הערות:</b> מקור יחיד, מבוסס עדות לוחם. חופף ל-S060</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span></div>
+<div class="dec" data-id="S038"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="ext" data-flags="strong" id="S039">
+<header><span class="id">S039</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>יותר משנתיים אחרי, המשטרה לא פרסמה תחקיר שלם על התנהלותה ב-7 באוקטובר, ומסמך בדיקה פנימי נגנז</h3>
+<p class="en">More than two years on, Israel Police has published no completed investigation of its own conduct; an internal review was shelved</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד משטרת ישראל</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023 ואילך</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">ועדת אגרנט - ועדת חקירה ממלכתית שהוקמה כחודש לאחר סיום מלחמת יום הכיפורים, פרסמה דוח ביניים ראשון פחות מחצי שנה אחר כך</div><div class="sm"><span class="t t-press">press</span> <b>שומרים</b> · 07.05.2025 · <a href="https://www.shomrim.news/hebrew/police-october7" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">מסמך בדיקה פנימי נגנז בהוראת דרגים גבוהים</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 01.12.2025 · <a href="https://www.israelhayom.co.il/culture/tv/article/19360501" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תחקיר משטרתי בהובלת ניצב בדימוס פועל, סיום צפוי סוף 2026 — תהליך, לא תיקון</div>
+
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S039"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="new" data-flags="contested" id="S040">
+<header><span class="id">S040</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>מפקד מחוז דרום אסר על שוטריו לשתף פעולה עם תחקיר צה״ל ללא אישור מוקדם; כנסי הפקת לקחים בוטלו פעמיים</h3>
+<p class="en">Southern District commander barred officers from cooperating with the IDF probe; lessons summits cancelled twice</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל — מחוז דרום / המפכ״ל</dd></div><div><dt>מתי</dt><dd>דווח 04.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מפקד מחוז דרום במשטרה אסר על פקודיו לשתף פעולה עם התחקיר הצבאי בנוגע לאירועי 7 באוקטובר</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 14.04.2024 · <a href="https://www.kan.org.il/content/kan-news/defense/737769/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> המשטרה טענה לתיאום מלא ולשקיפות מול המבקר</div>
+<div class="notes"><b>הערות:</b> contested — לתייג את תגובת המשטרה כ-contests</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span></div>
+<div class="dec" data-id="S040"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="new" data-flags="strong" id="S041">
+<header><span class="id">S041</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>לא היה מנגנון תיאום בין מד״א לאיחוד הצלה, ונוצרו עמדות טיפול כפולות ולא מתואמות</h3>
+<p class="en">No coordination mechanism between MDA and United Hatzalah produced duplicated treatment points</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הבריאות / מד״א / איחוד הצלה</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">לא הייתה למד״א תמונת מצב על פעילות איחוד הצלה, מיקום האמבולנסים שלו או הפצועים שבהם טיפל</div><div class="sm"><span class="t t-press">press</span> <b>מקור ראשון</b> · 30.06.2026 · <a href="https://www.makorrishon.co.il/news/health/article/346686" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צו בית משפט מ-2023 חייב הסדרה תוך שלושה חודשים; הנוהל פורסם רק ב-02.2025</div>
+<div class="notes"><b>הערות:</b> המבקר: הפער היה ידוע לפחות מ-2019</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S041"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="medical" data-tier="A" data-dd="ext" data-flags="needs-quote" id="S042">
+<header><span class="id">S042</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i11</span><span class="cl">פינוי, רפואה וחירום</span></header>
+<h3>מד״א טיפל בכ-24,000 קריאות חירום, ונתוניהן לא הגיעו לכוחות בשטח</h3>
+<p class="en">MDA handled ~24,000 emergency calls whose data never reached forces in the field</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מד״א / צה״ל — שיתוף מידע</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p4</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">באוקטובר 2023 היו ברשות מד״א 24 אמבולנסים ממוגני ירי, לעומת 50 שהיו דרושים על פי ההמלצות</div><div class="sm"><span class="t t-press">press</span> <b>גלובס</b> · 30.06.2026 · <a href="https://www.globes.co.il/news/article.aspx?did=1001547379" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> 22% מהקריאות מהעוטף. הציטוט הזמין נוגע לאמבולנסים — נדרש ציטוט ייעודי לנתון הקריאות</div>
+<div class="flags"><span class="fl fl-needs-quote">חסר ציטוט</span></div>
+<div class="dec" data-id="S042"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong gap" id="S043">
+<header><span class="id">S043</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>נהלי הזיהוי בשורה ובנובה תיעדפו מהירות על פני שימור ראיות — ויתור על סי-טי ופינוי זירה בלתי מתועד</h3>
+<p class="en">Identification at Shura and Nova prioritised speed over forensic preservation; CT abandoned, sites cleared undocumented</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / משרד הבריאות / הרבנות הצבאית</dd></div><div><dt>מתי</dt><dd>7–10.10.2023 והימים שאחרי</dd></div><div><dt>איפה</dt><dd>מחנה שורה; מתחם נובה</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">החליט מי שהחליט במשטרה לתעדף את זיהוי הגופות על פני איסוף הראיות ונסיבות המוות, והורה לוותר על בדיקות הסי־טי בשורה</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 14.12.2023 · <a href="https://www.ynet.co.il/news/article/yokra13715836" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> דחפורים פינו את מתחם נובה לפני תיעוד שיטתי; רכבים עם חפצים אישיים פונו לפני איסוף פורנזי</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S043"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="contested" id="S044">
+<header><span class="id">S044</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>טיפול לא מתואם בגופות בין זק״א, הרבנות הצבאית וגורמים נוספים הוביל לפתיחה ואריזה חוזרת ולאובדן סימנים</h3>
+<p class="en">Uncoordinated handling of remains between organisations led to repacking and loss of forensic markings</p>
+<dl class="meta"><div><dt>גוף</dt><dd>זק״א / הרבנות הצבאית / משטרת ישראל</dd></div><div><dt>מתי</dt><dd>7–10.10.2023</dd></div><div><dt>איפה</dt><dd>מחנה שורה</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מדובר בהתנהלות של שוק. חלק מהגופות, שנארזו על ידי זק״א, רבנות או צה״ל, נפתחו על ידי כוחות אחרים</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 12.12.2023 · <a href="https://www.ynet.co.il/news/article/yokra13715227" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מחלוקת פתוחה בין הארגונים — זק״א ורבנות מציגות גרסאות שונות. contested</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span></div>
+<div class="dec" data-id="S044"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="sensitive-framing" id="S045">
+<header><span class="id">S045</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>מתקן שורה לא נבנה בהיקף הנדרש, ומאות שקי שרידים בלתי מזוהים נותרו לא פתורים</h3>
+<p class="en">The Shura facility was not built to the required scale; hundreds of bags of unidentified remains unresolved</p>
+<dl class="meta"><div><dt>גוף</dt><dd>הרבנות הצבאית — מחנה שורה</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023; מצב מתועד ל-04.2025</dd></div><div><dt>איפה</dt><dd>מחנה שורה</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אף אחד מהמתכננים של הבסיס לא תיאר לעצמו שיום אחד, מרכז הצבי יהיה קטן מלהכיל את כמות הגופות שתגיע אליו</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 25.04.2025 · <a href="https://www.ynet.co.il/news/article/yokra14342771" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> מחלוקת פתוחה בין הרבנות הראשית למשרד הדתות על בדיקות DNA חוזרות מול קבורה משותפת</div>
+<div class="notes"><b>הערות:</b> כ-350 שקים נותרו נכון לתאריך המקור</div>
+<div class="flags"><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S045"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="" id="S046">
+<header><span class="id">S046</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>המרכז הלאומי לרפואה משפטית הפעיל את מבצע הזיהוי בכוח אדם חלקי, וגויסו רופאים משפטיים מחו״ל</h3>
+<p class="en">The forensic institute ran mass identification with a fraction of needed staff; foreign physicians recruited in emergency</p>
+<dl class="meta"><div><dt>גוף</dt><dd>המרכז הלאומי לרפואה משפטית (משרד הבריאות)</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023</dd></div><div><dt>איפה</dt><dd>אבו כביר</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">עם התבררות היקף המלחמה, גויסו תשעה רופאים משפטיים מחו״ל</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 14.11.2023 · <a href="https://www.ynet.co.il/health/article/syy0t1111nt" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> משרד הבריאות הצהיר על שיפור תנאי גיוס ומתקן חדש — יעד 2026, נדחה בשל סכסוך קרקע</div>
+<div class="notes"><b>הערות:</b> המכון פועל בדרך כלל עם 5–8 רופאים משפטיים</div>
+<div class="flags"></div>
+<div class="dec" data-id="S046"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="C" data-dd="new" data-flags="single-source sensitive-framing" id="S047">
+<header><span class="id">S047</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>במקרה מתועד אחד לפחות משפחה למדה על מות קרוב מרשתות חברתיות שעות לפני הודעה רשמית</h3>
+<p class="en">At least one documented case of a family learning of a death via social media hours before official notification</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / מערך ההודעה למשפחות / מרכז הזיהוי</dd></div><div><dt>מתי</dt><dd>7.10.2023 בוקר עד לילה</dd></div><div><dt>איפה</dt><dd>אופקים; שורה</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">כל מי שדיברתי איתו ידע חוץ מאיתנו</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 06.02.2026 · <a href="https://www.ynet.co.il/health/article/hkqvumalwl" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקרה יחיד. לנסח ברמת המערכת בלבד — כלל העריכה אוסר שמות. הודעה רשמית הגיעה כ-16 שעות אחרי</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S047"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="C" data-dd="new" data-flags="circumstantial" id="S048">
+<header><span class="id">S048</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>לא היה גוף פיקוד או דוקטרינה מראש לתרחיש חטיפת אזרחים המונית; מטה החטופים הוקם בדיעבד</h3>
+<p class="en">No pre-existing doctrine or command body for a mass civilian abduction scenario</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אמ״ן / המטכ״ל</dd></div><div><dt>מתי</dt><dd>הוקם בימים והשבועות שאחרי 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The scenario in which everyone returned [from Gaza] is beyond all imagination; we did not assess that we would reach this situation</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 29.01.2026 · <a href="https://www.timesofisrael.com/beyond-all-imagination-idf-shutters-its-hostages-hq-over-two-years-after-oct-7/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> מטה החטופים עצמו היה התיקון; נסגר לאחר 846 יום ללא דוקטרינה קבועה מוצהרת</div>
+<div class="notes"><b>הערות:</b> ראיה נסיבתית לפער הדוקטרינרי — לא הודאה מפורשת</div>
+<div class="flags"><span class="fl fl-circumstantial">נסיבתי</span></div>
+<div class="dec" data-id="S048"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="C" data-dd="new" data-flags="contested political blocked-primary" id="S049">
+<header><span class="id">S049</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>דיווח על הוראה המיוחסת לפיקוד הדרום שלא לאפשר לכלי רכב לחזור לעזה, במסגרת מה שתואר כהפעלת נוהל חניבעל</h3>
+<p class="en">Disputed scope of an order barring vehicles from returning to Gaza (Hannibal procedure)</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד דרום</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>מרחב הגבול</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">not a single vehicle could return to Gaza</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 07.07.2024 · <a href="https://www.timesofisrael.com/idf-officers-invoked-defunct-hannibal-protocol-during-oct-7-fighting-report/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found; צה״ל סירב להתייחס — ״ייבחן בשלב מאוחר יותר״</div>
+<div class="notes"><b>הערות:</b> מחלוקת פתוחה. הנוהל בוטל רשמית ב-2016. המקור הראשוני (הארץ) חסום. לדעת רועי: פריט טעון</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span><span class="fl fl-political">טעון פוליטית</span><span class="fl fl-blocked-primary">מקור ראשוני חסום</span></div>
+<div class="dec" data-id="S049"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="C" data-dd="new" data-flags="contested political sensitive-framing" id="S050">
+<header><span class="id">S050</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>מחלוקת מתועדת בין תחקיר צה״ל לעדות ניצולה בשאלה אם אש ישראלית פגעה בבית שהוחזקו בו חטופים בבארי</h3>
+<p class="en">IDF Be&#x27;eri review versus survivor testimony on whether Israeli fire struck a house holding hostages</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל — צוות התחקיר</dd></div><div><dt>מתי</dt><dd>אירוע 7.10.2023; תחקיר 07.2024</dd></div><div><dt>איפה</dt><dd>בארי</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">no civilians inside the building were harmed by tank shell fire, except for an isolated incident outside the building where two civilians were harmed by shrapnel</div><div class="sm"><span class="t t-press">press</span> <b>ABC News (Australia)</b> · 07.09.2024 · <a href="https://www.abc.net.au/news/2024-09-07/israel-hannibal-directive-kidnap-hamas-gaza-hostages-idf/104224430" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> contested חריף. שתי הגרסאות בציבור. כרוך בשמות ניצולים — יש לנסח ברמת מוסד בלבד</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span><span class="fl fl-political">טעון פוליטית</span><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S050"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="C" data-dd="new" data-flags="needs-corroboration" id="S051">
+<header><span class="id">S051</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>מספר ההרוגים הארצי עודכן שוב ושוב משום שלא הייתה ספירה מאוחדת של הרוגים, חטופים ונעדרים</h3>
+<p class="en">National death toll revised repeatedly because no reconciled count of dead, abducted and missing existed</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד החוץ / המרכז הלאומי לרפואה משפטית</dd></div><div><dt>מתי</dt><dd>10–11.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">There were a lot of corpses that were not identified and now we think those belong to terrorists… not Israeli casualties</div><div class="sm"><span class="t t-ngo">ngo</span> <b>FDD</b> · 12.11.2023 · <a href="https://www.fdd.org/analysis/2023/11/12/israel-revises-october-7-death-toll-after-agonizing-forensics/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> ארכיאולוגים מרשות העתיקות גויסו לסיוע בזיהוי — פתרון אד-הוק</div>
+<div class="notes"><b>הערות:</b> FDD הוא מכון מדיניות בעל עמדה — נדרש מקור ישראלי מקביל</div>
+<div class="flags"><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S051"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="strong gap" id="S052">
+<header><span class="id">S052</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>משפחות בנו בעצמן את מפקד הנעדרים בהיעדר רשימה ממלכתית מוסמכת אחת</h3>
+<p class="en">Families built their own accounting of the missing absent a single authoritative state list</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל / משטרת ישראל מול מטה המשפחות</dd></div><div><dt>מתי</dt><dd>7–15.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The Israel Defense Forces (IDF) said on Friday that it notified the families of 120 people taken captive, but did not release any other information</div><div class="sm"><span class="t t-press">press</span> <b>CNN</b> · 15.10.2023 · <a href="https://www.cnn.com/2023/10/15/middleeast/israel-hostages-families-hnk-intl-cmd/index.html" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> מטה המשפחות עצמו — פתרון אזרחי, לא ממלכתי</div>
+<div class="notes"><b>הערות:</b> פער בין 120 (צה״ל) ל-341 נעדרים (משפחות) ללא גוף מיישב</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S052"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong" id="S053">
+<header><span class="id">S053</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>ראיות משדה הקרב ומהזירות לא נשמרו באופן עקבי, מה שפגע ביכולת ההעמדה לדין</h3>
+<p class="en">Battlefield and forensic evidence not consistently preserved, undermining later prosecution</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / הרבנות הצבאית</dd></div><div><dt>מתי</dt><dd>7–10.10.2023 והשבועות שאחרי</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">יש כמות גדולה של ראיות, חלקן פגומות</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 14.08.2025 · <a href="https://www.ynet.co.il/news/article/h1lnejjuxg" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> ועדת שרים אישרה ב-05.2025 בית דין מיוחד של 15 שופטים — פתרון במורד הזרם</div>
+<div class="notes"><b>הערות:</b> כמעט שנתיים אחרי, אף מחבל לא הועמד לדין</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S053"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="new" data-flags="strong gap" id="S054">
+<header><span class="id">S054</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>לא הייתה תוכנית להגנה על העובדים הזרים ששוכנו הכי קרוב לגבול — לא לפני ולא אחרי</h3>
+<p class="en">No plan existed to protect foreign agricultural workers stationed nearest the border, before or after</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ועדת ביטחון יישובית / צה״ל</dd></div><div><dt>מתי</dt><dd>7.10.2023; תחקיר 2025</dd></div><div><dt>איפה</dt><dd>עלומים</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">not only was there no specific plan for defending the mostly Thai workers... there still is no such plan today</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 19.03.2025 · <a href="https://www.jpost.com/israel-news/article-846752" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — התחקיר קובע במפורש שאין תוכנית גם היום</div>
+<div class="notes"><b>הערות:</b> אמירה נדירה של ״לא תוקן״ בתוך תחקיר רשמי — חזק לצורך שלב במחזור החיים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S054"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="gap" id="S055">
+<header><span class="id">S055</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>לא היה תהליך ממלכתי בזמן אמת לאישור גורלם של אזרחים זרים — אישור מות שני עובדים הגיע כשבעה חודשים אחרי</h3>
+<p class="en">No timely state process for confirming and communicating the fate of foreign nationals</p>
+<dl class="meta"><div><dt>גוף</dt><dd>דובר צה״ל / משרד החוץ</dd></div><div><dt>מתי</dt><dd>אישור 16.05.2024 לאירועי 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The Israel Defense Forces and the Foreign Ministry have notified the families</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 17.05.2024 · <a href="https://www.timesofisrael.com/israel-confirms-2-thai-nationals-were-killed-on-oct-7-bodies-being-held-by-hamas/amp/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> HRW מצטט את משרד החוץ התאילנדי: 22 נחטפו, 32 נהרגו, 19 נפצעו</div>
+<div class="flags"><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S055"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="strong gap" id="S056">
+<header><span class="id">S056</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>מספר מצומצם בלבד של מטוסים, מסוקים וכטב״מים היה בכוננות מיידית בשעות הראשונות</h3>
+<p class="en">Only a small number of aircraft were on immediate readiness in the opening hours</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל האוויר — מערך הכוננות</dd></div><div><dt>מתי</dt><dd>06:30–11:00 7.10.2023</dd></div><div><dt>איפה</dt><dd>מרחב הדרום</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">only two fighter jets and two other planes at the ready</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 12.09.2024 · <a href="https://www.timesofisrael.com/2-jets-few-plans-and-no-clue-probe-finds-air-force-unready-and-in-the-dark-on-oct-7/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">היו יותר מ-25 כלי טיס מסוגים שונים (מסוקים, כטמ״ם, קרב) בכוננות ׳קצרה׳</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 24.12.2024 · <a href="https://www.israelhayom.co.il/news/defense/article/17025612" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> שני המספרים אינם סותרים — רוב הכוננות הייתה בצפון. תקיפה מקיפה הוזמנה רק ב-10:00</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S056"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="strong gap" id="S057">
+<header><span class="id">S057</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>לא הייתה דוקטרינת סיוע אווירי קרוב בתוך יישובים ישראליים שבהם התערבבו מחבלים ותושבים</h3>
+<p class="en">No doctrine for close air support inside Israeli communities with intermingled attackers and residents</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל האוויר — צוותי מסוקי קרב וכטב״ם</dd></div><div><dt>מתי</dt><dd>בוקר–צהריים 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">הקושי העיקרי היה ההבחנה בין עמית לאויב</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 24.12.2024 · <a href="https://www.israelhayom.co.il/news/defense/article/17025612" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">תיקשרו עם כוחות ואזרחים בשטח באמצעות מכשירי הטלפון האישיים שלהם</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 24.12.2024 · <a href="https://www.israelhayom.co.il/news/defense/article/17025612" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> תקשורת בטלפונים אישיים כתחליף לשרשרת מטרות</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S057"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="sensitive-framing" id="S058">
+<header><span class="id">S058</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>מבנה הפיקוד המרוכז של חיל האוויר עיכב את זרימת תמונת המצב לדרג הבכיר</h3>
+<p class="en">Centralised IAF command structure delayed situational awareness reaching senior command</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל האוויר — פיקוד ובקרה</dd></div><div><dt>מתי</dt><dd>06:30–~16:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The Air Force&#x27;s centralization in such a critical event worked against its effectiveness</div><div class="sm"><span class="t t-press">press</span> <b>Ynetnews</b> · 16.02.2025 · <a href="https://www.ynetnews.com/article/rj8mxik5yl" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">בשעות הללו, חיל האוויר הגדול לא באמת היה שם</div><div class="sm"><span class="t t-press">press</span> <b>וואלה</b> · 28.03.2024 · <a href="https://news.walla.co.il/item/3654034" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מפקד החיל למד על נובה כ-10 שעות אחרי — לנסח ברמת תפקיד, לא שם</div>
+<div class="flags"><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S058"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="C" data-dd="new" data-flags="needs-corroboration" id="S059">
+<header><span class="id">S059</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>מערכות הגילוי לא הותאמו לזיהוי מצנחי רחיפה ממונעים הטסים נמוך ואיטי</h3>
+<p class="en">Aerial detection was not configured to identify low, slow powered paragliders</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מערך ההגנה האווירית / חיל האוויר</dd></div><div><dt>מתי</dt><dd>~06:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>מרחב הגבול</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The paragliders would probably have flown very low — popping up to go over the border fencing and then flying low to the ground — staying under the radar coverage</div><div class="sm"><span class="t t-press">press</span> <b>Task &amp; Purpose</b> · 12.10.2023 · <a href="https://taskandpurpose.com/news/hamas-paraglider-attack-israel/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">לא היה לנו מידע ולא זמן</div><div class="sm"><span class="t t-press">press</span> <b>וואלה</b> · 28.03.2024 · <a href="https://news.walla.co.il/item/3654034" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> ההסבר הטכני הוא של אנליסט חיצוני (RAND), לא מקור רשמי ישראלי — נדרש מקור רשמי</div>
+<div class="flags"><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S059"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="new" data-flags="strong" id="S060">
+<header><span class="id">S060</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>בהגנת החוף לא הייתה יחידת תגובה מהירה, וקישור ההתרעה לפיקוד ביבשה לא תפקד</h3>
+<p class="en">Coastal defence lacked a rapid-response unit and a working early-warning link to inland command</p>
+<dl class="meta"><div><dt>גוף</dt><dd>חיל הים — ארכיטקטורת הגנת חופים</dd></div><div><dt>מתי</dt><dd>06:29–06:52 7.10.2023 וכ-40 שעות אחריה</dd></div><div><dt>איפה</dt><dd>זיקים</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">הכוח לא חתר למגע קרוב עם האויב</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 04.05.2025 · <a href="https://www.kan.org.il/content/kan-news/defense/894501/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">The second speedboat, after seeing the first being destroyed, made a U-turn</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 04.05.2025 · <a href="https://www.timesofisrael.com/in-massive-failure-troops-abandoned-civilians-at-zikim-beach-on-oct-7-idf-probe-finds/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> התחקיר המליץ על יחידות ימי-יבשה ייעודיות ושיפור פרוטוקולי תקשורת בין-זרועית</div>
+<div class="notes"><b>הערות:</b> חוף זיקים לא סווג כ״נקודת חדירה קריטית״</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S060"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="warning" data-tier="B" data-dd="ext" data-flags="contested" id="S061">
+<header><span class="id">S061</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i17</span><span class="cl">התרעה ומודיעין</span></header>
+<h3>בתחקיר השב״כ נמצא כי תוכניות פלישה קודמות לא עובדו כאיום מיידי וכי רשת המקורות האנושיים נחלשה</h3>
+<p class="en">Shin Bet&#x27;s own probe: prior Hamas invasion plans never processed as an imminent threat; HUMINT weakened</p>
+<dl class="meta"><div><dt>גוף</dt><dd>שירות הביטחון הכללי</dd></div><div><dt>מתי</dt><dd>עד 03:03–06:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p1</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">These plans were never fully processed as an imminent threat, which led to a lack of preparation</div><div class="sm"><span class="t t-press">press</span> <b>Ynetnews</b> · 04.03.2025 · <a href="https://www.ynetnews.com/article/sju9cseoyl" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">unclear division of responsibilities with IDF</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 04.03.2025 · <a href="https://www.timesofisrael.com/shin-bet-probe-oct-7-would-have-been-prevented-if-wed-acted-differently/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> הנהגת השב״כ הכירה פומבית בכשל — הכרה, לא תיקון מבני</div>
+<div class="notes"><b>הערות:</b> ToI מציין שהדוח ״מסיט אחריות לגופים אחרים״ — contested. התרעת 03:03 לא כללה היקף או תזמון</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span></div>
+<div class="dec" data-id="S061"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="new" data-flags="needs-corroboration" id="S062">
+<header><span class="id">S062</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>יחידות מיוחדות וכוחות שיצאו מביתם הגיעו לזירה ללא מבנה פיקוד קולט, מה שיצר סיכון אש כוחותינו</h3>
+<p class="en">Special units and off-duty personnel converged without a receiving command structure, producing friendly-fire risk</p>
+<dl class="meta"><div><dt>גוף</dt><dd>תגובת אד-הוק של יחידות מיוחדות וכוחות לא מגויסים</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">כוח משטרתי של לוחמים קפץ למגע מתוך רכבים פרטיים</div><div class="sm"><span class="t t-press">press</span> <b>מעריב</b> · 27.05.2025 · <a href="https://www.maariv.co.il/news/military/article-1200263" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">numerous cases of friendly fire errors leading to tragic deaths</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 20.06.2024 · <a href="https://www.jpost.com/israel-hamas-war/article-807053" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל לא הכחיש את הדיווח — הכרה משתמעת</div>
+<div class="notes"><b>הערות:</b> האירוע במעריב הוא באזור תל אביב, לא בעוטף — משמש למנגנון בלבד</div>
+<div class="flags"><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S062"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="police" data-tier="C" data-dd="new" data-flags="remedy-signal" id="S063">
+<header><span class="id">S063</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">משטרה וכוחות מיוחדים</span></header>
+<h3>מחסני החירום למילואים חילקו ציוד מתכלה ובן עשרות שנים בעת הגיוס</h3>
+<p class="en">Reserve emergency depots issued degraded, decades-old equipment on mobilisation</p>
+<dl class="meta"><div><dt>גוף</dt><dd>לוגיסטיקת מילואים / חת״ם</dd></div><div><dt>מתי</dt><dd>7–10.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">האפודים היו מתפוררים, הרוכסנים שבורים, והקסדות עוד מהשירות של אבא שלי בשנות ה-80</div><div class="sm"><span class="t t-press">press</span> <b>מעריב (מצטט את Tablet)</b> · 06.10.2025 · <a href="https://www.maariv.co.il/news/military/article-1238914" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">אנחנו לא רוצים עוד קטסטרופה. אנחנו זוכרים היטב למה לקח לכוחות שש שעות להגיע לניר עוז</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 21.12.2025 · <a href="https://www.ynet.co.il/news/article/yokra14619075" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל החל לצייד כ-10,000 לוחמי מילואים בנשק אישי המוחזק בבית — לקח מוצהר</div>
+<div class="notes"><b>הערות:</b> מבוסס בעיקר על עדויות אישיות בתחקיר Tablet. יש כאן אות תיקון ברור — מועמד לשלב 4</div>
+<div class="flags"><span class="fl fl-remedy-signal">אות תיקון</span></div>
+<div class="dec" data-id="S063"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="strong" id="S064">
+<header><span class="id">S064</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i11</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>הצמתים בדרום לא אובטחו לפני שכוחות תגבורת ותנועה אזרחית הופנו דרכם, והם הפכו לעמדות מארב</h3>
+<p class="en">Southern road junctions were not secured before convoys and civilian traffic were routed through them</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אוגדת עזה / פיקוד דרום — ניתוב תגבורות</dd></div><div><dt>מתי</dt><dd>מ~09:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>צומת גמה, מגן, עין הבשור, שער הנגב</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">הפקודה המתבקשת - לטהר את הצמתים - עדיין לא מגיעה, והרבה דם...נשפך בצמתים האלו</div><div class="sm"><span class="t t-press">press</span> <b>ידיעות אחרונות / z.ynet</b> · 12.01.2024 · <a href="http://z.ynet.co.il/long/content/specials/time-of-darkness/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">אובדן השליטה על נקודות אסטרטגיות אפשר לפולשים להציב מארבים</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 27.05.2025 · <a href="https://www.ynet.co.il/news/article/ryw0fggzxl" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מרחיב את i11 מכביש 232 לרשת הצמתים כולה</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S064"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="strong gap remedy-signal" id="S065">
+<header><span class="id">S065</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>תשתית הסלולר והתקשורת בעוטף קרסה תוך שעות וניתקה כיתות כוננות, חמ״לים ותושבים בממ״דים</h3>
+<p class="en">Cellular and communications infrastructure in the envelope collapsed within hours</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מפעילות סלולר / חברת החשמל / משרד התקשורת</dd></div><div><dt>מתי</dt><dd>7.10.2023 מהבוקר והלאה</dd></div><div><dt>איפה</dt><dd>עוטף עזה</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">כיתות הכוננות התקשו לתקשר ביניהן, חמ״לים נותקו והתושבים בממ״דים איבדו קשר עם העולם</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 25.12.2023 · <a href="https://www.ynet.co.il/digital/technology/article/yokra13731407" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">7 באוקטובר חשף פער עצום ביכולת לייצר ולהחזיק תמונת מצב</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 11.01.2026 · <a href="https://www.israelhayom.co.il/news/defense/article/19652822" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> יישובים רכשו טלפונים לווייניים; פותחו ערכות חמ״ל ניידות; משרד התקשורת הכיר בצורך בגיבוי</div>
+<div class="notes"><b>הערות:</b> שרשרת סיבתית: קריסת חשמל ← גנרטורים באתרי שידור אזלו ← צוותי תיקון לא יכלו להיכנס. שונה מ-i14 (עומס שיחות)</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-gap">פער חדש</span><span class="fl fl-remedy-signal">אות תיקון</span></div>
+<div class="dec" data-id="S065"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="C" data-dd="new" data-flags="single-source strong" id="S066">
+<header><span class="id">S066</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>מפעילי תמיכה אווירית עקפו את שרשרת המטרות והשתמשו בקבוצת ווטסאפ אזרחית כדי לקבל קואורדינטות מתושבים נצורים</h3>
+<p class="en">Aerial support operators bypassed the targeting chain and took coordinates from a kibbutz civilian WhatsApp group</p>
+<dl class="meta"><div><dt>גוף</dt><dd>שרשרת הפיקוד של מפעילי כטב״ם</dd></div><div><dt>מתי</dt><dd>~08:10 7.10.2023</dd></div><div><dt>איפה</dt><dd>כפר עזה ויישובים נוספים</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מפעילים אחרים נכנסו לקבוצות הווטסאפ של קיבוץ כפר עזה ויישובים אחרים, וקיבלו מטרות מהאזרחים הנצורים</div><div class="sm"><span class="t t-press">press</span> <b>ידיעות אחרונות / z.ynet</b> · 12.01.2024 · <a href="http://z.ynet.co.il/long/content/specials/time-of-darkness/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקרה קונקרטי של ערוץ אזרחי שהחליף מערכת צבאית. מקור יחיד</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S066"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="B" data-dd="ext" data-flags="" id="S067">
+<header><span class="id">S067</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i12</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>מערך הפיקוד הפנימי של אוגדת עזה קרס וכוחות התגבור לא הוכוונו</h3>
+<p class="en">Gaza Division&#x27;s internal command network broke down; reinforcements went undirected</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אוגדת עזה</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>גזרת אוגדת עזה</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">כוחות התגבור לא הוכוונו למקום בשל חוסר בפיקוד</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 27.02.2025 · <a href="https://www.kan.org.il/content/kan-news/defense/865442/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> i12 עוסק בקשר אוגדה–מטכ״ל; זה בפיקוד הפנימי של האוגדה על כוחותיה</div>
+<div class="flags"></div>
+<div class="dec" data-id="S067"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="C" data-dd="new" data-flags="opinion-source needs-corroboration" id="S068">
+<header><span class="id">S068</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>דוקטרינת ההגנה המרחבית ננטשה כמדיניות, ותושבי יישובי הספר נותרו לא מאורגנים להגנת היישוב</h3>
+<p class="en">Territorial defence doctrine had been abandoned as policy, leaving communities without organised defence</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל / הנהגת המדינה — מדיניות הגנה מרחבית</dd></div><div><dt>מתי</dt><dd>מצב בתוקף 7.10.2023; מתועד כלא מתוקן ב-03.2025</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">היא חדלה להתקיים מכיוון שהנהגת צה״ל והמדינה חדלו להאמין בה</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 20.03.2025 · <a href="https://www.israelhayom.co.il/news/politics/article/17583382" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מאמר דעה/ניתוח, לא תחקיר — נדרש מקור מוסדי לתמיכה</div>
+<div class="flags"><span class="fl fl-opinion-source">מאמר דעה</span><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S068"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="new" data-flags="strong" id="S069">
+<header><span class="id">S069</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>התכנון המבצעי הניח שהמכשול לא ייפרץ תוך פחות מארבע שעות; בפועל נפרץ תוך פחות מעשר דקות</h3>
+<p class="en">Operational planning assumed the barrier could not be breached for four hours; it took under ten minutes</p>
+<dl class="meta"><div><dt>גוף</dt><dd>תכנון מבצעי / תרחיש ייחוס של פיקוד דרום</dd></div><div><dt>מתי</dt><dd>~06:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>מכשול הגבול</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">תרחיש הייחוס קבע שאם חמאס והג׳יהאד האיסלאמי ינסו לפרוץ את המכשול...הוא ייפרץ רק אחרי ארבע שעות</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 11.07.2024 · <a href="https://www.ynet.co.il/news/article/by5fce6v0" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> כשל בהנחת התכנון, לא בחומרת הגדר — משלים את i02</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S069"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="C" data-dd="ext" data-flags="single-source" id="S070">
+<header><span class="id">S070</span><span class="tier tier-C">C</span><span class="dd dd-ext">EXTENDS i12</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>בור הפיקוד של המטכ״ל עקב אחר שידורי טלגרם ורשתות של חמאס כדי להבין את המתרחש</h3>
+<p class="en">The General Staff command bunker followed Hamas&#x27;s own broadcasts to understand the attack</p>
+<dl class="meta"><div><dt>גוף</dt><dd>בור הפיקוד של המטכ״ל</dd></div><div><dt>מתי</dt><dd>~06:26–07:00 7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">בגלל העיוורון מהשטח, פנו שם לשידורי הטלוויזיה וכן לרשתות החברתיות, ובראשן ערוצי טלגרם, גם ישראליים ובעיקר של חמאס</div><div class="sm"><span class="t t-press">press</span> <b>ידיעות אחרונות / z.ynet</b> · 12.01.2024 · <a href="http://z.ynet.co.il/long/content/specials/time-of-darkness/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקור יחיד אך עיתונות תחקירית מובילה. מחזק את i12 מכיוון הדרג העליון</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span></div>
+<div class="dec" data-id="S070"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="command" data-tier="C" data-dd="new" data-flags="single-source" id="S071">
+<header><span class="id">S071</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פיקוד, שליטה וזמן תגובה</span></header>
+<h3>ברעים פעלו כוחות תגבורת מרובים ללא תיאום, בעוד כיתת הכוננות נלחמה לבדה כשלוש שעות</h3>
+<p class="en">At Re&#x27;im multiple converging forces operated without coordination while the squad fought alone ~3 hours</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד תגבורות / תיאום בין-יחידתי</dd></div><div><dt>מתי</dt><dd>06:29–09:30 7.10.2023</dd></div><div><dt>איפה</dt><dd>רעים</dd></div><div><dt>אב מועמד</dt><dd>p3</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">ריבוי הכוחות ללא תיאום ותקשורת יצר בלבול</div><div class="sm"><span class="t t-press">press</span> <b>מקור ראשון</b> · 10.04.2025 · <a href="https://www.makorrishon.co.il/news/828145/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> רעים אינו מכוסה בסט הקיים</div>
+<div class="flags"><span class="fl fl-single-source">מקור יחיד</span></div>
+<div class="dec" data-id="S071"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="new" data-flags="method-example" id="S072">
+<header><span class="id">S072</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">המכשול והחדירה</span></header>
+<h3>מעבר ארז נפרץ במטענים ועמדת השמירה הותקפה, כפי שאומת בניתוח גיאולוקיישן</h3>
+<p class="en">Erez Crossing barrier breached with explosives and guard tower engaged, established by geolocation</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אבטחת מסוף ארז / הגנת מעברים</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>מעבר ארז</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">entering the Erez military facility after breaching the border with explosives</div><div class="sm"><span class="t t-press">press</span> <b>CNN</b> · 08.10.2023 · <a href="https://www.cnn.com/2023/10/08/middleeast/hamas-videos-visual-timeline/index.html" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> CNN מפרסם את שיטת האימות שלו ואת מגבלותיו — שימושי לעמוד המתודולוגיה של הפרויקט</div>
+<div class="flags"><span class="fl fl-method-example">דוגמת מתודולוגיה</span></div>
+<div class="dec" data-id="S072"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="contested" id="S073">
+<header><span class="id">S073</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>הקלטות ממצלמות הגבול משמונה השעות הראשונות נעלמו או הוגבלה הגישה אליהן</h3>
+<p class="en">Border-camera recordings from the first eight hours went missing or were access-restricted</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד דרום / מערך התצפית של אוגדת עזה</dd></div><div><dt>מתי</dt><dd>7.10.2023; דווח כחסר ב-03.12.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Some of the recordings have either disappeared or were simply downloaded from the network and relocated under the directives of commanding officers</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 03.12.2023 · <a href="https://www.jpost.com/arab-israeli-conflict/article-776318" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל הכחיש: כל החומרים ״נשמרים ונגישים לגורמים הרלוונטיים״</div>
+<div class="notes"><b>הערות:</b> contested חריף — הכחשה רשמית מפורשת. יש לתייג את תגובת צה״ל כ-contests</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span></div>
+<div class="dec" data-id="S073"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="barrier" data-tier="B" data-dd="ext" data-flags="" id="S074">
+<header><span class="id">S074</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i02</span><span class="cl">המכשול והחדירה</span></header>
+<h3>הגדר נפרצה ב-114 נקודות, ומולן עמדו 767 חיילים ו-13 טנקים לאורך כל התוואי</h3>
+<p class="en">114 breach points along the fence faced 767 soldiers and 13 tanks</p>
+<dl class="meta"><div><dt>גוף</dt><dd>אוגדת עזה / פיקוד דרום — פריסת כוחות</dd></div><div><dt>מתי</dt><dd>מ-06:29 7.10.2023</dd></div><div><dt>איפה</dt><dd>גדר הגבול</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">They faced only 767 IDF soldiers and 13 spread-out and isolatable tanks</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post</b> · 28.02.2025 · <a href="https://www.jpost.com/israel-news/article-844153" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> נתון מתוך תחקיר צה״ל עצמו שנמסר לעיתונות — לא אימות עצמאי</div>
+<div class="flags"></div>
+<div class="dec" data-id="S074"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="ext" data-flags="pattern" id="S075">
+<header><span class="id">S075</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i07</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>צוות הכוננות של קיבוץ נותר חמוש בחסר בעקבות הוראה קודמת להחזרת נשק וללא נשקייה מאושרת</h3>
+<p class="en">A kibbutz defence squad was left under-armed by a prior weapons-return order with no approved armory</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מדיניות צה״ל לחימוש כיתות כוננות / אוגדת עזה</dd></div><div><dt>מתי</dt><dd>מדיניות קדמה בשנה; תוצאה 7.10.2023</dd></div><div><dt>איפה</dt><dd>עין השלושה</dd></div><div><dt>אב מועמד</dt><dd>p5</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Of the 14 members of the local security team, just four had assault rifles</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 23.04.2025 · <a href="https://www.timesofisrael.com/outgunned-ein-hashlosha-security-team-failed-to-resist-oct-7-onslaught-probe-finds/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> אותו מנגנון כמו בשדרות (S012) — דפוס ארצי של החזרת נשק ללא נשקיות</div>
+<div class="flags"><span class="fl fl-pattern">דפוס חוזר</span></div>
+<div class="dec" data-id="S075"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="warning" data-tier="C" data-dd="ext" data-flags="second-hand political" id="S076">
+<header><span class="id">S076</span><span class="tier tier-C">C</span><span class="dd dd-ext">EXTENDS i17</span><span class="cl">התרעה ומודיעין</span></header>
+<h3>חומרי תכנון שנתפסו מראים היערכות מתואמת מבחוץ שנמשכה חודשים ולא אותרה מראש</h3>
+<p class="en">Captured Hamas planning material shows months of externally coordinated preparation not detected in advance</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מוסדות המודיעין — פונקציית ההתרעה</dd></div><div><dt>מתי</dt><dd>תכנון שקדם ל-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p1</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">open the door for the majority of Arab and Islamic countries to follow the same path</div><div class="sm"><span class="t t-press">press</span> <b>Jerusalem Post (מצטט WSJ)</b> · 18.05.2025 · <a href="https://www.jpost.com/breaking-news/article-854372" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקור מדרג שני (JPost על WSJ). המקור אינו מציין איזה גוף ישראלי החזיק או פספס את החומר. פוליטי</div>
+<div class="flags"><span class="fl fl-second-hand">מדרג שני</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S076"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="second-hand contested" id="S077">
+<header><span class="id">S077</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>פערי תיאום בפינוי גופות בשבוע הראשון, ויחידת הזיהוי הצבאית הודרה מהעבודה</h3>
+<p class="en">Body-recovery coordination gaps in the first week; the military identification unit was excluded</p>
+<dl class="meta"><div><dt>גוף</dt><dd>יחידת הזיהוי של פיקוד העורף / ארגוני מתנדבים</dd></div><div><dt>מתי</dt><dd>7–14.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">double-wrapped bodies in its own bags after they had already been placed in IDF or other organizations&#x27; bags, creating a mess at headquarters</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 06.02.2024 · <a href="https://www.timesofisrael.com/zaka-exploited-hamass-october-7-attack-to-campaign-for-donations-report/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מבוסס על תחקיר הארץ (חסום) דרך ToI. זירות סומנו כ״פונו״ גם היכן שנמצאו שרידים אחר כך</div>
+<div class="flags"><span class="fl fl-second-hand">מדרג שני</span><span class="fl fl-contested">שנוי במחלוקת</span></div>
+<div class="dec" data-id="S077"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="C" data-dd="ext" data-flags="ngo-finding" id="S078">
+<header><span class="id">S078</span><span class="tier tier-C">C</span><span class="dd dd-ext">EXTENDS i09</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>הוועדה האזרחית מצאה כי עמדות התצפית אוישו בכוח לא חמוש וללא נהלי חירום</h3>
+<p class="en">Civil Commission found observation posts staffed by unarmed personnel with no emergency protocol</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל — בסיס נחל עוז / מערך התצפית</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>נחל עוז</dd></div><div><dt>אב מועמד</dt><dd>p2</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אין הגדרה אחרת למציאות האיומה הזו מלבד ׳הפקרה׳</div><div class="sm"><span class="t t-press">press</span> <b>ynet</b> · 26.11.2024 · <a href="https://www.ynet.co.il/news/article/r1pcnkmx1l" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> ממצא של ועדה אזרחית פרטית, לא של גוף מדינתי — לתייג כעמדת הוועדה</div>
+<div class="flags"><span class="fl fl-ngo-finding">ממצא של ארגון</span></div>
+<div class="dec" data-id="S078"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="ext" data-flags="ngo-finding political" id="S079">
+<header><span class="id">S079</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>ועדת חקירה אזרחית ביוזמת משפחות היא הגוף היחיד שגבה עדות מבכירים על 7 באוקטובר</h3>
+<p class="en">A families-initiated private commission is the only body that has taken testimony from senior officials</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ועדת החקירה האזרחית / היעדר ועדת חקירה ממלכתית</dd></div><div><dt>מתי</dt><dd>07.2024–11.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">חובה להקים ועדת חקירה ממלכתית שתחקור את האסון לאלתר</div><div class="sm"><span class="t t-press">press</span> <b>כאן</b> · 26.11.2024 · <a href="https://www.kan.org.il/content/kan-news/local/828790/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">הנחקרים ממנים את החוקרים</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 21.11.2024 · <a href="https://www.israelhayom.co.il/news/politics/article/16822914" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — המלצת הוועדה לא יושמה</div>
+<div class="notes"><b>הערות:</b> כ-120 עדים. הציטוט ״הנחקרים ממנים את החוקרים״ הוא עמדת הוועדה, לא ממצא מוכרע</div>
+<div class="flags"><span class="fl fl-ngo-finding">ממצא של ארגון</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S079"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="ngo-finding sensitive" id="S080">
+<header><span class="id">S080</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>גוף אזרחי, ולא מוסד מדינתי, הפיק את השחזור הראייתי השיטתי היחיד של האלימות המינית</h3>
+<p class="en">A civil-society body, not a state institution, produced the only systematic evidentiary reconstruction of sexual violence</p>
+<dl class="meta"><div><dt>גוף</dt><dd>הנציבות האזרחית (civilc.org)</dd></div><div><dt>מתי</dt><dd>10.2023–05.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The Commission systematically reviewed more than 10,000 photographs and video segments, amounting to well over 1,800 cumulative hours of analysis of visuals</div><div class="sm"><span class="t t-ngo">ngo</span> <b>The Civil Commission</b> · 12.05.2026 · <a href="https://www.civilc.org/silenced-no-more/executive-summary" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — הדוח עצמו ממלא את מקום התיעוד הרשמי החסר</div>
+<div class="notes"><b>הערות:</b> פרסום עצמי של ארגון. הממצא כאן הוא ההיעדר המוסדי, לא תוכן הדוח</div>
+<div class="flags"><span class="fl fl-ngo-finding">ממצא של ארגון</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S080"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="A" data-dd="ext" data-flags="political" id="S081">
+<header><span class="id">S081</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>הממשלה לא הקימה ועדת חקירה ממלכתית חרף לחץ בג״ץ</h3>
+<p class="en">Government has not established a state commission of inquiry despite High Court pressure</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ממשלת ישראל / בג״ץ</dd></div><div><dt>מתי</dt><dd>2023–2026; דיון 23.04.2026, פסיקה 27.04.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מצב דברים זה אינו מתקבל על הדעת, והוא מעורר קושי משפטי ניכר</div><div class="sm"><span class="t t-court">court</span> <b>כאן</b> · 27.04.2026 · <a href="https://www.kan.org.il/content/kan-news/local/1034120/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">government is advancing alternative legislation for a state-national commission controlled by political mechanisms</div><div class="sm"><span class="t t-ngo">ngo</span> <b>המכון הישראלי לדמוקרטיה</b> · 23.04.2026 · <a href="https://www.idi.org.il/articles/64014" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> הממשלה נדרשה להציג מתווה חקירה עד 01.07.2026 — תוכנית בלבד</div>
+<div class="notes"><b>הערות:</b> הציטוט אומת מול העמוד ב-4.9.2026. בג״ץ נתן ארכה של חודשיים (עד 1.7.2026) להצגת מתווה חקירה</div>
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S081"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="B" data-dd="ext" data-flags="political" id="S082">
+<header><span class="id">S082</span><span class="tier tier-B">B</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>היועמ״שית המליצה לדחות את ההחלטה על ועדת חקירה ממלכתית לממשלה הבאה</h3>
+<p class="en">Attorney General recommended deferring the state-commission decision to the next government</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד היועמ״שית / ממשלת ישראל</dd></div><div><dt>מתי</dt><dd>19.08.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">ועדת חקירה ממלכתית היא הכלי המשפטי הראוי והייעודי</div><div class="sm"><span class="t t-press">press</span> <b>ישראל היום</b> · 19.08.2026 · <a href="https://www.israelhayom.co.il/news/law/article/21230593" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> הכרה בכלי הראוי לצד דחיית היישום — הכרה ללא ביצוע</div>
+
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S082"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="A" data-dd="ext" data-flags="" id="S083">
+<header><span class="id">S083</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>צה״ל מנע השלמת טיוטות כמעט סופיות של דוחות מבקר המדינה</h3>
+<p class="en">IDF blocked completion of near-finished Comptroller audit drafts</p>
+<dl class="meta"><div><dt>גוף</dt><dd>צה״ל / שב״כ / משרד מבקר המדינה</dd></div><div><dt>מתי</dt><dd>דווח 22.08.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">צה״ל אינו מוכן לאפשר את השלמת טיוטות הדו״חות</div><div class="sm"><span class="t t-official">official</span> <b>כלכליסט</b> · 22.08.2024 · <a href="https://www.calcalist.co.il/local_news/article/rkqzjjrsc" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מבוסס על תצהיר המבקר לבג״ץ — עמדה מתדיינת</div>
+<div class="flags"></div>
+<div class="dec" data-id="S083"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="A" data-dd="ext" data-flags="strong" id="S084">
+<header><span class="id">S084</span><span class="tier tier-A">A</span><span class="dd dd-ext">EXTENDS i16</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>בכירים סירבו למסור מסמכים או להיפגש עם צוותי הביקורת של מבקר המדינה</h3>
+<p class="en">Senior officials refused to hand over documents or meet Comptroller audit teams</p>
+<dl class="meta"><div><dt>גוף</dt><dd>גופי ביטחון מבוקרים / משרד מבקר המדינה</dd></div><div><dt>מתי</dt><dd>עד 19.02.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">פסקי דין יש לקיים. הסכמים יש לקיים. ביקורת המדינה יש לקיים.</div><div class="sm"><span class="t t-official">official</span> <b>מבקר המדינה</b> · 19.02.2026 · <a href="https://www.mevaker.gov.il/newsroom/2026-02-19" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> המבקר ביקש דיון דחוף בהרכב מורחב — לא הוכרע</div>
+<div class="notes"><b>הערות:</b> שמונה ביקורות, מעל 300 שנות-אדם</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S084"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="accountability" data-tier="C" data-dd="new" data-flags="position-not-finding political" id="S085">
+<header><span class="id">S085</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">חקירה ואחריותיות</span></header>
+<h3>ארגון שקיפות ובכירי ביטחון לשעבר עתרו לעצור את חקירת המבקר עד תום הלחימה</h3>
+<p class="en">A watchdog and former security officials petitioned to halt the Comptroller&#x27;s wartime investigation</p>
+<dl class="meta"><div><dt>גוף</dt><dd>התנועה לאיכות השלטון (עותרת) / משרד מבקר המדינה</dd></div><div><dt>מתי</dt><dd>06.02.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">אין מקום לקיום ביקורת מבקר המדינה על הדרגים הלוחמים בעיצומה של מלחמה קשה</div><div class="sm"><span class="t t-ngo">ngo</span> <b>מקור ראשון</b> · 06.02.2024 · <a href="https://www.makorrishon.co.il/news/article/294424" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> n/a</div>
+<div class="notes"><b>הערות:</b> עמדת עותרים, לא ממצא. אותו ארגון קידם מאוחר יותר ועדת חקירה — עמדה שהשתנתה. פוליטי מאוד</div>
+<div class="flags"><span class="fl fl-position-not-finding">עמדה, לא ממצא</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S085"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong single-source" id="S086">
+<header><span class="id">S086</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>מדור הזיהוי הפלילי מסר כי לא ניתן היה להפעיל פרוטוקולי חקירת זירה רגילים בזירות ההרג ההמוניות</h3>
+<p class="en">Police forensics stated standard crime-scene protocols could not be applied to the mass-casualty scenes</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל — המחלקה לזיהוי פלילי</dd></div><div><dt>מתי</dt><dd>7–31.10.2023</dd></div><div><dt>איפה</dt><dd>מחנה שורה / systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">We won&#x27;t be able to conduct a full CSI, with crime scene identification protocols</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 31.10.2023 · <a href="https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> אמירה רשמית של גורמי משטרה בשטח, בזמן אמת. מקור יחיד</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-single-source">מקור יחיד</span></div>
+<div class="dec" data-id="S086"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong" id="S087">
+<header><span class="id">S087</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>פינוי הגופות מהזירות בוצע בעיקר בידי ארגוני מתנדבים ללא הכשרה בשימור ראיות</h3>
+<p class="en">Body recovery was performed mainly by volunteer organisations without evidence-preservation training</p>
+<dl class="meta"><div><dt>גוף</dt><dd>זק״א / מד״א / איחוד הצלה / יחידות צה״ל מול המחלקה לזיהוי פלילי</dd></div><div><dt>מתי</dt><dd>מ-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">the people responsible for collecting the bodies [from the scene] were not forensics investigators</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 31.10.2023 · <a href="https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> נמסר בידי ראשת המחלקה לזיהוי פלילי — לנסח ברמת תפקיד</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S087"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong" id="S088">
+<header><span class="id">S088</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>הגופות עובדו במסלול זיהוי המכוון לקבורה, ותיעוד סיבת המוות הוגדר כמחוץ למנדט המתקן</h3>
+<p class="en">Bodies processed on an identification track oriented to burial; cause-of-death documentation outside the mandate</p>
+<dl class="meta"><div><dt>גוף</dt><dd>המחלקה לזיהוי פלילי — מתקן שורה</dd></div><div><dt>מתי</dt><dd>10.2023</dd></div><div><dt>איפה</dt><dd>מחנה שורה</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">prime mission is to identify victims; we were not concerned with how they died or what happened</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 31.10.2023 · <a href="https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> לחץ לוח הזמנים של הקבורה מצוין במפורש במקור</div>
+<div class="flags"><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S088"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="strong sensitive" id="S089">
+<header><span class="id">S089</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>איסוף ערכות אינוס, המחייב טיפול בחלון של כ-48 שעות, לא זכה לעדיפות נוכח היקף האירועים</h3>
+<p class="en">Rape-kit collection, requiring a ~48-hour window, was not prioritised amid mass-casualty response</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל — להב 433</dd></div><div><dt>מתי</dt><dd>אמירה 14.11.2023 על אירועי 7–8.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">rape kits, which have a 48-hour window to be collected after an assault, were not prioritized</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 14.11.2023 · <a href="https://www.timesofisrael.com/police-start-building-oct-7-rape-cases-focusing-on-footage-and-testimonies/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">Physical evidence of sexual assault was broadly not collected on the day of the attacks due to complications posed by the evidence being located in an active warzone</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 03.12.2023 · <a href="https://www.timesofisrael.com/graphic-report-details-new-evidence-of-rape-sexual-violence-during-october-7-rampage/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> מעבר לתיקים מבוססי תיעוד ועדויות — התאמה, לא תיקון</div>
+<div class="notes"><b>הערות:</b> שני מקורות עצמאיים על אותו פער מוסדי. נושא רגיש — לנסח כתהליך בלבד</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S089"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="ngo-finding sensitive" id="S090">
+<header><span class="id">S090</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>איגוד מרכזי הסיוע ציין כי הרשויות החליטו שלא להפעיל פרוטוקולי חקירת זירה ממושכים לתיעוד מקרי אונס</h3>
+<p class="en">ARCCI stated authorities decided against time-consuming crime-scene protocols for rape documentation</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל / רשויות המדינה (כפי שמתאר האיגוד)</dd></div><div><dt>מתי</dt><dd>7.10.2023 ובסמוך; דוח 21.02.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">decide against time-consuming crime scene investigation protocols to document rape cases in the immediate aftermath</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 21.02.2024 · <a href="https://www.timesofisrael.com/israeli-report-submitted-to-un-on-hamass-mass-scale-weaponization-of-rape/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> האיגוד עצמו מציין מגבלה: הדוח אינו כמותי וההיקף ״אולי לעולם לא יהיה ידוע״</div>
+<div class="flags"><span class="fl fl-ngo-finding">ממצא של ארגון</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S090"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="B" data-dd="new" data-flags="contested political sensitive" id="S091">
+<header><span class="id">S091</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>לא היה נוהל לבדיקת עדויות מתנדבים בשטח בטרם הגיעו לתקשורת; עדות אחת נסוגה כשלושה חודשים אחר כך</h3>
+<p class="en">No standing protocol for vetting volunteer field accounts before they reached press; one account later withdrawn</p>
+<dl class="meta"><div><dt>גוף</dt><dd>זק״א</dd></div><div><dt>מתי</dt><dd>10.2023–01.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p9</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">we are not forensics workers</div><div class="sm"><span class="t t-press">press</span> <b>PBS NewsHour (AP)</b> · 27.02.2024 · <a href="https://www.pbs.org/newshour/world/how-2-debunked-accounts-of-sexual-violence-on-oct-7-fueled-a-global-dispute-over-israel-hamas-war" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תיקון בדיעבד בלבד; לא תואר שינוי נוהל</div>
+<div class="notes"><b>הערות:</b> ממצא על תהליך בלבד — לא על שאלת ההיקף, שבה המקורות חלוקים. פריט טעון מאוד</div>
+<div class="flags"><span class="fl fl-contested">שנוי במחלוקת</span><span class="fl fl-political">טעון פוליטית</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S091"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="A" data-dd="new" data-flags="strong sensitive political" id="S092">
+<header><span class="id">S092</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>משלחת האו״ם מצאה שאיסוף הראיות נפגע מהתערבות מתנדבים חסרי הכשרה, וציינה שלא פעל מנגנון אימות קבוע של האו״ם</h3>
+<p class="en">UN SRSG mission found evidence collection compromised by untrained volunteers; no standing UN verification mechanism</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מערך התגובה והזיהוי הישראלי (כהערכת האו״ם) / היעדר מנגנון או״ם</dd></div><div><dt>מתי</dt><dd>משלחת 29.01–14.02.2024; דוח 04.03.2024</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">loss of potentially valuable evidence due to the interventions of some untrained volunteer first responders</div><div class="sm"><span class="t t-official">official</span> <b>UN OSRSG-SVC</b> · 04.03.2024 · <a href="https://www.un.org/sexualviolenceinconflict/press-release/israel-west-bank-mission/" target="_blank" rel="noopener">מקור</a></div></div><div class="src"><div class="q">in Israel the SRSG would not have verified UN information gathered by UN investigative mechanisms available to her, for there are no such mechanisms on the ground in Israel</div><div class="sm"><span class="t t-ngo">ngo</span> <b>מרכז מינרווה, האוניברסיטה העברית</b> · 03.2024 · <a href="https://en.minervacenter.huji.ac.il/october-7th-sexual-violence-crimes-against-humanity" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> מקור או״ם ראשוני. הצוות בחן מעל 5,000 תצלומים ו~50 שעות תיעוד. הדוח מגביל את עצמו במפורש</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-sensitive">נושא רגיש</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S092"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="inference-risk" id="S093">
+<header><span class="id">S093</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>אוספים ערוכים של תיעוד התוקפים הוקרנו לעיתונות זרה בתנאים שאסרו הקלטה, ללא פרוטוקול קטלוג ושימור מפורסם</h3>
+<p class="en">Curated attacker footage screened to foreign press under non-recordable conditions, with no disclosed preservation protocol</p>
+<dl class="meta"><div><dt>גוף</dt><dd>דובר צה״ל</dd></div><div><dt>מתי</dt><dd>הקרנה 23.10.2023</dd></div><div><dt>איפה</dt><dd>בסיס צבאי</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Journalists were not permitted to record the screening</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 23.10.2023 · <a href="https://www.timesofisrael.com/idf-shows-foreign-press-raw-hamas-bodycam-videos-of-murder-torture-decapitation/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> המקור מתעד אירוע תקשורתי, לא את ניהול הארכיון. הממצא הוא היעדר פרוטוקול מפורסם — ניסוח זהיר</div>
+<div class="flags"><span class="fl fl-inference-risk">סיכון להסקה</span></div>
+<div class="dec" data-id="S093"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="ngo-finding sensitive" id="S094">
+<header><span class="id">S094</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>חומר חזותי שהועלה לרשתות הוסר בהמשך בידי הפלטפורמות, ולא נמצאה תוכנית שימור מדינתית מקבילה</h3>
+<p class="en">Visual material posted to social media was later removed by platforms with no parallel state preservation programme</p>
+<dl class="meta"><div><dt>גוף</dt><dd>היעדר גוף שימור דיגיטלי מדינתי</dd></div><div><dt>מתי</dt><dd>10–12.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">A large amount of the visual materials posted on social networks on or immediately after October 7 was later removed, due to some platforms&#x27; rules regarding graphic content</div><div class="sm"><span class="t t-ngo">ngo</span> <b>The Dinah Project</b> · 07.2025 · <a href="https://thedinahproject.org/wp-content/uploads/2025/07/The-Dinah-Project-full-report-A4-pages_web-1.pdf" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> הדוח מציין: Meta הסירה אלפי קבצים, YouTube כ-85,000. הפרויקט עצמו מצהיר שאינו מנהל ארכיון</div>
+<div class="flags"><span class="fl fl-ngo-finding">ממצא של ארגון</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S094"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="opinion-source political" id="S095">
+<header><span class="id">S095</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>ניתוח משפטי מצביע על חקירות ללא ביקורי הצלב האדום ועל בית דין הרשאי לסטות מכללי גילוי ראיות ושרשרת משמורת</h3>
+<p class="en">Legal analysis flags interrogations without ICRC access and a court able to deviate from disclosure and chain-of-custody rules</p>
+<dl class="meta"><div><dt>גוף</dt><dd>רשויות החקירה / בית הדין הצבאי המיוחד</dd></div><div><dt>מתי</dt><dd>מסוף 2023; ניתוח 22.06.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">authorities did not even allow visits by the ICRC</div><div class="sm"><span class="t t-press">press</span> <b>EJIL:Talk!</b> · 22.06.2026 · <a href="https://www.ejiltalk.org/israels-military-ad-hoc-court-for-october-7-abdicating-truth-and-justice/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> בלוג אקדמי בעל עמדה ביקורתית — לתייג בבירור. הקישור הברור ביותר בין פערי התיעוד לתוצאה משפטית</div>
+<div class="flags"><span class="fl fl-opinion-source">מאמר דעה</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S095"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="A" data-dd="new" data-flags="political sensitive" id="S096">
+<header><span class="id">S096</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>דוח מזכ״ל האו״ם תיעד הקמת גוף תיעוד בין-משרדי ישראלי, אך ללא מתן גישה לגופי או״ם לאימות עצמאי</h3>
+<p class="en">UN Secretary-General recorded an Israeli interministerial documentation body but no access for independent UN verification</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ממשלת ישראל — ועדה בין-משרדית / גופי האו״ם</dd></div><div><dt>מתי</dt><dd>במהלך 2024; דוח 15.07.2025</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">established an interministerial National Committee for Gender Violence focusing on the 7 October 2023 attacks, but did not grant access to relevant United Nations bodies to carry out fully fledged and independent investigations</div><div class="sm"><span class="t t-official">official</span> <b>United Nations</b> · 15.07.2025 · <a href="https://www.un.org/unispal/document/conflict-related-sexual-violence-report-of-the-secretary-general-s-2025-389/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> הקמת הוועדה עצמה מוצגת כתגובה מוסדית; פער הגישה נותר</div>
+<div class="notes"><b>הערות:</b> מסמך או״ם רשמי ומתוארך. פוליטי מאוד — לשקול היטב אם נכנס ל-MVP</div>
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span><span class="fl fl-sensitive">נושא רגיש</span></div>
+<div class="dec" data-id="S096"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="shelter" data-tier="B" data-dd="new" data-flags="gap sensitive-framing strong" id="S097">
+<header><span class="id">S097</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">מיגון ומקלוט</span></header>
+<h3>לא הופעלו אזעקות ולא הייתה תשתית מיגון בכפרים הבדואים הלא-מוכרים בנגב</h3>
+<p class="en">No siren warning and no shelter infrastructure in unrecognised Negev Bedouin villages</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד העורף / משרד הביטחון / משרד הפנים</dd></div><div><dt>מתי</dt><dd>7.10.2023</dd></div><div><dt>איפה</dt><dd>הפזורה הבדואית בנגב</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">did not hear sirens prior to the missile strikes</div><div class="sm"><span class="t t-ngo">ngo</span> <b>האגודה לזכויות האזרח</b> · 13.10.2023 · <a href="https://www.english.acri.org.il/post/the-absence-of-warning-and-shelter-systems-in-the-unrecognized-villages-in-the-negev" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> האגודה דרשה פריסת אזעקות ומיגון; לא נמצאה התחייבות ממשלתית במקור</div>
+<div class="notes"><b>הערות:</b> עתירה על אותו פער נדחתה בבג״ץ ב-2017 — הפער היה מתודיין ולא נסגר לפני 7.10</div>
+<div class="flags"><span class="fl fl-gap">פער חדש</span><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S097"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="shelter" data-tier="C" data-dd="new" data-flags="needs-date sensitive-framing" id="S098">
+<header><span class="id">S098</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">מיגון ומקלוט</span></header>
+<h3>חלוקת מקלטים ניידים לאחר המתקפה לא כללה יישובים בדואים</h3>
+<p class="en">Post-attack mobile shelter distribution excluded Bedouin villages</p>
+<dl class="meta"><div><dt>גוף</dt><dd>ממשלת ישראל / פיקוד העורף</dd></div><div><dt>מתי</dt><dd>7.10.2023 והימים שאחרי</dd></div><div><dt>איפה</dt><dd>יישובים בדואים בנגב</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">lack rocket sirens, bomb shelters and cover from Israel&#x27;s Iron Dome missile defense system</div><div class="sm"><span class="t t-press">press</span> <b>NBC News</b> · 10.2023 · <a href="https://www.nbcnews.com/news/world/arabs-living-israels-negev-desert-are-sitting-ducks-hamas-rcna120168" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> תאריך מדויק אינו מופיע בעמוד — לאמת. נושא רגיש פוליטית</div>
+<div class="flags"><span class="fl fl-needs-date">חסר תאריך</span><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S098"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="shelter" data-tier="A" data-dd="new" data-flags="strong sensitive-framing" id="S099">
+<header><span class="id">S099</span><span class="tier tier-A">A</span><span class="dd dd-new">NEW</span><span class="cl">מיגון ומקלוט</span></header>
+<h3>מבקר המדינה: אין מיגון תקני בפזורה הבדואית, ומתוך 11,775 מקלטים ציבוריים רק 37 ביישובים ערביים</h3>
+<p class="en">Comptroller: no standard shelters in the Bedouin dispersal; Arab localities hold 0.3% of public shelters</p>
+<dl class="meta"><div><dt>גוף</dt><dd>מבקר המדינה / משרד הביטחון</dd></div><div><dt>מתי</dt><dd>מצב מ-7.10.2023; נתונים ל-01.2025</dd></div><div><dt>איפה</dt><dd>הפזורה הבדואית; רשויות ערביות</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">there are no standard shelters or emergency protection measures available</div><div class="sm"><span class="t t-oversight">oversight</span> <b>מבקר המדינה</b> · 01.2025 · <a href="https://library.mevaker.gov.il/sites/DigitalLibrary/Pages/Reports/9561-4.aspx" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> גוף ביקורת המאשר, אחרי 7.10, שהפער שזוהה ב-S097 לא נסגר. 8 מתוך 37 המקלטים אינם תקינים</div>
+<div class="flags"><span class="fl fl-strong">חזק</span><span class="fl fl-sensitive-framing">דורש ניסוח זהיר</span></div>
+<div class="dec" data-id="S099"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="remedy-signal strong" id="S100">
+<header><span class="id">S100</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>מערך ההתרעה הלאומי לא כלל ערוץ שפה מלבד עברית במשך כ-20 חודשים אחרי 7 באוקטובר</h3>
+<p class="en">The national alert system had no language channel beyond Hebrew for ~20 months after 7 October</p>
+<dl class="meta"><div><dt>גוף</dt><dd>פיקוד העורף — מערך ההתרעה הלאומי</dd></div><div><dt>מתי</dt><dd>7.10.2023 עד 24.06.2025</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">מצופה ממערך ההתרעה הלאומי לפעול בהתאם לעקרון השוויון ולהבטיח את הזכות לביטחון, להגנה ולמידע באופן שווה</div><div class="sm"><span class="t t-ngo">ngo</span> <b>האגודה לזכויות האזרח</b> · 17.06.2025 · <a href="https://www.acri.org.il/post/_1238" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> מ-24.06.2025 פיקוד העורף החל לשלוח התרעות בארבע שפות (עברית, אנגלית, ערבית, רוסית). ללא אמהרית</div>
+<div class="notes"><b>הערות:</b> אות תיקון ברור ומתוארך — מועמד חזק לשלב 4 בסולם</div>
+<div class="flags"><span class="fl fl-remedy-signal">אות תיקון</span><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S100"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="squads" data-tier="B" data-dd="new" data-flags="gap strong" id="S101">
+<header><span class="id">S101</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">כיתות כוננות והגנה מרחבית</span></header>
+<h3>אף גוף ישראלי לא הזהיר עובדים חקלאיים תאילנדים ונפאלים; הניצולים נסמכו על מעסיקים ומסתור מאולתר</h3>
+<p class="en">No Israeli institution warned Thai and Nepali agricultural workers; survivors relied on employers</p>
+<dl class="meta"><div><dt>גוף</dt><dd>היעדר גוף מיועד — רשות האוכלוסין / משרד החקלאות / פיקוד העורף</dd></div><div><dt>מתי</dt><dd>בוקר 7.10.2023</dd></div><div><dt>איפה</dt><dd>עלומים וחוות בעוטף</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">climb out the window next to his bed and crawl into the nearby cowshed, where he hid under cow dung for 20 hours</div><div class="sm"><span class="t t-press">press</span> <b>Times of Israel</b> · 29.01.2025 · <a href="https://www.timesofisrael.com/working-through-the-trauma-thai-farmhands-who-survived-oct-7-return-to-the-fields/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> ההוראות להסתתר הגיעו מחבר קיבוץ בטלפון, לא מערוץ מדינתי. משלים את S054</div>
+<div class="flags"><span class="fl fl-gap">פער חדש</span><span class="fl fl-strong">חזק</span></div>
+<div class="dec" data-id="S101"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="C" data-dd="new" data-flags="needs-corroboration" id="S102">
+<header><span class="id">S102</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>לא היה מנגנון ממלכתי למעקב ולעדכון על מצבם של עובדים זרים בימים שלאחר מכן</h3>
+<p class="en">No state mechanism tracked or notified the status of foreign workers in the days after</p>
+<dl class="meta"><div><dt>גוף</dt><dd>היעדר גוף מיועד לאיתור והודעה</dd></div><div><dt>מתי</dt><dd>7–10.10.2023</dd></div><div><dt>איפה</dt><dd>חוות בעוטף</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">The casualty figures fluctuated wildly: At least one Thai laborer reported dead was actually alive</div><div class="sm"><span class="t t-press">press</span> <b>The Nation</b> · 13.05.2024 · <a href="https://www.thenation.com/article/world/the-invisible-lives-of-israels-thai-workforce/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> The Nation הוא כתב עת בעל עמדה — נדרש מקור מקביל. אב אחד למד שבנו חי מתמונה שפרסם חמאס</div>
+<div class="flags"><span class="fl fl-needs-corroboration">דורש אימות</span></div>
+<div class="dec" data-id="S102"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="alerts" data-tier="B" data-dd="new" data-flags="gap" id="S103">
+<header><span class="id">S103</span><span class="tier tier-B">B</span><span class="dd dd-new">NEW</span><span class="cl">התרעה, מידע ותקשורת לאזרח</span></header>
+<h3>אף גוף ישראלי לא שימש איש קשר למשפחות העובדים הזרים; את התפקיד מילאו חוקרים עצמאיים וממשלת המוצא</h3>
+<p class="en">No Israeli body served as point of contact for foreign workers&#x27; families; researchers and the home government filled it</p>
+<dl class="meta"><div><dt>גוף</dt><dd>היעדר גוף קישור ישראלי</dd></div><div><dt>מתי</dt><dd>7.10.2023 והשבועות שאחרי</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p6</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">I&#x27;m often the first person to speak to them</div><div class="sm"><span class="t t-press">press</span> <b>NPR</b> · 09.11.2023 · <a href="https://www.npr.org/2023/11/09/1211191682/thailand-israel-hamas-attack-hostages-farm-workers" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> תאילנד ארגנה בעצמה פינוי של כ-7,500 עובדים ופעלה ישירות לשחרור חטופים</div>
+<div class="notes"><b>הערות:</b> מקור זר. מדגים כי פונקציה מדינתית מולאה בידי ממשלה זרה</div>
+<div class="flags"><span class="fl fl-gap">פער חדש</span></div>
+<div class="dec" data-id="S103"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="C" data-dd="mrg" data-flags="opinion-source merge-candidate" id="S104">
+<header><span class="id">S104</span><span class="tier tier-C">C</span><span class="dd dd-mrg">MERGE S033</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>לא היה מרשם ברמת הרשות המקומית של תושבים עם מוגבלות הזקוקים לסיוע בפינוי</h3>
+<p class="en">No local-authority register identified residents with disabilities needing evacuation assistance</p>
+<dl class="meta"><div><dt>גוף</dt><dd>רשויות מקומיות / משרד הביטחון</dd></div><div><dt>מתי</dt><dd>7.10.2023, מצב לא פתור</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">Every local authority should build and maintain a database of residents with disabilities and their needs</div><div class="sm"><span class="t t-ngo">ngo</span> <b>נגישות ישראל</b> · 15.03.2026 · <a href="https://aisrael.org/en/israels-deadly-neglect-disability-rights-ignored-in-emergency-plans-opinion-yuval-wagner/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found — הציטוט הוא קריאה למרשם שאינו קיים</div>
+<div class="notes"><b>הערות:</b> מאמר דעה מ-2026. חופף ל-S033 שמבוסס על מבקר המדינה — לאחד</div>
+<div class="flags"><span class="fl fl-opinion-source">מאמר דעה</span><span class="fl fl-merge-candidate">מועמד לאיחוד</span></div>
+<div class="dec" data-id="S104"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="C" data-dd="new" data-flags="opinion-source needs-primary" id="S105">
+<header><span class="id">S105</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>חובה סטטוטורית מ-2005 להכין תקנות חירום נגישות מעולם לא יושמה; רשת מתנדבים מילאה את החלל מ-7.10</h3>
+<p class="en">A 2005 statutory duty to prepare disability-inclusive emergency regulations was never implemented</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משרד הביטחון — חובה לפי פרק הנגישות</dd></div><div><dt>מתי</dt><dd>חובה מ-2005; פער התממש מ-7.10.2023</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">In 2005, the Knesset passed the accessibility chapter...requiring the Defense Ministry to prepare regulations for emergency preparedness...Those regulations were never meaningfully implemented</div><div class="sm"><span class="t t-ngo">ngo</span> <b>נגישות ישראל</b> · 15.03.2026 · <a href="https://aisrael.org/en/israels-deadly-neglect-disability-rights-ignored-in-emergency-plans-opinion-yuval-wagner/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> יוזמת ״האפוד הסגול״ החלה ב-7.10.2023 — תחליף אזרחי, לא תיקון ממשלתי</div>
+<div class="notes"><b>הערות:</b> עובדת החובה החוקית ניתנת לאימות במקור ראשוני — כדאי לאמת בחקיקה עצמה</div>
+<div class="flags"><span class="fl fl-opinion-source">מאמר דעה</span><span class="fl fl-needs-primary">דורש מקור ראשוני</span></div>
+<div class="dec" data-id="S105"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="evacuation" data-tier="C" data-dd="new" data-flags="political weak-source" id="S106">
+<header><span class="id">S106</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">פינוי, קליטה ורווחה</span></header>
+<h3>תושבים בדואים שהועסקו ביישובים שפונו איבדו את פרנסתם ללא מנגנון תמיכה ייעודי מתועד</h3>
+<p class="en">Bedouin residents employed by evacuated communities lost livelihoods with no distinct support mechanism</p>
+<dl class="meta"><div><dt>גוף</dt><dd>היעדר ערוץ פיצוי ייעודי</dd></div><div><dt>מתי</dt><dd>7.10.2023 והשבועות שאחרי</dd></div><div><dt>איפה</dt><dd>יישובי העוטף ויישובי הנגב</dd></div><div><dt>אב מועמד</dt><dd>p8</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">many Naqab Bedouin previously made a living working in communities that have been evacuated due to their proximity to Gaza</div><div class="sm"><span class="t t-press">press</span> <b>+972 Magazine</b> · 06.12.2023 · <a href="https://www.972mag.com/bedouin-citizens-negev-october-7/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found</div>
+<div class="notes"><b>הערות:</b> +972 הוא כתב עת בעל עמדה פוליטית מובהקת — נדרש מקור ישראלי מקביל לפני שימוש. הציטוט אומת ב-4.9.2026</div>
+<div class="flags"><span class="fl fl-political">טעון פוליטית</span><span class="fl fl-weak-source">מקור חלש</span></div>
+<div class="dec" data-id="S106"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="unverified contested political" id="S107">
+<header><span class="id">S107</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>יחידה צבאית אספה תיעוד ממצלמות אבטחה קהילתיות והחזירה אותו כשהוא ערוך, לטענת התושבים</h3>
+<p class="en">A military unit collected community security-camera footage and returned it altered, residents say</p>
+<dl class="meta"><div><dt>גוף</dt><dd>זרוע היבשה — יחידת מילואים / מטה החטופים / דובר צה״ל</dd></div><div><dt>מתי</dt><dd>איסוף מ-09.10.2023; טענות דווחו 05.2026</dd></div><div><dt>איפה</dt><dd>בארי ויישובי עוטף</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">the materials had been tampered with and were returned with deletions</div><div class="sm"><span class="t t-press">press</span> <b>Israel Hayom</b> · 13.05.2026 · <a href="https://www.israelhayom.com/2026/05/13/gaza-border-residents-say-idf-deleted-parts-of-their-oct-7-security-footage" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> none found; המקור עצמו מציין שלא הצליח לאמת את הטענה באופן עצמאי</div>
+<div class="notes"><b>הערות:</b> טענה בלתי מאומתת גם לפי המפרסם. אין להשתמש ללא אימות נוסף. הקשר לטענות S073</div>
+<div class="flags"><span class="fl fl-unverified">לא מאומת</span><span class="fl fl-contested">שנוי במחלוקת</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S107"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article><article class="card" data-cluster="documentation" data-tier="C" data-dd="new" data-flags="weak-source needs-primary political" id="S108">
+<header><span class="id">S108</span><span class="tier tier-C">C</span><span class="dd dd-new">NEW</span><span class="cl">תיעוד, זיהוי וראיות</span></header>
+<h3>טלפונים, מצלמות ותיעוד שהוחרמו נותרים בידי המדינה, וההשבה נמנעת בנימוק של חקירות פתוחות</h3>
+<p class="en">Confiscated phones, cameras and footage remain in state custody, return withheld citing open investigations</p>
+<dl class="meta"><div><dt>גוף</dt><dd>משטרת ישראל — להב 433 / שב״כ / צה״ל</dd></div><div><dt>מתי</dt><dd>איסוף מ-7–9.10.2023; מצב מדווח 06.2026</dd></div><div><dt>איפה</dt><dd>systemic</dd></div><div><dt>אב מועמד</dt><dd>p7</dd></div></dl>
+<div class="srcs"><div class="src"><div class="q">They disconnected what was needed, took it and moved on – that was the last time we saw the materials</div><div class="sm"><span class="t t-press">press</span> <b>ScheerPost (מצטט ערוץ 13)</b> · 01.06.2026 · <a href="https://scheerpost.com/2026/06/01/israeli-authorities-refuse-to-return-massive-trove-of-oct-7-video-what-are-they-hiding/" target="_blank" rel="noopener">מקור</a></div></div></div>
+<div class="rem"><b>אות תיקון:</b> צה״ל מכחיש עיכוב מכוון ומוסר שהוא ״בשלבים אחרונים של גיבוש מדיניות״ להשבת חומרים</div>
+<div class="notes"><b>הערות:</b> ScheerPost הוא אתר עמדה; המקור הראשוני (ערוץ 13) לא אותר ישירות. לא לשימוש ללא המקור הישראלי</div>
+<div class="flags"><span class="fl fl-weak-source">מקור חלש</span><span class="fl fl-needs-primary">דורש מקור ראשוני</span><span class="fl fl-political">טעון פוליטית</span></div>
+<div class="dec" data-id="S108"><button data-v="yes">כן</button><button data-v="maybe">אולי</button><button data-v="no">לא</button><span class="mark"></span></div>
+</article>
+</div>
+<div class="exp"><button id="ex">ייצוא החלטות</button></div>
+<dialog id="dlg"><h3>החלטות</h3><textarea id="out" readonly></textarea><p><button onclick="document.getElementById('dlg').close()">סגור</button></p></dialog>
+<script>
+var D={};try{D=JSON.parse(localStorage.getItem('oct7dec')||'{}')}catch(e){}
+function save(){try{localStorage.setItem('oct7dec',JSON.stringify(D))}catch(e){}}
+document.querySelectorAll('.dec').forEach(function(d){
+ var id=d.dataset.id;
+ function paint(){d.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',D[id]===b.dataset.v)});d.querySelector('.mark').textContent=D[id]?'':'טרם הוחלט'}
+ d.querySelectorAll('button').forEach(function(b){b.onclick=function(){D[id]=(D[id]===b.dataset.v)?null:b.dataset.v;if(!D[id])delete D[id];save();paint()}});paint();
+});
+document.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){
+ document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');
+ var f=c.dataset.f,v=c.dataset.v;
+ document.querySelectorAll('.card').forEach(function(k){
+  var show = f==='all' || (f==='cluster'&&k.dataset.cluster===v) || (f==='tier'&&k.dataset.tier===v) || (f==='dd'&&k.dataset.dd===v) || (f==='flag'&&(' '+k.dataset.flags+' ').indexOf(' '+v+' ')>=0);
+  k.style.display=show?'':'none';
+ });
+}});
+document.getElementById('ex').onclick=function(){
+ document.getElementById('out').value=JSON.stringify(D,null,1);
+ document.getElementById('dlg').showModal();
+};
+</script></body></html>

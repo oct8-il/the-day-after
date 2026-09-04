@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { hasUnsourcedData } from '@/lib/data';
 
 /**
  * The prototype's header.top, unchanged in structure. The sign-in button is
@@ -8,9 +9,11 @@ import Link from 'next/link';
 export function Header({ current }: { current?: 'home' | 'gap' | 'about' }) {
   return (
     <>
-      <div className="proto">
-        אתר בבנייה · הנתונים המוצגים כאן <b>להמחשה בלבד</b> ואינם נתונים מאומתים
-      </div>
+      {hasUnsourcedData && (
+        <div className="proto">
+          בנייה · חלק מהכשלים בבנייה זו <b>עדיין לא קושרו למקורות</b> ואינם מתפרסמים
+        </div>
+      )}
       <header className="top">
         <div className="brand">
           <span className="name">היום שאחרי</span>

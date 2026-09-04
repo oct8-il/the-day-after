@@ -1,0 +1,3400 @@
+{
+ "generated": "2026-09-04",
+ "scope": "7–10.10.2023 (day + first 72h), plus warning window and accountability process",
+ "count": 108,
+ "findings": [
+  {
+   "id": "S001",
+   "batch": "idf-probes",
+   "en": "Intelligence Directorate culture prevented reassessment of accumulated warning signs over two years",
+   "he": "תרבות ארגונית באמ״ן מנעה בחינה מחדש של אינדיקציות שהצטברו לאורך שנתיים",
+   "inst": "אמ״ן — אגף המודיעין",
+   "when": "מצטבר עד ליל 6–7.10.2023",
+   "where": "systemic",
+   "parent": "p1",
+   "dedupe": "EXTENDS i17",
+   "tier": "B",
+   "scope": "warning-window",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/rjst7snckg",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "27.02.2025",
+     "quote": "קראנו, אבל לא ראינו מה כתוב בשורות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מנגנון ארגוני חוזר (עשר הזדמנויות שהוחמצו), להבדיל מקריאה שגויה של מסמך יחיד",
+   "flags": [],
+   "cluster": "warning",
+   "cluster_he": "התרעה ומודיעין"
+  },
+  {
+   "id": "S002",
+   "batch": "idf-probes",
+   "en": "External expert panel found most General Staff Oct 7 investigations inadequate",
+   "he": "פאנל מומחים חיצוני קבע כי רוב תחקירי המטכ״ל על 7 באוקטובר אינם מספקים",
+   "inst": "המטכ״ל — צוות בדיקה חיצוני",
+   "when": "דוח פורסם 11.2025",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/external-panel-appointed-by-idf-chief-finds-most-of-armys-oct-7-probes-inadequate/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "10.11.2025",
+     "quote": "provide a solid factual foundation, but do not identify the points of failure or necessary changes"
+    }
+   ],
+   "remedy": "הרמטכ״ל קיבל את הדוח והתחייב לבצע מחדש תחקירים שנמצאו בלתי מספקים",
+   "notes": "מטא-ממצא על אמינות מנגנון התחקירים עצמו. 10 מתוך 24 דורגו כתום, 5 כאדום. נושאים מסוימים לא נחקרו כלל",
+   "flags": [
+    "meta"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S003",
+   "batch": "idf-probes",
+   "en": "Nova festival approval handled by mid-level officers; brigade troop-shortage objection overruled",
+   "he": "אישור פסטיבל נובה טופל בדרגי ביניים ללא מעורבות פיקוד בכיר, והסתייגות מפקד חטיבה בדבר מחסור בכוחות נדחתה",
+   "inst": "אוגדת עזה — חטיבה צפונית / פיקוד דרום",
+   "when": "בתהליך האישור שקדם ל-06:29",
+   "where": "רעים — מתחם נובה",
+   "parent": "p3",
+   "dedupe": "EXTENDS i10",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/idf-okayed-nova-music-festival-but-didnt-inform-troops-deployed-at-border-probe-finds/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "03.04.2025",
+     "quote": "the request was handled by mid-level officers, and senior commanders were mostly not consulted with"
+    },
+    {
+     "url": "https://www.ynetnews.com/article/by00khoqpkg",
+     "outlet": "Ynetnews",
+     "type": "press",
+     "date": "03.04.2025",
+     "quote": "no IDF units in the area were informed about the event, and no military personnel were assigned to secure it"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מרחיב את i10 משאלת ״לא ידעו״ לשאלת שרשרת האישור עצמה",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S004",
+   "batch": "idf-probes",
+   "en": "At Kfar Aza at least 20 IDF units fought without a unified commander",
+   "he": "בכפר עזה לחמו לפחות 20 יחידות צה״ל ללא מפקד מכליל",
+   "inst": "כוחות מגיבים בכפר עזה / אוגדת עזה",
+   "when": "בוקר–צהריים 7.10.2023",
+   "where": "כפר עזה",
+   "parent": "p3",
+   "dedupe": "EXTENDS i03",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynetnews.com/article/rjplvlmdr",
+     "outlet": "Ynetnews",
+     "type": "press",
+     "date": "15.07.2024",
+     "quote": "at least 20 different IDF battalions and other elite units were present in the area, fighting without the direction of a commanding officer"
+    },
+    {
+     "url": "https://www.maariv.co.il/news/israel/article-1175861",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "26.02.2025",
+     "quote": "גם כשנכנסו החיילים האמיצים להילחם זה היה ללא שליטה וללא פיקוד"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "i03 עוסק בזמן התגובה; זה עוסק בהיעדר פיקוד מאחד בין הכוחות שכן הגיעו, כולל אירועי דו-צדדי",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S005",
+   "batch": "idf-probes",
+   "en": "At Nirim/Nir Oz command wrongly assumed troops present and prioritised outposts over communities",
+   "he": "בניר עוז ובנירים הניחו בטעות שכוחות כבר בשטח, ולא זוהה שהגנת היישוב קודמת להגנת המוצבים",
+   "inst": "פיקוד אוגדת עזה",
+   "when": "06:29–13:10 7.10.2023",
+   "where": "נירים, ניר עוז",
+   "parent": "p3",
+   "dedupe": "EXTENDS i04",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://news.walla.co.il/item/3734266",
+     "outlet": "וואלה",
+     "type": "press",
+     "date": "14.03.2025",
+     "quote": "מפקדים התקשו להבין שמה שחשוב ברקע החדירות הרבות הוא ההגנה על היישובים ולא על המוצבים"
+    },
+    {
+     "url": "https://www.jpost.com/israel-news/defense-news/article-848841",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "04.04.2025",
+     "quote": "across-the-board failure to defend the residents"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "הסיבה שהתחקיר נותן לכשל של i04 — שגיאת תעדוף והנחה, לא מרחק או תזמון",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S006",
+   "batch": "idf-probes",
+   "en": "Gaza Division HQ base had information-security breaches and was treated as a rear facility",
+   "he": "בסיס אוגדת עזה סבל מפרצות אבטחת מידע והתייחסו אליו כמתקן עורפי חרף חשיפתו",
+   "inst": "מפקדת אוגדת עזה — בסיס רעים",
+   "when": "מ-06:29 7.10.2023",
+   "where": "רעים",
+   "parent": "p3",
+   "dedupe": "EXTENDS i12",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/despite-vulnerabilities-troops-blocked-capture-of-gaza-division-base-on-oct-7-probe/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "13.06.2025",
+     "quote": "Large breaches of information security gave Hamas significant knowledge on the base ahead of its attack"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מוסיף ל-i12: הבסיס 6.5 ק״מ מהגבול סווג כעורפי, תשתית הגנה מזערית, חלון של 30 דקות לא נוצל",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S007",
+   "batch": "idf-probes",
+   "en": "At Sufa cascading loss of officers across four echelons crippled sector defence",
+   "he": "בסופה אבדן שרשרת מפקדים בדרגי פלוגה, גדוד וחטיבה בשעות הראשונות שיתק את ההגנה בגזרה",
+   "inst": "חטיבת הנח״ל / חטיבה דרומית / אוגדת עזה",
+   "when": "שעות הבוקר 7.10.2023",
+   "where": "סופה",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/israel-news/defense-news/article-862411",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "28.07.2025",
+     "quote": "The IDF's Gaza Division, including its Southern Brigade, was out of action for several hours, which disrupted the army's ability to defend the area"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "ארבעה דרגי פיקוד נהרגו בשעות הראשונות באותה גזרה",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S008",
+   "batch": "idf-probes",
+   "en": "At Kissufim the reference scenario trained against was fundamentally wrong",
+   "he": "בכיסופים תרחיש הייחוס שאליו הוכשרו הכוחות היה שגוי מיסודו, והם לא הוכשרו להילחם ביישוב רווי מחבלים",
+   "inst": "מחנה כיסופים / כיתת הכוננות",
+   "when": "7.10.2023",
+   "where": "כיסופים",
+   "parent": "p5",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1198365",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "22.05.2025",
+     "quote": "תרחיש הייחוס אליו נערכו הכוחות היה שגוי מיסודו"
+    },
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1198365",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "22.05.2025",
+     "quote": "הכוחות לא הוכשרו להילחם ביישוב ישראלי רווי מחבלים"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "האמירה הברורה ביותר שנמצאה על היעדר תרחיש פלישה קרקעית באימונים",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S009",
+   "batch": "idf-probes",
+   "en": "At Holit a closed gate kept armoured reinforcement outside; uncoordinated movement nearly caused friendly fire",
+   "he": "בחולית שער סגור מנע כניסת רכבים משוריינים, ותנועת כוח לא מתואמת כמעט גרמה לאש כוחותינו",
+   "inst": "חטיבת גולני / חטיבת פארן",
+   "when": "מ-06:56; ~16:15 7.10.2023",
+   "where": "חולית",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/israel-news/defense-news/article-894205",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "27.04.2026",
+     "quote": "The gate, however, remained closed, and the vehicles remained outside the kibbutz"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "התמונה ההפוכה של i08 — כאן דווקא בקרת הכניסה הייתה המכשול",
+   "flags": [],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S010",
+   "batch": "idf-probes",
+   "en": "Ofakim had no standing alert squad, no urban command centre, and forces were misdirected",
+   "he": "לאופקים לא הייתה כיתת כוננות קבועה ולא חמ״ל עירוני, וכוחות צה״ל הופנו למקום שגוי",
+   "inst": "פיקוד דרום / תחנת משטרה / רשות מקומית",
+   "when": "7.10.2023, ~06:30–14:30",
+   "where": "אופקים",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1214362",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "14.07.2025",
+     "quote": "צה״ל נכשל במשימתו להגן על העיר אופקים"
+    },
+    {
+     "url": "https://www.ynet.co.il/news/article/rk00mlszuxe",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "14.07.2025",
+     "quote": "לתחנת משטרה אין אמצעים לייצר תמונת מצב כמו חמ״ל עירוני"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "עיר אזרחית מחוץ לטבעת הקיבוצים — לא מכוסה כלל בסט הקיים",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S011",
+   "batch": "idf-probes",
+   "en": "At Netiv HaAsara the armed standby squad was ordered to shelter in place and the sector commander did not override",
+   "he": "בנתיב העשרה הורה רבש״צ לכיתת הכוננות להסתגר בבתים, ומפקד הגזרה לא הורה לו לצאת",
+   "inst": "רבש״צ יישוב / פיקוד גדוד גזרתי / חטיבת גולני",
+   "when": "בוקר 7.10.2023",
+   "where": "נתיב העשרה",
+   "parent": "p5",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/h1wqvhxskg",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "04.03.2025",
+     "quote": "הרבש״צ הורה ל-25 חברי כיתת הכוננות להסתגר בבתיהם, ולא לצאת"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "37 לוחמים בשטח לא מנעו הרג של 17 אזרחים בידי 3 מחבלים. נדרשת ניסוח מוסדי — לא אישי",
+   "flags": [
+    "sensitive-framing"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S012",
+   "batch": "idf-probes",
+   "en": "In Sderot rifles were transferred to the Gaza Division without authorisation and an automated shelter failed to unlock",
+   "he": "בשדרות הועברו רובים לאוגדת עזה ללא סמכות והכיתה נותרה עם אקדחים; מיגונית אוטומטית נכשלה להיפתח",
+   "inst": "שרשרת אספקת כיתות כוננות / מערכת מיגוניות עירונית",
+   "when": "7.10.2023",
+   "where": "שדרות",
+   "parent": "p5",
+   "dedupe": "EXTENDS i07",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/byihutwujg",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "29.01.2025",
+     "quote": "22 חברי כיתת כוננות שנותרו עם אקדחים בלבד מול עשרות מחבלים"
+    },
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/880715/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "09.04.2025",
+     "quote": "בעיר לא הופעלה אזעקה של חדירת מחבלים, אלא רק אזעקת צבע אדום"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "שני כשלים נפרדים בממצא אחד — לשקול פיצול",
+   "flags": [
+    "split-candidate"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S013",
+   "batch": "idf-probes",
+   "en": "At Zikim a naval base commander did not deploy a patrol vessel and a ground force disengaged leaving a running vehicle",
+   "he": "בזיקים לא הוצאה ספינת סיור חרף אזהרות, וכוח קרקעי נסוג והשאיר רכב פעיל שבו השתמשו המחבלים",
+   "inst": "חיל הים — בסיס אשדוד / חטיבת גולני",
+   "when": "בוקר מוקדם 7.10.2023",
+   "where": "זיקים",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1176309",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "27.02.2025",
+     "quote": "מפקד הבסיס מחליט שלא להוציא את ספינת הדבורה לים"
+    },
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/894501/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "04.05.2025",
+     "quote": "הכוח לא פעל בחירוף נפש לחצוץ בין המחבלים לאזרחים"
+    }
+   ],
+   "remedy": "התחקיר המליץ על יחידות ימי-יבשה ייעודיות ושיפור פרוטוקולי קשר",
+   "notes": "שרשרת סיבתית בין-זרועית — נדרשת ניסוח מוסדי ולא אישי",
+   "flags": [
+    "sensitive-framing"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S014",
+   "batch": "idf-probes",
+   "en": "Erez-area base commanded by a sergeant, staffed by support personnel; engineering failure to reinforce the gate",
+   "he": "בסיס באזור מעבר ארז היה בפיקוד סמל, מאויש בעיקר בכוח תומך, וכשל ההנדסה בחיזוק השער הוגדר ככשל מקצועי ומוסרי",
+   "inst": "מרכז שליטה ארז / חיל ההנדסה",
+   "when": "בוקר 7.10.2023",
+   "where": "מעבר ארז — מחנה יפתח",
+   "parent": "p2",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynetnews.com/article/sjzczjnqle",
+     "outlet": "Ynetnews",
+     "type": "press",
+     "date": "02.09.2025",
+     "quote": "The entire base that Saturday morning was under the command of a sergeant"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "פער דרגה/סמכות ואמירה מפורשת של ״כשל מוסרי״ בתחקיר עצמו",
+   "flags": [],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S015",
+   "batch": "idf-probes",
+   "en": "Chief of Staff night-before directives on air defence and maritime alert were not carried out",
+   "he": "הוראות הרמטכ״ל מהלילה לחיזוק ההגנה האווירית ולהעלאת כוננות ימית לא בוצעו",
+   "inst": "חיל האוויר — מערך הגנה אווירית / חיל הים / אג״ם",
+   "when": "ליל 6–7.10.2023, מ~04:30",
+   "where": "systemic",
+   "parent": "p1",
+   "dedupe": "EXTENDS i01",
+   "tier": "C",
+   "scope": "warning-window",
+   "sources": [
+    {
+     "url": "https://www.israelnationalnews.com/news/418920",
+     "outlet": "ערוץ 7",
+     "type": "press",
+     "date": "07.12.2025",
+     "quote": "His instruction to the Air Force to increase alert levels in the air-defense array and to add an Iron Dome battery was also not carried out"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקור יחיד, מוטה פוליטית — דורש אימות במקור שני לפני שימוש",
+   "flags": [
+    "single-source",
+    "needs-corroboration"
+   ],
+   "cluster": "warning",
+   "cluster_he": "התרעה ומודיעין"
+  },
+  {
+   "id": "S016",
+   "batch": "comptroller",
+   "en": "No organised command and control for casualty evacuation; MDA handoff points coordinated ~8 hours late",
+   "he": "פיקוד הדרום ואוגדת עזה פעלו ללא פיקוד ובקרה מסודרים בפינוי פצועים, ותיאום נקודות השחלוף מול מד״א התעכב כשמונה שעות",
+   "inst": "פיקוד דרום / אוגדת עזה / מד״א",
+   "when": "06:29 עד ~14:23, 7.10.2023",
+   "where": "מרחב הנגב המערבי",
+   "parent": "p4",
+   "dedupe": "EXTENDS i06",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.mevaker.gov.il/newsroom/2026-06-30-1",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "30.06.2026",
+     "quote": "תיאום מאוחר של נקודות השחלוף מול מד״א - קרוב לשמונה שעות לאחר תחילת מתקפת הטרור"
+    },
+    {
+     "url": "https://www.maariv.co.il/news/law/article-1339133",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "30.06.2026",
+     "quote": "הרשות העליונה לאשפוז...התכנסה לראשונה רק בשעה 14:00. עד אותה שעה כבר הגיעו לסורוקה ולברזילי 501 פצועים"
+    }
+   ],
+   "remedy": "צה״ל הודיע כי החל לשלב את מערכות הנתונים של מד״א בחפ״קים הרפואיים; אין אימות עצמאי",
+   "notes": "מספור מדויק של העיכוב מדוח המבקר עצמו — חזק",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S017",
+   "batch": "comptroller",
+   "en": "MDA real-time casualty system installed at Gaza Division was never used by military medical staff",
+   "he": "מערכת מד״א למעקב בזמן אמת שהוצבה באוגדת עזה לא שומשה כלל בידי גורמי הרפואה הצבאיים",
+   "inst": "מערך הרפואה הצבאית / מד״א",
+   "when": "7.10.2023",
+   "where": "מפקדת אוגדת עזה",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.mevaker.gov.il/newsroom/2026-06-30-1",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "30.06.2026",
+     "quote": "מד״א הציב באוגדת עזה מערכת אשר משקפת בזמן אמת את כלל האירועים המתקבלים במוקדי מד״א, לא השתמשו גורמי הרפואה הצבאיים במערכת"
+    }
+   ],
+   "remedy": "צה״ל אישר שילוב נתוני מד״א בחמ״לים הצבאיים",
+   "notes": "כשל מערכות מידע ספציפי — המערכת הותקנה ונבדקה ימים קודם",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S018",
+   "batch": "comptroller",
+   "en": "Armoured ambulance fleet at 48% of the Comptroller's own 2016 standard; one stationed near the envelope",
+   "he": "צי האמבולנסים הממוגנים עמד על 48% מהתקן שקבע המבקר ב-2016, ואמבולנס ממוגן אחד בלבד הוצב דרך קבע בעוטף",
+   "inst": "מד״א / משרד הביטחון",
+   "when": "מצב קיים ב-7.10.2023",
+   "where": "systemic",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/law/article-1339133",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "30.06.2026",
+     "quote": "ערב המתקפה היו למד״א רק 24 אמבולנסים כאלה בכל הארץ, 48% מהכמות שנדרשה"
+    },
+    {
+     "url": "https://www.globes.co.il/news/article.aspx?did=1001547379",
+     "outlet": "גלובס",
+     "type": "press",
+     "date": "30.06.2026",
+     "quote": "באוקטובר 2023 היו ברשות מד״א 24 אמבולנסים ממוגני ירי, לעומת 50 שהיו דרושים על פי ההמלצות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "פער שהמבקר עצמו זיהה ב-2016 ולא נסגר — דפוס מסוג ״זוהה ולא תוקן״",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S019",
+   "batch": "comptroller",
+   "en": "Blood supply to receiving hospitals delayed hours; Soroka trauma room near zero O-type at midday",
+   "he": "אספקת מנות דם לבתי החולים הקולטים התעכבה בשעות, ובחדר הטראומה בסורוקה כמעט אזלו מנות מסוג O בצהריים",
+   "inst": "מד״א — שירותי הדם / משרד הבריאות / סורוקה",
+   "when": "08:40–12:15 ו~12:00, 7.10.2023",
+   "where": "סורוקה, ברזילי",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/health/article/bj008d3przg",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "12.05.2026",
+     "quote": "בשעה 12:00 של 7 באוקטובר, אחרי שמאות פצועים פונו לסורוקה, היו בבנק הדם של בית החולים אפס מנות דם מסוג O"
+    },
+    {
+     "url": "https://www.kan.org.il/content/kan-news/local/1040393/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "12.05.2026",
+     "quote": "בבוקר 7 באוקטובר החזיק בנק הדם של מגן דוד אדום רק 534 מנות דם מסוג O, במקום 750 כנדרש"
+    }
+   ],
+   "remedy": "המבקר המליץ על תקן מלאי מחייב ומערכת מלאי בזמן אמת בין בתי חולים; יושמה כ-18 חודשים אחרי",
+   "notes": "שני דיווחים עצמאיים על אותו דוח מבקר. מקור mako נוסף אותר אך מוחלף במקורות נגישים",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S020",
+   "batch": "comptroller",
+   "en": "No operational plan to evacuate border communities; evacuations took 14–36 hours",
+   "he": "לא הייתה תוכנית אופרטיבית לפינוי תושבי יישובי הספר; פינוי יישובים נמשך בין 14 ל-36 שעות",
+   "inst": "ממשלת ישראל / צה״ל",
+   "when": "7–8.10.2023",
+   "where": "מפלסים, ניר עם, נחל עוז, כפר עזה",
+   "parent": "p8",
+   "dedupe": "EXTENDS i18",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://news.walla.co.il/item/3818330",
+     "outlet": "וואלה",
+     "type": "press",
+     "date": "—",
+     "quote": "פינוי מפלסים החל רק לאחר 17 שעות, ניר עם לאחר 20 שעות, נחל עוז לאחר 14 שעות, ופינוי כפר עזה נמשך כ-36 שעות"
+    },
+    {
+     "url": "https://news.walla.co.il/item/3818330",
+     "outlet": "וואלה",
+     "type": "press",
+     "date": "—",
+     "quote": "הליך הפינוי התנהל ב׳אי סדר מוחלט׳ שהגיע לרמה המסכנת את חיי התושבים"
+    }
+   ],
+   "remedy": "תגובת משרד הביטחון הפנתה אחריות למשרדי הממשלה — לא התחייבות לתיקון",
+   "notes": "i18 עוסק בקליטה; זה בהוצאה מאזור הסכנה. תאריך הפרסום חסר בעמוד — לאמת",
+   "flags": [
+    "needs-date"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S021",
+   "batch": "comptroller",
+   "en": "Receiving municipalities got no advance data on evacuees' welfare needs and were critically understaffed",
+   "he": "הרשויות הקולטות לא קיבלו מידע מוקדם על צורכי הרווחה של המפונים וסבלו ממחסור חמור בעובדים סוציאליים",
+   "inst": "משרד הרווחה / רשויות מקומיות קולטות",
+   "when": "7–10.10.2023 והימים שאחרי",
+   "where": "אילת, טבריה, ערים קולטות",
+   "parent": "p8",
+   "dedupe": "EXTENDS i18",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "02.2026",
+     "quote": "היעדר מיפוי הצרכים"
+    },
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "02.2026",
+     "quote": "היעדר נוכחות של נציגים ממחלקות הרווחה"
+    }
+   ],
+   "remedy": "none found; הפערים נותרו חרף נהלים קיימים (פח 21, ״אורח במלון״)",
+   "notes": "אילת: 10 תקני עו״ס לכ-60,000 מפונים",
+   "flags": [],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S022",
+   "batch": "comptroller",
+   "en": "Home Front Command froze municipal shelter-planning enforcement in 2018; a third of the population lacked standard protection",
+   "he": "פיקוד העורף הקפיא ב-2018 את אכיפת תכנון המיגון ברשויות, וכשליש מהאוכלוסייה נותר ללא מיגון תקני",
+   "inst": "פיקוד העורף / רשויות מקומיות",
+   "when": "החלטה 2018; מצב בתוקף ב-7.10.2023",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "01.2026",
+     "quote": "בשנת 2018 החליט פקע״ר להקפיא את ביצועו של שלב ב׳ (גיבוש המענה על ידי הרשויות המקומיות)"
+    },
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "01.2026",
+     "quote": "נכון לינואר 2025 לכ-3.2 מיליון תושבים (33.6%) אין מיגון תקני"
+    }
+   ],
+   "remedy": "תוכנית מיגון של 4 מיליארד ש״ח קיבלה כ-10% מהתקציב — ראיה לאי-סגירה",
+   "notes": "מקור ראשוני ישיר מהדוח",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "shelter",
+   "cluster_he": "מיגון ומקלוט"
+  },
+  {
+   "id": "S023",
+   "batch": "comptroller",
+   "en": "No advance estimate of detainee volume; detention-capacity crisis harmed interrogation capability",
+   "he": "לא היה אומדן מוקדם למספר העצורים, ומשבר התפוסה פגע ביכולת המעצר והחקירה",
+   "inst": "צה״ל / שב״כ / שב״ס",
+   "when": "מ-7.10.2023 והלאה",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/comptroller-prison-overcrowding-has-harmed-shin-bet-delayed-oct-7-terror-trials/",
+     "outlet": "Times of Israel",
+     "type": "oversight",
+     "date": "09.06.2026",
+     "quote": "The arrest of thousands of terrorists without prior preparation exacerbated the gap in terms of the lack of space and harmed the Shin Bet's ability to carry out arrests and interrogations"
+    },
+    {
+     "url": "https://www.maariv.co.il/news/israel/article-1331014",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "09.06.2026",
+     "quote": "מחסור במקומות כליאה בבתי הכלא של שב״ס גרם לפגיעה ניכרת ביכולתו של שב״כ לבצע מעצרים"
+    }
+   ],
+   "remedy": "none found; קיבולת גדלה בלחץ אך לא כתיקון מערכתי",
+   "notes": "קיים נוהל משותף מ-2006 שלא הופעל. השלכה על העמדה לדין",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S024",
+   "batch": "comptroller",
+   "en": "Public mental-health system collapsed in the first days and relied almost entirely on volunteers",
+   "he": "מערך בריאות הנפש הציבורי קרס בימים הראשונים למלחמה והסתמך כמעט לחלוטין על מתנדבים",
+   "inst": "משרד הבריאות",
+   "when": "הימים הראשונים מ-7.10.2023",
+   "where": "systemic",
+   "parent": "p8",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/health/article/s1mqq0rtkl",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "—",
+     "quote": "מערך בריאות הנפש, שהתקשה לתפקד עוד לפני 7 באוקטובר - קרס בימים הראשונים למלחמה"
+    }
+   ],
+   "remedy": "משרד הבריאות דחה את הדוח — התכחשות, לא הכרה",
+   "notes": "מרבית הדוח חורג מחלון 72 השעות; רק ״קרס בימים הראשונים״ בתחום. תאריך פרסום חסר",
+   "flags": [
+    "contested",
+    "needs-date"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S025",
+   "batch": "comptroller",
+   "en": "IDF, Shin Bet and the Attorney General petitioned to block the Comptroller's audit; the court partially upheld",
+   "he": "צה״ל, השב״כ והיועמ״שית עתרו לחסום את ביקורת המבקר על ההתנהלות ב-7 באוקטובר; בג״ץ קיבל חלק מהעתירה",
+   "inst": "צה״ל / שב״כ / היועמ״שית / הפצ״ר",
+   "when": "2024–2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "A",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.globes.co.il/news/article.aspx?did=1001547375",
+     "outlet": "גלובס",
+     "type": "court",
+     "date": "29.06.2026",
+     "quote": "מבקר המדינה אינו מוסמך לבחון סוגיות מובהקות של מדיניות ואסטרטגיה בתחומי החוץ והביטחון"
+    }
+   ],
+   "remedy": "none found — הפסיקה מצמצמת פיקוח",
+   "notes": "ארבעה מתוך שמונה מסלולי ביקורת נחסמו, כולל ממד ההנהגה",
+   "flags": [
+    "strong",
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S026",
+   "batch": "comptroller",
+   "en": "Senior military officials asked the Comptroller to remove the responsibility chapter; he refused",
+   "he": "בכירים בצבא ביקשו ממבקר המדינה להוריד את פרק האחריות מהתחקירים; המבקר סירב",
+   "inst": "בכירים במערכת הביטחון / משרד מבקר המדינה",
+   "when": "נחשף 06.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/bkd5owfmme",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "06.2026",
+     "quote": "חלק מהבכירים ביקשו ממני להוריד את הפרק של האחריות בתחקירים - לא הסכמתי בשום צורה"
+    }
+   ],
+   "remedy": "n/a — המבקר סירב",
+   "notes": "המקור עצמו אינו נוקב בשמות; מנוסח ברמת מוסד",
+   "flags": [
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S027",
+   "batch": "knesset",
+   "en": "No approved state evacuation plan existed; the security establishment decided and government approved after the fact",
+   "he": "לא הייתה תוכנית פינוי מאושרת; מערכת הביטחון החליטה בפועל והממשלה אישרה בדיעבד",
+   "inst": "משרד הביטחון / ממשלת ישראל",
+   "when": "7–10.10.2023",
+   "where": "עוטף עזה וגבול הצפון",
+   "parent": "p8",
+   "dedupe": "EXTENDS i18",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://fs.knesset.gov.il/globaldocs/MMM/ac8ae5e4-d97b-ee11-815f-005056aac6c3/2_ac8ae5e4-d97b-ee11-815f-005056aac6c3_11_20278.pdf",
+     "outlet": "מרכז המחקר והמידע של הכנסת",
+     "type": "knesset",
+     "date": "12.11.2023",
+     "quote": "החלטות הממשלה בנושא פינוי אוכלוסייה למעשה אישרו בדיעבד את ההחלטות שהתקבלו בפועל על ידי מערכת הביטחון"
+    },
+    {
+     "url": "https://fs.knesset.gov.il/globaldocs/MMM/e83f8692-1e77-ee11-815f-005056aac6c3/2_e83f8692-1e77-ee11-815f-005056aac6c3_11_20270.pdf",
+     "outlet": "מרכז המחקר והמידע של הכנסת",
+     "type": "knesset",
+     "date": "22.11.2023",
+     "quote": "בדוח משנת 2016 כתב המבקר כי התוכנית אינה בת-ביצוע"
+    }
+   ],
+   "remedy": "תוכניות ״מרחק בטוח״ ו״משב רוח״ גובשו בדיעבד",
+   "notes": "מסמך כנסת בן חודש מהאירוע — מקור ראשוני חזק",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S028",
+   "batch": "knesset",
+   "en": "No civilian government situation room existed to collect and coordinate home-front data",
+   "he": "לא היה חדר מצב ממשלתי אזרחי לעורף שריכז נתונים באופן מערכתי",
+   "inst": "משרד ראש הממשלה / ממשלת ישראל",
+   "when": "מ-7.10.2023",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2025/Government-Management/2025-Government-Management.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "16.09.2025",
+     "quote": "אין חדר מצב ממשלתי אזרחי לעורף המרכז נתונים באופן מערכתי"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "רחב יותר מ-i18 — תיאום נתונים ממשלתי כולל, לא ניהול מפונים",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S029",
+   "batch": "knesset",
+   "en": "NEMA has no statutory power to direct other bodies and no Home Front Law unifies emergency authority",
+   "he": "לרח״ל אין סמכות חוקית להורות לגופים אחרים, ואין ״חוק מערך העורף״ המאחד סמכויות בחירום",
+   "inst": "רח״ל / משרד הביטחון",
+   "when": "מצב מבני בתוקף ב-7.10.2023",
+   "where": "systemic",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://fs.knesset.gov.il/globaldocs/MMM/a34c6b58-e9f7-e411-80c8-00155d010977/2_a34c6b58-e9f7-e411-80c8-00155d010977_11_9002.pdf",
+     "outlet": "מרכז המחקר והמידע של הכנסת",
+     "type": "knesset",
+     "date": "22.10.2012",
+     "quote": "אין לרח״ל סמכות לתת פקודות והנחיות לגופים אחרים, והיא אינה מחליפה שום גורם"
+    }
+   ],
+   "remedy": "none found — חוק מערך העורף הוצע ולא נחקק",
+   "notes": "המסמך מ-2012; ההמשכיות מאומתת בדוח המבקר 2025 (S028). לציין את הפער בתאריך בגלוי",
+   "flags": [
+    "dated-source"
+   ],
+   "cluster": "legal",
+   "cluster_he": "מבנה סמכויות בחירום"
+  },
+  {
+   "id": "S030",
+   "batch": "knesset",
+   "en": "Two separate uncoordinated emergency declarations were made, with no single civilian state-of-emergency framework",
+   "he": "הוכרזו שתי הכרזות חירום נפרדות ולא מתואמות, ולא הייתה מסגרת אחת של מצב חירום אזרחי",
+   "inst": "משרד הביטחון / המשרד לביטחון לאומי",
+   "when": "7.10.2023, 08:00 ו-18:00",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://fs.knesset.gov.il/24/Committees/24_ci_bg_600301.pdf",
+     "outlet": "הכנסת — הצוות המשפטי של ועדת חוץ וביטחון",
+     "type": "knesset",
+     "date": "12.05.2021",
+     "quote": "יש להבחין בין הכרזה על ׳מצב מיוחד בעורף׳ ובין ׳הכרזה על מצב חירום׳"
+    },
+    {
+     "url": "https://www.idi.org.il/articles/51062",
+     "outlet": "המכון הישראלי לדמוקרטיה",
+     "type": "ngo",
+     "date": "10.10.2023",
+     "quote": "ההכרזה שניתנה על ידי השר לביטחון לאומי תמוהה מעט, שכן לא לחלוטין ברור אם הייתה נחוצה"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "ניתוח משפטי מ-10.10.2023 — בתוך חלון האירוע. יש בו ממד פוליטי — לשקול ניסוח",
+   "flags": [
+    "political"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S031",
+   "batch": "knesset",
+   "en": "Shelter gaps most severe in Negev Bedouin unrecognised villages, which have no recognised shelter infrastructure",
+   "he": "פערי המיגון חריפים במיוחד בכפרים הבדואים הלא-מוכרים בנגב, שאין בהם תשתית מיגון מוכרת",
+   "inst": "משרד הביטחון / רשויות מקומיות / הרשות לפיתוח והתיישבות הבדואים",
+   "when": "מצב בתוקף 7–10.10.2023",
+   "where": "הפזורה הבדואית בנגב",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-104-Local.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "01.2026",
+     "quote": "משנת 2020, פערי המיגון לא צומצמו ואף גדלו (בכ-5.6%)"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "כ-165,000 תושבי כפרים לא-מוכרים ללא תשתית מיגון ממשלתית. נושא רגיש פוליטית — לנסח כפער תשתיתי בלבד",
+   "flags": [
+    "sensitive-framing",
+    "gap"
+   ],
+   "cluster": "shelter",
+   "cluster_he": "מיגון ומקלוט"
+  },
+  {
+   "id": "S032",
+   "batch": "knesset",
+   "en": "A southern hospital received 241 casualties while under direct rocket fire, exposing protected-capacity gaps",
+   "he": "בית חולים בדרום קלט 241 פצועים בעודו סופג מטחי רקטות, מה שחשף פערי מיגון בחדרי טיפול",
+   "inst": "משרד הבריאות / מיגון בתי חולים",
+   "when": "7.10.2023",
+   "where": "בית חולים בדרום (״ד׳״ בדוח)",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Emergency/2026-Emergency-103-Hospitals.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "01.2026",
+     "quote": "לביה״ח ד׳ הגיעו ביממה הראשונה ללחימה, 7.10.23 241 פצועים, תוך שהוא סופג מטחי רקטות כבדים"
+    }
+   ],
+   "remedy": "משרד הבריאות אמד ב-12.2023 את עלות סגירת הפער בכ-4.8 מיליארד ש״ח",
+   "notes": "אזהרות קודמות של המבקר מ-2007 ו-2014 לא יושמו",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S033",
+   "batch": "knesset",
+   "en": "No pre-war register identified residents with disabilities or elderly needing evacuation assistance",
+   "he": "לא היה מאגר טרום-מלחמתי לזיהוי תושבים עם מוגבלות או קשישים הזקוקים לסיוע בפינוי",
+   "inst": "משרד הרווחה / משרד הפנים / מחלקות רווחה ברשויות",
+   "when": "7–10.10.2023 והשבועות שאחרי",
+   "where": "systemic",
+   "parent": "p8",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://fs.knesset.gov.il/25/Committees/25_cs_bg_9693455.pdf",
+     "outlet": "מבקר המדינה (חומר רקע לוועדת כנסת)",
+     "type": "oversight",
+     "date": "07.2025",
+     "quote": "אנשים שאינם מטופלים בזמן שגרה במש״ח, ולכן הם אינם מוכרים בהכרח לרשות"
+    },
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2026/Evacuation/2026-Evacuation-210.pdf",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "02.2026",
+     "quote": "חלפו שבועיים בטרם זו הצליחה לייצר מענים מקיפים ושיטתיים לצרכים שנתגלו"
+    }
+   ],
+   "remedy": "משרד הרווחה הגדיר איסוף נתונים כזה כ״רחבה ואינה בת יישום״ — דחייה, לא תיקון",
+   "notes": "שלוש תקנות נגישות שנדרשו עד 2018 יושמו באיחור של 4–6 שנים",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S034",
+   "batch": "knesset",
+   "en": "No standardised protocol for identifying the dead and hostages before burial; notification delivered in stages",
+   "he": "לא היה נוהל אחיד לזיהוי חללים וחטופים לפני קבורה; הבשורה למשפחות נמסרה בשלבים",
+   "inst": "משרד הבריאות / המרכז הלאומי לרפואה משפטית / מטה החטופים והנעדרים",
+   "when": "7–10.10.2023 והימים שאחרי",
+   "where": "systemic",
+   "parent": "p8",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://fs.knesset.gov.il/25/Committees/25_cs_bg_5964234.pdf",
+     "outlet": "מטה החטופים והנעדרים — חטיבת מערכת הבריאות",
+     "type": "official",
+     "date": "19.02.2025",
+     "quote": "העדר זיהוי החלל לפני הקבורה"
+    },
+    {
+     "url": "https://fs.knesset.gov.il/25/Committees/25_cs_bg_5964234.pdf",
+     "outlet": "מטה החטופים והנעדרים",
+     "type": "official",
+     "date": "19.02.2025",
+     "quote": "במקרים מסוימים קבלת הבשורה נעשתה בשלבים לפי דרגת החשש לחיים"
+    }
+   ],
+   "remedy": "המסמך עצמו קובע נהלי זיהוי מבוססי DNA מתוקנים",
+   "notes": "מסמך מוסדי רשמי — אחד המקורות החזקים לאשכול הזיהוי",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S035",
+   "batch": "police-emergency",
+   "en": "Sderot police station besieged ~26 hours with no unified operational control; town's squad disarmed pre-attack",
+   "he": "תחנת המשטרה בשדרות הייתה נצורה כ-26 שעות ללא פיקוד ובקרה מאוחדים, ורובי כיתת הכוננות של העיר נלקחו עוד לפני המתקפה",
+   "inst": "משטרת ישראל — תחנת שדרות / כיתת כוננות עירונית",
+   "when": "06:58 7.10 עד 09:30 8.10.2023",
+   "where": "שדרות",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/bjoua1xake",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "09.04.2025",
+     "quote": "באוגוסט 2022 נשללו מחברי כיתת הכוננות של שדרות הרובים הארוכים על רקע מחלוקות בירוקרטיות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "נשען על תחקיר צה״ל, לא על תחקיר המשטרה (שטרם פורסם)",
+   "flags": [
+    "gap"
+   ],
+   "cluster": "police",
+   "cluster_he": "משטרה וכוחות מיוחדים"
+  },
+  {
+   "id": "S036",
+   "batch": "police-emergency",
+   "en": "~1,000 security personnel concentrated in Sderot while nearby communities went undefended",
+   "he": "כ-1,000 כוחות ביטחון התרכזו בשדרות בעוד יישובים סמוכים נותרו ללא הגנה",
+   "inst": "משטרת ישראל / צה״ל — הקצאת כוחות",
+   "when": "06:58 7.10 עד 09:30 8.10.2023",
+   "where": "שדרות",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/1000-troops-were-in-sderot-on-oct-7-even-as-no-further-terrorists-invaded-city-probe-finds/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "09.04.2025",
+     "quote": "Nearly 1,000 Israeli security forces ended up in Sderot...even after no further terrorists were invading"
+    },
+    {
+     "url": "https://www.timesofisrael.com/1000-troops-were-in-sderot-on-oct-7-even-as-no-further-terrorists-invaded-city-probe-finds/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "09.04.2025",
+     "quote": "If a warning was sent...it would have been possible to place police roadblocks...and foil the enemy's attack"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "שאלת הקצאת כוחות — לא זמן תגובה. משלים את S035",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S037",
+   "batch": "police-emergency",
+   "en": "No dedicated protective force or IDF-police liaison assigned to the Nova festival",
+   "he": "לא הוקצה כוח הגנה ייעודי ולא קצין קישור צה״ל–משטרה לפסטיבל נובה",
+   "inst": "אוגדת עזה / חמ״ל משטרתי דרומי",
+   "when": "ליל 6–7.10 ובוקר 7.10.2023",
+   "where": "רעים",
+   "parent": "p3",
+   "dedupe": "EXTENDS i10",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/hyqs0u9ayl",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "03.04.2025",
+     "quote": "מבחינת צה״ל, מסיבת הנובה נשכחה"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "הכוח המאורגן הראשון (11 חיילים) הגיע ב-11:20, כחמש שעות אחרי תחילת המתקפה",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S038",
+   "batch": "police-emergency",
+   "en": "A mobilised Border Police special reserve unit was blocked from deploying south for two days",
+   "he": "כוח מילואים של יחידה מיוחדת שגויס ב-7.10 לא הורשה לרדת דרומה במשך יומיים בשל מגבלת גזרה",
+   "inst": "משטרת ישראל / מג״ב — יחידה מיוחדת",
+   "when": "7–9.10.2023",
+   "where": "ירושלים; יעד — עוטף עזה",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/853388/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "29.01.2025",
+     "quote": "ביקשנו לרדת דרומה והתברר ששלחו רכב אחד לחלץ לוחם שלנו שגר בדרום ורכב נוסף שנסע דרומה – הוחזר"
+    }
+   ],
+   "remedy": "המשטרה טענה כי החזקת הכוח בירושלים מנעה הסלמה שם — הצדקה, לא תיקון",
+   "notes": "מקור יחיד, מבוסס עדות לוחם. חופף ל-S060",
+   "flags": [
+    "single-source"
+   ],
+   "cluster": "police",
+   "cluster_he": "משטרה וכוחות מיוחדים"
+  },
+  {
+   "id": "S039",
+   "batch": "police-emergency",
+   "en": "More than two years on, Israel Police has published no completed investigation of its own conduct; an internal review was shelved",
+   "he": "יותר משנתיים אחרי, המשטרה לא פרסמה תחקיר שלם על התנהלותה ב-7 באוקטובר, ומסמך בדיקה פנימי נגנז",
+   "inst": "פיקוד משטרת ישראל",
+   "when": "מ-7.10.2023 ואילך",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.shomrim.news/hebrew/police-october7",
+     "outlet": "שומרים",
+     "type": "press",
+     "date": "07.05.2025",
+     "quote": "ועדת אגרנט - ועדת חקירה ממלכתית שהוקמה כחודש לאחר סיום מלחמת יום הכיפורים, פרסמה דוח ביניים ראשון פחות מחצי שנה אחר כך"
+    },
+    {
+     "url": "https://www.israelhayom.co.il/culture/tv/article/19360501",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "01.12.2025",
+     "quote": "מסמך בדיקה פנימי נגנז בהוראת דרגים גבוהים"
+    }
+   ],
+   "remedy": "תחקיר משטרתי בהובלת ניצב בדימוס פועל, סיום צפוי סוף 2026 — תהליך, לא תיקון",
+   "notes": "",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S040",
+   "batch": "police-emergency",
+   "en": "Southern District commander barred officers from cooperating with the IDF probe; lessons summits cancelled twice",
+   "he": "מפקד מחוז דרום אסר על שוטריו לשתף פעולה עם תחקיר צה״ל ללא אישור מוקדם; כנסי הפקת לקחים בוטלו פעמיים",
+   "inst": "משטרת ישראל — מחוז דרום / המפכ״ל",
+   "when": "דווח 04.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/737769/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "14.04.2024",
+     "quote": "מפקד מחוז דרום במשטרה אסר על פקודיו לשתף פעולה עם התחקיר הצבאי בנוגע לאירועי 7 באוקטובר"
+    }
+   ],
+   "remedy": "המשטרה טענה לתיאום מלא ולשקיפות מול המבקר",
+   "notes": "contested — לתייג את תגובת המשטרה כ-contests",
+   "flags": [
+    "contested"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S041",
+   "batch": "police-emergency",
+   "en": "No coordination mechanism between MDA and United Hatzalah produced duplicated treatment points",
+   "he": "לא היה מנגנון תיאום בין מד״א לאיחוד הצלה, ונוצרו עמדות טיפול כפולות ולא מתואמות",
+   "inst": "משרד הבריאות / מד״א / איחוד הצלה",
+   "when": "7.10.2023",
+   "where": "systemic",
+   "parent": "p4",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.makorrishon.co.il/news/health/article/346686",
+     "outlet": "מקור ראשון",
+     "type": "press",
+     "date": "30.06.2026",
+     "quote": "לא הייתה למד״א תמונת מצב על פעילות איחוד הצלה, מיקום האמבולנסים שלו או הפצועים שבהם טיפל"
+    }
+   ],
+   "remedy": "צו בית משפט מ-2023 חייב הסדרה תוך שלושה חודשים; הנוהל פורסם רק ב-02.2025",
+   "notes": "המבקר: הפער היה ידוע לפחות מ-2019",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S042",
+   "batch": "police-emergency",
+   "en": "MDA handled ~24,000 emergency calls whose data never reached forces in the field",
+   "he": "מד״א טיפל בכ-24,000 קריאות חירום, ונתוניהן לא הגיעו לכוחות בשטח",
+   "inst": "מד״א / צה״ל — שיתוף מידע",
+   "when": "7.10.2023",
+   "where": "systemic",
+   "parent": "p4",
+   "dedupe": "EXTENDS i11",
+   "tier": "A",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.globes.co.il/news/article.aspx?did=1001547379",
+     "outlet": "גלובס",
+     "type": "press",
+     "date": "30.06.2026",
+     "quote": "באוקטובר 2023 היו ברשות מד״א 24 אמבולנסים ממוגני ירי, לעומת 50 שהיו דרושים על פי ההמלצות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "22% מהקריאות מהעוטף. הציטוט הזמין נוגע לאמבולנסים — נדרש ציטוט ייעודי לנתון הקריאות",
+   "flags": [
+    "needs-quote"
+   ],
+   "cluster": "medical",
+   "cluster_he": "פינוי, רפואה וחירום"
+  },
+  {
+   "id": "S043",
+   "batch": "police-emergency",
+   "en": "Identification at Shura and Nova prioritised speed over forensic preservation; CT abandoned, sites cleared undocumented",
+   "he": "נהלי הזיהוי בשורה ובנובה תיעדפו מהירות על פני שימור ראיות — ויתור על סי-טי ופינוי זירה בלתי מתועד",
+   "inst": "משטרת ישראל / משרד הבריאות / הרבנות הצבאית",
+   "when": "7–10.10.2023 והימים שאחרי",
+   "where": "מחנה שורה; מתחם נובה",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/yokra13715836",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "14.12.2023",
+     "quote": "החליט מי שהחליט במשטרה לתעדף את זיהוי הגופות על פני איסוף הראיות ונסיבות המוות, והורה לוותר על בדיקות הסי־טי בשורה"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "דחפורים פינו את מתחם נובה לפני תיעוד שיטתי; רכבים עם חפצים אישיים פונו לפני איסוף פורנזי",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S044",
+   "batch": "police-emergency",
+   "en": "Uncoordinated handling of remains between organisations led to repacking and loss of forensic markings",
+   "he": "טיפול לא מתואם בגופות בין זק״א, הרבנות הצבאית וגורמים נוספים הוביל לפתיחה ואריזה חוזרת ולאובדן סימנים",
+   "inst": "זק״א / הרבנות הצבאית / משטרת ישראל",
+   "when": "7–10.10.2023",
+   "where": "מחנה שורה",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/yokra13715227",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "12.12.2023",
+     "quote": "מדובר בהתנהלות של שוק. חלק מהגופות, שנארזו על ידי זק״א, רבנות או צה״ל, נפתחו על ידי כוחות אחרים"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מחלוקת פתוחה בין הארגונים — זק״א ורבנות מציגות גרסאות שונות. contested",
+   "flags": [
+    "contested"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S045",
+   "batch": "police-emergency",
+   "en": "The Shura facility was not built to the required scale; hundreds of bags of unidentified remains unresolved",
+   "he": "מתקן שורה לא נבנה בהיקף הנדרש, ומאות שקי שרידים בלתי מזוהים נותרו לא פתורים",
+   "inst": "הרבנות הצבאית — מחנה שורה",
+   "when": "מ-7.10.2023; מצב מתועד ל-04.2025",
+   "where": "מחנה שורה",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/yokra14342771",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "25.04.2025",
+     "quote": "אף אחד מהמתכננים של הבסיס לא תיאר לעצמו שיום אחד, מרכז הצבי יהיה קטן מלהכיל את כמות הגופות שתגיע אליו"
+    }
+   ],
+   "remedy": "מחלוקת פתוחה בין הרבנות הראשית למשרד הדתות על בדיקות DNA חוזרות מול קבורה משותפת",
+   "notes": "כ-350 שקים נותרו נכון לתאריך המקור",
+   "flags": [
+    "sensitive-framing"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S046",
+   "batch": "police-emergency",
+   "en": "The forensic institute ran mass identification with a fraction of needed staff; foreign physicians recruited in emergency",
+   "he": "המרכז הלאומי לרפואה משפטית הפעיל את מבצע הזיהוי בכוח אדם חלקי, וגויסו רופאים משפטיים מחו״ל",
+   "inst": "המרכז הלאומי לרפואה משפטית (משרד הבריאות)",
+   "when": "מ-7.10.2023",
+   "where": "אבו כביר",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/health/article/syy0t1111nt",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "14.11.2023",
+     "quote": "עם התבררות היקף המלחמה, גויסו תשעה רופאים משפטיים מחו״ל"
+    }
+   ],
+   "remedy": "משרד הבריאות הצהיר על שיפור תנאי גיוס ומתקן חדש — יעד 2026, נדחה בשל סכסוך קרקע",
+   "notes": "המכון פועל בדרך כלל עם 5–8 רופאים משפטיים",
+   "flags": [],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S047",
+   "batch": "police-emergency",
+   "en": "At least one documented case of a family learning of a death via social media hours before official notification",
+   "he": "במקרה מתועד אחד לפחות משפחה למדה על מות קרוב מרשתות חברתיות שעות לפני הודעה רשמית",
+   "inst": "משטרת ישראל / מערך ההודעה למשפחות / מרכז הזיהוי",
+   "when": "7.10.2023 בוקר עד לילה",
+   "where": "אופקים; שורה",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/health/article/hkqvumalwl",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "06.02.2026",
+     "quote": "כל מי שדיברתי איתו ידע חוץ מאיתנו"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקרה יחיד. לנסח ברמת המערכת בלבד — כלל העריכה אוסר שמות. הודעה רשמית הגיעה כ-16 שעות אחרי",
+   "flags": [
+    "single-source",
+    "sensitive-framing"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S048",
+   "batch": "hostages",
+   "en": "No pre-existing doctrine or command body for a mass civilian abduction scenario",
+   "he": "לא היה גוף פיקוד או דוקטרינה מראש לתרחיש חטיפת אזרחים המונית; מטה החטופים הוקם בדיעבד",
+   "inst": "אמ״ן / המטכ״ל",
+   "when": "הוקם בימים והשבועות שאחרי 7.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/beyond-all-imagination-idf-shutters-its-hostages-hq-over-two-years-after-oct-7/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "29.01.2026",
+     "quote": "The scenario in which everyone returned [from Gaza] is beyond all imagination; we did not assess that we would reach this situation"
+    }
+   ],
+   "remedy": "מטה החטופים עצמו היה התיקון; נסגר לאחר 846 יום ללא דוקטרינה קבועה מוצהרת",
+   "notes": "ראיה נסיבתית לפער הדוקטרינרי — לא הודאה מפורשת",
+   "flags": [
+    "circumstantial"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S049",
+   "batch": "hostages",
+   "en": "Disputed scope of an order barring vehicles from returning to Gaza (Hannibal procedure)",
+   "he": "דיווח על הוראה המיוחסת לפיקוד הדרום שלא לאפשר לכלי רכב לחזור לעזה, במסגרת מה שתואר כהפעלת נוהל חניבעל",
+   "inst": "פיקוד דרום",
+   "when": "7.10.2023",
+   "where": "מרחב הגבול",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/idf-officers-invoked-defunct-hannibal-protocol-during-oct-7-fighting-report/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "07.07.2024",
+     "quote": "not a single vehicle could return to Gaza"
+    }
+   ],
+   "remedy": "none found; צה״ל סירב להתייחס — ״ייבחן בשלב מאוחר יותר״",
+   "notes": "מחלוקת פתוחה. הנוהל בוטל רשמית ב-2016. המקור הראשוני (הארץ) חסום. לדעת רועי: פריט טעון",
+   "flags": [
+    "contested",
+    "political",
+    "blocked-primary"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S050",
+   "batch": "hostages",
+   "en": "IDF Be'eri review versus survivor testimony on whether Israeli fire struck a house holding hostages",
+   "he": "מחלוקת מתועדת בין תחקיר צה״ל לעדות ניצולה בשאלה אם אש ישראלית פגעה בבית שהוחזקו בו חטופים בבארי",
+   "inst": "צה״ל — צוות התחקיר",
+   "when": "אירוע 7.10.2023; תחקיר 07.2024",
+   "where": "בארי",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.abc.net.au/news/2024-09-07/israel-hannibal-directive-kidnap-hamas-gaza-hostages-idf/104224430",
+     "outlet": "ABC News (Australia)",
+     "type": "press",
+     "date": "07.09.2024",
+     "quote": "no civilians inside the building were harmed by tank shell fire, except for an isolated incident outside the building where two civilians were harmed by shrapnel"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "contested חריף. שתי הגרסאות בציבור. כרוך בשמות ניצולים — יש לנסח ברמת מוסד בלבד",
+   "flags": [
+    "contested",
+    "political",
+    "sensitive-framing"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S051",
+   "batch": "hostages",
+   "en": "National death toll revised repeatedly because no reconciled count of dead, abducted and missing existed",
+   "he": "מספר ההרוגים הארצי עודכן שוב ושוב משום שלא הייתה ספירה מאוחדת של הרוגים, חטופים ונעדרים",
+   "inst": "משרד החוץ / המרכז הלאומי לרפואה משפטית",
+   "when": "10–11.2023",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.fdd.org/analysis/2023/11/12/israel-revises-october-7-death-toll-after-agonizing-forensics/",
+     "outlet": "FDD",
+     "type": "ngo",
+     "date": "12.11.2023",
+     "quote": "There were a lot of corpses that were not identified and now we think those belong to terrorists… not Israeli casualties"
+    }
+   ],
+   "remedy": "ארכיאולוגים מרשות העתיקות גויסו לסיוע בזיהוי — פתרון אד-הוק",
+   "notes": "FDD הוא מכון מדיניות בעל עמדה — נדרש מקור ישראלי מקביל",
+   "flags": [
+    "needs-corroboration"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S052",
+   "batch": "hostages",
+   "en": "Families built their own accounting of the missing absent a single authoritative state list",
+   "he": "משפחות בנו בעצמן את מפקד הנעדרים בהיעדר רשימה ממלכתית מוסמכת אחת",
+   "inst": "צה״ל / משטרת ישראל מול מטה המשפחות",
+   "when": "7–15.10.2023",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.cnn.com/2023/10/15/middleeast/israel-hostages-families-hnk-intl-cmd/index.html",
+     "outlet": "CNN",
+     "type": "press",
+     "date": "15.10.2023",
+     "quote": "The Israel Defense Forces (IDF) said on Friday that it notified the families of 120 people taken captive, but did not release any other information"
+    }
+   ],
+   "remedy": "מטה המשפחות עצמו — פתרון אזרחי, לא ממלכתי",
+   "notes": "פער בין 120 (צה״ל) ל-341 נעדרים (משפחות) ללא גוף מיישב",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S053",
+   "batch": "hostages",
+   "en": "Battlefield and forensic evidence not consistently preserved, undermining later prosecution",
+   "he": "ראיות משדה הקרב ומהזירות לא נשמרו באופן עקבי, מה שפגע ביכולת ההעמדה לדין",
+   "inst": "משטרת ישראל / הרבנות הצבאית",
+   "when": "7–10.10.2023 והשבועות שאחרי",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/h1lnejjuxg",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "14.08.2025",
+     "quote": "יש כמות גדולה של ראיות, חלקן פגומות"
+    }
+   ],
+   "remedy": "ועדת שרים אישרה ב-05.2025 בית דין מיוחד של 15 שופטים — פתרון במורד הזרם",
+   "notes": "כמעט שנתיים אחרי, אף מחבל לא הועמד לדין",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S054",
+   "batch": "hostages",
+   "en": "No plan existed to protect foreign agricultural workers stationed nearest the border, before or after",
+   "he": "לא הייתה תוכנית להגנה על העובדים הזרים ששוכנו הכי קרוב לגבול — לא לפני ולא אחרי",
+   "inst": "ועדת ביטחון יישובית / צה״ל",
+   "when": "7.10.2023; תחקיר 2025",
+   "where": "עלומים",
+   "parent": "p5",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/israel-news/article-846752",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "19.03.2025",
+     "quote": "not only was there no specific plan for defending the mostly Thai workers... there still is no such plan today"
+    }
+   ],
+   "remedy": "none found — התחקיר קובע במפורש שאין תוכנית גם היום",
+   "notes": "אמירה נדירה של ״לא תוקן״ בתוך תחקיר רשמי — חזק לצורך שלב במחזור החיים",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S055",
+   "batch": "hostages",
+   "en": "No timely state process for confirming and communicating the fate of foreign nationals",
+   "he": "לא היה תהליך ממלכתי בזמן אמת לאישור גורלם של אזרחים זרים — אישור מות שני עובדים הגיע כשבעה חודשים אחרי",
+   "inst": "דובר צה״ל / משרד החוץ",
+   "when": "אישור 16.05.2024 לאירועי 7.10.2023",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/israel-confirms-2-thai-nationals-were-killed-on-oct-7-bodies-being-held-by-hamas/amp/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "17.05.2024",
+     "quote": "The Israel Defense Forces and the Foreign Ministry have notified the families"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "HRW מצטט את משרד החוץ התאילנדי: 22 נחטפו, 32 נהרגו, 19 נפצעו",
+   "flags": [
+    "gap"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S056",
+   "batch": "air-naval-isa",
+   "en": "Only a small number of aircraft were on immediate readiness in the opening hours",
+   "he": "מספר מצומצם בלבד של מטוסים, מסוקים וכטב״מים היה בכוננות מיידית בשעות הראשונות",
+   "inst": "חיל האוויר — מערך הכוננות",
+   "when": "06:30–11:00 7.10.2023",
+   "where": "מרחב הדרום",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/2-jets-few-plans-and-no-clue-probe-finds-air-force-unready-and-in-the-dark-on-oct-7/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "12.09.2024",
+     "quote": "only two fighter jets and two other planes at the ready"
+    },
+    {
+     "url": "https://www.israelhayom.co.il/news/defense/article/17025612",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "24.12.2024",
+     "quote": "היו יותר מ-25 כלי טיס מסוגים שונים (מסוקים, כטמ״ם, קרב) בכוננות ׳קצרה׳"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "שני המספרים אינם סותרים — רוב הכוננות הייתה בצפון. תקיפה מקיפה הוזמנה רק ב-10:00",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S057",
+   "batch": "air-naval-isa",
+   "en": "No doctrine for close air support inside Israeli communities with intermingled attackers and residents",
+   "he": "לא הייתה דוקטרינת סיוע אווירי קרוב בתוך יישובים ישראליים שבהם התערבבו מחבלים ותושבים",
+   "inst": "חיל האוויר — צוותי מסוקי קרב וכטב״ם",
+   "when": "בוקר–צהריים 7.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.israelhayom.co.il/news/defense/article/17025612",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "24.12.2024",
+     "quote": "הקושי העיקרי היה ההבחנה בין עמית לאויב"
+    },
+    {
+     "url": "https://www.israelhayom.co.il/news/defense/article/17025612",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "24.12.2024",
+     "quote": "תיקשרו עם כוחות ואזרחים בשטח באמצעות מכשירי הטלפון האישיים שלהם"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "תקשורת בטלפונים אישיים כתחליף לשרשרת מטרות",
+   "flags": [
+    "strong",
+    "gap"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S058",
+   "batch": "air-naval-isa",
+   "en": "Centralised IAF command structure delayed situational awareness reaching senior command",
+   "he": "מבנה הפיקוד המרוכז של חיל האוויר עיכב את זרימת תמונת המצב לדרג הבכיר",
+   "inst": "חיל האוויר — פיקוד ובקרה",
+   "when": "06:30–~16:30 7.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynetnews.com/article/rj8mxik5yl",
+     "outlet": "Ynetnews",
+     "type": "press",
+     "date": "16.02.2025",
+     "quote": "The Air Force's centralization in such a critical event worked against its effectiveness"
+    },
+    {
+     "url": "https://news.walla.co.il/item/3654034",
+     "outlet": "וואלה",
+     "type": "press",
+     "date": "28.03.2024",
+     "quote": "בשעות הללו, חיל האוויר הגדול לא באמת היה שם"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מפקד החיל למד על נובה כ-10 שעות אחרי — לנסח ברמת תפקיד, לא שם",
+   "flags": [
+    "sensitive-framing"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S059",
+   "batch": "air-naval-isa",
+   "en": "Aerial detection was not configured to identify low, slow powered paragliders",
+   "he": "מערכות הגילוי לא הותאמו לזיהוי מצנחי רחיפה ממונעים הטסים נמוך ואיטי",
+   "inst": "מערך ההגנה האווירית / חיל האוויר",
+   "when": "~06:30 7.10.2023",
+   "where": "מרחב הגבול",
+   "parent": "p2",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://taskandpurpose.com/news/hamas-paraglider-attack-israel/",
+     "outlet": "Task & Purpose",
+     "type": "press",
+     "date": "12.10.2023",
+     "quote": "The paragliders would probably have flown very low — popping up to go over the border fencing and then flying low to the ground — staying under the radar coverage"
+    },
+    {
+     "url": "https://news.walla.co.il/item/3654034",
+     "outlet": "וואלה",
+     "type": "press",
+     "date": "28.03.2024",
+     "quote": "לא היה לנו מידע ולא זמן"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "ההסבר הטכני הוא של אנליסט חיצוני (RAND), לא מקור רשמי ישראלי — נדרש מקור רשמי",
+   "flags": [
+    "needs-corroboration"
+   ],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S060",
+   "batch": "air-naval-isa",
+   "en": "Coastal defence lacked a rapid-response unit and a working early-warning link to inland command",
+   "he": "בהגנת החוף לא הייתה יחידת תגובה מהירה, וקישור ההתרעה לפיקוד ביבשה לא תפקד",
+   "inst": "חיל הים — ארכיטקטורת הגנת חופים",
+   "when": "06:29–06:52 7.10.2023 וכ-40 שעות אחריה",
+   "where": "זיקים",
+   "parent": "p2",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/894501/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "04.05.2025",
+     "quote": "הכוח לא חתר למגע קרוב עם האויב"
+    },
+    {
+     "url": "https://www.timesofisrael.com/in-massive-failure-troops-abandoned-civilians-at-zikim-beach-on-oct-7-idf-probe-finds/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "04.05.2025",
+     "quote": "The second speedboat, after seeing the first being destroyed, made a U-turn"
+    }
+   ],
+   "remedy": "התחקיר המליץ על יחידות ימי-יבשה ייעודיות ושיפור פרוטוקולי תקשורת בין-זרועית",
+   "notes": "חוף זיקים לא סווג כ״נקודת חדירה קריטית״",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S061",
+   "batch": "air-naval-isa",
+   "en": "Shin Bet's own probe: prior Hamas invasion plans never processed as an imminent threat; HUMINT weakened",
+   "he": "בתחקיר השב״כ נמצא כי תוכניות פלישה קודמות לא עובדו כאיום מיידי וכי רשת המקורות האנושיים נחלשה",
+   "inst": "שירות הביטחון הכללי",
+   "when": "עד 03:03–06:30 7.10.2023",
+   "where": "systemic",
+   "parent": "p1",
+   "dedupe": "EXTENDS i17",
+   "tier": "B",
+   "scope": "warning-window",
+   "sources": [
+    {
+     "url": "https://www.ynetnews.com/article/sju9cseoyl",
+     "outlet": "Ynetnews",
+     "type": "press",
+     "date": "04.03.2025",
+     "quote": "These plans were never fully processed as an imminent threat, which led to a lack of preparation"
+    },
+    {
+     "url": "https://www.timesofisrael.com/shin-bet-probe-oct-7-would-have-been-prevented-if-wed-acted-differently/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "04.03.2025",
+     "quote": "unclear division of responsibilities with IDF"
+    }
+   ],
+   "remedy": "הנהגת השב״כ הכירה פומבית בכשל — הכרה, לא תיקון מבני",
+   "notes": "ToI מציין שהדוח ״מסיט אחריות לגופים אחרים״ — contested. התרעת 03:03 לא כללה היקף או תזמון",
+   "flags": [
+    "contested"
+   ],
+   "cluster": "warning",
+   "cluster_he": "התרעה ומודיעין"
+  },
+  {
+   "id": "S062",
+   "batch": "air-naval-isa",
+   "en": "Special units and off-duty personnel converged without a receiving command structure, producing friendly-fire risk",
+   "he": "יחידות מיוחדות וכוחות שיצאו מביתם הגיעו לזירה ללא מבנה פיקוד קולט, מה שיצר סיכון אש כוחותינו",
+   "inst": "תגובת אד-הוק של יחידות מיוחדות וכוחות לא מגויסים",
+   "when": "בוקר 7.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1200263",
+     "outlet": "מעריב",
+     "type": "press",
+     "date": "27.05.2025",
+     "quote": "כוח משטרתי של לוחמים קפץ למגע מתוך רכבים פרטיים"
+    },
+    {
+     "url": "https://www.jpost.com/israel-hamas-war/article-807053",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "20.06.2024",
+     "quote": "numerous cases of friendly fire errors leading to tragic deaths"
+    }
+   ],
+   "remedy": "צה״ל לא הכחיש את הדיווח — הכרה משתמעת",
+   "notes": "האירוע במעריב הוא באזור תל אביב, לא בעוטף — משמש למנגנון בלבד",
+   "flags": [
+    "needs-corroboration"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S063",
+   "batch": "air-naval-isa",
+   "en": "Reserve emergency depots issued degraded, decades-old equipment on mobilisation",
+   "he": "מחסני החירום למילואים חילקו ציוד מתכלה ובן עשרות שנים בעת הגיוס",
+   "inst": "לוגיסטיקת מילואים / חת״ם",
+   "when": "7–10.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.maariv.co.il/news/military/article-1238914",
+     "outlet": "מעריב (מצטט את Tablet)",
+     "type": "press",
+     "date": "06.10.2025",
+     "quote": "האפודים היו מתפוררים, הרוכסנים שבורים, והקסדות עוד מהשירות של אבא שלי בשנות ה-80"
+    },
+    {
+     "url": "https://www.ynet.co.il/news/article/yokra14619075",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "21.12.2025",
+     "quote": "אנחנו לא רוצים עוד קטסטרופה. אנחנו זוכרים היטב למה לקח לכוחות שש שעות להגיע לניר עוז"
+    }
+   ],
+   "remedy": "צה״ל החל לצייד כ-10,000 לוחמי מילואים בנשק אישי המוחזק בבית — לקח מוצהר",
+   "notes": "מבוסס בעיקר על עדויות אישיות בתחקיר Tablet. יש כאן אות תיקון ברור — מועמד לשלב 4",
+   "flags": [
+    "remedy-signal"
+   ],
+   "cluster": "police",
+   "cluster_he": "משטרה וכוחות מיוחדים"
+  },
+  {
+   "id": "S064",
+   "batch": "heb-reconstruction",
+   "en": "Southern road junctions were not secured before convoys and civilian traffic were routed through them",
+   "he": "הצמתים בדרום לא אובטחו לפני שכוחות תגבורת ותנועה אזרחית הופנו דרכם, והם הפכו לעמדות מארב",
+   "inst": "אוגדת עזה / פיקוד דרום — ניתוב תגבורות",
+   "when": "מ~09:30 7.10.2023",
+   "where": "צומת גמה, מגן, עין הבשור, שער הנגב",
+   "parent": "p3",
+   "dedupe": "EXTENDS i11",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "http://z.ynet.co.il/long/content/specials/time-of-darkness/",
+     "outlet": "ידיעות אחרונות / z.ynet",
+     "type": "press",
+     "date": "12.01.2024",
+     "quote": "הפקודה המתבקשת - לטהר את הצמתים - עדיין לא מגיעה, והרבה דם...נשפך בצמתים האלו"
+    },
+    {
+     "url": "https://www.ynet.co.il/news/article/ryw0fggzxl",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "27.05.2025",
+     "quote": "אובדן השליטה על נקודות אסטרטגיות אפשר לפולשים להציב מארבים"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מרחיב את i11 מכביש 232 לרשת הצמתים כולה",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S065",
+   "batch": "heb-reconstruction",
+   "en": "Cellular and communications infrastructure in the envelope collapsed within hours",
+   "he": "תשתית הסלולר והתקשורת בעוטף קרסה תוך שעות וניתקה כיתות כוננות, חמ״לים ותושבים בממ״דים",
+   "inst": "מפעילות סלולר / חברת החשמל / משרד התקשורת",
+   "when": "7.10.2023 מהבוקר והלאה",
+   "where": "עוטף עזה",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/digital/technology/article/yokra13731407",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "25.12.2023",
+     "quote": "כיתות הכוננות התקשו לתקשר ביניהן, חמ״לים נותקו והתושבים בממ״דים איבדו קשר עם העולם"
+    },
+    {
+     "url": "https://www.israelhayom.co.il/news/defense/article/19652822",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "11.01.2026",
+     "quote": "7 באוקטובר חשף פער עצום ביכולת לייצר ולהחזיק תמונת מצב"
+    }
+   ],
+   "remedy": "יישובים רכשו טלפונים לווייניים; פותחו ערכות חמ״ל ניידות; משרד התקשורת הכיר בצורך בגיבוי",
+   "notes": "שרשרת סיבתית: קריסת חשמל ← גנרטורים באתרי שידור אזלו ← צוותי תיקון לא יכלו להיכנס. שונה מ-i14 (עומס שיחות)",
+   "flags": [
+    "strong",
+    "gap",
+    "remedy-signal"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S066",
+   "batch": "heb-reconstruction",
+   "en": "Aerial support operators bypassed the targeting chain and took coordinates from a kibbutz civilian WhatsApp group",
+   "he": "מפעילי תמיכה אווירית עקפו את שרשרת המטרות והשתמשו בקבוצת ווטסאפ אזרחית כדי לקבל קואורדינטות מתושבים נצורים",
+   "inst": "שרשרת הפיקוד של מפעילי כטב״ם",
+   "when": "~08:10 7.10.2023",
+   "where": "כפר עזה ויישובים נוספים",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "http://z.ynet.co.il/long/content/specials/time-of-darkness/",
+     "outlet": "ידיעות אחרונות / z.ynet",
+     "type": "press",
+     "date": "12.01.2024",
+     "quote": "מפעילים אחרים נכנסו לקבוצות הווטסאפ של קיבוץ כפר עזה ויישובים אחרים, וקיבלו מטרות מהאזרחים הנצורים"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקרה קונקרטי של ערוץ אזרחי שהחליף מערכת צבאית. מקור יחיד",
+   "flags": [
+    "single-source",
+    "strong"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S067",
+   "batch": "heb-reconstruction",
+   "en": "Gaza Division's internal command network broke down; reinforcements went undirected",
+   "he": "מערך הפיקוד הפנימי של אוגדת עזה קרס וכוחות התגבור לא הוכוונו",
+   "inst": "אוגדת עזה",
+   "when": "בוקר 7.10.2023",
+   "where": "גזרת אוגדת עזה",
+   "parent": "p3",
+   "dedupe": "EXTENDS i12",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/defense/865442/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "27.02.2025",
+     "quote": "כוחות התגבור לא הוכוונו למקום בשל חוסר בפיקוד"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "i12 עוסק בקשר אוגדה–מטכ״ל; זה בפיקוד הפנימי של האוגדה על כוחותיה",
+   "flags": [],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S068",
+   "batch": "heb-reconstruction",
+   "en": "Territorial defence doctrine had been abandoned as policy, leaving communities without organised defence",
+   "he": "דוקטרינת ההגנה המרחבית ננטשה כמדיניות, ותושבי יישובי הספר נותרו לא מאורגנים להגנת היישוב",
+   "inst": "צה״ל / הנהגת המדינה — מדיניות הגנה מרחבית",
+   "when": "מצב בתוקף 7.10.2023; מתועד כלא מתוקן ב-03.2025",
+   "where": "systemic",
+   "parent": "p5",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://www.israelhayom.co.il/news/politics/article/17583382",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "20.03.2025",
+     "quote": "היא חדלה להתקיים מכיוון שהנהגת צה״ל והמדינה חדלו להאמין בה"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מאמר דעה/ניתוח, לא תחקיר — נדרש מקור מוסדי לתמיכה",
+   "flags": [
+    "opinion-source",
+    "needs-corroboration"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S069",
+   "batch": "heb-reconstruction",
+   "en": "Operational planning assumed the barrier could not be breached for four hours; it took under ten minutes",
+   "he": "התכנון המבצעי הניח שהמכשול לא ייפרץ תוך פחות מארבע שעות; בפועל נפרץ תוך פחות מעשר דקות",
+   "inst": "תכנון מבצעי / תרחיש ייחוס של פיקוד דרום",
+   "when": "~06:30 7.10.2023",
+   "where": "מכשול הגבול",
+   "parent": "p2",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/by5fce6v0",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "11.07.2024",
+     "quote": "תרחיש הייחוס קבע שאם חמאס והג׳יהאד האיסלאמי ינסו לפרוץ את המכשול...הוא ייפרץ רק אחרי ארבע שעות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "כשל בהנחת התכנון, לא בחומרת הגדר — משלים את i02",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S070",
+   "batch": "heb-reconstruction",
+   "en": "The General Staff command bunker followed Hamas's own broadcasts to understand the attack",
+   "he": "בור הפיקוד של המטכ״ל עקב אחר שידורי טלגרם ורשתות של חמאס כדי להבין את המתרחש",
+   "inst": "בור הפיקוד של המטכ״ל",
+   "when": "~06:26–07:00 7.10.2023",
+   "where": "systemic",
+   "parent": "p3",
+   "dedupe": "EXTENDS i12",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "http://z.ynet.co.il/long/content/specials/time-of-darkness/",
+     "outlet": "ידיעות אחרונות / z.ynet",
+     "type": "press",
+     "date": "12.01.2024",
+     "quote": "בגלל העיוורון מהשטח, פנו שם לשידורי הטלוויזיה וכן לרשתות החברתיות, ובראשן ערוצי טלגרם, גם ישראליים ובעיקר של חמאס"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקור יחיד אך עיתונות תחקירית מובילה. מחזק את i12 מכיוון הדרג העליון",
+   "flags": [
+    "single-source"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S071",
+   "batch": "heb-reconstruction",
+   "en": "At Re'im multiple converging forces operated without coordination while the squad fought alone ~3 hours",
+   "he": "ברעים פעלו כוחות תגבורת מרובים ללא תיאום, בעוד כיתת הכוננות נלחמה לבדה כשלוש שעות",
+   "inst": "פיקוד תגבורות / תיאום בין-יחידתי",
+   "when": "06:29–09:30 7.10.2023",
+   "where": "רעים",
+   "parent": "p3",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.makorrishon.co.il/news/828145/",
+     "outlet": "מקור ראשון",
+     "type": "press",
+     "date": "10.04.2025",
+     "quote": "ריבוי הכוחות ללא תיאום ותקשורת יצר בלבול"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "רעים אינו מכוסה בסט הקיים",
+   "flags": [
+    "single-source"
+   ],
+   "cluster": "command",
+   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+  },
+  {
+   "id": "S072",
+   "batch": "foreign-press",
+   "en": "Erez Crossing barrier breached with explosives and guard tower engaged, established by geolocation",
+   "he": "מעבר ארז נפרץ במטענים ועמדת השמירה הותקפה, כפי שאומת בניתוח גיאולוקיישן",
+   "inst": "אבטחת מסוף ארז / הגנת מעברים",
+   "when": "בוקר 7.10.2023",
+   "where": "מעבר ארז",
+   "parent": "p2",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.cnn.com/2023/10/08/middleeast/hamas-videos-visual-timeline/index.html",
+     "outlet": "CNN",
+     "type": "press",
+     "date": "08.10.2023",
+     "quote": "entering the Erez military facility after breaching the border with explosives"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "CNN מפרסם את שיטת האימות שלו ואת מגבלותיו — שימושי לעמוד המתודולוגיה של הפרויקט",
+   "flags": [
+    "method-example"
+   ],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S073",
+   "batch": "foreign-press",
+   "en": "Border-camera recordings from the first eight hours went missing or were access-restricted",
+   "he": "הקלטות ממצלמות הגבול משמונה השעות הראשונות נעלמו או הוגבלה הגישה אליהן",
+   "inst": "פיקוד דרום / מערך התצפית של אוגדת עזה",
+   "when": "7.10.2023; דווח כחסר ב-03.12.2023",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/arab-israeli-conflict/article-776318",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "03.12.2023",
+     "quote": "Some of the recordings have either disappeared or were simply downloaded from the network and relocated under the directives of commanding officers"
+    }
+   ],
+   "remedy": "צה״ל הכחיש: כל החומרים ״נשמרים ונגישים לגורמים הרלוונטיים״",
+   "notes": "contested חריף — הכחשה רשמית מפורשת. יש לתייג את תגובת צה״ל כ-contests",
+   "flags": [
+    "contested"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S074",
+   "batch": "foreign-press",
+   "en": "114 breach points along the fence faced 767 soldiers and 13 tanks",
+   "he": "הגדר נפרצה ב-114 נקודות, ומולן עמדו 767 חיילים ו-13 טנקים לאורך כל התוואי",
+   "inst": "אוגדת עזה / פיקוד דרום — פריסת כוחות",
+   "when": "מ-06:29 7.10.2023",
+   "where": "גדר הגבול",
+   "parent": "p2",
+   "dedupe": "EXTENDS i02",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/israel-news/article-844153",
+     "outlet": "Jerusalem Post",
+     "type": "press",
+     "date": "28.02.2025",
+     "quote": "They faced only 767 IDF soldiers and 13 spread-out and isolatable tanks"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "נתון מתוך תחקיר צה״ל עצמו שנמסר לעיתונות — לא אימות עצמאי",
+   "flags": [],
+   "cluster": "barrier",
+   "cluster_he": "המכשול והחדירה"
+  },
+  {
+   "id": "S075",
+   "batch": "foreign-press",
+   "en": "A kibbutz defence squad was left under-armed by a prior weapons-return order with no approved armory",
+   "he": "צוות הכוננות של קיבוץ נותר חמוש בחסר בעקבות הוראה קודמת להחזרת נשק וללא נשקייה מאושרת",
+   "inst": "מדיניות צה״ל לחימוש כיתות כוננות / אוגדת עזה",
+   "when": "מדיניות קדמה בשנה; תוצאה 7.10.2023",
+   "where": "עין השלושה",
+   "parent": "p5",
+   "dedupe": "EXTENDS i07",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/outgunned-ein-hashlosha-security-team-failed-to-resist-oct-7-onslaught-probe-finds/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "23.04.2025",
+     "quote": "Of the 14 members of the local security team, just four had assault rifles"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "אותו מנגנון כמו בשדרות (S012) — דפוס ארצי של החזרת נשק ללא נשקיות",
+   "flags": [
+    "pattern"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S076",
+   "batch": "foreign-press",
+   "en": "Captured Hamas planning material shows months of externally coordinated preparation not detected in advance",
+   "he": "חומרי תכנון שנתפסו מראים היערכות מתואמת מבחוץ שנמשכה חודשים ולא אותרה מראש",
+   "inst": "מוסדות המודיעין — פונקציית ההתרעה",
+   "when": "תכנון שקדם ל-7.10.2023",
+   "where": "systemic",
+   "parent": "p1",
+   "dedupe": "EXTENDS i17",
+   "tier": "C",
+   "scope": "warning-window",
+   "sources": [
+    {
+     "url": "https://www.jpost.com/breaking-news/article-854372",
+     "outlet": "Jerusalem Post (מצטט WSJ)",
+     "type": "press",
+     "date": "18.05.2025",
+     "quote": "open the door for the majority of Arab and Islamic countries to follow the same path"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקור מדרג שני (JPost על WSJ). המקור אינו מציין איזה גוף ישראלי החזיק או פספס את החומר. פוליטי",
+   "flags": [
+    "second-hand",
+    "political"
+   ],
+   "cluster": "warning",
+   "cluster_he": "התרעה ומודיעין"
+  },
+  {
+   "id": "S077",
+   "batch": "foreign-press",
+   "en": "Body-recovery coordination gaps in the first week; the military identification unit was excluded",
+   "he": "פערי תיאום בפינוי גופות בשבוע הראשון, ויחידת הזיהוי הצבאית הודרה מהעבודה",
+   "inst": "יחידת הזיהוי של פיקוד העורף / ארגוני מתנדבים",
+   "when": "7–14.10.2023",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/zaka-exploited-hamass-october-7-attack-to-campaign-for-donations-report/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "06.02.2024",
+     "quote": "double-wrapped bodies in its own bags after they had already been placed in IDF or other organizations' bags, creating a mess at headquarters"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מבוסס על תחקיר הארץ (חסום) דרך ToI. זירות סומנו כ״פונו״ גם היכן שנמצאו שרידים אחר כך",
+   "flags": [
+    "second-hand",
+    "contested"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S078",
+   "batch": "civil-society",
+   "en": "Civil Commission found observation posts staffed by unarmed personnel with no emergency protocol",
+   "he": "הוועדה האזרחית מצאה כי עמדות התצפית אוישו בכוח לא חמוש וללא נהלי חירום",
+   "inst": "צה״ל — בסיס נחל עוז / מערך התצפית",
+   "when": "בוקר 7.10.2023",
+   "where": "נחל עוז",
+   "parent": "p2",
+   "dedupe": "EXTENDS i09",
+   "tier": "C",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.ynet.co.il/news/article/r1pcnkmx1l",
+     "outlet": "ynet",
+     "type": "press",
+     "date": "26.11.2024",
+     "quote": "אין הגדרה אחרת למציאות האיומה הזו מלבד ׳הפקרה׳"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "ממצא של ועדה אזרחית פרטית, לא של גוף מדינתי — לתייג כעמדת הוועדה",
+   "flags": [
+    "ngo-finding"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S079",
+   "batch": "civil-society",
+   "en": "A families-initiated private commission is the only body that has taken testimony from senior officials",
+   "he": "ועדת חקירה אזרחית ביוזמת משפחות היא הגוף היחיד שגבה עדות מבכירים על 7 באוקטובר",
+   "inst": "ועדת החקירה האזרחית / היעדר ועדת חקירה ממלכתית",
+   "when": "07.2024–11.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/local/828790/",
+     "outlet": "כאן",
+     "type": "press",
+     "date": "26.11.2024",
+     "quote": "חובה להקים ועדת חקירה ממלכתית שתחקור את האסון לאלתר"
+    },
+    {
+     "url": "https://www.israelhayom.co.il/news/politics/article/16822914",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "21.11.2024",
+     "quote": "הנחקרים ממנים את החוקרים"
+    }
+   ],
+   "remedy": "none found — המלצת הוועדה לא יושמה",
+   "notes": "כ-120 עדים. הציטוט ״הנחקרים ממנים את החוקרים״ הוא עמדת הוועדה, לא ממצא מוכרע",
+   "flags": [
+    "ngo-finding",
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S080",
+   "batch": "civil-society",
+   "en": "A civil-society body, not a state institution, produced the only systematic evidentiary reconstruction of sexual violence",
+   "he": "גוף אזרחי, ולא מוסד מדינתי, הפיק את השחזור הראייתי השיטתי היחיד של האלימות המינית",
+   "inst": "הנציבות האזרחית (civilc.org)",
+   "when": "10.2023–05.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.civilc.org/silenced-no-more/executive-summary",
+     "outlet": "The Civil Commission",
+     "type": "ngo",
+     "date": "12.05.2026",
+     "quote": "The Commission systematically reviewed more than 10,000 photographs and video segments, amounting to well over 1,800 cumulative hours of analysis of visuals"
+    }
+   ],
+   "remedy": "none found — הדוח עצמו ממלא את מקום התיעוד הרשמי החסר",
+   "notes": "פרסום עצמי של ארגון. הממצא כאן הוא ההיעדר המוסדי, לא תוכן הדוח",
+   "flags": [
+    "ngo-finding",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S081",
+   "batch": "civil-society",
+   "en": "Government has not established a state commission of inquiry despite High Court pressure",
+   "he": "הממשלה לא הקימה ועדת חקירה ממלכתית חרף לחץ בג״ץ",
+   "inst": "ממשלת ישראל / בג״ץ",
+   "when": "2023–2026; דיון 23.04.2026, פסיקה 27.04.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "A",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.kan.org.il/content/kan-news/local/1034120/",
+     "outlet": "כאן",
+     "type": "court",
+     "date": "27.04.2026",
+     "quote": "מצב דברים זה אינו מתקבל על הדעת, והוא מעורר קושי משפטי ניכר"
+    },
+    {
+     "url": "https://www.idi.org.il/articles/64014",
+     "outlet": "המכון הישראלי לדמוקרטיה",
+     "type": "ngo",
+     "date": "23.04.2026",
+     "quote": "government is advancing alternative legislation for a state-national commission controlled by political mechanisms"
+    }
+   ],
+   "remedy": "הממשלה נדרשה להציג מתווה חקירה עד 01.07.2026 — תוכנית בלבד",
+   "notes": "הציטוט אומת מול העמוד ב-4.9.2026. בג״ץ נתן ארכה של חודשיים (עד 1.7.2026) להצגת מתווה חקירה",
+   "flags": [
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S082",
+   "batch": "civil-society",
+   "en": "Attorney General recommended deferring the state-commission decision to the next government",
+   "he": "היועמ״שית המליצה לדחות את ההחלטה על ועדת חקירה ממלכתית לממשלה הבאה",
+   "inst": "משרד היועמ״שית / ממשלת ישראל",
+   "when": "19.08.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "B",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.israelhayom.co.il/news/law/article/21230593",
+     "outlet": "ישראל היום",
+     "type": "press",
+     "date": "19.08.2026",
+     "quote": "ועדת חקירה ממלכתית היא הכלי המשפטי הראוי והייעודי"
+    }
+   ],
+   "remedy": "הכרה בכלי הראוי לצד דחיית היישום — הכרה ללא ביצוע",
+   "notes": "",
+   "flags": [
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S083",
+   "batch": "civil-society",
+   "en": "IDF blocked completion of near-finished Comptroller audit drafts",
+   "he": "צה״ל מנע השלמת טיוטות כמעט סופיות של דוחות מבקר המדינה",
+   "inst": "צה״ל / שב״כ / משרד מבקר המדינה",
+   "when": "דווח 22.08.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "A",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.calcalist.co.il/local_news/article/rkqzjjrsc",
+     "outlet": "כלכליסט",
+     "type": "official",
+     "date": "22.08.2024",
+     "quote": "צה״ל אינו מוכן לאפשר את השלמת טיוטות הדו״חות"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מבוסס על תצהיר המבקר לבג״ץ — עמדה מתדיינת",
+   "flags": [],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S084",
+   "batch": "civil-society",
+   "en": "Senior officials refused to hand over documents or meet Comptroller audit teams",
+   "he": "בכירים סירבו למסור מסמכים או להיפגש עם צוותי הביקורת של מבקר המדינה",
+   "inst": "גופי ביטחון מבוקרים / משרד מבקר המדינה",
+   "when": "עד 19.02.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "EXTENDS i16",
+   "tier": "A",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.mevaker.gov.il/newsroom/2026-02-19",
+     "outlet": "מבקר המדינה",
+     "type": "official",
+     "date": "19.02.2026",
+     "quote": "פסקי דין יש לקיים. הסכמים יש לקיים. ביקורת המדינה יש לקיים."
+    }
+   ],
+   "remedy": "המבקר ביקש דיון דחוף בהרכב מורחב — לא הוכרע",
+   "notes": "שמונה ביקורות, מעל 300 שנות-אדם",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S085",
+   "batch": "civil-society",
+   "en": "A watchdog and former security officials petitioned to halt the Comptroller's wartime investigation",
+   "he": "ארגון שקיפות ובכירי ביטחון לשעבר עתרו לעצור את חקירת המבקר עד תום הלחימה",
+   "inst": "התנועה לאיכות השלטון (עותרת) / משרד מבקר המדינה",
+   "when": "06.02.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.makorrishon.co.il/news/article/294424",
+     "outlet": "מקור ראשון",
+     "type": "ngo",
+     "date": "06.02.2024",
+     "quote": "אין מקום לקיום ביקורת מבקר המדינה על הדרגים הלוחמים בעיצומה של מלחמה קשה"
+    }
+   ],
+   "remedy": "n/a",
+   "notes": "עמדת עותרים, לא ממצא. אותו ארגון קידם מאוחר יותר ועדת חקירה — עמדה שהשתנתה. פוליטי מאוד",
+   "flags": [
+    "position-not-finding",
+    "political"
+   ],
+   "cluster": "accountability",
+   "cluster_he": "חקירה ואחריותיות"
+  },
+  {
+   "id": "S086",
+   "batch": "atrocity-doc",
+   "en": "Police forensics stated standard crime-scene protocols could not be applied to the mass-casualty scenes",
+   "he": "מדור הזיהוי הפלילי מסר כי לא ניתן היה להפעיל פרוטוקולי חקירת זירה רגילים בזירות ההרג ההמוניות",
+   "inst": "משטרת ישראל — המחלקה לזיהוי פלילי",
+   "when": "7–31.10.2023",
+   "where": "מחנה שורה / systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "31.10.2023",
+     "quote": "We won't be able to conduct a full CSI, with crime scene identification protocols"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "אמירה רשמית של גורמי משטרה בשטח, בזמן אמת. מקור יחיד",
+   "flags": [
+    "strong",
+    "single-source"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S087",
+   "batch": "atrocity-doc",
+   "en": "Body recovery was performed mainly by volunteer organisations without evidence-preservation training",
+   "he": "פינוי הגופות מהזירות בוצע בעיקר בידי ארגוני מתנדבים ללא הכשרה בשימור ראיות",
+   "inst": "זק״א / מד״א / איחוד הצלה / יחידות צה״ל מול המחלקה לזיהוי פלילי",
+   "when": "מ-7.10.2023",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "31.10.2023",
+     "quote": "the people responsible for collecting the bodies [from the scene] were not forensics investigators"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "נמסר בידי ראשת המחלקה לזיהוי פלילי — לנסח ברמת תפקיד",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S088",
+   "batch": "atrocity-doc",
+   "en": "Bodies processed on an identification track oriented to burial; cause-of-death documentation outside the mandate",
+   "he": "הגופות עובדו במסלול זיהוי המכוון לקבורה, ותיעוד סיבת המוות הוגדר כמחוץ למנדט המתקן",
+   "inst": "המחלקה לזיהוי פלילי — מתקן שורה",
+   "when": "10.2023",
+   "where": "מחנה שורה",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/amid-war-and-urgent-need-to-id-bodies-evidence-of-hamass-october-7-rapes-slips-away/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "31.10.2023",
+     "quote": "prime mission is to identify victims; we were not concerned with how they died or what happened"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "לחץ לוח הזמנים של הקבורה מצוין במפורש במקור",
+   "flags": [
+    "strong"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S089",
+   "batch": "atrocity-doc",
+   "en": "Rape-kit collection, requiring a ~48-hour window, was not prioritised amid mass-casualty response",
+   "he": "איסוף ערכות אינוס, המחייב טיפול בחלון של כ-48 שעות, לא זכה לעדיפות נוכח היקף האירועים",
+   "inst": "משטרת ישראל — להב 433",
+   "when": "אמירה 14.11.2023 על אירועי 7–8.10.2023",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/police-start-building-oct-7-rape-cases-focusing-on-footage-and-testimonies/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "14.11.2023",
+     "quote": "rape kits, which have a 48-hour window to be collected after an assault, were not prioritized"
+    },
+    {
+     "url": "https://www.timesofisrael.com/graphic-report-details-new-evidence-of-rape-sexual-violence-during-october-7-rampage/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "03.12.2023",
+     "quote": "Physical evidence of sexual assault was broadly not collected on the day of the attacks due to complications posed by the evidence being located in an active warzone"
+    }
+   ],
+   "remedy": "מעבר לתיקים מבוססי תיעוד ועדויות — התאמה, לא תיקון",
+   "notes": "שני מקורות עצמאיים על אותו פער מוסדי. נושא רגיש — לנסח כתהליך בלבד",
+   "flags": [
+    "strong",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S090",
+   "batch": "atrocity-doc",
+   "en": "ARCCI stated authorities decided against time-consuming crime-scene protocols for rape documentation",
+   "he": "איגוד מרכזי הסיוע ציין כי הרשויות החליטו שלא להפעיל פרוטוקולי חקירת זירה ממושכים לתיעוד מקרי אונס",
+   "inst": "משטרת ישראל / רשויות המדינה (כפי שמתאר האיגוד)",
+   "when": "7.10.2023 ובסמוך; דוח 21.02.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/israeli-report-submitted-to-un-on-hamass-mass-scale-weaponization-of-rape/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "21.02.2024",
+     "quote": "decide against time-consuming crime scene investigation protocols to document rape cases in the immediate aftermath"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "האיגוד עצמו מציין מגבלה: הדוח אינו כמותי וההיקף ״אולי לעולם לא יהיה ידוע״",
+   "flags": [
+    "ngo-finding",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S091",
+   "batch": "atrocity-doc",
+   "en": "No standing protocol for vetting volunteer field accounts before they reached press; one account later withdrawn",
+   "he": "לא היה נוהל לבדיקת עדויות מתנדבים בשטח בטרם הגיעו לתקשורת; עדות אחת נסוגה כשלושה חודשים אחר כך",
+   "inst": "זק״א",
+   "when": "10.2023–01.2024",
+   "where": "systemic",
+   "parent": "p9",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.pbs.org/newshour/world/how-2-debunked-accounts-of-sexual-violence-on-oct-7-fueled-a-global-dispute-over-israel-hamas-war",
+     "outlet": "PBS NewsHour (AP)",
+     "type": "press",
+     "date": "27.02.2024",
+     "quote": "we are not forensics workers"
+    }
+   ],
+   "remedy": "תיקון בדיעבד בלבד; לא תואר שינוי נוהל",
+   "notes": "ממצא על תהליך בלבד — לא על שאלת ההיקף, שבה המקורות חלוקים. פריט טעון מאוד",
+   "flags": [
+    "contested",
+    "political",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S092",
+   "batch": "atrocity-doc",
+   "en": "UN SRSG mission found evidence collection compromised by untrained volunteers; no standing UN verification mechanism",
+   "he": "משלחת האו״ם מצאה שאיסוף הראיות נפגע מהתערבות מתנדבים חסרי הכשרה, וציינה שלא פעל מנגנון אימות קבוע של האו״ם",
+   "inst": "מערך התגובה והזיהוי הישראלי (כהערכת האו״ם) / היעדר מנגנון או״ם",
+   "when": "משלחת 29.01–14.02.2024; דוח 04.03.2024",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.un.org/sexualviolenceinconflict/press-release/israel-west-bank-mission/",
+     "outlet": "UN OSRSG-SVC",
+     "type": "official",
+     "date": "04.03.2024",
+     "quote": "loss of potentially valuable evidence due to the interventions of some untrained volunteer first responders"
+    },
+    {
+     "url": "https://en.minervacenter.huji.ac.il/october-7th-sexual-violence-crimes-against-humanity",
+     "outlet": "מרכז מינרווה, האוניברסיטה העברית",
+     "type": "ngo",
+     "date": "03.2024",
+     "quote": "in Israel the SRSG would not have verified UN information gathered by UN investigative mechanisms available to her, for there are no such mechanisms on the ground in Israel"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "מקור או״ם ראשוני. הצוות בחן מעל 5,000 תצלומים ו~50 שעות תיעוד. הדוח מגביל את עצמו במפורש",
+   "flags": [
+    "strong",
+    "sensitive",
+    "political"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S093",
+   "batch": "atrocity-doc",
+   "en": "Curated attacker footage screened to foreign press under non-recordable conditions, with no disclosed preservation protocol",
+   "he": "אוספים ערוכים של תיעוד התוקפים הוקרנו לעיתונות זרה בתנאים שאסרו הקלטה, ללא פרוטוקול קטלוג ושימור מפורסם",
+   "inst": "דובר צה״ל",
+   "when": "הקרנה 23.10.2023",
+   "where": "בסיס צבאי",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/idf-shows-foreign-press-raw-hamas-bodycam-videos-of-murder-torture-decapitation/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "23.10.2023",
+     "quote": "Journalists were not permitted to record the screening"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "המקור מתעד אירוע תקשורתי, לא את ניהול הארכיון. הממצא הוא היעדר פרוטוקול מפורסם — ניסוח זהיר",
+   "flags": [
+    "inference-risk"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S094",
+   "batch": "atrocity-doc",
+   "en": "Visual material posted to social media was later removed by platforms with no parallel state preservation programme",
+   "he": "חומר חזותי שהועלה לרשתות הוסר בהמשך בידי הפלטפורמות, ולא נמצאה תוכנית שימור מדינתית מקבילה",
+   "inst": "היעדר גוף שימור דיגיטלי מדינתי",
+   "when": "10–12.2023",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://thedinahproject.org/wp-content/uploads/2025/07/The-Dinah-Project-full-report-A4-pages_web-1.pdf",
+     "outlet": "The Dinah Project",
+     "type": "ngo",
+     "date": "07.2025",
+     "quote": "A large amount of the visual materials posted on social networks on or immediately after October 7 was later removed, due to some platforms' rules regarding graphic content"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "הדוח מציין: Meta הסירה אלפי קבצים, YouTube כ-85,000. הפרויקט עצמו מצהיר שאינו מנהל ארכיון",
+   "flags": [
+    "ngo-finding",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S095",
+   "batch": "atrocity-doc",
+   "en": "Legal analysis flags interrogations without ICRC access and a court able to deviate from disclosure and chain-of-custody rules",
+   "he": "ניתוח משפטי מצביע על חקירות ללא ביקורי הצלב האדום ועל בית דין הרשאי לסטות מכללי גילוי ראיות ושרשרת משמורת",
+   "inst": "רשויות החקירה / בית הדין הצבאי המיוחד",
+   "when": "מסוף 2023; ניתוח 22.06.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.ejiltalk.org/israels-military-ad-hoc-court-for-october-7-abdicating-truth-and-justice/",
+     "outlet": "EJIL:Talk!",
+     "type": "press",
+     "date": "22.06.2026",
+     "quote": "authorities did not even allow visits by the ICRC"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "בלוג אקדמי בעל עמדה ביקורתית — לתייג בבירור. הקישור הברור ביותר בין פערי התיעוד לתוצאה משפטית",
+   "flags": [
+    "opinion-source",
+    "political"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S096",
+   "batch": "atrocity-doc",
+   "en": "UN Secretary-General recorded an Israeli interministerial documentation body but no access for independent UN verification",
+   "he": "דוח מזכ״ל האו״ם תיעד הקמת גוף תיעוד בין-משרדי ישראלי, אך ללא מתן גישה לגופי או״ם לאימות עצמאי",
+   "inst": "ממשלת ישראל — ועדה בין-משרדית / גופי האו״ם",
+   "when": "במהלך 2024; דוח 15.07.2025",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "accountability",
+   "sources": [
+    {
+     "url": "https://www.un.org/unispal/document/conflict-related-sexual-violence-report-of-the-secretary-general-s-2025-389/",
+     "outlet": "United Nations",
+     "type": "official",
+     "date": "15.07.2025",
+     "quote": "established an interministerial National Committee for Gender Violence focusing on the 7 October 2023 attacks, but did not grant access to relevant United Nations bodies to carry out fully fledged and independent investigations"
+    }
+   ],
+   "remedy": "הקמת הוועדה עצמה מוצגת כתגובה מוסדית; פער הגישה נותר",
+   "notes": "מסמך או״ם רשמי ומתוארך. פוליטי מאוד — לשקול היטב אם נכנס ל-MVP",
+   "flags": [
+    "political",
+    "sensitive"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S097",
+   "batch": "populations",
+   "en": "No siren warning and no shelter infrastructure in unrecognised Negev Bedouin villages",
+   "he": "לא הופעלו אזעקות ולא הייתה תשתית מיגון בכפרים הבדואים הלא-מוכרים בנגב",
+   "inst": "פיקוד העורף / משרד הביטחון / משרד הפנים",
+   "when": "7.10.2023",
+   "where": "הפזורה הבדואית בנגב",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.english.acri.org.il/post/the-absence-of-warning-and-shelter-systems-in-the-unrecognized-villages-in-the-negev",
+     "outlet": "האגודה לזכויות האזרח",
+     "type": "ngo",
+     "date": "13.10.2023",
+     "quote": "did not hear sirens prior to the missile strikes"
+    }
+   ],
+   "remedy": "האגודה דרשה פריסת אזעקות ומיגון; לא נמצאה התחייבות ממשלתית במקור",
+   "notes": "עתירה על אותו פער נדחתה בבג״ץ ב-2017 — הפער היה מתודיין ולא נסגר לפני 7.10",
+   "flags": [
+    "gap",
+    "sensitive-framing",
+    "strong"
+   ],
+   "cluster": "shelter",
+   "cluster_he": "מיגון ומקלוט"
+  },
+  {
+   "id": "S098",
+   "batch": "populations",
+   "en": "Post-attack mobile shelter distribution excluded Bedouin villages",
+   "he": "חלוקת מקלטים ניידים לאחר המתקפה לא כללה יישובים בדואים",
+   "inst": "ממשלת ישראל / פיקוד העורף",
+   "when": "7.10.2023 והימים שאחרי",
+   "where": "יישובים בדואים בנגב",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.nbcnews.com/news/world/arabs-living-israels-negev-desert-are-sitting-ducks-hamas-rcna120168",
+     "outlet": "NBC News",
+     "type": "press",
+     "date": "10.2023",
+     "quote": "lack rocket sirens, bomb shelters and cover from Israel's Iron Dome missile defense system"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "תאריך מדויק אינו מופיע בעמוד — לאמת. נושא רגיש פוליטית",
+   "flags": [
+    "needs-date",
+    "sensitive-framing"
+   ],
+   "cluster": "shelter",
+   "cluster_he": "מיגון ומקלוט"
+  },
+  {
+   "id": "S099",
+   "batch": "populations",
+   "en": "Comptroller: no standard shelters in the Bedouin dispersal; Arab localities hold 0.3% of public shelters",
+   "he": "מבקר המדינה: אין מיגון תקני בפזורה הבדואית, ומתוך 11,775 מקלטים ציבוריים רק 37 ביישובים ערביים",
+   "inst": "מבקר המדינה / משרד הביטחון",
+   "when": "מצב מ-7.10.2023; נתונים ל-01.2025",
+   "where": "הפזורה הבדואית; רשויות ערביות",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "A",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Pages/Reports/9561-4.aspx",
+     "outlet": "מבקר המדינה",
+     "type": "oversight",
+     "date": "01.2025",
+     "quote": "there are no standard shelters or emergency protection measures available"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "גוף ביקורת המאשר, אחרי 7.10, שהפער שזוהה ב-S097 לא נסגר. 8 מתוך 37 המקלטים אינם תקינים",
+   "flags": [
+    "strong",
+    "sensitive-framing"
+   ],
+   "cluster": "shelter",
+   "cluster_he": "מיגון ומקלוט"
+  },
+  {
+   "id": "S100",
+   "batch": "populations",
+   "en": "The national alert system had no language channel beyond Hebrew for ~20 months after 7 October",
+   "he": "מערך ההתרעה הלאומי לא כלל ערוץ שפה מלבד עברית במשך כ-20 חודשים אחרי 7 באוקטובר",
+   "inst": "פיקוד העורף — מערך ההתרעה הלאומי",
+   "when": "7.10.2023 עד 24.06.2025",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of+",
+   "sources": [
+    {
+     "url": "https://www.acri.org.il/post/_1238",
+     "outlet": "האגודה לזכויות האזרח",
+     "type": "ngo",
+     "date": "17.06.2025",
+     "quote": "מצופה ממערך ההתרעה הלאומי לפעול בהתאם לעקרון השוויון ולהבטיח את הזכות לביטחון, להגנה ולמידע באופן שווה"
+    }
+   ],
+   "remedy": "מ-24.06.2025 פיקוד העורף החל לשלוח התרעות בארבע שפות (עברית, אנגלית, ערבית, רוסית). ללא אמהרית",
+   "notes": "אות תיקון ברור ומתוארך — מועמד חזק לשלב 4 בסולם",
+   "flags": [
+    "remedy-signal",
+    "strong"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S101",
+   "batch": "populations",
+   "en": "No Israeli institution warned Thai and Nepali agricultural workers; survivors relied on employers",
+   "he": "אף גוף ישראלי לא הזהיר עובדים חקלאיים תאילנדים ונפאלים; הניצולים נסמכו על מעסיקים ומסתור מאולתר",
+   "inst": "היעדר גוף מיועד — רשות האוכלוסין / משרד החקלאות / פיקוד העורף",
+   "when": "בוקר 7.10.2023",
+   "where": "עלומים וחוות בעוטף",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "day-of",
+   "sources": [
+    {
+     "url": "https://www.timesofisrael.com/working-through-the-trauma-thai-farmhands-who-survived-oct-7-return-to-the-fields/",
+     "outlet": "Times of Israel",
+     "type": "press",
+     "date": "29.01.2025",
+     "quote": "climb out the window next to his bed and crawl into the nearby cowshed, where he hid under cow dung for 20 hours"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "ההוראות להסתתר הגיעו מחבר קיבוץ בטלפון, לא מערוץ מדינתי. משלים את S054",
+   "flags": [
+    "gap",
+    "strong"
+   ],
+   "cluster": "squads",
+   "cluster_he": "כיתות כוננות והגנה מרחבית"
+  },
+  {
+   "id": "S102",
+   "batch": "populations",
+   "en": "No state mechanism tracked or notified the status of foreign workers in the days after",
+   "he": "לא היה מנגנון ממלכתי למעקב ולעדכון על מצבם של עובדים זרים בימים שלאחר מכן",
+   "inst": "היעדר גוף מיועד לאיתור והודעה",
+   "when": "7–10.10.2023",
+   "where": "חוות בעוטף",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h",
+   "sources": [
+    {
+     "url": "https://www.thenation.com/article/world/the-invisible-lives-of-israels-thai-workforce/",
+     "outlet": "The Nation",
+     "type": "press",
+     "date": "13.05.2024",
+     "quote": "The casualty figures fluctuated wildly: At least one Thai laborer reported dead was actually alive"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "The Nation הוא כתב עת בעל עמדה — נדרש מקור מקביל. אב אחד למד שבנו חי מתמונה שפרסם חמאס",
+   "flags": [
+    "needs-corroboration"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S103",
+   "batch": "populations",
+   "en": "No Israeli body served as point of contact for foreign workers' families; researchers and the home government filled it",
+   "he": "אף גוף ישראלי לא שימש איש קשר למשפחות העובדים הזרים; את התפקיד מילאו חוקרים עצמאיים וממשלת המוצא",
+   "inst": "היעדר גוף קישור ישראלי",
+   "when": "7.10.2023 והשבועות שאחרי",
+   "where": "systemic",
+   "parent": "p6",
+   "dedupe": "NEW",
+   "tier": "B",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.npr.org/2023/11/09/1211191682/thailand-israel-hamas-attack-hostages-farm-workers",
+     "outlet": "NPR",
+     "type": "press",
+     "date": "09.11.2023",
+     "quote": "I'm often the first person to speak to them"
+    }
+   ],
+   "remedy": "תאילנד ארגנה בעצמה פינוי של כ-7,500 עובדים ופעלה ישירות לשחרור חטופים",
+   "notes": "מקור זר. מדגים כי פונקציה מדינתית מולאה בידי ממשלה זרה",
+   "flags": [
+    "gap"
+   ],
+   "cluster": "alerts",
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+  },
+  {
+   "id": "S104",
+   "batch": "populations",
+   "en": "No local-authority register identified residents with disabilities needing evacuation assistance",
+   "he": "לא היה מרשם ברמת הרשות המקומית של תושבים עם מוגבלות הזקוקים לסיוע בפינוי",
+   "inst": "רשויות מקומיות / משרד הביטחון",
+   "when": "7.10.2023, מצב לא פתור",
+   "where": "systemic",
+   "parent": "p8",
+   "dedupe": "MERGE S033",
+   "tier": "C",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://aisrael.org/en/israels-deadly-neglect-disability-rights-ignored-in-emergency-plans-opinion-yuval-wagner/",
+     "outlet": "נגישות ישראל",
+     "type": "ngo",
+     "date": "15.03.2026",
+     "quote": "Every local authority should build and maintain a database of residents with disabilities and their needs"
+    }
+   ],
+   "remedy": "none found — הציטוט הוא קריאה למרשם שאינו קיים",
+   "notes": "מאמר דעה מ-2026. חופף ל-S033 שמבוסס על מבקר המדינה — לאחד",
+   "flags": [
+    "opinion-source",
+    "merge-candidate"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S105",
+   "batch": "populations",
+   "en": "A 2005 statutory duty to prepare disability-inclusive emergency regulations was never implemented",
+   "he": "חובה סטטוטורית מ-2005 להכין תקנות חירום נגישות מעולם לא יושמה; רשת מתנדבים מילאה את החלל מ-7.10",
+   "inst": "משרד הביטחון — חובה לפי פרק הנגישות",
+   "when": "חובה מ-2005; פער התממש מ-7.10.2023",
+   "where": "systemic",
+   "parent": "p8",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "pre-existing",
+   "sources": [
+    {
+     "url": "https://aisrael.org/en/israels-deadly-neglect-disability-rights-ignored-in-emergency-plans-opinion-yuval-wagner/",
+     "outlet": "נגישות ישראל",
+     "type": "ngo",
+     "date": "15.03.2026",
+     "quote": "In 2005, the Knesset passed the accessibility chapter...requiring the Defense Ministry to prepare regulations for emergency preparedness...Those regulations were never meaningfully implemented"
+    }
+   ],
+   "remedy": "יוזמת ״האפוד הסגול״ החלה ב-7.10.2023 — תחליף אזרחי, לא תיקון ממשלתי",
+   "notes": "עובדת החובה החוקית ניתנת לאימות במקור ראשוני — כדאי לאמת בחקיקה עצמה",
+   "flags": [
+    "opinion-source",
+    "needs-primary"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S106",
+   "batch": "populations",
+   "en": "Bedouin residents employed by evacuated communities lost livelihoods with no distinct support mechanism",
+   "he": "תושבים בדואים שהועסקו ביישובים שפונו איבדו את פרנסתם ללא מנגנון תמיכה ייעודי מתועד",
+   "inst": "היעדר ערוץ פיצוי ייעודי",
+   "when": "7.10.2023 והשבועות שאחרי",
+   "where": "יישובי העוטף ויישובי הנגב",
+   "parent": "p8",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.972mag.com/bedouin-citizens-negev-october-7/",
+     "outlet": "+972 Magazine",
+     "type": "press",
+     "date": "06.12.2023",
+     "quote": "many Naqab Bedouin previously made a living working in communities that have been evacuated due to their proximity to Gaza"
+    }
+   ],
+   "remedy": "none found",
+   "notes": "+972 הוא כתב עת בעל עמדה פוליטית מובהקת — נדרש מקור ישראלי מקביל לפני שימוש. הציטוט אומת ב-4.9.2026",
+   "flags": [
+    "political",
+    "weak-source"
+   ],
+   "cluster": "evacuation",
+   "cluster_he": "פינוי, קליטה ורווחה"
+  },
+  {
+   "id": "S107",
+   "batch": "digital-record",
+   "en": "A military unit collected community security-camera footage and returned it altered, residents say",
+   "he": "יחידה צבאית אספה תיעוד ממצלמות אבטחה קהילתיות והחזירה אותו כשהוא ערוך, לטענת התושבים",
+   "inst": "זרוע היבשה — יחידת מילואים / מטה החטופים / דובר צה״ל",
+   "when": "איסוף מ-09.10.2023; טענות דווחו 05.2026",
+   "where": "בארי ויישובי עוטף",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://www.israelhayom.com/2026/05/13/gaza-border-residents-say-idf-deleted-parts-of-their-oct-7-security-footage",
+     "outlet": "Israel Hayom",
+     "type": "press",
+     "date": "13.05.2026",
+     "quote": "the materials had been tampered with and were returned with deletions"
+    }
+   ],
+   "remedy": "none found; המקור עצמו מציין שלא הצליח לאמת את הטענה באופן עצמאי",
+   "notes": "טענה בלתי מאומתת גם לפי המפרסם. אין להשתמש ללא אימות נוסף. הקשר לטענות S073",
+   "flags": [
+    "unverified",
+    "contested",
+    "political"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  },
+  {
+   "id": "S108",
+   "batch": "digital-record",
+   "en": "Confiscated phones, cameras and footage remain in state custody, return withheld citing open investigations",
+   "he": "טלפונים, מצלמות ותיעוד שהוחרמו נותרים בידי המדינה, וההשבה נמנעת בנימוק של חקירות פתוחות",
+   "inst": "משטרת ישראל — להב 433 / שב״כ / צה״ל",
+   "when": "איסוף מ-7–9.10.2023; מצב מדווח 06.2026",
+   "where": "systemic",
+   "parent": "p7",
+   "dedupe": "NEW",
+   "tier": "C",
+   "scope": "72h+",
+   "sources": [
+    {
+     "url": "https://scheerpost.com/2026/06/01/israeli-authorities-refuse-to-return-massive-trove-of-oct-7-video-what-are-they-hiding/",
+     "outlet": "ScheerPost (מצטט ערוץ 13)",
+     "type": "press",
+     "date": "01.06.2026",
+     "quote": "They disconnected what was needed, took it and moved on – that was the last time we saw the materials"
+    }
+   ],
+   "remedy": "צה״ל מכחיש עיכוב מכוון ומוסר שהוא ״בשלבים אחרונים של גיבוש מדיניות״ להשבת חומרים",
+   "notes": "ScheerPost הוא אתר עמדה; המקור הראשוני (ערוץ 13) לא אותר ישירות. לא לשימוש ללא המקור הישראלי",
+   "flags": [
+    "weak-source",
+    "needs-primary",
+    "political"
+   ],
+   "cluster": "documentation",
+   "cluster_he": "תיעוד, זיהוי וראיות"
+  }
+ ],
+ "verified_spotcheck": "5 מקורות נבדקו מחדש ידנית ב-4.9.2026: מבקר המדינה 30.6.2026, ToI שדרות, או״ם OSRSG, כאן בג״ץ, 972mag. שני ציטוטים תוקנו (S081, S106)."
+}
