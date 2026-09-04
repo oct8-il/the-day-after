@@ -8,15 +8,18 @@ import type { ParentCell } from '@/lib/home';
 /**
  * The failure matrix: who failed x when, and the tray that opens inside it.
  *
- * The tray is a full-width row of the same grid, inserted directly beneath the
- * row of tiles it belongs to, with a notch pointing at the tile that opened it.
- * That is the whole idea: the grid opens rather than pushing a separate panel
- * to the bottom of the page, so the answer arrives where the reader's eye
- * already is - and on a phone, where the grid stacks, right under the tile they
- * tapped.
+ * The DOM is grouped by WHO - domain first, then the phases within it. That is
+ * the order a phone reads, because a single column cannot show two dimensions
+ * at once and "which part of the state failed" is the one worth keeping; the
+ * phase survives as a label on each tile rather than as a heading. On a wide
+ * screen the same elements are placed explicitly into the grid by the --col and
+ * --row custom properties below, so the desktop still reads as a table with
+ * domains across and phases down. One DOM, two readings, no duplicated markup.
  *
- * The open failure lives in the URL hash, so a tray can be linked to and the
- * back button closes it, as #/parent/<id> did in the prototype.
+ * The tray is a full-width row of that same grid, inserted directly beneath the
+ * row of tiles it belongs to, with a notch pointing at the tile that opened it.
+ * On desktop the rows below it are pushed down a line to make room; on a phone
+ * it simply follows the tile that was tapped.
  */
 export function Matrix({
   domains, phases, cells,
@@ -46,8 +49,6 @@ export function Matrix({
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
-    // Anywhere outside the tray or a tile closes it. A reader who has finished
-    // with a failure should not have to find a small x to say so.
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       if (t.closest('.drawer') || t.closest('.tile')) return;
@@ -61,8 +62,6 @@ export function Matrix({
     };
   }, [open]);
 
-  // Keep the tray in view when it opens below the fold - on a phone the grid is
-  // a tall single column and the tray can otherwise open off-screen.
   useEffect(() => {
     if (!open || !trayRef.current) return;
     const r = trayRef.current.getBoundingClientRect();
@@ -73,70 +72,110 @@ export function Matrix({
 
   const all = Object.values(cells).flat();
   const current = all.find((p) => p.id === open) ?? null;
-  const openPhase = current
-    ? Object.entries(cells).find(([, list]) => list.some((p) => p.id === current.id))?.[0].split('/')[1]
+  const openKey = current
+    ? Object.entries(cells).find(([, list]) => list.some((p) => p.id === current.id))?.[0]
     : null;
-  const openDomain = current
-    ? Object.entries(cells).find(([, list]) => list.some((p) => p.id === current.id))?.[0].split('/')[0]
-    : null;
+  const [openDomain, openPhase] = openKey ? openKey.split('/') : [null, null];
+  const openPhaseIndex = openPhase ? phases.findIndex((p) => p.id === openPhase) : -1;
+
+  /** Desktop rows shift down by one below the tray, to make room for it. */
+  const rowOf = (phaseIndex: number) =>
+    phaseIndex + 2 + (openPhaseIndex >= 0 && phaseIndex > openPhaseIndex ? 1 : 0);
 
   return (
     <div className="matrix" id="matrix">
-      <div />
-      {domains.map((d) => <div className="colh" key={d.id}>{d.he}</div>)}
+      {/* Phase names, down the side. Placed explicitly; on a phone they give way
+          to the label each tile carries. */}
+      {phases.map((ph, pi) => (
+        <div className="rowh" key={ph.id} style={{ ['--col' as string]: 1, ['--row' as string]: rowOf(pi) }}>
+          {ph.he}
+        </div>
+      ))}
 
-      {phases.map((ph) => (
-        <Fragment key={ph.id}>
-          <div className="rowh">{ph.he}</div>
-          {domains.map((d) => {
+      {domains.map((d, di) => (
+        <Fragment key={d.id}>
+          <div className="colh" style={{ ['--col' as string]: di + 2, ['--row' as string]: 1 }}>
+            {d.he}
+          </div>
+
+          {phases.map((ph, pi) => {
             const list = cells[`${d.id}/${ph.id}`] ?? [];
-            if (!list.length) return <div className="cell empty" key={d.id}>·</div>;
+            const place = { ['--col' as string]: di + 2, ['--row' as string]: rowOf(pi) };
+            if (!list.length) return <div className="cell empty" key={ph.id} style={place}>·</div>;
             return (
-              <div className="cell" key={d.id}>
-                {list.map((p) => (
-                  <a
-                    className={`tile${open === p.id ? ' on' : ''}`}
-                    key={p.id}
-                    href={`#${p.id}`}
-                    aria-expanded={open === p.id}
-                    aria-controls="drawer"
-                    style={{ ['--c' as string]: p.color }}
+              <Fragment key={ph.id}>
+                <div className="cell" style={place}>
+                  {list.map((p) => (
+                    <Tile
+                      key={p.id}
+                      parent={p}
+                      phase={ph.he}
+                      isOpen={open === p.id}
+                      onToggle={close}
+                    />
+                  ))}
+                </div>
+
+                {current && openDomain === d.id && openPhase === ph.id && (
+                  <div
+                    className="drawer"
+                    id="drawer"
+                    ref={trayRef}
+                    style={{
+                      ['--c' as string]: current.color,
+                      ['--row' as string]: openPhaseIndex + 3,
+                    }}
                   >
-                    <div className="ico"><Icon name={p.icon} /></div>
-                    <div className="lab">{p.short}</div>
-                    <div className="foot">
-                      <div className="score" title="חלוקת האירועים לפי שלב">
-                        {p.distribution.map((d2) => (
-                          <span key={d2.stage} style={{ width: `${d2.share}%`, background: d2.color }} />
-                        ))}
-                      </div>
-                      <div className="st num">{p.implemented} מ־{p.count} יושמו</div>
+                    <div className="notchrow" aria-hidden="true">
+                      <div />
+                      {domains.map((x) => (
+                        <div key={x.id}>{x.id === openDomain && <i className="notch" />}</div>
+                      ))}
                     </div>
-                  </a>
-                ))}
-              </div>
+                    <Tray parent={current} onClose={close} />
+                  </div>
+                )}
+              </Fragment>
             );
           })}
-
-          {current && openPhase === ph.id && (
-            <div
-              className="drawer"
-              id="drawer"
-              ref={trayRef}
-              style={{ ['--c' as string]: current.color }}
-            >
-              <div className="notchrow" aria-hidden="true">
-                <div />
-                {domains.map((d) => (
-                  <div key={d.id}>{d.id === openDomain && <i className="notch" />}</div>
-                ))}
-              </div>
-              <Tray parent={current} onClose={close} />
-            </div>
-          )}
         </Fragment>
       ))}
     </div>
+  );
+}
+
+function Tile({
+  parent, phase, isOpen, onToggle,
+}: {
+  parent: ParentCell; phase: string; isOpen: boolean; onToggle: () => void;
+}) {
+  return (
+    <a
+      className={`tile${isOpen ? ' on' : ''}`}
+      href={`#${parent.id}`}
+      aria-expanded={isOpen}
+      aria-controls="drawer"
+      style={{ ['--c' as string]: parent.color }}
+      onClick={(e) => {
+        // Pressing the open failure again closes it. Anything else would leave
+        // the only way out of a tray being to find some neutral pixel, which on
+        // a phone there may not be.
+        if (isOpen) { e.preventDefault(); onToggle(); }
+      }}
+    >
+      {/* The other half of the matrix, for a screen too narrow to draw it. */}
+      <span className="when">{phase}</span>
+      <div className="ico"><Icon name={parent.icon} /></div>
+      <div className="lab">{parent.short}</div>
+      <div className="foot">
+        <div className="score" title="חלוקת האירועים לפי שלב">
+          {parent.distribution.map((d) => (
+            <span key={d.stage} style={{ width: `${d.share}%`, background: d.color }} />
+          ))}
+        </div>
+        <div className="st num">{parent.implemented} מ־{parent.count} יושמו</div>
+      </div>
+    </a>
   );
 }
 

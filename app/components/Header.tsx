@@ -6,7 +6,17 @@ import { hasUnsourcedData } from '@/lib/data';
  * present but inert until Phase 5: the launch build has no accounts, and a
  * button that does nothing is still the honest shape of the page it will be.
  */
-export function Header({ current }: { current?: 'home' | 'gap' | 'about' }) {
+export function Header({
+  current, compact = false,
+}: {
+  current?: 'home' | 'gap' | 'about';
+  /**
+   * Inside a failure. On a phone the site's own navigation is noise there - the
+   * reader arrived from the map and the way back is the name in the corner - so
+   * it is hidden below 760px. On a desktop there is room and it stays.
+   */
+  compact?: boolean;
+}) {
   return (
     <>
       {hasUnsourcedData && (
@@ -14,7 +24,7 @@ export function Header({ current }: { current?: 'home' | 'gap' | 'about' }) {
           בנייה · חלק מהכשלים בבנייה זו <b>עדיין לא קושרו למקורות</b> ואינם מתפרסמים
         </div>
       )}
-      <header className="top">
+      <header className={`top${compact ? ' compact' : ''}`}>
         {/* The name is the way home, as it is on every site a reader has used. */}
         <Link className="brand" href="/">
           <span className="name">היום שאחרי</span>

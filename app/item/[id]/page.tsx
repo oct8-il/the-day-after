@@ -70,7 +70,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
 
   return (
     <>
-      <Header />
+      <Header compact />
 
       {/* ---------- docked failure header and chapter rail ---------- */}
       <div className="dock" id="dock">
@@ -337,7 +337,7 @@ function Ledger({ inc }: { inc: Incident }) {
 function NothingPublished() {
   return (
     <>
-      <Header />
+      <Header compact />
       <div className="wrap">
         <section className="view active">
           <div className="pagehead">

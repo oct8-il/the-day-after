@@ -788,3 +788,55 @@
     .gapsoon{font-size:24px}
     .gapsoon.sub{font-size:19px}
   }
+
+  /* =====================================================================
+     Two dimensions on one column.
+
+     The matrix's DOM is grouped by domain, because that is the order a phone
+     must read it in. Above 760px the same elements are placed back into the
+     table by the --col/--row properties each one carries, so the desktop keeps
+     domains across and phases down.
+     ===================================================================== */
+  @media (min-width:761px){
+    .matrix > .rowh,.matrix > .colh,.matrix > .cell{
+      grid-column:var(--col);grid-row:var(--row)}
+    .matrix > .drawer{grid-row:var(--row)}
+    .tile .when{display:none}
+  }
+
+  @media (max-width:760px){
+    /* Phase names down the side have nowhere to go; each tile carries its own
+       instead, so a reader still knows whether they are looking at a failure
+       from before the attack, during it, or after. */
+    .matrix > .rowh{display:none}
+    .matrix > .colh{display:block;font-size:12.5px;letter-spacing:.06em;
+      color:var(--text-2);padding:16px 0 2px;text-align:start;
+      border-block-end:1px solid var(--line-soft);margin-block-end:2px}
+    .matrix > .colh:first-of-type{padding-top:2px}
+    /* The cell's own box is redundant once the domain heading is doing the
+       grouping - it left a hole beside any phase with a single failure. The
+       tiles sit straight under the heading and stretch to fill the line. */
+    .matrix > .cell{border:0;background:transparent;padding:0;
+      display:flex;flex-wrap:wrap;gap:10px;min-height:0}
+    .matrix > .cell > .tile{flex:1 1 44%}
+    /* My display:flex above outranked the older .cell.empty rule, which put a
+       stray middot back under two of the domain headings. */
+    .matrix > .cell.empty{display:none}
+    .tile{padding-top:26px}
+    .tile .when{position:absolute;inset-block-start:8px;inset-inline-start:10px;
+      font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--muted)}
+
+    /* The strip: four rubrics into a phone without a hole in it. Days and
+       failures share a line, the ladder takes its own, and the contested count
+       reads as a sentence rather than as a stat block with an empty half
+       beside it. */
+    .strip .gap{grid-column:1/-1}
+    .strip .gap .data{justify-content:flex-start}
+    .strip .gap .v{display:flex;align-items:baseline;gap:10px;text-align:start;font-size:26px}
+    .strip .gap .v small{display:inline;margin:0;line-height:1.35}
+    .strip>div{padding:12px 14px}
+
+    /* Inside a failure, the site's own navigation is noise: a reader arrived
+       from the map and the way back is the name in the corner. */
+    header.top.compact nav.main,header.top.compact .signin{display:none}
+  }
