@@ -184,7 +184,10 @@
      the title and the stage chip; until voting ships there is nothing to put
      there, so the chip sits right after the title instead of stranded past
      an empty track. Restore the 140px column when that summary returns. */
-  .kids .row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:15px}
+  /* .row is a real <a> now (it wasn't in the prototype, which used a
+     plain clickable div) - without this it inherits the site-wide
+     a{color:var(--accent)} and the incident title reads as a link. */
+  .kids .row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:15px;color:inherit}
   .kids .row:last-child{border-bottom:0}
   .kids .row:hover{background:var(--surface-2)}
   .kids .row .pl{color:var(--muted);font-size:13px;margin-inline-start:8px}
@@ -238,14 +241,32 @@
   .aisum p{margin:0 0 6px;font-size:14.5px;color:var(--text-2)}
   .aisum sup a{font-size:11px;color:var(--accent);margin-inline-start:2px}
   .ledger{list-style:none;margin:0;padding:0}
-  .ledger li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px;align-items:start}
+  .ledger li{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px;align-items:start}
   .ledger li:last-child{border-bottom:0}
   .ledger .st{font-weight:700;color:var(--c);white-space:nowrap;min-width:64px}
   .ledger .src{color:var(--text)} .ledger .src small{display:block;color:var(--muted);font-size:12.5px}
   .ledger .dt{color:var(--muted);white-space:nowrap}
   .ledger li.contest{background:linear-gradient(90deg,transparent,var(--accent-soft));margin:0 -8px;padding:9px 8px}
-  .ledger li.flash{animation:citeflash 1.6s ease}
-  @keyframes citeflash{0%,100%{background:transparent}15%{background:var(--accent-soft)}}
+  /* A citation click flashes its claim: a held background tint, a left
+     accent bar, and a small badge echoing the footnote number that was
+     clicked ("מקור 1") - a colour change alone was too easy to miss. */
+  .ledger li.flash{animation:citeflash 2.8s ease;margin:0 -10px;padding-inline:10px;border-radius:4px}
+  .ledger li.flash::before{
+    content:"מקור " attr(data-cite-num);position:absolute;top:-10px;inset-inline-end:6px;
+    background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;
+    padding:2px 9px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);
+    animation:citebadge 2.8s ease;pointer-events:none;
+  }
+  @keyframes citeflash{
+    0%{background:transparent;box-shadow:inset 3px 0 0 transparent}
+    8%,55%{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+    100%{background:transparent;box-shadow:inset 3px 0 0 transparent}
+  }
+  @keyframes citebadge{
+    0%,100%{opacity:0;transform:translateY(4px) scale(.9)}
+    10%,60%{opacity:1;transform:translateY(0) scale(1)}
+    85%{opacity:0;transform:translateY(0) scale(1)}
+  }
   details.trace{border:1px solid var(--line-soft);margin-top:10px}
   details.trace summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:14px;color:var(--s5);list-style:none;display:flex;justify-content:space-between}
   details.trace summary::after{content:"+";color:var(--muted)} details.trace[open] summary::after{content:"−"}
