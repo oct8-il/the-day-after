@@ -102,7 +102,13 @@ export function EvidenceMap({ pins }: { pins: Pin[] }) {
                 </circle>
               );
             })}
-            <text x={p.labelLeft ? x - 12 : x + 12} y={y + 4} textAnchor={p.labelLeft ? 'end' : 'start'}>
+            {/* Clear the pin - a place with several sources draws them in a
+                ring, and on a phone the dots are bigger than on a desktop. */}
+            <text
+              x={p.labelLeft ? x - (arr.length > 1 ? 22 : 14) : x + (arr.length > 1 ? 22 : 14)}
+              y={y + 4}
+              textAnchor={p.labelLeft ? 'end' : 'start'}
+            >
               {p.he}{arr.length > 1 ? ` · ${arr.length}` : ''}
             </text>
           </g>

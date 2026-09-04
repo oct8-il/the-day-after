@@ -738,3 +738,53 @@
   }
   a.brand{color:inherit}
   a.brand:hover .name{color:var(--accent)}
+
+  /* =====================================================================
+     Mobile pass.
+
+     The audience is the Israeli public and the launch is a social one, so
+     almost everyone meets this site on a phone. Three things were wrong there
+     and nowhere else: controls too small to hit, metadata too small to read,
+     and SVG text scaled into illegibility.
+     ===================================================================== */
+  @media (max-width:760px){
+
+    /* --- controls a thumb can actually hit (44px) --------------------- */
+    nav.main a,nav.main button{min-height:44px;display:flex;align-items:center}
+    .signin{min-height:44px}
+    a.brand{min-height:44px;align-items:center}
+    .drawer .close{width:44px;height:44px}
+    .dock .bk{min-width:44px;min-height:44px;display:grid;place-items:center}
+
+    /* Links inside prose stay in the line, but their hit area does not have
+       to: negative margins let the target grow without moving the text. */
+    .ev .src small a,.ledger .src small a,.crumb a,.trace summary,.actions a,
+    .panel a,.intro-prose a,.method .prose a,.soon a,.kids.empty a{
+      display:inline-block;padding-block:11px;margin-block:-9px}
+    .aisum sup a{display:inline-block;padding:7px 5px;margin:-7px -3px}
+
+    /* --- metadata you can read at arm's length ------------------------ */
+    .chip{font-size:12.5px}
+    .kids .row .tx small{font-size:13px}
+    .tile .foot .st{font-size:12px}
+    .closeband h4{font-size:12.5px}
+    .ev .src small,.ledger .src small{font-size:12.5px}
+    /* The small labels that title a block or a chapter. They are meant to be
+       quiet, not unreadable, and 11.5px of Hebrew at arm's length is the
+       latter. */
+    .block>.bh,.bh span,.aisum .lbl span,.eyebrow .kk,.eyebrow .side,
+    .clip .by,.clip .kick span{font-size:12.5px}
+
+    /* --- SVG text is in viewBox units, so a 640-wide chart drawn at 340
+           renders 9px type at under 5. Scale the type, not the drawing, and
+           drop the context town names - the pins are the point, and the dots
+           still give the geography. ---------------------------------------- */
+    .placelabel{display:none}
+    .pin text{font-size:19px}
+    .maplabel{font-size:22px}
+    .pin circle.core{r:9px}
+    .gap .lbl{font-size:19px}
+    .gap .zonelbl{font-size:21px}
+    .gapsoon{font-size:24px}
+    .gapsoon.sub{font-size:19px}
+  }
