@@ -61,8 +61,16 @@ fails on every other machine forever, because fonts rasterise differently.
   Production, Preview or Development, and nothing that can drift out of sync
   with the branch model. `prod` is the only environment without a ribbon and
   the only one search engines are allowed to index.
-- **Domains**: apex on `prod`, `staging.` and `dev.` on their branches — once
-  the domain exists.
+- **Domains** (`oct8.co.il`, registered 3 Sep 2026 through internic.co.il):
+  `oct8.co.il` on `prod`, `staging.oct8.co.il` on `staging`,
+  `dev.oct8.co.il` on `dev`. Add `www.oct8.co.il` too and let Vercel redirect
+  it to the apex.
+
+  The nameservers are sitesdepot's, so the records go in **sitesdepot's DNS
+  panel**, not at internic. Add only the hosts above — an A record for the
+  apex and CNAMEs for the three subdomains, using the exact values Vercel's
+  Domains screen shows. Do not replace the zone wholesale: the Google
+  Workspace MX records live there and mail stops the moment they go.
 
 Framework preset and build command need no changes; the project is a plain
 Next.js static export.

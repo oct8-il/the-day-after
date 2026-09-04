@@ -1,10 +1,25 @@
 import type { Metadata } from 'next';
 import { ENV, IS_PROD } from './env';
+import { SITE_NAME, SITE_URL } from './site';
 import './globals.css';
 
+const DESCRIPTION =
+  'מעקב אחר הכשלים של השבעה באוקטובר ואחר תיקונם — מקורות מתועדים, שלב אחר שלב.';
+
 export const metadata: Metadata = {
-  title: 'היום שאחרי',
-  description: 'מעקב אחר הכשלים של השבעה באוקטובר ואחר תיקונם — מקורות מתועדים, שלב אחר שלב.',
+  // Every relative URL below - and every share image - resolves against this.
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: DESCRIPTION,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    locale: 'he_IL',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: DESCRIPTION,
+    url: '/',
+  },
   robots: IS_PROD ? undefined : { index: false, follow: false },
 };
 
