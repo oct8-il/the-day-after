@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import {
-  byId, parentById, placeById, childrenOf, visibleIncidents,
+  parentById, placeById, childrenOf, visibleIncidents,
   stageOf, isContested, stageMeta, TYPES, QUESTIONS,
   type Claim, type Incident,
 } from '@/lib/data';
@@ -13,14 +12,26 @@ import { SourceLink } from '@/app/components/SourceLink';
 
 export const dynamicParams = false;
 
+/**
+ * A static export refuses to build a dynamic route that generates no pages, and
+ * "nothing is published yet" is a real state of this site - staging and prod
+ * exist before the ledger does. So when there is nothing to show, the route
+ * generates one page saying exactly that. It is unlinked and noindexed, and it
+ * disappears the moment the first incident is published.
+ */
+const EMPTY = 'none';
+
 export function generateStaticParams() {
-  return visibleIncidents.map((i) => ({ id: i.id }));
+  const ids = visibleIncidents.map((i) => ({ id: i.id }));
+  return ids.length ? ids : [{ id: EMPTY }];
 }
+
+const visible = (id: string) => visibleIncidents.find((i) => i.id === id);
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const inc = byId(id);
-  if (!inc) return {};
+  const inc = visible(id);
+  if (!inc) return { title: 'אין עדיין כשלים שפורסמו', robots: { index: false, follow: false } };
   const st = stageOf(inc);
   return {
     title: inc.he,
@@ -36,8 +47,8 @@ const placeNames = (claims: Claim[]) => [
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const inc = byId(id);
-  if (!inc) notFound();
+  const inc = visible(id);
+  if (!inc) return <NothingPublished />;
 
   const parent = parentById(inc.parent)!;
   const st = stageOf(inc);
@@ -294,5 +305,29 @@ function Ledger({ inc }: { inc: Incident }) {
         </ul>
       </div>
     </details>
+  );
+}
+
+
+/** The item route's empty state: this environment has nothing published yet. */
+function NothingPublished() {
+  return (
+    <>
+      <Header />
+      <div className="wrap">
+        <section className="view active">
+          <div className="pagehead">
+            <h2>אין עדיין כשלים שפורסמו</h2>
+            <span className="sub">הפנקס נבנה. כשל מופיע כאן רק אחרי שכל טענה בו קושרה למקור.</span>
+          </div>
+          <div className="soon">
+            <p>
+              אפשר לחזור ל<Link href="/">מפת הכשלים</Link> או לקרוא על השיטה
+              ב<Link href="/about/">עמוד הפרויקט</Link>.
+            </p>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

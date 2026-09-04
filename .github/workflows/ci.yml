@@ -133,10 +133,12 @@ jobs:
         with: { name: site, path: out }
       - name: serve the exported site
         run: npm start & npx wait-on http://localhost:4173 -t 30000
-      - name: Lighthouse, mobile, item page
+      # The home page, not an item page: which items exist depends on what is
+      # published, so naming one here would fail the moment it is not.
+      - name: Lighthouse, mobile
         uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: http://localhost:4173/item/i13/
+          urls: http://localhost:4173/
           configPath: ./.github/lighthouse.json
           uploadArtifacts: true
 
