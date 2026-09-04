@@ -55,10 +55,14 @@
   .brand .name{font-family:"Frank Ruhl Libre",serif;font-size:24px;font-weight:500;color:var(--text)}
   .brand .tag{font-size:12.5px;color:var(--muted)}
   nav.main{display:flex;gap:4px}
+  nav.main a,
   nav.main button{padding:6px 12px;border-radius:4px;color:var(--text-2);font-weight:600;font-size:15px}
+  nav.main a[aria-current="page"],
   nav.main button[aria-current="page"]{background:var(--surface-2);color:var(--text)}
   nav.main .navsep{width:1px;background:var(--line);margin:6px 6px}
+  nav.main a.sec,
   nav.main button.sec{font-weight:500;font-size:13.5px;color:var(--muted)}
+  nav.main a.sec[aria-current="page"],
   nav.main button.sec[aria-current="page"]{color:var(--text-2);background:transparent;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:6px}
 
   /* ===== first-visit opening sequence on הכשלים ===== */
@@ -286,11 +290,14 @@
   .chapters .ch .num{color:var(--text)}
 
   .siblings{list-style:none;margin:0;padding:0;font-size:14.5px}
-  .siblings li{padding:8px 0;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:10px;cursor:pointer}
+  .siblings li{border-bottom:1px solid var(--line-soft)}
+  .siblings li>a{padding:8px 0;display:flex;justify-content:space-between;gap:10px;cursor:pointer;color:inherit}
   .siblings li:last-child{border-bottom:0}
   .siblings li:hover .t{color:var(--accent)}
   .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .actions a,
   .actions button{border:1px solid var(--line);padding:7px 12px;border-radius:4px;font-size:14px;color:var(--text-2)}
+  .actions a:hover,
   .actions button:hover{color:var(--text);border-color:var(--muted)}
 
   /* gap */
@@ -619,3 +626,12 @@
     font-size:10.5px;font-weight:700;color:var(--c);border:1px solid var(--c)}
   .docksub .nm{font-weight:600}
   @media (max-width:1279px){ .dock.on .docksub{display:flex} }
+
+  /* ---- chapter 3 before the vote opens (Phase 5) ---- */
+  .soon{border:1px dashed var(--line);border-radius:6px;background:var(--surface);
+    padding:18px 20px;margin-top:14px}
+  .soon p{margin:0;font-size:15px;line-height:1.75;color:var(--text-2);max-width:62ch}
+  .soon p.small{margin-top:8px;font-size:12.5px;color:var(--muted)}
+
+  /* ---- a claim whose source link has not been filled in (dev only) ---- */
+  .nolink{color:var(--muted);font-style:italic}

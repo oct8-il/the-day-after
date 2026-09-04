@@ -17,7 +17,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Incident, Parent, Place, Taxonomy, INDEPENDENT_TYPES } from '../data/schema/index.ts';
-import { stageOf, hasIndependentVerification } from './compute-stage.ts';
+import { stageOf, hasIndependentVerification } from '../lib/stage.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(ROOT, 'data');
