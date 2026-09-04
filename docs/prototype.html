@@ -10,6 +10,7 @@
     --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43; --flag:#c9a45a;
     --t-official:#b3ada4; --t-oversight:#b9a6d6; --t-press:#d29a7c; --t-research:#d19ab4; --t-civil:#e2b1a0;
     --pro:#6fbf8a; --con:#d96a5f;
+    --paper:#e8e1d3; --paper-ink:#1f1c17; --paper-rule:#7a715f; --paper-muted:#5d564a;
     --land:#1b2027; --gaza:#262c34; --sea:#151b23; --road:#2f3740;
     color-scheme:dark;
   }
@@ -21,6 +22,7 @@
       --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
       --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
       --pro:#2f8f5b; --con:#c4483c;
+      --paper:#efe8d8; --paper-ink:#1f1c17; --paper-rule:#8a7f6a; --paper-muted:#6a6355;
       --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
       color-scheme:light;
     }
@@ -32,6 +34,7 @@
     --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
     --t-official:#8a8378; --t-oversight:#7d67a8; --t-press:#b0684a; --t-research:#b0668c; --t-civil:#c07a66;
     --pro:#2f8f5b; --con:#c4483c;
+    --paper:#efe8d8; --paper-ink:#1f1c17; --paper-rule:#8a7f6a; --paper-muted:#6a6355;
     --land:#ece8df; --gaza:#ddd7ca; --sea:#dfe6ea; --road:#cfc8bb;
     color-scheme:light;
   }
@@ -355,6 +358,13 @@
   .block{margin:22px 0 0}
   .block>.bh{font-size:11.5px;letter-spacing:.06em;font-weight:700;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between;gap:10px;align-items:baseline;border-bottom:1px solid var(--line-soft);padding-bottom:6px}
   .lead{font-size:17px;line-height:1.62;color:var(--text-2);max-width:64ch;margin:0}
+  /* the failure description, set like a passage lifted from a printed page */
+  .clip{background:var(--paper);color:var(--paper-ink);padding:16px 22px 20px;border-top:3px double var(--paper-rule);border-bottom:1px solid var(--paper-rule);margin:2px 0 0;max-width:72ch}
+  .clip .kick{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11.5px;letter-spacing:.06em;font-weight:600;color:var(--paper-muted);border-bottom:1px solid var(--paper-rule);padding-bottom:6px;margin-bottom:12px}
+  .clip p{font-family:"Frank Ruhl Libre",serif;font-size:17.5px;line-height:1.62;margin:0;text-align:justify;color:var(--paper-ink)}
+  .clip p::first-letter{font-size:2.6em;line-height:.85;float:right;margin:4px 0 0 8px;font-weight:700}
+  .clip .by{font-size:11.5px;color:var(--paper-muted);margin-top:10px;padding-top:6px;border-top:1px dotted var(--paper-rule)}
+  @media (max-width:640px){.clip{padding:14px 16px 16px}.clip p{font-size:16.5px;text-align:start}}
   .answerbox{background:var(--surface);border:1px solid var(--line);padding:16px 18px;margin-top:20px}
   .answerbox .ttl{font-size:11.5px;letter-spacing:.06em;font-weight:700;color:var(--muted);margin-bottom:10px}
   .closeband{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border:1px solid var(--line);background:var(--surface);margin-top:4px}
@@ -1218,6 +1228,10 @@ function buildOrientation(i,p,st,S){
 }
 let teardownOrient=null;
 
+function firstDocumented(i){
+  const ds=i.claims.filter(c=>c[0]===1).map(c=>c[3]).filter(Boolean).map(d=>{const m=d.match(/(\d{2})\.(\d{4})/);return m?[+m[2],+m[1],d]:[parseInt(d,10)||9999,13,d];});
+  if(!ds.length)return '—';ds.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);return ds[0][2];
+}
 function renderItem(id){
   const i=INCIDENTS.find(x=>x.id===id);if(!i)return;
   const p=PARENTS.find(x=>x.id===i.p),st=stageOf(i),S=STAGES[st],q=qOf(i),type=curType(i);
@@ -1240,7 +1254,10 @@ function renderItem(id){
   c1.append(el('div',{class:'eyebrow',html:`<span class="no">1</span><span class="kk">הבעיה</span><span class="side">${ev.length} מקורות מתעדים${places.length?' · '+places.length+' מוקדים':''}</span>`}),
     el('h3',{},'מה נכשל'),
     el('p',{class:'chaplead'},'מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.'),
-    el('p',{class:'lead'},i.sum));
+    el('div',{class:'clip'},
+      el('div',{class:'kick'},el('span',{},p.he),el('span',{class:'num'},'תועד לראשונה · '+firstDocumented(i))),
+      el('p',{},i.sum),
+      el('div',{class:'by'},'תיאור הכשל · נכתב על ידי העורך מתוך המקורות המתועדים למטה')));
   const evb=el('div',{class:'block'});
   evb.append(el('div',{class:'bh'},el('span',{},'העדויות שמתעדות את הכשל'),el('span',{class:'num'},`${ev.length} מתוך ${i.claims.length} טענות`)));
   evb.append(el('ul',{class:'ev'},...ev.map(c=>el('li',{style:`--c:${TYPES[c[1]].c}`},el('span',{class:'dot'}),
