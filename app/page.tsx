@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Header } from './components/Header';
 import { Matrix } from './components/Matrix';
 import { HomeIntro } from './components/HomeIntro';
@@ -38,8 +39,13 @@ export default function Home() {
               <div className="k">היכן הם עומדים לפי המקורות</div>
               <div className="data">
                 <div className="ladder6">
+                  {/* Fragments, not wrapper elements: .ladder6 is a grid whose
+                      end caps are :first-child and :nth-child(5), so the cells
+                      must be its real children. A wrapper - even one with
+                      display:contents - makes every cell the first child of its
+                      own box, and the five stages stop reading as one bar. */}
                   {strip.ladder.map((s) => (
-                    <span key={s.stage} style={{ display: 'contents' }}>
+                    <Fragment key={s.stage}>
                       {s.stage === 6 && <span className="div" />}
                       <div
                         className={`cell6${s.count ? '' : ' zero'}${s.stage === 6 ? ' exit' : ''}`}
@@ -49,7 +55,7 @@ export default function Home() {
                         <span className="c num">{s.count}</span>
                         <span className="l">{s.he}</span>
                       </div>
-                    </span>
+                    </Fragment>
                   ))}
                 </div>
               </div>
