@@ -73,6 +73,12 @@ export function buildMatrix(placeName: (id: string) => string | undefined): {
   const cells: Record<string, ParentCell[]> = {};
   for (const p of parents) {
     const kids = visibleIncidents.filter((i) => i.parent === p.id);
+    // A parent with nothing published under it is not a finding of "stage 1" -
+    // it is a category we have not filled yet, and a tile reading "0 מ־0 יושמו"
+    // would state a claim the ledger cannot support. It disappears from the
+    // matrix until an incident lands under it. On dev every incident is visible,
+    // so an empty cell there means the parent is genuinely empty.
+    if (!kids.length) continue;
     const stage = aggregate(kids);
     const counts = new Map<number, number>();
     for (const i of kids) counts.set(stageOf(i), (counts.get(stageOf(i)) ?? 0) + 1);
