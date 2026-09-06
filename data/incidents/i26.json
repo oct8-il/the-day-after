@@ -1,0 +1,57 @@
+{
+  "id": "i26",
+  "parent": "p4",
+  "he": "מלאי הדם היה מתחת לתקן עוד לפני המתקפה, ובצהרי 7 באוקטובר לא נותרו בסורוקה מנות דם מסוג O",
+  "summary": "בבוקר 7 באוקטובר החזיק בנק הדם של מד״א 534 מנות דם מסוג O במקום 750 הנדרשות. ההזמנה הראשונה של בתי החולים בדרום הגיעה אליהם רק אחרי יותר משלוש שעות, ובשעה 12:00 — אחרי שמאות פצועים כבר פונו — לא נותרו בבנק הדם של סורוקה מנות מסוג O. מבקר המדינה קבע שלא הייתה מערכת ממוחשבת שסיפקה תמונת מצב של מלאי הדם בכלל בתי החולים.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i26-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כאן חדשות — סיקור דוח המבקר על מלאי הדם",
+      "date": "12.05.2026",
+      "url": "https://www.kan.org.il/content/kan-news/local/1040393/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בבוקר 7 באוקטובר החזיק בנק הדם של מגן דוד אדום רק 534 מנות דם מסוג O, במקום 750 כנדרש"
+    },
+    {
+      "id": "i26-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור דוח המבקר על מלאי הדם",
+      "date": "12.05.2026",
+      "url": "https://www.ynet.co.il/health/article/bj008d3przg",
+      "archive_url": null,
+      "contests": null,
+      "place": "soroka",
+      "quote": "בשעה 12:00 של 7 באוקטובר, אחרי שמאות פצועים פונו לסורוקה, היו בבנק הדם של בית החולים אפס מנות דם מסוג O"
+    },
+    {
+      "id": "i26-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור דוח המבקר על מלאי הדם",
+      "date": "12.05.2026",
+      "url": "https://www.ynet.co.il/health/article/bj008d3przg",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "לפי המבקר, בתי החולים בדרום קיבלו ממד\"א את הזמנת הדם הראשונה ב-7 באוקטובר רק אחרי יותר משלוש שעות."
+    },
+    {
+      "id": "i26-c04",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כאן חדשות — סיקור דוח המבקר על מלאי הדם",
+      "date": "12.05.2026",
+      "url": "https://www.kan.org.il/content/kan-news/local/1040393/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "לא הייתה מערכת ממוחשבת שסיפקה תמונת מצב עדכנית של מלאי הדם בכלל בתי החולים עד שנה וחצי אחרי 7 באוקטובר"
+    }
+  ]
+}

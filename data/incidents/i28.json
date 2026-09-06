@@ -1,0 +1,33 @@
+{
+  "id": "i28",
+  "parent": "p4",
+  "he": "למד\"א היו 24 אמבולנסים ממוגני ירי מתוך 50 שנדרשו על פי ההמלצות",
+  "summary": "באוקטובר 2023 החזיקה מד״א 24 אמבולנסים ממוגני ירי, לעומת 50 שנדרשו על פי ההמלצות — פחות ממחצית. באותו יום צלצל הטלפון בקו החירום של מד״א כ-24 אלף פעמים.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i28-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "גלובס — סיקור דוח המבקר על פינוי הפצועים",
+      "date": "30.06.2026",
+      "url": "https://www.globes.co.il/news/article.aspx?did=1001547379",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "באוקטובר 2023 היו ברשות מד\"א 24 אמבולנסים ממוגני ירי, לעומת 50 שהיו דרושים על פי ההמלצות."
+    },
+    {
+      "id": "i28-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "גלובס — סיקור דוח המבקר על פינוי הפצועים",
+      "date": "30.06.2026",
+      "url": "https://www.globes.co.il/news/article.aspx?did=1001547379",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "24 אלף פעמים צלצל הטלפון בקו החירום של מד\"א ב-7.10."
+    }
+  ]
+}

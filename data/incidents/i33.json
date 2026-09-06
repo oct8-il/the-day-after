@@ -1,0 +1,21 @@
+{
+  "id": "i33",
+  "parent": "p6",
+  "he": "חודש לתוך המלחמה לא היה חדר מצב ממשלתי אזרחי לעורף שמרכז נתונים באופן מערכתי",
+  "summary": "במכתב מבקר המדינה לראש הממשלה מ-13 בנובמבר 2023, כחודש לתוך המלחמה, נקבע כי אין חדר מצב ממשלתי אזרחי לעורף המרכז נתונים באופן מערכתי על ניהול האוכלוסייה האזרחית וצרכיה. הממצא פורסם בדוח ניהול המערכה של המבקר בספטמבר 2025.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i33-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "מבקר המדינה — ניהול המערכה בעורף האזרחי",
+      "date": "09.2025",
+      "url": "https://library.mevaker.gov.il/sites/DigitalLibrary/Documents/2025/Government-Management/2025-Government-Management.pdf",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "וכי אין חדר מצב ממשלתי אזרחי לעורף המרכז נתונים באופן מערכתי"
+    }
+  ]
+}

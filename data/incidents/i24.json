@@ -1,0 +1,57 @@
+{
+  "id": "i24",
+  "parent": "p3",
+  "he": "באופקים לא היה חמ\"ל עירוני שירכז תמונת מצב, וגדוד שנשלח לעיר הגיע בטעות לאזור התעשייה",
+  "summary": "בתחקיר צה״ל על הקרב באופקים נקבע שהצבא נכשל במשימתו להגן על העיר. לתחנת המשטרה, שהייתה הגורם היחיד בעל תמונת מצב חלקית, לא היו אמצעים לייצר תמונת מצב ברמת חמ״ל עירוני. גדוד שהגיע לעיר הופנה בטעות לאזור התעשייה, ובמבחן התוצאה לא השפיע על הקרב עצמו.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i24-c01",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "מעריב — סיקור תחקיר צה\"ל על אופקים",
+      "date": "14.07.2025",
+      "url": "https://www.maariv.co.il/news/military/article-1214362",
+      "archive_url": null,
+      "contests": null,
+      "place": "ofakim",
+      "quote": "צה\"ל נכשל במשימתו להגן על העיר אופקים."
+    },
+    {
+      "id": "i24-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר צה\"ל על אופקים",
+      "date": "14.07.2025",
+      "url": "https://www.ynet.co.il/news/article/rk00mlszuxe",
+      "archive_url": null,
+      "contests": null,
+      "place": "ofakim",
+      "quote": "לתחנת משטרה אין אמצעים לייצר תמונת מצב כמו חמ\"ל עירוני"
+    },
+    {
+      "id": "i24-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר צה\"ל על אופקים",
+      "date": "14.07.2025",
+      "url": "https://www.ynet.co.il/news/article/rk00mlszuxe",
+      "archive_url": null,
+      "contests": null,
+      "place": "ofakim",
+      "quote": "גדוד דקל הגיע בטעות לאזור התעשייה"
+    },
+    {
+      "id": "i24-c04",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר צה\"ל על אופקים",
+      "date": "14.07.2025",
+      "url": "https://www.ynet.co.il/news/article/rk00mlszuxe",
+      "archive_url": null,
+      "contests": null,
+      "place": "ofakim",
+      "quote": "במבחן התוצאה, הגדוד לא השפיע על הקרב עצמו שנגמר מהר מאוד"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "id": "i29",
+  "parent": "p5",
+  "he": "צה\"ל הורה ליישובי העוטף להחזיר את הרובים אחרי גל פריצות לנשקיות, והחזרתם הותנתה באחסון מאושר שלא היה בכל יישוב",
+  "summary": "למעלה משנה לפני המתקפה הורה צה״ל ליישובי עוטף עזה להחזיר את רובי הסער לצבא, בעקבות סדרת פריצות שבהן נגנב נשק. החזרת הרובים הותנתה בכך שלחברי הכיתה תהיה דרך מאושרת לנעול אותם בבית, או נשקייה ביישוב. בעין השלושה לא הייתה נשקייה פעילה, וביום המתקפה החזיקו ארבעה מתוך ארבעה-עשר חברי צוות הביטחון ברובי סער. בשדרות החזיר הרבש\"צ היוצא את הנשקים לצבא באוגוסט 2022, ו-22 חברי כיתת הכוננות נותרו עם אקדחים בלבד.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i29-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר צה\"ל על עין השלושה",
+      "date": "23.04.2025",
+      "url": "https://www.timesofisrael.com/outgunned-ein-hashlosha-security-team-failed-to-resist-oct-7-onslaught-probe-finds/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "Over a year earlier, the IDF had ordered all Gaza border towns to return their assault rifles to the military following a series of break-ins in which weapons were stolen."
+    },
+    {
+      "id": "i29-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר צה\"ל על עין השלושה",
+      "date": "23.04.2025",
+      "url": "https://www.timesofisrael.com/outgunned-ein-hashlosha-security-team-failed-to-resist-oct-7-onslaught-probe-finds/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "The army had conditioned the return of the rifles on squad members having an approved method for safely locking them in their homes, or alternatively, an armory in the community. Ein Hashlosha did not have an active armory."
+    },
+    {
+      "id": "i29-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר צה\"ל על עין השלושה",
+      "date": "23.04.2025",
+      "url": "https://www.timesofisrael.com/outgunned-ein-hashlosha-security-team-failed-to-resist-oct-7-onslaught-probe-finds/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "Of the 14 members of the local security team, just four had assault rifles."
+    },
+    {
+      "id": "i29-c04",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר צה\"ל על שדרות",
+      "date": "29.01.2025",
+      "url": "https://www.ynet.co.il/news/article/byihutwujg",
+      "archive_url": null,
+      "contests": null,
+      "place": "sderot",
+      "quote": "22 חברי כיתת כוננות שנותרו עם אקדחים בלבד מול עשרות מחבלים"
+    },
+    {
+      "id": "i29-c05",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "ynet — סיקור תחקיר צה\"ל על שדרות",
+      "date": "29.01.2025",
+      "url": "https://www.ynet.co.il/news/article/byihutwujg",
+      "archive_url": null,
+      "contests": null,
+      "place": "sderot",
+      "quote": "במהלך חודש אוגוסט 2022, עם סיום תפקידו של הרבש\"ץ הקודם של העיר, הוא החליט להזדכות על הנשקים והחזיר אותם לצבא"
+    }
+  ]
+}

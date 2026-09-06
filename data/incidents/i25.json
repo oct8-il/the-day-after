@@ -1,0 +1,57 @@
+{
+  "id": "i25",
+  "parent": "p1",
+  "he": "תוכניות הפלישה שהיו בידי השב\"כ מעולם לא עובדו כאיום מיידי, ורשת המקורות האנושיים נחלשה",
+  "summary": "בתחקיר הפנימי של השב״כ נמצא כי תוכניות הפלישה של חמאס שהיו בידי הארגון לא עובדו כאיום מיידי, וכי רשת המקורות האנושיים נחלשה בשנים שקדמו למתקפה. התחקיר מצביע גם על חלוקת אחריות לא ברורה מול צה״ל בשאלה מי אמור להתריע על מלחמה. הארגון הצהיר כי אילו פעל אחרת — הן ברמה המקצועית והן ברמה הניהולית — הטבח היה נמנע.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "i25-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Ynetnews — סיקור תחקיר השב\"כ",
+      "date": "04.03.2025",
+      "url": "https://www.ynetnews.com/article/sju9cseoyl",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "These plans were never fully processed as an imminent threat, which led to a lack of preparation."
+    },
+    {
+      "id": "i25-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Ynetnews — סיקור תחקיר השב\"כ",
+      "date": "04.03.2025",
+      "url": "https://www.ynetnews.com/article/sju9cseoyl",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "The investigation also revealed operational failures in its human intelligence (HUMINT) network, which had been weakened in recent years."
+    },
+    {
+      "id": "i25-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר השב\"כ",
+      "date": "04.03.2025",
+      "url": "https://www.timesofisrael.com/shin-bet-probe-oct-7-would-have-been-prevented-if-wed-acted-differently/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "An unclear division of responsibility between the IDF and Shin Bet on which organization should provide a warning for war"
+    },
+    {
+      "id": "i25-c04",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "Times of Israel — סיקור תחקיר השב\"כ",
+      "date": "04.03.2025",
+      "url": "https://www.timesofisrael.com/shin-bet-probe-oct-7-would-have-been-prevented-if-wed-acted-differently/",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "if the Shin Bet had acted differently, in the years leading up to the attack and during the night of the attack - both at the professional level and the managerial level - the massacre would have been avoided"
+    }
+  ]
+}
