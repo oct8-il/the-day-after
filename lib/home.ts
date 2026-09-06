@@ -125,7 +125,11 @@ export function buildStrip() {
   for (const i of visibleIncidents) counts[stageOf(i)]++;
   return {
     incidents: visibleIncidents.length,
-    parents: parents.length,
+    // Count the parents the matrix actually draws, not the ones on file: a
+    // parent with nothing visible under it is skipped in buildMatrix, and a
+    // headline reading "9 systemic failures" above 8 tiles is a wrong number on
+    // the one page that exists to be trusted about numbers.
+    parents: parents.filter((p) => visibleIncidents.some((i) => i.parent === p.id)).length,
     ladder: [1, 2, 3, 4, 5, 6].map((s) => ({
       stage: s,
       he: (['', 'זוהה', 'הוכר', 'תוכנית', 'יושם', 'אומת', 'נסוג'])[s],
