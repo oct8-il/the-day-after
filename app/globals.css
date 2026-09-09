@@ -55,18 +55,13 @@
   .proto{background:var(--accent);color:var(--accent-ink);font-size:12.5px;font-weight:700;text-align:center;padding:6px 12px}
   header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
   .brand{display:flex;align-items:center;gap:12px}
-  /* brand/logo.html: the site header gets the one-line lockup, one file per
-     theme - CSS shows the right one, the same way the tokens above pick
-     between dark and light. The logo carries no color of its own. */
-  .brand .mark{display:flex;align-items:center;line-height:0}
-  .brand .mark img{display:block;height:22px;width:auto}
-  .brand .mark .light{display:none}
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]) .brand .mark .dark{display:none}
-    :root:not([data-theme="dark"]) .brand .mark .light{display:block}
-  }
-  :root[data-theme="light"] .brand .mark .dark{display:none}
-  :root[data-theme="light"] .brand .mark .light{display:block}
+  /* brand/logo.html: the header gets the one-line lockup, painted from the
+     same tokens as everything else - inlined (not an <img>) specifically so
+     it can, e.g. react to :hover like the text name it replaced did. */
+  .brand .mark{display:block;height:22px;width:auto}
+  .brand .mark .bar{fill:var(--accent)}
+  .brand .mark .word{fill:var(--text)}
+  .brand:hover .mark .word{fill:var(--accent)}
   .brand .tag{font-size:12.5px;color:var(--muted)}
   nav.main{display:flex;gap:4px}
   nav.main a,
@@ -368,7 +363,7 @@
 
   @media (max-width:900px){
     header.top{flex-wrap:wrap;padding:10px 14px;gap:8px}
-    .brand .mark img{height:18px}
+    .brand .mark{height:18px}
     nav.main{order:3;width:100%;justify-content:space-between;border-top:1px solid var(--line-soft);padding-top:8px}
     .signin{font-size:12.5px;padding:4px 8px}
     .strip{grid-template-columns:repeat(2,1fr)}
