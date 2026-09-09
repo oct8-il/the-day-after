@@ -27,7 +27,13 @@ export function Header({
       <header className={`top${compact ? ' compact' : ''}`}>
         {/* The name is the way home, as it is on every site a reader has used. */}
         <Link className="brand" href="/">
-          <span className="name">היום שאחרי</span>
+          <span className="mark" role="img" aria-label="היום שאחרי">
+            {/* One SVG per theme (brand/logo.html: "שורה אחת ... כותרת האתר") -
+                CSS shows the right one, the same way the theme tokens above it
+                pick between dark and light. */}
+            <img src="/brand/logo-inline-dark.svg" alt="" className="dark" />
+            <img src="/brand/logo-inline-light.svg" alt="" className="light" />
+          </span>
           <span className="tag">מה נכשל, ומה נעשה מאז</span>
         </Link>
         <nav className="main" aria-label="ראשי">

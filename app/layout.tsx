@@ -13,6 +13,16 @@ export const metadata: Metadata = {
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
   description: DESCRIPTION,
   alternates: { canonical: '/' },
+  // The favicon self-themes (see brand/logo.html); the .ico fallback and the
+  // touch icon are the fixed-ink versions, since old browsers and iOS both
+  // ignore prefers-color-scheme for these.
+  icons: {
+    icon: [
+      { url: '/brand/favicon.svg', type: 'image/svg+xml' },
+      { url: '/brand/favicon.ico', sizes: '16x16 32x32 48x48' },
+    ],
+    apple: '/brand/apple-touch-icon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'he_IL',
@@ -20,6 +30,7 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: DESCRIPTION,
     url: '/',
+    images: [{ url: '/brand/og-image.png', width: 1200, height: 630 }],
   },
   robots: IS_PROD ? undefined : { index: false, follow: false },
 };
