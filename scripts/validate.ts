@@ -31,6 +31,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
  * wrong wherever it is written, and fails in both.
  */
 const STRICT = process.argv.includes('--strict');
+/**
+ * The pass gate (docs/method/pass.md). false: a published incident may still
+ * lack its pass block and check:passes merely reports it. Flip to true on
+ * 1 October 2026 and strict mode refuses to publish an unpassed incident.
+ */
+const REQUIRE_PASS = false;
 
 /**
  * Which pool to judge. Both are checked on every push, by the same schema, so
@@ -231,6 +237,46 @@ for (const file of files) {
     checkAnnotatedField(`${where} poll.status`, inc.poll.status, claimIds, true);
     checkAnnotatedField(`${where} poll.question`, inc.poll.question, claimIds, false);
     checkAnnotatedField(`${where} poll.caveat`, inc.poll.caveat, claimIds, false);
+  }
+
+  // Regression needs something to regress from (docs/method/pass.md 3.6).
+  if (inc.claims.some((c) => c.asserts_stage === 6) && !inc.claims.some((c) => c.asserts_stage === 4 || c.asserts_stage === 5)) {
+    fail(where, 'a stage-6 claim with no stage-4 or stage-5 claim: nothing was in place to regress (docs/method/pass.md 3.6)');
+  }
+
+  // The pass block, when present, must agree with the claims it says it found.
+  if (inc.pass) {
+    const pw = `${where} pass`;
+    for (const b of inc.pass.responsible) checkNames(`${pw} responsible`, b);
+    for (const s of [2, 3, 4, 5, 6]) {
+      if (inc.pass.searches.filter((x) => x.stage === s).length !== 1) fail(pw, `stage ${s} needs exactly one search entry`);
+    }
+    for (const s of inc.pass.searches) {
+      const sw = `${pw} stage ${s.stage}`;
+      const atStage = inc.claims.filter((c) => c.asserts_stage === s.stage).map((c) => c.id);
+      if (s.outcome === 'found') {
+        if (!s.claims.length) fail(sw, 'found, but lists no claim');
+        for (const id of s.claims) {
+          if (!claimIds.has(id)) fail(sw, `lists "${id}", which is not a claim of this incident`);
+          else if (!atStage.includes(id)) fail(sw, `lists ${id}, which does not assert stage ${s.stage}`);
+        }
+      } else if (atStage.length) {
+        fail(sw, `${s.outcome}, yet ${atStage.join(', ')} assert${atStage.length > 1 ? '' : 's'} stage ${s.stage} - a claim the pass did not find is a claim the pass did not re-read`);
+      }
+    }
+    if (inc.pass.counter.outcome === 'found' && !inc.pass.counter.claims.length) fail(`${pw} counter`, 'found, but lists no contesting claim');
+    for (const id of inc.pass.counter.claims) {
+      const c = inc.claims.find((x) => x.id === id);
+      if (!c) fail(`${pw} counter`, `lists "${id}", which is not a claim of this incident`);
+      else if (c.asserts_stage !== 0) fail(`${pw} counter`, `${id} is not a contesting claim`);
+    }
+    const computed = stageOf(inc);
+    if (computed >= 2 && !(inc.summaries ?? []).some((x) => x.stage === computed)) {
+      fail(pw, `computed stage is ${computed} and there is no summary for it - a passed incident carries the editor summary for its current stage`);
+    }
+  }
+  if (STRICT && REQUIRE_PASS && isPublished(inc.id) && !inc.pass) {
+    fail(where, 'published without a completed pass (docs/method/pass.md) - an unpassed incident leaves published.json');
   }
 
   if (stageOf(inc) === 5 && !hasIndependentVerification(inc)) {

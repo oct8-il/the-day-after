@@ -96,6 +96,54 @@ export const Poll = z.object({
   caveat: z.string().min(8),
 });
 
+/**
+ * The pass (docs/method/pass.md): the per-incident checklist as data. One
+ * search entry per stage 2-6, a counter-evidence search, the responsible body,
+ * and the stage before the pass so the movement is visible. The stage after is
+ * computed from the claims and never stored.
+ *
+ * Optional until 1 October 2026; validated whenever present. From that date
+ * scripts/validate.ts requires it on every published incident (REQUIRE_PASS).
+ */
+const PASS_DATE = z.string().regex(/^\d{2}\.\d{2}\.\d{4}$/, 'a search date is a day: DD.MM.YYYY');
+export const SEARCH_OUTCOME = z.enum(['found', 'not_found', 'unreachable']);
+
+export const StageSearch = z.object({
+  /** 2 acknowledged .. 6 regressed. Stage 1 is covered by stage1_origins. */
+  stage: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(5), z.literal(6)]),
+  /** Bodies, outlets, channels and query terms actually used - names, not categories. */
+  where: z.array(z.string().min(2)).min(1, 'a search that names nowhere was not a search'),
+  date: PASS_DATE,
+  outcome: SEARCH_OUTCOME,
+  /** Ids of the claims authored for this stage; required when found. */
+  claims: z.array(z.string()).default([]),
+  note: z.string().max(400).optional(),
+});
+
+export const Pass = z.object({
+  /** The day the pass was completed. */
+  date: PASS_DATE,
+  /** The body or bodies whose own words count as stage 2 and whose report counts as stage 4. Institutions only. */
+  responsible: z.array(z.string().min(2)).min(1),
+  /** Computed stage before the pass; null if the incident was not published before. */
+  stage_before: STAGE.nullable(),
+  /** The distinct originating bodies behind the stage-1 claims - two where they exist. */
+  stage1_origins: z.array(z.string().min(2)).min(1),
+  searches: z.array(StageSearch).length(5, 'one search per stage 2-6, none skipped'),
+  /** The counter-evidence search: a stage-less entry with the same shape. */
+  counter: z.object({
+    where: z.array(z.string().min(2)).min(1),
+    date: PASS_DATE,
+    outcome: SEARCH_OUTCOME,
+    claims: z.array(z.string()).default([]),
+    note: z.string().max(400).optional(),
+  }),
+  /** Pages that plausibly hold an answer but could not be fetched - for the editor's browser. */
+  unreachable: z.array(z.string().url()).default([]),
+  /** The Linear sub-issue of this pass. */
+  issue: z.string().url().optional(),
+});
+
 export const Incident = z.object({
   /** i.. for the real ledger, t.. for fixtures. The prefix is the pool, and
    *  validate.ts refuses a record whose prefix disagrees with the pool it sits
@@ -117,6 +165,8 @@ export const Incident = z.object({
   feedback_strip: z.boolean().optional(),
   claims: z.array(Claim).min(1, 'an incident with no claim is not a record of anything'),
   summaries: z.array(Summary).optional(),
+  /** The per-item checklist as data (docs/method/pass.md). Optional until 1 October 2026. */
+  pass: Pass.optional(),
 });
 
 export const Parent = z.object({
@@ -164,6 +214,8 @@ export const Taxonomy = z.object({
   questions: z.record(z.string(), z.object({}).loose()),
 });
 
+export type StageSearch = z.infer<typeof StageSearch>;
+export type Pass = z.infer<typeof Pass>;
 export type Summary = z.infer<typeof Summary>;
 export type Photo = z.infer<typeof Photo>;
 export type Poll = z.infer<typeof Poll>;

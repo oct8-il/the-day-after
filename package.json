@@ -15,6 +15,7 @@
     "validate": "node --experimental-strip-types scripts/validate.ts --pool=live",
     "validate:strict": "node --experimental-strip-types scripts/validate.ts --pool=live --strict",
     "check:links": "node scripts/check-links.mjs",
+    "check:passes": "node --experimental-strip-types scripts/check-passes.ts",
     "fidelity": "playwright test",
     "fidelity:baseline": "FIDELITY_TARGET=prototype playwright test --update-snapshots",
     "fidelity:app": "FIDELITY_TARGET=app playwright test",
