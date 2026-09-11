@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { ENV, IS_PROD } from './env';
+import { ENV, IS_PROD, IS_HELD, LAUNCHED } from './env';
 import { SITE_NAME, SITE_URL } from './site';
 import './globals.css';
 
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     url: '/',
     images: [{ url: '/brand/og-image.png', width: 1200, height: 630 }],
   },
-  robots: IS_PROD ? undefined : { index: false, follow: false },
+  robots: IS_PROD && LAUNCHED ? undefined : { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -68,8 +68,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {!IS_PROD && <div className="env-ribbon">{ENV}</div>}
-        {children}
+        {IS_HELD ? <Holding /> : children}
       </body>
     </html>
+  );
+}
+
+/* Shown on every route of a prod build until LAUNCHED is true. Deliberately
+   says nothing about the content: the name, the date, and no way in. */
+function Holding() {
+  return (
+    <main className="holding">
+      <p className="holding-name">{SITE_NAME}</p>
+      <p className="holding-date">7 באוקטובר 2026</p>
+    </main>
   );
 }
