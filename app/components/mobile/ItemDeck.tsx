@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import type { DeckItem, StagePage } from '@/lib/mobile';
 
@@ -14,6 +14,31 @@ import type { DeckItem, StagePage } from '@/lib/mobile';
  */
 const NAMES = ['השער', 'סקירת הכשל', 'מה נעשה מאז', 'מה עוד לא נעשה', 'דעת הציבור', 'הלאה'];
 
+/** The fragment each slide answers to. A shared link can open the deck on any
+ *  slide, and on any single stage page inside slides 3 and 4 - `#stage-4` finds
+ *  whichever of the two slides holds stage 4. The gate is the bare URL, so the
+ *  link a reader shares from slide 1 carries no fragment at all. */
+const SLUG: Record<string, string> = {
+  gate: '', overview: 'overview', reached: 'done', unreached: 'notyet', ask: 'ask', onward: 'onward',
+};
+
+function parseHash(hash: string, item: DeckItem): { slide: string; stage: number | null } | null {
+  const h = decodeURIComponent(hash.replace(/^#/, ''));
+  if (!h) return null;
+  const m = /^stage-([1-6])$/.exec(h);
+  if (m) {
+    const n = Number(m[1]);
+    if (item.reached.some((p) => p.n === n)) return { slide: 'reached', stage: n };
+    if (item.unreached.some((p) => p.n === n)) return { slide: 'unreached', stage: n };
+    return null;
+  }
+  const k = Object.keys(SLUG).find((key) => SLUG[key] === h && key !== 'gate');
+  return k ? { slide: k, stage: null } : null;
+}
+
+/** Down to a later stage, up to an earlier one, right to the previous slide. */
+const CHEVRON = { down: 'M6 9l6 6 6-6', up: 'M18 15l-6-6-6 6', back: 'M9 5l7 7-7 7' };
+
 export function ItemDeck({ item, map }: { item: DeckItem; map: ReactNode }) {
   // Slide 4 is skipped entirely for an item with nothing left to reach - a
   // slide with nothing to say is not shown.
@@ -22,6 +47,29 @@ export function ItemDeck({ item, map }: { item: DeckItem; map: ReactNode }) {
 
   const track = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
+
+  // Where the fragment says to open. Read once, on the client's first render,
+  // so the stacks inside slides 3 and 4 can honour it in their own mount effect
+  // rather than being scrolled twice. The server always renders slide 1.
+  const entry = useMemo(
+    () => (typeof window === 'undefined' ? null : parseHash(window.location.hash, item)),
+    [item],
+  );
+
+  // Each stack lends the deck a way to scroll itself to one stage, so a
+  // fragment that arrives later - a link followed inside the page, the back
+  // button - is honoured the same way the first one was.
+  const jumpers = useRef<Record<string, (n: number) => void>>({});
+
+  // Which stage page each stack is showing, so the fragment can name it.
+  const seen = useRef<Record<string, number>>({});
+  const hash = (i: number) => {
+    const k = keys[i];
+    const n = seen.current[k];
+    const frag = k === 'gate' ? '' : (k === 'reached' || k === 'unreached') && n ? `#stage-${n}` : `#${SLUG[k]}`;
+    const url = location.pathname + location.search + frag;
+    if (url !== location.pathname + location.search + location.hash) history.replaceState(null, '', url);
+  };
 
   useEffect(() => {
     const el = track.current;
@@ -32,13 +80,38 @@ export function ItemDeck({ item, map }: { item: DeckItem; map: ReactNode }) {
       t = true;
       requestAnimationFrame(() => {
         t = false;
-        const i = Math.round(Math.abs(el.scrollLeft) / el.clientWidth);
-        setAt(Math.min(keys.length - 1, Math.max(0, i)));
+        const i = Math.min(keys.length - 1, Math.max(0, Math.round(Math.abs(el.scrollLeft) / el.clientWidth)));
+        setAt(i);
+        hash(i);
       });
     };
     el.addEventListener('scroll', read, { passive: true });
     return () => el.removeEventListener('scroll', read);
   }, [keys.length]);
+
+  const apply = (target: { slide: string; stage: number | null } | null, smooth: boolean) => {
+    const el = track.current;
+    if (!el || !target) return;
+    const i = (keys as readonly string[]).indexOf(target.slide);
+    if (i <= 0) return;
+    const dir = getComputedStyle(el).direction === 'rtl' ? -1 : 1;
+    const left = dir * i * el.clientWidth;
+    if (smooth) el.scrollTo({ left, behavior: 'smooth' });
+    else el.scrollLeft = left;
+    setAt(i);
+    if (target.stage !== null) jumpers.current[target.slide]?.(target.stage);
+  };
+
+  // Jump to the slide the fragment named - on arrival, and whenever the
+  // fragment changes afterwards. Runs after the stacks have placed themselves,
+  // so nothing fights it. Our own writes use replaceState, which fires no
+  // hashchange, so this never loops.
+  useEffect(() => {
+    apply(entry, false);
+    const onHash = () => apply(parseHash(location.hash, item), true);
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
 
   const go = (i: number) => {
     const el = track.current;
@@ -46,6 +119,20 @@ export function ItemDeck({ item, map }: { item: DeckItem; map: ReactNode }) {
     // RTL: scrollLeft runs negative in this direction in most engines.
     const dir = getComputedStyle(el).direction === 'rtl' ? -1 : 1;
     el.scrollTo({ left: dir * i * el.clientWidth, behavior: 'smooth' });
+  };
+
+  // Read from the DOM rather than from `at`: the stacks call this from a mount
+  // effect that captured the first render's state.
+  const slideNow = () => {
+    const el = track.current;
+    if (!el) return 0;
+    return Math.min(keys.length - 1, Math.max(0, Math.round(Math.abs(el.scrollLeft) / el.clientWidth)));
+  };
+
+  const onStage = (k: string, n: number) => {
+    seen.current[k] = n;
+    const i = slideNow();
+    if (keys[i] === k) hash(i);
   };
 
   const crumbs = (
@@ -82,8 +169,8 @@ export function ItemDeck({ item, map }: { item: DeckItem; map: ReactNode }) {
         {keys.map((k, i) => {
           if (k === 'gate') return <Gate key={k} item={item} crumbs={crumbs} foot={foot(i)} />;
           if (k === 'overview') return <Overview key={k} item={item} crumbs={crumbs} foot={foot(i)} />;
-          if (k === 'reached') return <Stack key={k} item={item} pages={item.reached} crumbs={crumbs} foot={foot} index={i} title="מה נעשה מאז" map={map} />;
-          if (k === 'unreached') return <Stack key={k} item={item} pages={item.unreached} crumbs={crumbs} foot={foot} index={i} title="מה עוד לא נעשה" map={null} />;
+          if (k === 'reached') return <Stack key={k} item={item} pages={item.reached} crumbs={crumbs} foot={foot} index={i} title="מה נעשה מאז" map={map} go={go} openStage={entry?.slide === 'reached' ? entry.stage : null} onStage={(n) => onStage('reached', n)} lend={(to) => { jumpers.current.reached = to; }} />;
+          if (k === 'unreached') return <Stack key={k} item={item} pages={item.unreached} crumbs={crumbs} foot={foot} index={i} title="מה עוד לא נעשה" map={null} go={go} openStage={entry?.slide === 'unreached' ? entry.stage : null} onStage={(n) => onStage('unreached', n)} lend={(to) => { jumpers.current.unreached = to; }} />;
           if (k === 'ask') return <Ask key={k} item={item} crumbs={crumbs} foot={foot(i)} />;
           return <Onward key={k} item={item} crumbs={crumbs} foot={foot(i)} />;
         })}
@@ -152,27 +239,61 @@ function Overview({ item, crumbs, foot }: { item: DeckItem; crumbs: ReactNode; f
 
 /* ------------------------------------------------------------ slides 3, 4 */
 function Stack({
-  item, pages, crumbs, foot, index, title, map,
+  item, pages, crumbs, foot, index, title, map, go, openStage, onStage, lend,
 }: {
   item: DeckItem; pages: StagePage[]; crumbs: ReactNode;
   foot: (i: number, mid?: ReactNode) => ReactNode; index: number; title: string; map: ReactNode;
+  go: (i: number) => void; openStage: number | null; onStage: (n: number) => void;
+  lend: (to: (n: number) => void) => void;
 }) {
   const stack = useRef<HTMLDivElement>(null);
-  const [at, setAt] = useState(0);
   // The reached stack opens on the current stage; the unreached one on the next.
-  const opensAt = pages.findIndex((p) => p.n === item.currentStage);
+  // A fragment naming one stage overrides both.
+  const named = openStage === null ? -1 : pages.findIndex((p) => p.n === openStage);
+  const cur = pages.findIndex((p) => p.n === item.currentStage);
+  const opensAt = Math.max(0, named >= 0 ? named : cur);
+  const [at, setAt] = useState(Math.max(0, cur));
 
   useEffect(() => {
     const el = stack.current;
     if (!el) return;
     if (opensAt > 0) el.scrollTop = opensAt * el.clientHeight;
-    const read = () => setAt(Math.round(el.scrollTop / el.clientHeight));
+    setAt(opensAt);
+    onStage(pages[opensAt].n);
+    lend((n) => {
+      const j = pages.findIndex((q) => q.n === n);
+      if (j >= 0) el.scrollTo({ top: j * el.clientHeight, behavior: 'smooth' });
+    });
+    const read = () => {
+      const i = Math.min(pages.length - 1, Math.max(0, Math.round(el.scrollTop / el.clientHeight)));
+      setAt(i);
+      onStage(pages[i].n);
+    };
     el.addEventListener('scroll', read, { passive: true });
     return () => el.removeEventListener('scroll', read);
   }, [opensAt]);
 
   const viewed = pages[Math.min(at, pages.length - 1)];
   const mid = pages.length > 1 ? <><span>↑↓</span><span>שלבים</span></> : null;
+
+  // The pill shows only when the reader is somewhere other than the current
+  // stage. On the reached slide it walks the stack; on the unreached slide,
+  // where the current stage never appears, it walks back a slide instead.
+  const away = cur < 0 || at !== cur;
+  const path = cur < 0 ? CHEVRON.back : cur > at ? CHEVRON.down : CHEVRON.up;
+  const back = () => {
+    if (cur < 0) return go(index - 1);
+    const el = stack.current;
+    el?.scrollTo({ top: cur * el.clientHeight, behavior: 'smooth' });
+  };
+  const pill = away && (
+    <div className="pillrow">
+      <button className="backnow" onClick={back}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={path} /></svg>
+        חזרה לשלב הנוכחי
+      </button>
+    </div>
+  );
 
   return (
     <section className="slide">
@@ -250,6 +371,7 @@ function Stack({
           </article>
         ))}
       </div>
+      {pill}
       {foot(index, mid)}
     </section>
   );

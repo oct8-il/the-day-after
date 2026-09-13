@@ -1,1 +1,15 @@
-[]
+{
+  "ported": [],
+
+  "_ported": "Views whose port is finished. A view is compared against the frozen prototype only once its name is listed here, so switching the gate on is a deliberate line in a commit rather than a side effect of a route existing.",
+
+  "exempt": [
+    {
+      "view": "item-i13",
+      "project": "phone",
+      "why": "The phone item is not a port of the prototype. Below 760px it renders the six-slide deck designed in docs/mobile-item.html (DIA-360), which the prototype has no counterpart for, so a prototype baseline at 390px can only ever fail. Its own gate needs the spec's twelve embedded screens as the baseline source - filed separately. The desktop width of this view stays gated."
+    }
+  ],
+
+  "_exempt": "view x project pairs that have deliberately left the prototype. Never add one to silence a diff: an exemption says the design diverged on purpose, and each carries the reason it did."
+}

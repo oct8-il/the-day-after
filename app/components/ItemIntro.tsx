@@ -28,6 +28,14 @@ export function ItemIntro({
   stages: { n: number; he: string; color: string }[];
 }) {
   useEffect(() => {
+    // Below the deck's breakpoint the desktop tree is not on screen and the
+    // phone shows the deck instead, so there is nothing here to choreograph.
+    // Leave before touching anything - including the once-per-reader flag,
+    // which belongs to the desktop reading - and before the scroll hint, which
+    // is appended to the body and would otherwise float over the deck.
+    const desktop = document.querySelector('.item-desktop');
+    if (desktop && getComputedStyle(desktop).display === 'none') return;
+
     const seen = (() => { try { return localStorage.getItem('hy_item_intro') === '1'; } catch { return true; } })();
     if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     try { localStorage.setItem('hy_item_intro', '1'); } catch {}
