@@ -8,6 +8,9 @@ import {
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { ItemDock } from '@/app/components/ItemDock';
 import { ItemIntro } from '@/app/components/ItemIntro';
+import { ItemDeck } from '@/app/components/mobile/ItemDeck';
+import { buildDeck } from '@/lib/mobile';
+import '@/app/mobile-item.css';
 import { CitationLinks } from '@/app/components/CitationLinks';
 import { Header } from '@/app/components/Header';
 import { SourceLink } from '@/app/components/SourceLink';
@@ -68,8 +71,16 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     { n: 3, t: 'דעת הציבור', color: 'var(--accent)', d: 'מה הציבור חושב' },
   ];
 
+  const deck = buildDeck(inc);
+
   return (
     <>
+      {/* Two item pages live in this HTML and the browser picks by width. See
+          app/mobile-item.css - the switch is CSS only so the right one is there
+          on the first paint, with no server and no flash of the wrong layout. */}
+      <ItemDeck item={deck} map={pins.length > 0 ? <div className="evmap"><EvidenceMap pins={pins} /></div> : null} />
+
+      <div className="item-desktop">
       <Header compact />
 
       {/* ---------- docked failure header and chapter rail ---------- */}
@@ -286,6 +297,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             </section>
           </div>
         </section>
+      </div>
       </div>
     </>
   );
