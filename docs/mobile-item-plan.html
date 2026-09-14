@@ -1,0 +1,353 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · Mobile item — build plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43; --flag:#c9a45a;
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .frame{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:60px 0 36px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.1;margin:14px 0 10px}
+  .lede{font-size:19px;color:var(--text-2);max-width:64ch;margin:0}
+  .meta{font-size:13.5px;color:var(--muted);margin-top:14px}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:29px;line-height:1.2;margin:56px 0 6px;scroll-margin-top:20px}
+  h3{font-size:18px;font-weight:700;margin:30px 0 6px;letter-spacing:.01em}
+  h4{font-size:14.5px;font-weight:700;margin:20px 0 4px;color:var(--text-2);letter-spacing:.04em;text-transform:uppercase}
+  p{margin:10px 0;max-width:72ch}
+  ul,ol{max-width:72ch;padding-inline-start:22px}
+  li{margin:6px 0}
+  code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+  pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:14px 0}
+  pre code{background:none;border:0;padding:0;font-size:13.5px;line-height:1.6}
+  .he{direction:rtl;unicode-bidi:isolate;display:inline-block}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  td.q{width:30%;color:var(--text)}
+  .note{border-inline-start:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .warn{border-inline-start:3px solid var(--no);background:rgba(217,106,95,.10);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .status{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;padding:2px 9px;border-radius:3px;white-space:nowrap}
+  .st-done{background:rgba(111,191,138,.16);color:var(--yes)}
+  .st-open{background:rgba(217,165,79,.16);color:var(--partial)}
+  .st-todo{background:var(--surface-2);color:var(--muted)}
+  nav.toc{margin:26px 0 0;font-size:15px;columns:2;column-gap:36px}
+  nav.toc a{display:block;padding:3px 0;color:var(--text-2)}
+  .phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .phase h3{margin-top:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pno{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);letter-spacing:.06em}
+  .gate{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px;font-size:14.5px;color:var(--text-2)}
+  .gate b{color:var(--accent);font-weight:700}
+  @media (max-width:640px){ nav.toc{columns:1} .frame{padding:0 18px 64px} td.q{width:auto} }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header class="masthead">
+  <div class="kicker">היום שאחרי · DIA-360</div>
+  <h1>Mobile item — build plan</h1>
+  <p class="lede">What gets built, in what order, and what was decided in the 14 September interview before any of it starts. The design is <a href="mobile-item.html">docs/mobile-item.html</a> v2.0; this document is how it becomes code.</p>
+  <p class="meta">v1.3 · 14 September 2026 · every question answered · <b>Phase 0 done</b> · branch <span class="mono">dia-360-mobile-item-restart</span> · Phase 0 complete, Phase 1 next</p>
+</header>
+
+<nav class="toc">
+  <a href="#decisions">1 · Decisions taken</a>
+  <a href="#fallout">2 · What those decisions cost</a>
+  <a href="#data">3 · Data and schema</a>
+  <a href="#jump">4 · Jump mode (new, unspecced)</a>
+  <a href="#phases">5 · Build phases</a>
+  <a href="#verify">6 · Verification</a>
+  <a href="#open">7 · Still open</a>
+  <a href="#risks">8 · Risks</a>
+</nav>
+
+<h2 id="decisions">1 · Decisions taken</h2>
+<p>Twenty-four rulings from the interview. These go into <span class="mono">mobile-item.html</span> as v2.1 before code is written, so the spec stays the single source.</p>
+
+<h3>Build shape</h3>
+<table>
+  <tr><th>Question</th><th>Ruling</th><th>Consequence</th></tr>
+  <tr><td class="q">How the phone gets the mobile page</td><td>Same URL, CSS breakpoint — both trees in the HTML</td><td>One canonical URL; every item page ships two DOMs</td></tr>
+  <tr><td class="q">Deep links</td><td>Hash — <code>/item/i13/#3-s2</code></td><td>No extra static pages; slides invisible to crawlers</td></tr>
+  <tr><td class="q">Back button</td><td>Push the first move only</td><td>Back → the gate from anywhere, second Back leaves</td></tr>
+  <tr><td class="q">Breakpoint scope</td><td>Item page now, home/gap/about to follow</td><td>Two design languages on the phone until then — a known state</td></tr>
+  <tr><td class="q">Slide 5 scope</td><td>MVP only</td><td>No registers, no ballot, no backend</td></tr>
+</table>
+
+<h3>Data and content</h3>
+<table>
+  <tr><th>Question</th><th>Ruling</th><th>Consequence</th></tr>
+  <tr><td class="q">Overview shape</td><td>Open the structure — one markdown string per stage</td><td>Schema change, markdown renderer, validator rewrite, migrate i13</td></tr>
+  <tr><td class="q">Slide 2's text</td><td>Rewrite <code>summary</code> to be systemic</td><td>29 summaries rewritten; desktop and OG inherit the new text</td></tr>
+  <tr><td class="q">Missing overview on a reached stage</td><td>Fall back to that stage's claims</td><td>All 29 render from day one; nothing blocks on writing</td></tr>
+  <tr><td class="q">Item number</td><td>Number by position in <code>published.json</code></td><td>i13 becomes <span class="he">כשל מס׳ 12</span>; the five posts need regenerating</td></tr>
+  <tr><td class="q">Stage 6 <span class="he">(נסוג)</span></td><td>Sixth rung, drawn only when reached</td><td>Locator geometry varies by item; <code>--s6</code> enters the mobile palette</td></tr>
+  <tr><td class="q">Stage date and age</td><td>Earliest claim asserting that stage</td><td>Purely computed. Stage 1 therefore shows the documentation date (19.10.2023 for i13), which settles D3 by implication</td></tr>
+  <tr><td class="q">Photos</td><td>Port the five post photos now</td><td>5 items get the real gate, 24 the fallback — visibly mixed</td></tr>
+  <tr><td class="q">Gate source line</td><td>Top official/oversight source, then earliest press, then a count</td><td>Computed; an item with no official source names two outlets</td></tr>
+  <tr><td class="q">Slide 5's question</td><td>Keep the stage-generic question from <code>taxonomy.questions</code></td><td>Renders on all 29, never stale; loses the mock's contextual phrasing</td></tr>
+  <tr><td class="q">Slide 5's three summary lines</td><td>Three authored fields per item</td><td>87 short strings to write, kept in sync with the stage</td></tr>
+  <tr><td class="q">Item card statement</td><td>A short form per incident</td><td>One more authored line per item; cards read uniform</td></tr>
+  <tr><td class="q">Other failures on slide 6</td><td>Siblings under the same parent first, then fill</td><td>Deterministic; small parents get filler</td></tr>
+</table>
+
+<h3>Behaviour and delivery</h3>
+<table>
+  <tr><th>Question</th><th>Ruling</th><th>Consequence</th></tr>
+  <tr><td class="q">Locator rungs</td><td>Not tappable — long-press jump mode instead</td><td>A new gesture the spec does not describe. See §4</td></tr>
+  <tr><td class="q">Jump mode lifecycle</td><td>One continuous gesture — hold, slide, release</td><td>No mode can be left on by accident</td></tr>
+  <tr><td class="q">Jump mode feedback</td><td>Live scrub — the page moves under the finger</td><td>Every intermediate screen renders; the perf risk of the build</td></tr>
+  <tr><td class="q">Jump mode visual state</td><td>Rail brightens, page dims behind (~40%)</td><td>The heaviest effect on the page, and unmistakably a mode</td></tr>
+  <tr><td class="q">Crossing stacks</td><td>Rail stays within its stack; the dots cross slides</td><td>Each control does one thing; stage 1 → stage 5 is two gestures</td></tr>
+  <tr><td class="q">Unreached page text</td><td>The "who would count as a check" line on stage 5 only</td><td>Page shape differs by stage, deliberately</td></tr>
+  <tr><td class="q">Slide 6 rating variant</td><td>Ships — three cards and the stars</td><td><b>Needs somewhere to send answers.</b> First non-static dependency</td></tr>
+  <tr><td class="q">Standard of proof</td><td>New 390×844 baselines, self-referential</td><td>Catches regressions from freeze-day on, not mistakes made today</td></tr>
+  <tr><td class="q">Review rhythm</td><td>Slide by slide, on a real phone</td><td>Seven review stops before merge</td></tr>
+</table>
+
+<h2 id="fallout">2 · What those decisions cost</h2>
+
+<h3>The writing job, sized</h3>
+<p>Per incident, before the mobile page reads as designed:</p>
+<table>
+  <tr><th>What</th><th>Where</th><th>Count</th></tr>
+  <tr><td>Systemic <code>summary</code>, rewritten in markdown with cites</td><td>Slide 2</td><td>29</td></tr>
+  <tr><td>Per-reached-stage overview, markdown with cites</td><td>Slide 3</td><td>1–5 each · ~60–90 total</td></tr>
+  <tr><td>Three opinion-head lines</td><td>Slide 5</td><td>87</td></tr>
+  <tr><td>Short card statement</td><td>Slide 6</td><td>29</td></tr>
+  <tr><td>Photo fields</td><td>Gate, slide 6 cards</td><td>5 now · 24 in DIA-366</td></tr>
+</table>
+<p>None of it blocks the build: the claims fallback covers missing overviews, and every authored field degrades to something honest. It does block the page <em>looking finished</em>, which is worth stating plainly before slide-by-slide review starts — the first phone you pick up will show fallbacks.</p>
+
+<div class="warn"><strong>Renumbering invalidates published work.</strong> <span class="mono">Claude outputs/five-posts.html</span> hard-codes the number from the file id — i13→13, i29→29, i01→1 — and the IG dry run went out that way. Numbering by published position makes i13 <span class="he">כשל מס׳ 12</span> on the site. The generator needs the same computed number, and anything already posted is stale. Regenerating the five posts is a task in this plan; anything already public is a call only you can make.</div>
+
+<div class="warn"><strong>The rating strip breaks the static guarantee.</strong> "The site is built from the repository, there is no database and no API" is currently a fact about the project. A star rating that goes somewhere needs an endpoint — a form service, a serverless function, or a third-party form. Decide which before Phase 8; until then the strip is built and inert.</div>
+
+<h2 id="data">3 · Data and schema</h2>
+
+<h4>Schema changes</h4>
+<pre><code>// data/schema/index.ts
+
+- Summary = { stage, lines: [{ text, cites: string[] }] }
++ Summary = { stage, text: string }        // markdown; cites are [label](i13-c08) links
+
+  Incident = {
+    id, parent, he,
+-   summary: string,                        // narrative, item-specific
++   summary: string,                        // markdown, SYSTEMIC — no 7.10 manifestation
++   card_line?: string,                     // short statement for slide 6 cards
++   opinion?: { failed, since, caveat },    // slide 5's three head lines
++   photo?: {                              // two crops, independent of each other
++     portrait?:  { file, photographer, source, licence, place, year },   // the gate
++     landscape?: { file, photographer, source, licence, place, year },   // slide 6 card
++   },
+    illustrative, claims, summaries?
+  }</code></pre>
+
+<h4>Validator</h4>
+<ul>
+  <li>Parse the markdown rather than the array: every sentence carries at least one link, every link resolves to a claim of <em>this</em> incident.</li>
+  <li>Accept inline bold mid-sentence (the emphasis rule from slide 2 supersedes the old bold-opening-line ruling).</li>
+  <li>Reject a <code>summary</code> that names a date in October 2023 — a cheap proxy for the systemic rule, worth trying and easy to drop if it fights the writing.</li>
+  <li>Photo fields validate together: a <code>file</code> with no licence fails rather than rendering an uncredited photograph. Dimensions are <strong>not</strong> checked — the crop is trusted.</li>
+  <li>The two crops are independent: an item may have a portrait and no landscape, or the reverse. Each falls back on its own — the gate to the number ghost, the card to its bare tint.</li>
+</ul>
+
+<h4>New computed helpers (<code>lib/</code>)</h4>
+<table>
+  <tr><th>Function</th><th>Rule</th></tr>
+  <tr><td><code>itemNumber(id)</code></td><td>1-based index in <code>published.json</code>; total is <code>published.length</code></td></tr>
+  <tr><td><code>stageDate(inc, n)</code></td><td>Earliest claim asserting stage n, by the existing year-then-month sort</td></tr>
+  <tr><td><code>reached(inc)</code> / <code>unreached(inc)</code></td><td>Partition for slides 3 and 4. The current stage is always in <code>reached</code>, regression included</td></tr>
+  <tr><td><code>sourceLine(inc)</code></td><td>Highest-authority official/oversight claim, then earliest press claim, then <span class="he">ועוד N מקורות</span></td></tr>
+  <tr><td><code>siblings(inc, n)</code></td><td>Same parent first, then a stable fill; never the item itself</td></tr>
+</table>
+
+<h2 id="jump">4 · Jump mode (new, unspecced)</h2>
+<p>Decided in the interview, absent from v2.0 of the spec, and the only hidden gesture on the page. Written here so it can be reviewed before it is built.</p>
+<ul>
+  <li><strong>Arming</strong>: press and hold ~400ms on the stage rail (slides 3 and 4) or on the dot row (any slide). The finger stays down for the whole interaction.</li>
+  <li><strong>Moving</strong>: slide along the strip. The page scrubs live — each stage or slide renders as it is passed.</li>
+  <li><strong>State</strong>: the strip goes to full strength, the page behind drops to ~40%. Both transitions are ~120ms so arming reads as a change, not a glitch.</li>
+  <li><strong>Landing</strong>: release. Mode ends with the finger; there is nothing to dismiss.</li>
+  <li><strong>Reach</strong>: the rail moves within its own stack only — an unreached rung stays inert on slide 3. The dot row crosses all six slides, slide 4 included.</li>
+</ul>
+<p><strong>Jump mode is an accelerator, never the only route.</strong> Every stage and slide it can reach is also reachable by ordinary sequential navigation, which is what makes it safe to leave undiscovered — and what makes the page usable with a screen reader, where the gesture does not exist. See §7.</p>
+<div class="note"><strong>Implementation notes, from the platform rather than the design.</strong> A long press on iOS raises the selection callout and the magnifier unless the strip carries <code>-webkit-touch-callout:none</code>, <code>user-select:none</code> and <code>touch-action:none</code>. Arming must cancel the deck's own scroll-snap so the two gestures do not fight. There is no haptics API in Safari, so the feedback is visual or it does not exist. Reduced-motion should drop the scrub to a direct jump on release, keeping the dim.</div>
+
+<h2 id="phases">5 · Build phases</h2>
+<p>Seven review stops, each on a real phone over the dev server (<code>next dev</code> already allows LAN origins). Nothing merges until the last one.</p>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 0</span> Spec to v2.1 <span class="status st-done">done · 14 Sep</span></h3>
+  <p><code>docs/mobile-item.html</code> is now v2.1. Added: §2 gains the breakpoint and the deep-link and history rules; §3 gains <strong>Jump mode</strong> with its platform notes; §4 gains "Computed, not authored" (source line, item number, the two photo crops); §5 says the text is <code>summary</code> rewritten systemic; §6 gains the computed stage date, the claims fallback, and locator rows for stage 6 and for tapping; §7 narrows the checking-body line to stage 5; §8 states that only the MVP ships and where its head text comes from; §9 gains the sibling rule, the card short form, the rating strip's store and flag, and a Share section; §10 is rewritten around the new schema; <strong>§11 "Implementation rulings" is new</strong>; §12 keeps only what is genuinely open; the round log records the interview.</p>
+  <div class="gate"><b>Gate:</b> read the diff and confirm the spec says what you decided.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 1</span> Data, schema, validator</h3>
+  <p>Schema change, i13's stage-4 summary migrated to markdown, the new helpers, validator rewritten. The five photos moved into <code>public/photos/</code> with their credits. No UI at all.</p>
+  <div class="gate"><b>Gate:</b> <code>npm run validate</code> green, desktop item page unchanged, i13 carries one real markdown overview.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 2</span> Shell, chrome, gestures</h3>
+  <p>The mobile component tree behind the breakpoint. Horizontal scroll-snap deck, breadcrumb, dots, footer chain, hash routing with the push-once history rule, and jump mode on the dots. Slides 2–6 are placeholders naming themselves.</p>
+  <div class="gate"><b>Gate #1:</b> swipe, dots, jump mode, Back, and a deep link opening at the right slide — on your phone.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 3</span> Slide 1 — <span class="he">השער</span></h3>
+  <p>Photo duotone, right-edge fade, gate-only rail with the age line, title block, source line, credit, and the no-photo fallback with the number ghost.</p>
+  <div class="gate"><b>Gate #2:</b> i13 (photo) and an item without one, side by side.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 4</span> Slide 2 — <span class="he">סקירת הכשל</span></h3>
+  <p>The markdown renderer, the chip, source chips per sentence, the sources carousel. This phase sets the body pattern slides 3 and 4 reuse, so it is reviewed carefully.</p>
+  <div class="gate"><b>Gate #3:</b> the body pattern, before it propagates.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 5</span> Slide 3 — <span class="he">מה נעשה מאז</span></h3>
+  <p>Nested vertical scroll-snap, the head group, the locator with its offset rings, the current-stage pill, the back-to-current pill, jump mode on the rail, the evidence map on stage 1, and the claims fallback for stages with no overview.</p>
+  <div class="gate"><b>Gate #4:</b> i13 (4 reached) and i20 (1 reached). The biggest stop.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 6</span> Slide 4 — <span class="he">מה עוד לא נעשה</span></h3>
+  <p>Same component, opposite filter. The hourglass group, the computed statement, the stage-5 checking-body line, the skip rule for an item at the last stage, the regression rule, and the locator slots that never move.</p>
+  <div class="gate"><b>Gate #5:</b> i13 (one page, no arrows), i20 (four pages, arrows), and an item at stage 5 that has no slide 4 and five dots.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 7</span> Slide 5 — <span class="he">דעת הציבור</span>, MVP</h3>
+  <p>Head, the three authored lines with their chips, the stage-generic question, the dimmed scale in its dashed box, <span class="he">הגישו מקור</span>.</p>
+  <div class="gate"><b>Gate #6:</b> the screen, and whether the generic question reads right under real context lines.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 8</span> Slide 6 — <span class="he">הלאה</span></h3>
+  <p>The 111px card with its photo ground and mask, sibling selection, <span class="he">כל 29 הכשלים</span>, the share action and the upright repost icon, the star strip, the wordmark.</p>
+  <div class="gate"><b>Gate #7:</b> the last slide, and share actually sharing.<br>
+  <b>Raise before this phase starts:</b> photo credit for the card grounds — see §7. Roy asked to be reminded here rather than deciding it in advance.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 9</span> Baselines and edge cases</h3>
+  <p>Freeze 390×844 baselines for every slide and stage page, retire the stale <code>item-i13-*-phone</code> desktop baselines, and add the behavioural assertions (§6).</p>
+  <div class="gate"><b>Gate:</b> the baseline set reviewed once, by eye, before it is frozen — it is only as good as that reading.</div>
+</div>
+
+<div class="phase">
+  <h3><span class="pno">PHASE 10</span> Content pass <span class="status st-todo">parallel track</span></h3>
+  <p>The writing from §2, plus DIA-366's remaining 24 photos. Runs alongside from Phase 1 onward; does not gate the merge.</p>
+</div>
+
+<h2 id="verify">6 · Verification</h2>
+<p>Three layers, because pixels alone cannot see a rule and rules alone cannot see a screen.</p>
+<ol>
+  <li><strong>Frozen 390×844 baselines</strong> — every slide, every stage page, i13 and i20, photo and no-photo.</li>
+  <li><strong>Behavioural assertions</strong>, which survive a legitimate redesign: the locator renders at <code>right:14px</code> as measured, not as authored; a rung's y-position is identical on slides 3 and 4; an item at the last stage produces five dots; the stage chip on a card keeps contrast over its photo; the page itself never scrolls.</li>
+  <li><strong>Gesture tests</strong> — Playwright touch emulation for swipe, long-press arming, scrub and release, and the push-once history rule.</li>
+</ol>
+<div class="note"><strong>The RTL trap, as a test rather than a memory.</strong> <code>padding-inline-end</code> and <code>align-items:flex-end</code> resolve to the left in this page, which cost two review rounds. Every edge-anchored element gets an assertion on its measured <code>getBoundingClientRect()</code>, so it can never quietly flip again.</div>
+
+<h2 id="open">7 · The six open questions, answered</h2>
+
+<h3>Breakpoint <span class="status st-done">decided</span></h3>
+<p>The mobile deck renders at <code>(max-width: 599px) and (min-height: 600px)</code>. Everything else — tablets, landscape phones, desktops — gets the existing item page.</p>
+<ul>
+  <li><strong>599px wide</strong> covers every phone in portrait, from a 280px folded cover screen to a 430px Pro Max, and stops below the 600–768px band where tablets begin. A 390-wide design stretched to 760 is the thing the whole reimagining exists to avoid.</li>
+  <li><strong>600px tall</strong> is the guard the spec never had. The deck is a fixed-height frame — six slides, a footer on a rule, 26px of home-indicator padding, a vertical rhythm drawn at 844. A landscape phone is 390px tall; the frame cannot survive it, and the desktop page handles that shape today.</li>
+  <li>Height is <code>100dvh</code>, not <code>100vh</code> — iOS Safari's collapsing URL bar makes <code>vh</code> taller than the visible viewport, which would push the footer under the chrome exactly where the next-slide label lives.</li>
+  <li>Between 320 and 599px the frame is <strong>fluid, not scaled</strong>: the 390 baseline sets the proportions, side gutters stay 20px, and type does not shrink. A scaled 390 canvas would blur text on a 430 screen.</li>
+</ul>
+
+<h3>Where the ratings go <span class="status st-done">decided</span></h3>
+<p><strong>Supabase, called from the client.</strong> A single table, insert-only:</p>
+<pre><code>feedback( id, item_id, rating int 1..5, created_at, device_key )
+  RLS: anon may INSERT, may not SELECT.</code></pre>
+<ul>
+  <li>It keeps <code>output: 'export'</code> intact — no serverless function, no build-target change, no runtime to operate. The static site stays static; one fetch goes out to a third party.</li>
+  <li>It is the same instance the <strong>full slide 5 will need</strong> for public answers and the ballot, so this is not a throwaway: the star strip is the first small use of the store the post-MVP page depends on.</li>
+  <li><code>device_key</code> is a random id in <code>localStorage</code> — enough to stop the same phone rating twenty times, not an identity. The UI shows the saved state from that key.</li>
+  <li>The anon key is public by nature, so the table is spammable. Acceptable here: it is developer feedback, nothing renders from it, and no one sees it but you. Before the <em>ballot</em> ships it needs a real gate (Turnstile or a rate limit), and the standing rule already caps the damage — public answers never move a stage.</li>
+</ul>
+<p>Say the word if you would rather not add the dependency; the alternative is a hosted form service, which is less work now and useless for the ballot later.</p>
+
+<h3>Share <span class="status st-done">decided</span></h3>
+<p>Web Share API where it exists — on iOS and Android that is the native sheet, which is the whole point on a page reached from Instagram. Where it does not, the fallback copies <strong>the item link, not the deep link</strong>: <code>/item/i13/</code> with no hash, so a shared link always opens at the gate. A short toast confirms the copy.</p>
+
+<h3>Keyboard and screen reader <span class="status st-done">decided</span></h3>
+<p>The question was whether the deck has any route through it that is not a gesture — on a phone, that means VoiceOver and TalkBack, where swipe means "next element", not "next slide". The answer is that nothing is gesture-only:</p>
+<ul>
+  <li>The deck is a scroll container of six <code>&lt;section&gt;</code>s, each labelled in Hebrew (<span class="he">השער</span>, <span class="he">סקירת הכשל</span>, …). A screen reader moves through them in DOM order; scroll-snap follows focus, so the visible slide and the spoken one stay together.</li>
+  <li>Slides 3 and 4 are the same shape one level down — a labelled section per stage page.</li>
+  <li>The footer's previous/next labels are real links to the slide hashes, so they work as ordinary navigation for anyone who never swipes.</li>
+  <li>A hardware keyboard gets arrow keys: left/right across slides, up/down within a stack. Cheap to add, and it is how the Playwright gesture tests will drive the deck.</li>
+  <li>Jump mode has no keyboard or AT equivalent, and needs none — it reaches nothing that sequential navigation does not.</li>
+  <li><code>prefers-reduced-motion</code> drops the live scrub to a direct jump on release, and the deck's slide transitions to instant. The dim stays: it is state, not motion.</li>
+</ul>
+
+<h3>Stale social posts <span class="status st-done">closed</span></h3>
+<p>Nothing is live; the five posts get regenerated from the new numbering. The generator reads the same computed number as the site, so the two cannot drift again.</p>
+
+<h3>Desktop page on a phone <span class="status st-done">closed</span></h3>
+<p>Not a goal. No link, no escape hatch, no "view desktop version". A phone under the breakpoint gets the deck.</p>
+
+<h3 id="remaining">The last two</h3>
+
+<h4>Card photo credit <span class="status st-open">deferred by Roy to Phase 8</span></h4>
+<p>The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA, which requires attribution. Not decided now — <strong>Roy asked to be reminded when Phase 8 begins</strong>, and the Phase 8 gate carries that reminder. The three candidate answers, so the reminder arrives with its options: one credits line at the foot of slide 6; a credits page linked from <span class="he">אודות</span>; or landscape crops only from sources that need no attribution.</p>
+
+<h4>Does the star strip show on every item <span class="status st-done">decided</span></h4>
+<p><strong>A global default with a per-item override.</strong> <code>site.feedbackStrip</code> is the switch; an incident may carry <code>feedback_strip: false</code> (or <code>true</code>) to differ. One field, and the strip can be taken down everywhere by editing one line when enough answers have arrived.</p>
+<div class="note"><strong>Why the default should stay uniform.</strong> The strip asks about the <em>site</em>, not the failure, so the item is not really the axis the decision lives on — and it costs a card, so per-item switching means a reader swiping through several failures sees slide 6 hold four cards, then three, then four, with no reason they can perceive. The override exists for the case where one item genuinely should not carry it; turning it into the normal mechanism is what makes the slide look unstable.</div>
+
+<h2 id="risks">8 · Risks</h2>
+<table>
+  <tr><th>Risk</th><th>Where it bites</th><th>Mitigation</th></tr>
+  <tr><td>Live scrub renders every intermediate screen on a six-slide deck with photos</td><td>Jump mode, Phase 2 and 5</td><td>Scrub the transform, not the content; decode photos once; measure on a real mid-range phone, not the simulator</td></tr>
+  <tr><td>Long press fights iOS selection, the callout and scroll-snap</td><td>Phase 2</td><td>The CSS in §4, and a real-device test at gate #1 rather than at the end</td></tr>
+  <tr><td>Both DOMs shipped per item page</td><td>Every item page's weight</td><td>Measure the HTML at Phase 3; if it is bad, the fallback is the separate route, which costs a URL decision, not a rewrite</td></tr>
+  <tr><td>Self-referential baselines freeze whatever exists on freeze-day</td><td>Phase 9</td><td>The gate is the eye-review; the spec's embedded screens stay the reference to read against</td></tr>
+  <tr><td>The page looks unfinished during review because the content pass trails</td><td>Gates #3–#7</td><td>Expected, stated here; review the pattern, not the prose</td></tr>
+</table>
+
+<p class="meta">Written 14 September 2026, after the design interview. Nothing in this plan has been built.</p>
+
+</div>
+</body>
+</html>
