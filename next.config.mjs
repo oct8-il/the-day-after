@@ -13,6 +13,9 @@ const branch =
   process.env.GITHUB_REF_NAME ??
   '';
 
+/** Vercel sets VERCEL; GitHub Actions sets CI. Neither is set on a laptop. */
+const HOSTED = Boolean(process.env.VERCEL || process.env.CI);
+
 /**
  * A build that cannot name its branch cannot know which environment it is, and
  * the line below would quietly call it dev - which on dev means the fixture
@@ -24,16 +27,28 @@ const branch =
  * the cause is "Enable access to System Environment Variables" being off in
  * Project Settings - VERCEL_GIT_COMMIT_REF is what carries the branch name.
  */
-if (!process.env.NEXT_PUBLIC_ENV && !branch && (process.env.VERCEL || process.env.CI)) {
+if (!branch && HOSTED) {
   throw new Error(
     'Hosted build with no branch name: neither VERCEL_GIT_COMMIT_REF nor GITHUB_REF_NAME is set, ' +
     'so this build cannot tell which environment it is. Refusing to guess.',
   );
 }
 
-const environment =
-  process.env.NEXT_PUBLIC_ENV ??
-  (branch === 'prod' ? 'prod' : branch === 'staging' ? 'staging' : 'dev');
+/**
+ * NEXT_PUBLIC_ENV is a LOCAL escape hatch - `NEXT_PUBLIC_ENV=staging npm run
+ * build` to see what staging will look like - and nothing more. A hosted build
+ * ignores it and goes by the branch, always.
+ *
+ * It used to win everywhere, which is how a NEXT_PUBLIC_ENV set on Vercel's
+ * Preview environment made the staging branch build itself as dev and serve
+ * the fixture pool on staging.oct8.co.il. One Preview value cannot be correct
+ * anyway: Preview covers staging, dev and every feature branch at once. The
+ * branch is the only thing that knows which of the three a build is, so on a
+ * deployment it is the only thing consulted.
+ */
+const environment = (!HOSTED && process.env.NEXT_PUBLIC_ENV)
+  ? process.env.NEXT_PUBLIC_ENV
+  : (branch === 'prod' ? 'prod' : branch === 'staging' ? 'staging' : 'dev');
 
 /**
  * Which pool of ledger data the build reads: data/live (the real ledger) or
