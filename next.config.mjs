@@ -13,6 +13,24 @@ const branch =
   process.env.GITHUB_REF_NAME ??
   '';
 
+/**
+ * A build that cannot name its branch cannot know which environment it is, and
+ * the line below would quietly call it dev - which on dev means the fixture
+ * pool. On a laptop that is the right default; in a hosted build it would mean
+ * a deployment serving invented records under a real URL, which is the one
+ * failure this project cannot recover from. So hosted builds refuse.
+ *
+ * VERCEL is set by Vercel, CI by GitHub Actions. If this ever fires on Vercel,
+ * the cause is "Enable access to System Environment Variables" being off in
+ * Project Settings - VERCEL_GIT_COMMIT_REF is what carries the branch name.
+ */
+if (!process.env.NEXT_PUBLIC_ENV && !branch && (process.env.VERCEL || process.env.CI)) {
+  throw new Error(
+    'Hosted build with no branch name: neither VERCEL_GIT_COMMIT_REF nor GITHUB_REF_NAME is set, ' +
+    'so this build cannot tell which environment it is. Refusing to guess.',
+  );
+}
+
 const environment =
   process.env.NEXT_PUBLIC_ENV ??
   (branch === 'prod' ? 'prod' : branch === 'staging' ? 'staging' : 'dev');
