@@ -53,9 +53,12 @@ jobs:
       # person to open dev.
       - name: validate the fixtures
         run: npm run validate:test
-      # TODO (DIA-369, with the full fixture pool): add `npm run check:fixtures`
-      # here. It asserts the fixtures still cover every state a page must
-      # survive - valid-but-useless fixtures are the failure mode this pool has.
+      # Valid fixtures are not the same as useful ones. Delete the regressed
+      # incident, or give the one with no summaries a summary, and nothing
+      # above would notice - the gap would surface weeks later as a layout bug
+      # on a phone. This asserts the pool still covers every state on the list.
+      - name: the fixtures still cover every state
+        run: npm run check:fixtures
 
   # ------------------------------------------------------------------- build
   build:
