@@ -1,0 +1,141 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>תיאור הכשל · חלופות הדגשה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{--bg:#121519;--surface:#191d23;--surface-2:#20252c;--line:#2b323b;--line-soft:#232931;--text:#e9e6df;--text-2:#b5bcc5;--muted:#8a939e;
+    --accent:#e0a44a;--accent-ink:#1a1206;--accent-soft:rgba(224,164,74,.14);--s1:#6b7480;--s2:#6f8fb0;--s3:#5fa3c9;--s4:#4fb8a8;--s5:#6fc97f;--s6:#c0705f;--flag:#c9a45a;
+    --paper:#e8e1d3;--paper-ink:#1f1c17;--paper-rule:#7a715f;--card:#1e242c;--card-2:#171c22;color-scheme:dark}
+  :root[data-theme="light"]{--bg:#f6f4ef;--surface:#fff;--surface-2:#f0ede6;--line:#d8d3c8;--line-soft:#e6e2d9;--text:#1d2126;--text-2:#3d444d;--muted:#6c7580;
+    --accent:#b97a1c;--accent-ink:#fff;--accent-soft:rgba(185,122,28,.12);--s1:#7b8590;--s2:#5b7ea3;--s3:#3f8fb8;--s4:#2f9d8f;--s5:#3f9f5a;--s6:#b8604f;--flag:#a8842e;
+    --paper:#efe8d8;--paper-ink:#1f1c17;--paper-rule:#8a7f6a;--card:#fbfaf7;--card-2:#f3f1ec;color-scheme:light}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:22px 28px 10px;max-width:1500px;margin:0 auto;flex-wrap:wrap}
+  .top h1{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:28px;margin:0}
+  .top p{margin:0;color:var(--muted);font-size:14px;max-width:70ch}
+  .top button{font:inherit;font-size:13px;color:var(--text-2);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 12px;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;padding:12px 28px 60px;max-width:1500px;margin:0 auto}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--bg);border:1px solid var(--line);padding:22px 26px 26px;display:flex;flex-direction:column;gap:0}
+  .panel .lbl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px;letter-spacing:.08em;font-weight:700;color:var(--muted);margin-bottom:18px;border-bottom:1px dashed var(--line);padding-bottom:8px}
+  .panel .lbl b{color:var(--accent);font-size:13px}
+  .panel .lbl .verdict{font-weight:400;letter-spacing:0;font-size:12.5px}
+  .panel .lbl .verdict.bad{color:var(--s6)}
+  .note{font-size:13px;color:var(--muted);margin-top:18px;line-height:1.5;border-top:1px solid var(--line-soft);padding-top:10px}
+
+  /* --- chapter-1 context, lifted from the prototype --- */
+  .eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;--c:var(--s2)}
+  .eyebrow .no{font-family:"Frank Ruhl Libre",serif;font-size:13px;color:var(--c);border:1px solid var(--c);width:25px;height:25px;display:grid;place-items:center;border-radius:50%;flex:none}
+  .eyebrow .kk{font-size:11.5px;letter-spacing:.16em;font-weight:700;color:var(--c)}
+  .eyebrow .side{margin-inline-start:auto;font-size:12.5px;color:var(--muted)}
+  h3{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:26px;line-height:1.25;margin:0 0 6px;color:var(--text)}
+  .chaplead{font-size:13.5px;color:var(--muted);margin:0 0 20px;max-width:60ch}
+  .lead{font-size:17px;line-height:1.62;color:var(--text-2);max-width:64ch;margin:0}
+  .bh{font-size:11.5px;letter-spacing:.06em;font-weight:700;color:var(--muted);margin:22px 0 0;display:flex;justify-content:space-between;border-bottom:1px solid var(--line-soft);padding-bottom:6px}
+  .evstub{font-size:14px;color:var(--text-2);padding:10px 0 0;opacity:.55}
+
+  /* 0 · as-is */
+  /* 1 · newspaper clipping (for comparison) */
+  .clip{background:var(--paper);color:var(--paper-ink);padding:18px 22px 20px;border-top:3px double var(--paper-rule);border-bottom:1px solid var(--paper-rule);margin:0 0 4px}
+  .clip .kick{display:flex;justify-content:space-between;font-family:"Assistant",sans-serif;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-rule);border-bottom:1px solid var(--paper-rule);padding-bottom:6px;margin-bottom:10px}
+  .clip p{font-family:"Frank Ruhl Libre",serif;font-size:17.5px;line-height:1.6;margin:0;text-align:justify;column-gap:26px}
+  .clip p::first-letter{font-size:2.6em;line-height:.85;float:right;margin:4px 0 0 8px;font-weight:700}
+
+  /* 2 · the lede */
+  .lede{font-family:"Frank Ruhl Libre",serif;font-size:21px;line-height:1.7;color:var(--text);max-width:60ch;margin:6px 0 0}
+  .lede::first-letter{font-size:3.1em;line-height:.8;float:right;margin:8px 0 0 10px;color:var(--s2);font-weight:500}
+  .lede-meta{font-size:12.5px;color:var(--muted);margin-top:10px}
+
+  /* 3 · record card */
+  .rec{background:var(--card);border:1px solid var(--line);border-top:2px solid var(--s2);padding:0;margin:4px 0 0;box-shadow:0 1px 0 rgba(0,0,0,.15)}
+  .rec .head{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:9px 16px;background:var(--card-2);border-bottom:1px solid var(--line-soft);font-size:11.5px;letter-spacing:.06em;font-weight:700;color:var(--muted)}
+  .rec .head .stamp{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--s2);border:1px solid color-mix(in srgb,var(--s2) 55%,transparent);padding:2px 8px;border-radius:3px;direction:ltr;unicode-bidi:isolate}
+  .rec .body{padding:16px 18px 14px}
+  .rec .body p{font-family:"Frank Ruhl Libre",serif;font-size:18.5px;line-height:1.68;color:var(--text);margin:0}
+  .rec .foot{display:flex;gap:16px;flex-wrap:wrap;padding:8px 18px 12px;font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line-soft)}
+  .rec .foot b{color:var(--text-2);font-weight:600}
+
+  /* 4 · the rule */
+  .rule{border-inline-start:4px solid var(--s2);padding:4px 18px 4px 0;margin:6px 0 0}
+  .rule .eb{font-size:11.5px;letter-spacing:.12em;font-weight:700;color:var(--s2);margin-bottom:6px}
+  .rule p{font-family:"Frank Ruhl Libre",serif;font-size:19px;line-height:1.66;color:var(--text);margin:0;max-width:62ch}
+  .rule .eb small{font-weight:400;letter-spacing:0;color:var(--muted);margin-inline-start:8px}
+
+  /* 5 · marked text */
+  .mark p{font-size:17.5px;line-height:1.75;color:var(--text);margin:0;max-width:64ch}
+  .mark p span{background:linear-gradient(transparent 12%,color-mix(in srgb,var(--accent) 30%,transparent) 12%,color-mix(in srgb,var(--accent) 30%,transparent) 88%,transparent 88%);padding:0 2px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+</style></head><body>
+<div class="top">
+  <div><h1>תיאור הכשל · חלופות הדגשה</h1><p>אותו טקסט (i13), אותו הקשר של פרק 1. הראשון הוא המצב הקיים, השני הוא ״קטע מהעיתון״ להשוואה, ואחריו ארבע חלופות שלא מתחזות למקור.</p></div>
+  <button id="th">ערכה בהירה</button>
+</div>
+<div class="grid">
+
+<div class="panel">
+  <div class="lbl"><span><b>0</b> · המצב הקיים</span><span class="verdict">פסקה רגילה</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <p class="lead">מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</p>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">התיאור נבלע בין הכותרת לבין רשימת הראיות. אין לו נוכחות של ״הדבר שצריך לקרוא״.</div>
+</div>
+
+<div class="panel">
+  <div class="lbl"><span><b>1</b> · קטע מהעיתון</span><span class="verdict bad">להשוואה בלבד · מטעה</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <div class="clip"><div class="kick"><span>מערכות התרעה ותקשורת לאזרח</span><span>תועד לראשונה · 2023</span></div>
+  <p>מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</p></div>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">בולט מאוד — ואומר ״עיתון כתב את זה״. הטקסט הזה נכתב על ידי העורך מתוך המקורות, ולכן הצורה משקרת על התוכן.</div>
+</div>
+
+<div class="panel">
+  <div class="lbl"><span><b>2</b> · הלִיד</span><span class="verdict">טיפוגרפי · בלי מסגרת</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <p class="lede">מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</p>
+  <div class="lede-meta">תיאור הכשל · נכתב על ידי העורך מתוך המקורות שלמטה</div>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">האתר הוא הכותב, והטיפוגרפיה אומרת ״כאן מתחילים לקרוא״. לא טוען לשום מקור כי לא ממסגר כלום. הכי זול, הכי שקט.</div>
+</div>
+
+<div class="panel">
+  <div class="lbl"><span><b>3</b> · כרטיס רשומה</span><span class="verdict">אובייקט של הפנקס עצמו</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <div class="rec">
+    <div class="head"><span>תיאור הכשל · נכתב על ידי העורך מתוך המקורות</span><span class="stamp">i13 · p6</span></div>
+    <div class="body"><p>מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</p></div>
+    <div class="foot"><span>תועד לראשונה <b>2023</b></span><span>מקורות מתעדים <b>4</b></span><span>מוקדים <b>אופקים · שדרות · אשקלון · נתיבות</b></span></div>
+  </div>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">אותה נוכחות של ״חפץ שהונח על הדף״ כמו הקטע מהעיתון — אבל החפץ הוא שלנו: רשומה בפנקס, עם כותב, תאריך ומקומות. הצורה והמשמעות מסכימות.</div>
+</div>
+
+<div class="panel">
+  <div class="lbl"><span><b>4</b> · הקו</span><span class="verdict">הדגשה במינימום</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <div class="rule"><div class="eb">תיאור הכשל <small>· נכתב על ידי העורך מתוך המקורות</small></div>
+  <p>מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</p></div>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">קו עבה בצבע השלב לאורך הקצה, כמו סטנדפירסט במגזין. בלי מילוי, בלי קופסה. השקט מבין השלושה, ועדיין ברור שזה הבלוק המודגש.</div>
+</div>
+
+<div class="panel">
+  <div class="lbl"><span><b>5</b> · טקסט מסומן</span><span class="verdict bad">לא ממליץ</span></div>
+  <div class="eyebrow"><span class="no">1</span><span class="kk">הבעיה</span><span class="side">4 מקורות מתעדים · 4 מוקדים</span></div>
+  <h3>מה נכשל</h3><p class="chaplead">מה תועד, ומי תיעד אותו. לכל טענה יש מקור, סוג ותאריך — בלי שלושתם היא לא נכנסת.</p>
+  <div class="mark"><p><span>מערך ההתרעה הלאומי תוכנן להתרעה על ירי תלול-מסלול, ולא כלל תרחיש של חדירה קרקעית רחבה. בשעות הראשונות של האירוע לא הופעלה בחלק מהיישובים ומערי הדרום התרעה ייעודית על חדירה, וההודעות שהופצו לציבור היו חלקיות, מאוחרות ולעיתים סותרות. ההודעות לא הבחינו בין מרחבים שבהם התרחשה חדירה לבין מרחבים שבהם נורו רקטות בלבד, וערוצי ההפצה לציבור עמדו בעומס חריג.</span></p></div>
+  <div class="bh"><span>העדויות שמתעדות את הכשל</span><span>4 מתוך 10 טענות</span></div><div class="evstub">● דוח מבקר המדינה — מוכנות מערך ההתרעה לציבור</div>
+  <div class="note">״תקראו את זה״ — אבל בטון של מרקר על תדפיס. נלחם בטון הרציני של שאר העמוד, וגונב את הענבר שהיה שמור לפער.</div>
+</div>
+
+</div>
+<script>
+  const b=document.getElementById('th'),r=document.documentElement;
+  b.addEventListener('click',()=>{const l=r.getAttribute('data-theme')==='light';if(l){r.removeAttribute('data-theme');b.textContent='ערכה בהירה';}else{r.setAttribute('data-theme','light');b.textContent='ערכה כהה';}});
+</script>
+</body></html>

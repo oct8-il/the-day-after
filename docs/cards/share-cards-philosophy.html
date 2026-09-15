@@ -1,0 +1,261 @@
+<title>Share Cards · Philosophy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-soft:rgba(224,164,74,.14);
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43;
+    --paper:#e8e1d3; --paper-ink:#1f1c17;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-soft:rgba(185,122,28,.12);
+      --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21;
+      --paper:#efe8d8; --paper-ink:#1f1c17;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-soft:rgba(185,122,28,.12);
+    --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21;
+    --paper:#efe8d8; --paper-ink:#1f1c17;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  main{max-width:72ch;margin:0 auto;padding:48px 24px 96px}
+  .he{font-family:"Frank Ruhl Libre",serif;direction:rtl;unicode-bidi:isolate;white-space:nowrap}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.86em;font-variant-numeric:tabular-nums}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  h1{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:clamp(34px,5vw,46px);line-height:1.1;margin:0 0 8px;text-wrap:balance}
+  .lede{font-size:19px;line-height:1.5;color:var(--text-2);margin:0 0 6px;max-width:60ch}
+  .meta{font-size:13px;color:var(--muted);margin:0 0 40px}
+  h2{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:28px;line-height:1.2;margin:56px 0 14px;text-wrap:balance}
+  h3{font-family:"Assistant",sans-serif;font-weight:700;font-size:16px;margin:26px 0 6px}
+  p{margin:0 0 14px}
+  p.q{color:var(--text-2)}
+  a{color:var(--accent)}
+  .rev{border:1px solid var(--accent);background:var(--accent-soft);padding:12px 16px;margin:0 0 28px;font-size:15px;color:var(--text-2)}
+  .rev b{color:var(--text)}
+  .figure{background:var(--surface);border:1px solid var(--line);padding:16px 18px;margin:18px 0 22px}
+  .figure .cap{font-size:13px;color:var(--muted);margin-top:10px}
+  .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+  .strip>div{padding:10px 6px 8px;text-align:center;border-top:4px solid var(--c);background:color-mix(in srgb,var(--c) 30%,var(--surface-2))}
+  .strip>div.zero{background:color-mix(in srgb,var(--c) 10%,var(--surface-2));color:var(--muted)}
+  .strip .n{font-family:"Frank Ruhl Libre",serif;font-size:26px;line-height:1}
+  .strip .l{font-family:"Frank Ruhl Libre",serif;font-size:13px;direction:rtl;margin-top:4px;white-space:nowrap}
+  .stances{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 8px}
+  .stance{background:var(--surface);border:1px solid var(--line);padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px}
+  .stance.rec{border-color:var(--accent);background:linear-gradient(var(--accent-soft),var(--accent-soft)),var(--surface)}
+  .stance .name{font-family:"Frank Ruhl Libre",serif;font-size:24px;line-height:1.1;direction:rtl;text-align:right}
+  .stance .sub{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:-4px}
+  .stance p{font-size:14.5px;line-height:1.5;margin:0;color:var(--text-2)}
+  .stance p b{color:var(--text);font-weight:600}
+  .stance .tag{align-self:flex-start;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:2px 8px;margin-top:auto}
+  .prin{display:grid;grid-template-columns:150px 1fr;gap:6px 22px;margin:14px 0}
+  .prin dt{font-weight:700;padding-top:12px;border-top:1px solid var(--line-soft)}
+  .prin dt .he{display:block;font-weight:500;font-size:19px;color:var(--text);text-align:left}
+  .prin dt small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .prin dd{margin:0;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--text-2)}
+  .prin dd b{color:var(--text);font-weight:600}
+  .prin dd i.mine{font-style:normal;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-inline-end:6px}
+  .anat{display:grid;grid-template-columns:1fr 1.15fr;gap:22px;align-items:start}
+  .card{position:relative;aspect-ratio:4/5;background:color-mix(in srgb,var(--s4) 40%,var(--surface-2));border:1px solid color-mix(in srgb,var(--s4) 60%,var(--line));padding:14px;display:grid;grid-template-rows:auto auto auto 1fr auto auto;gap:9px;direction:rtl;font-family:"Frank Ruhl Libre",serif;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(ellipse 60% 45% at 30% 70%,color-mix(in srgb,var(--s4) 65%,#000) 0%,transparent 70%),
+    repeating-linear-gradient(115deg,transparent 0 9px,color-mix(in srgb,var(--s4) 35%,#000) 9px 10px);opacity:.28;pointer-events:none}
+  .card>*{position:relative}
+  .photo-label{position:absolute;inset-inline-start:8px;bottom:6px;font-family:"Assistant",sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);direction:ltr;opacity:.9}
+  .slot{border:1px dashed color-mix(in srgb,var(--text) 45%,transparent);padding:6px 8px;font-size:12px;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:30px}
+  .slot small{font-family:"Assistant",sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);direction:ltr}
+  .slot.var{border-style:solid;border-color:var(--accent);background:var(--accent-soft);align-items:flex-start;flex-direction:column;justify-content:flex-start}
+  .slot.var small{color:var(--accent)}
+  .rungs{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;width:100%}
+  .rungs i{display:block;height:8px;background:color-mix(in srgb,var(--text) 18%,transparent)}
+  .rungs i.on{background:var(--text)}
+  .rungs i.fall{background:transparent;border:1px dashed color-mix(in srgb,var(--text) 40%,transparent)}
+  .anat ol{margin:0;padding-inline-start:20px;font-size:14.5px;color:var(--text-2)}
+  .anat li{margin-bottom:8px}
+  .anat li b{color:var(--text);font-weight:600}
+  .anat li.var b{color:var(--accent)}
+  .dec{border:1px solid var(--line);background:var(--surface);margin:14px 0;padding:16px 18px}
+  .dec .k{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--accent);letter-spacing:.06em;margin-bottom:4px}
+  .dec h3{margin:0 0 8px;font-size:17px}
+  .dec p{font-size:15px;color:var(--text-2);margin:0 0 6px}
+  .dec p.lean{color:var(--text)}
+  .dec p.lean::before{content:"My lean · ";font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .next{border-inline-start:3px solid var(--accent);padding:6px 16px;color:var(--text-2);margin-top:28px}
+  @media (max-width:720px){
+    .stances{grid-template-columns:1fr}
+    .prin{grid-template-columns:1fr;gap:2px 0}
+    .prin dd{border-top:0;padding-top:2px;padding-bottom:10px}
+    .anat{grid-template-columns:1fr}
+    .card{max-width:320px}
+  }
+</style>
+
+<main>
+  <p class="eyebrow">היום שאחרי · mobile roadmap · step 1 of 4 · revision 2</p>
+  <h1>What a share card is, before what it looks like</h1>
+  <p class="lede">The stance every card takes, the chassis every card shares, and the one thing that is allowed to change with the item's stage. Decide these, and the stage variations become a short exercise instead of an argument.</p>
+  <p class="meta">8 September 2026 · ledger: 29 published items</p>
+
+  <div class="rev"><b>What changed in this revision.</b> The first draft treated the ledger's discipline as the card's discipline: no photos, no adjectives, nothing written per card, a day-counter on every card. Roy rejected all four. The governing principle is <b>non-personal, not neutral</b>: no individuals and no blame, but October 7 is a charged subject and the site's agenda is to push problems toward a solution. The card may carry that charge. Photos are encouraged. Hooks are welcome. The clock appears only when staleness is the story.</div>
+
+  <h2>The problem the card has to solve</h2>
+  <p>A share card is seen by a stranger, out of context, between a friend's photo and an ad, for about a second. It is the first page of the site most mobile visitors will ever see. The rules it inherits from the ledger are few: institutions, units and systems only; no individuals; no partisan framing; published sources. Everything else is open, including emotion.</p>
+  <p>The real difficulty is that most feed imagery gets its charge from a person, and this project cannot use people. So the card's charge has to come from elsewhere: a place, an object, a system, a question, and time. i20 has stood at <span class="he">זוהה</span> since October 2023. i13 reached <span class="he">יושם</span> in October 2023 and no one outside the implementer has verified it since. These are emotional facts. The design question is how much the card says them, and how much it lets the reader feel them.</p>
+
+  <div class="figure">
+    <div class="strip">
+      <div style="--c:var(--s1)"><div class="n">8</div><div class="l">זוהה</div></div>
+      <div style="--c:var(--s2)"><div class="n">6</div><div class="l">הוכר</div></div>
+      <div style="--c:var(--s3)"><div class="n">8</div><div class="l">הוכרזה תוכנית</div></div>
+      <div style="--c:var(--s4)"><div class="n">6</div><div class="l">יושם</div></div>
+      <div class="zero" style="--c:var(--s5)"><div class="n">0</div><div class="l">אומת עצמאית</div></div>
+      <div style="--c:var(--s6)"><div class="n">1</div><div class="l">נסוג</div></div>
+    </div>
+    <div class="cap">The 29 published items by stage today. The chassis has to work for all of them, including the ones that will not have a photo or a written hook by 7 October.</div>
+  </div>
+
+  <h2>Three stances a card can take</h2>
+  <p>A card is not a screenshot. The question is what kind of object it pretends to be, because that decides what leads, what the type sounds like, and what the person feels they are holding.</p>
+
+  <div class="stances">
+    <div class="stance rec">
+      <div class="name">הקריאה</div>
+      <div class="sub">the reading · an instrument</div>
+      <p>The card is a readout from the tracker: <b>here is the state of one tracked thing, and here is what is wrong with that state.</b> Stage, ladder, the open question. The photo and the hook sit on top of the instrument and give it its temperature.</p>
+      <p>This is the one thing a card from this site can do that a news post cannot: show a state, not an event. The series is recognisable at the third card. Risk: if the instrument dominates, the card is cold.</p>
+      <span class="tag">recommended</span>
+    </div>
+    <div class="stance">
+      <div class="name">התיק</div>
+      <div class="sub">the file · a record</div>
+      <p>The card is a page pulled from the file: <b>a claim, its source, its date, a stamp.</b> Paper, rules, provenance first. The charge comes from letting the source speak.</p>
+      <p>Strong on credibility, and the site already has this register (the passage lifted from a printed page). Risk: heavy in a feed, and it depends on every item having a quote worth leading with. Eight items at stage 1 mostly do not.</p>
+    </div>
+    <div class="stance">
+      <div class="name">המודעה</div>
+      <div class="sub">the notice · a poster</div>
+      <p>The card is a notice on a wall: <b>a photo, a headline, a stamp across it.</b> The charge comes from the image and the sentence.</p>
+      <p>Loudest in a feed, and with photos and hooks now allowed it is fully viable. Risk: it is what every news outlet's card already looks like. A stranger cannot tell it comes from a tracker, so nothing about it says "this is one of thirty, and it is being watched."</p>
+    </div>
+  </div>
+
+  <p>My recommendation is still <b>the reading</b>, but with the notice's tools: the instrument is the skeleton, and the photo and hook are the flesh on it. What separates this card from a news card is not restraint, it is that the state is visible. A charged photo under a stage colour, with a question on it and a ladder showing where the thing stands, is both emotional and unmistakably from a tracker.</p>
+
+  <h2>The chassis: what is true of every card</h2>
+  <p>These do not depend on stage. They are what makes thirty cards one series rather than thirty posts. Where a line is my proposal rather than something we agreed, it is marked.</p>
+
+  <dl class="prin">
+    <dt><span class="he">סדרה</span><small>one series</small></dt>
+    <dd><b>Same frame, same anatomy, same positions.</b> A stranger who has seen two cards recognises the third before reading it. Repetition is how a slow feed builds memory. Every card carries its place in the set: <span class="he">13 מתוך 30</span>.</dd>
+
+    <dt><span class="he">מצב</span><small>status is the surface</small></dt>
+    <dd><b>The stage colour paints the whole ground</b> and the stage word sits in the same place on every card. <i class="mine">proposal</i>When there is a photo, it is rendered in the stage colour (a duotone), so the photo and the status are one surface rather than a picture with a coloured stripe. This is what lets a photo in without breaking "status first".</dd>
+
+    <dt><span class="he">הסולם</span><small>the ladder, always whole</small></dt>
+    <dd><b>All six rungs on every card, empty rungs visible.</b> It shows that the status is computed and that nothing is finished. Stage 6 is drawn as a fall, not as a rung above 5.</dd>
+
+    <dt><span class="he">תמונה</span><small>a photo, encouraged</small></dt>
+    <dd><b>An illustrative photo is encouraged, not required.</b> Places, objects, systems, institutions: the fence, the shelter, the siren pole, the war room, the Knesset committee hall. No identifiable individuals. One photo per item, curated like the title, with the credit in the provenance line. A card without a photo falls back to the plain stage-colour ground, so no item is blocked on finding one.</dd>
+
+    <dt><span class="he">שאלה</span><small>a hook</small></dt>
+    <dd><b>Every card asks something or says something with an edge.</b> Under D1 the edge is the statement of absence (<span class="he">לא תועדה תוכנית לתיקון</span>) and the hook is the stage's public question (<span class="he">?עד כמה התוכנית הזו טובה</span>), both computed, so every card has both; a per-item written line overrides where someone wrote a better one. Charged is fine; personal is not.</dd>
+
+    <dt><span class="he">זמן</span><small>time, when it is the story</small></dt>
+    <dd><b>The clock is not on every card.</b> When an item has not moved for long enough that the stillness is the point, the card says it in words, not in a number: <span class="he">לא זז מאז אוקטובר 2023</span>. The threshold and the phrasing are open (D3). The date of the last movement can always sit small in the provenance line.</dd>
+
+    <dt><span class="he">ניתן לבדיקה</span><small>checkable</small></dt>
+    <dd><b>Site name, domain, and the source and date of any quote shown.</b> A card is a claim, and the project's claims carry sources.</dd>
+
+    <dt><span class="he">שלוש מסגרות</span><small>one design, three frames</small></dt>
+    <dd><b>Design for the tightest frame first</b> (1.91:1 link preview), then let 4:5 and 9:16 add room, never rearrange. A vertical stack survives cropping; a composition does not. A photo makes this harder, not easier: it needs a safe area in all three frames.</dd>
+  </dl>
+
+  <h3>The chassis as slots</h3>
+  <p>Read this as an inventory, not a layout. The photo is the ground; every slot on it is fixed except one.</p>
+  <div class="figure">
+    <div class="anat">
+      <div class="card" aria-label="schematic card">
+        <div class="slot"><span>13 מתוך 30</span><small>series stamp</small></div>
+        <div class="slot"><span style="font-size:15px">יושם</span><small>stage word</small></div>
+        <div class="slot"><div class="rungs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="fall"></i></div></div>
+        <div class="slot var"><small>the lead · varies by stage</small><span style="font-size:13px;line-height:1.35;color:var(--text-2)">the one thing a stranger takes in first — the hook, the title, the quote, the stillness, or the ladder, depending on the stage's story</span></div>
+        <div class="slot"><span style="font-size:11px">ביישובי העוטף לא הופעלה התרעה על חדירה</span><small>title</small></div>
+        <div class="slot"><span style="font-family:Assistant">oct8.co.il · צילום: דובר צה"ל</span><small>provenance</small></div>
+        <div class="photo-label">photo, in stage duotone</div>
+      </div>
+      <ol>
+        <li><b>Ground</b> — the photo in stage colour, or the plain stage-colour field when there is none.</li>
+        <li><b>Series stamp</b> — the item's number in the bounded set.</li>
+        <li><b>Stage word</b> — the ledger's word, never a synonym.</li>
+        <li><b>Ladder</b> — six rungs, position lit, regression as a fall.</li>
+        <li class="var"><b>The lead</b> — the only slot whose content and size change with stage: hook, quote, stillness, or the ladder itself.</li>
+        <li><b>Title</b> — always present; the lead on some stages, a caption on others.</li>
+        <li><b>Provenance</b> — domain, photo credit, quote source when a quote is shown, last movement date.</li>
+      </ol>
+    </div>
+    <div class="cap">Schematic only. Order, sizes and the exact photo treatment are the next step. The point is that six things are constant and one is not.</div>
+  </div>
+
+  <h2>What stage is allowed to change</h2>
+  <p>A card at <span class="he">הוכר</span> should not be the card at <span class="he">יושם</span> with a different colour. But the difference should not be a different design. It should be a different <b>story</b>, told through the one variable slot and the hook.</p>
+  <p>Each stage holds a different tension, and the ledger already names it: the per-stage public question. Stage 1 asks how urgent; stage 2 whether the acknowledgement matches what happened; stage 3 whether the plan addresses the problem; stages 4 and 5 how far the implementation does. Those questions are the hooks, and they change with stage by construction. Roy's example, "how good is this plan?", is the stage-3 one.</p>
+  <p>Which also settles 7 September. The four leads on the canvas (<span class="he">המחוון</span>, <span class="he">המונה</span>, <span class="he">הכותרת</span>, <span class="he">הקבלה</span>) are not four rival designs. They are the right lead for different stages:</p>
+  <p class="q"><span class="he">זוהה</span> — nothing has happened; the stillness leads (in words, where it is long enough to matter; otherwise the title and the urgency question). <span class="he">הוכר</span> — someone admitted it: the admission leads, quoted. <span class="he">הוכרזה תוכנית</span> — a promise was made: the promise leads, with the "does it address the problem" hook. <span class="he">יושם</span> — it moved: the ladder leads, and the empty fifth rung is the point. <span class="he">אומת עצמאית</span> — the verifying institution leads. <span class="he">נסוג</span> — the fall leads, drawn as a drop from where it was.</p>
+  <p>That is the hypothesis for step 2: six cards on one chassis, each with a different lead, rather than six visual directions.</p>
+
+  <h2>Decisions</h2>
+
+  <div class="dec" style="border-color:var(--s4)">
+    <div class="k" style="color:var(--s4)">D1 · decided 8 Sep</div>
+    <h3>The stance: a call to action, spoken by the facts</h3>
+    <p>Roy's fourth option, replacing the three above. The card does not present the item's status; it calls for the item to move. The call is not an imperative in anyone's mouth — it is a computed statement about what the record holds or does not hold for one step of the ladder: <span class="he">לא תועדה תוכנית לתיקון הכשל</span>, <span class="he">לא תועד אימות בלתי תלוי</span>. Naturally that step is the current one or the next one, but the card is not bound to the next step; any step can be the subject, depending on what is concretely designed.</p>
+    <p>Impersonal: no institution is named. The ultimate responsibility is a judgement the site does not make. A statement of absence invites contradiction, so <span class="he">?יודעים אחרת</span> is the standing invitation, and the date the absence has held since supplies the charge when it matters (that is D3).</p>
+    <p>The stage question is the second line (<span class="he">?האם זה פתרון מספק</span>), present before voting opens; the site tells visitors that voting and analyst opinions open soon after launch. The ladder stays and the ground is the current stage's colour. Every card prints its address — the item's permanent number, <span class="mono">oct8.co.il/13</span> — so a reader drawn to one item can find it. An illustrative image is encouraged on every card.</p>
+    <p>Several cards are generated per item — at least one about the current step and one about the next — and the person sharing picks which one to share.</p>
+    <p class="lean">Working phrasing is <span class="he">לא תועד/ה</span> ("not documented") — what the ledger actually knows, one verb across the series — rather than <span class="he">לא פורסמה</span>, which asserts more than the record can. Settle it in D4. The printed number is the item's permanent id, not its rank, because ids have gaps and addresses must not change.</p>
+  </div>
+
+  <div class="dec" style="border-color:var(--s4)">
+    <div class="k" style="color:var(--s4)">D2 · decided 8 Sep</div>
+    <h3>The photo treatment: mixed, by luck</h3>
+    <p>Three treatments coexist: duotone in the stage colour, the natural photo under a dark scrim with the stage colour on type and ladder, and the plain stage-colour card with no photo. The treatment varies; the anatomy does not — stamp, stage word, ladder and address sit in the same places on every card, so the series is recognised by its skeleton while the skin catches different eyes.</p>
+    <p>Variety is random. When a person opens the share sheet, the post and story cards are drawn by luck — step, photo, treatment — with a shuffle to re-roll. Roy's reasoning: some people are drawn to this, some to that, and luck is what makes the third share of the same item look new on a feed that tracks the same 29 things for years. The link preview is the exception: one deterministic card per item, the item's canonical face on every WhatsApp and Telegram share.</p>
+    <p>Photos: several per item, zero or more, Roy sources. Places, objects, systems, institutions; no recognisable faces, no victims. Credit printed on the card — partnership as well as licence. Pools with clear terms: IDF Spokesperson, GPO (<span class="he">לע"מ</span>), Wikimedia Commons under CC BY / CC BY-SA; press photos only with a licence. Photo terms go to the pro-bono review with the sources. Data: <span class="mono">images: [{src, credit, license, focal}]</span>.</p>
+    <p>Dark theme only at launch. The sharer's theme is irrelevant to the person who sees the card; a light "paper" variant can be one more die later.</p>
+    <p>Build shape changes (recorded in <span class="mono">docs/roadmap.html</span>): only the link card is rendered at build time by Playwright; post and story cards are composed in the reader's browser at share time from the same DOM and globals.css. A dev-only contact sheet renders every combination for one item so legibility is checked once, not by luck. Prove font embedding and iOS Safari image export in the first build.</p>
+  </div>
+
+  <div class="dec">
+    <div class="k">D3</div>
+    <h3>When time is the story</h3>
+    <p>The clock is conditional. What is the threshold (a year? two? "since before the last anniversary"?), and what is the phrasing: <span class="he">לא זז מאז אוקטובר 2023</span> / <span class="he">שנתיים בלי תזוזה</span> / <span class="he">עדיין בשלב 1</span>. And does it replace the hook or sit beside it?</p>
+    <p class="lean">Month-and-year phrasing, shown when the item has not moved for a year or more, as the lead on stage-1 and stage-2 cards. Under a year, only the last-movement date in the provenance line. Roy flagged this as needing more thought; it can be decided while the six cards are being drawn.</p>
+  </div>
+
+  <div class="dec">
+    <div class="k">D4</div>
+    <h3>Where the writing comes from</h3>
+    <p>Hooks derived from the stage (one template per stage, every card covered on day one), per-item hooks written by hand (better, but 29 to write before 7 October and one more per new item), or both with hand-written winning. Same question for photos: 29 to source, credit and crop.</p>
+    <p class="lean">Both, hand-written winning. The stage template guarantees coverage; the hand-written hook is the upgrade path. Photos likewise: encouraged, never blocking.</p>
+  </div>
+
+  <div class="dec">
+    <div class="k">D5</div>
+    <h3>The card and the item page</h3>
+    <p>Still open from 7 September (A: the card is the item's above-the-fold; B: the card is its own packaged summary). The chassis works under either. It has to be settled by the end of the item step.</p>
+    <p class="lean">Leave it open until the six cards exist; if they and the item header converge, take A for free.</p>
+  </div>
+
+  <div class="next">Next step, once D2 and D4 are settled: cards on one chassis for every stage, each on a real published item with a real photo, in the three frames, with the current-step and next-step variants side by side. D3 can be decided from those.</div>
+</main>
