@@ -28,7 +28,13 @@
    "notes": "מנגנון ארגוני חוזר (עשר הזדמנויות שהוחמצו), להבדיל מקריאה שגויה של מסמך יחיד",
    "flags": [],
    "cluster": "warning",
-   "cluster_he": "התרעה ומודיעין"
+   "cluster_he": "התרעה ומודיעין",
+   "focus": "intel",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i01",
+   "v1_merge": null
   },
   {
    "id": "S002",
@@ -57,7 +63,13 @@
     "meta"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S003",
@@ -91,7 +103,13 @@
    "notes": "מרחיב את i10 משאלת ״לא ידעו״ לשאלת שרשרת האישור עצמה",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "nova",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i10",
+   "v1_merge": null
   },
   {
    "id": "S004",
@@ -125,7 +143,13 @@
    "notes": "i03 עוסק בזמן התגובה; זה עוסק בהיעדר פיקוד מאחד בין הכוחות שכן הגיעו, כולל אירועי דו-צדדי",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i03",
+   "v1_merge": null
   },
   {
    "id": "S005",
@@ -159,7 +183,13 @@
    "notes": "הסיבה שהתחקיר נותן לכשל של i04 — שגיאת תעדוף והנחה, לא מרחק או תזמון",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i04",
+   "v1_merge": null
   },
   {
    "id": "S006",
@@ -186,7 +216,13 @@
    "notes": "מוסיף ל-i12: הבסיס 6.5 ק״מ מהגבול סווג כעורפי, תשתית הגנה מזערית, חלון של 30 דקות לא נוצל",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i12",
+   "v1_merge": null
   },
   {
    "id": "S007",
@@ -213,7 +249,13 @@
    "notes": "ארבעה דרגי פיקוד נהרגו בשעות הראשונות באותה גזרה",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S008",
@@ -249,7 +291,13 @@
     "strong"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "squads",
+   "focus2": "mil",
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S009",
@@ -276,7 +324,13 @@
    "notes": "התמונה ההפוכה של i08 — כאן דווקא בקרת הכניסה הייתה המכשול",
    "flags": [],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S010",
@@ -313,7 +367,13 @@
     "gap"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": "squads",
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S011",
@@ -342,7 +402,13 @@
     "sensitive-framing"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "squads",
+   "focus2": "mil",
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S012",
@@ -378,7 +444,13 @@
     "split-candidate"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "squads",
+   "focus2": "hfc",
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": "weapons-return"
   },
   {
    "id": "S013",
@@ -414,7 +486,13 @@
     "sensitive-framing"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S014",
@@ -441,7 +519,13 @@
    "notes": "פער דרגה/סמכות ואמירה מפורשת של ״כשל מוסרי״ בתחקיר עצמו",
    "flags": [],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S015",
@@ -471,7 +555,13 @@
     "needs-corroboration"
    ],
    "cluster": "warning",
-   "cluster_he": "התרעה ומודיעין"
+   "cluster_he": "התרעה ומודיעין",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S016",
@@ -507,7 +597,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i06",
+   "v1_merge": null
   },
   {
    "id": "S017",
@@ -536,7 +632,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i06",
+   "v1_merge": null
   },
   {
    "id": "S018",
@@ -572,7 +674,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S019",
@@ -608,7 +716,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S020",
@@ -644,7 +758,13 @@
     "needs-date"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "evacuation",
+   "lane": "parked",
+   "v1": "claims-on-i18",
+   "v1_merge": null
   },
   {
    "id": "S021",
@@ -678,7 +798,13 @@
    "notes": "אילת: 10 תקני עו״ס לכ-60,000 מפונים",
    "flags": [],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "evacuation",
+   "lane": "parked",
+   "v1": "claims-on-i18",
+   "v1_merge": null
   },
   {
    "id": "S022",
@@ -714,7 +840,13 @@
     "strong"
    ],
    "cluster": "shelter",
-   "cluster_he": "מיגון ומקלוט"
+   "cluster_he": "מיגון ומקלוט",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S023",
@@ -750,7 +882,13 @@
     "strong"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S024",
@@ -780,7 +918,13 @@
     "needs-date"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": null,
+   "focus2": null,
+   "park": "evacuation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S025",
@@ -810,7 +954,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S026",
@@ -839,7 +989,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S027",
@@ -875,7 +1031,13 @@
     "strong"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "evacuation",
+   "lane": "parked",
+   "v1": "claims-on-i18",
+   "v1_merge": null
   },
   {
    "id": "S028",
@@ -905,7 +1067,13 @@
     "gap"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S029",
@@ -934,7 +1102,13 @@
     "dated-source"
    ],
    "cluster": "legal",
-   "cluster_he": "מבנה סמכויות בחירום"
+   "cluster_he": "מבנה סמכויות בחירום",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S030",
@@ -970,7 +1144,13 @@
     "political"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S031",
@@ -1000,7 +1180,13 @@
     "gap"
    ],
    "cluster": "shelter",
-   "cluster_he": "מיגון ומקלוט"
+   "cluster_he": "מיגון ומקלוט",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S032",
@@ -1029,7 +1215,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S033",
@@ -1066,7 +1258,13 @@
     "gap"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "evacuation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S034",
@@ -1102,7 +1300,13 @@
     "strong"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S035",
@@ -1131,7 +1335,13 @@
     "gap"
    ],
    "cluster": "police",
-   "cluster_he": "משטרה וכוחות מיוחדים"
+   "cluster_he": "משטרה וכוחות מיוחדים",
+   "focus": "mil",
+   "focus2": "squads",
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S036",
@@ -1168,7 +1378,13 @@
     "gap"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S037",
@@ -1195,7 +1411,13 @@
    "notes": "הכוח המאורגן הראשון (11 חיילים) הגיע ב-11:20, כחמש שעות אחרי תחילת המתקפה",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "nova",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i10",
+   "v1_merge": null
   },
   {
    "id": "S038",
@@ -1224,7 +1446,13 @@
     "single-source"
    ],
    "cluster": "police",
-   "cluster_he": "משטרה וכוחות מיוחדים"
+   "cluster_he": "משטרה וכוחות מיוחדים",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S039",
@@ -1260,7 +1488,13 @@
     "strong"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S040",
@@ -1289,7 +1523,13 @@
     "contested"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S041",
@@ -1318,7 +1558,13 @@
     "strong"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S042",
@@ -1347,7 +1593,13 @@
     "needs-quote"
    ],
    "cluster": "medical",
-   "cluster_he": "פינוי, רפואה וחירום"
+   "cluster_he": "פינוי, רפואה וחירום",
+   "focus": "ems",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S043",
@@ -1377,7 +1629,13 @@
     "gap"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S044",
@@ -1406,7 +1664,13 @@
     "contested"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S045",
@@ -1435,7 +1699,13 @@
     "sensitive-framing"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S046",
@@ -1462,7 +1732,13 @@
    "notes": "המכון פועל בדרך כלל עם 5–8 רופאים משפטיים",
    "flags": [],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S047",
@@ -1492,7 +1768,13 @@
     "sensitive-framing"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S048",
@@ -1521,7 +1803,13 @@
     "circumstantial"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S049",
@@ -1552,7 +1840,13 @@
     "blocked-primary"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S050",
@@ -1583,7 +1877,13 @@
     "sensitive-framing"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S051",
@@ -1612,7 +1912,13 @@
     "needs-corroboration"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S052",
@@ -1642,7 +1948,13 @@
     "gap"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S053",
@@ -1671,7 +1983,13 @@
     "strong"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S054",
@@ -1701,7 +2019,13 @@
     "gap"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S055",
@@ -1730,7 +2054,13 @@
     "gap"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "hostages",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S056",
@@ -1767,7 +2097,13 @@
     "gap"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": "air-force"
   },
   {
    "id": "S057",
@@ -1804,7 +2140,13 @@
     "gap"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": "air-force"
   },
   {
    "id": "S058",
@@ -1840,7 +2182,13 @@
     "sensitive-framing"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": "intel",
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S059",
@@ -1876,7 +2224,13 @@
     "needs-corroboration"
    ],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": "intel",
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S060",
@@ -1912,7 +2266,13 @@
     "strong"
    ],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S061",
@@ -1948,7 +2308,13 @@
     "contested"
    ],
    "cluster": "warning",
-   "cluster_he": "התרעה ומודיעין"
+   "cluster_he": "התרעה ומודיעין",
+   "focus": "intel",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S062",
@@ -1984,7 +2350,13 @@
     "needs-corroboration"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S063",
@@ -2020,7 +2392,13 @@
     "remedy-signal"
    ],
    "cluster": "police",
-   "cluster_he": "משטרה וכוחות מיוחדים"
+   "cluster_he": "משטרה וכוחות מיוחדים",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S064",
@@ -2056,7 +2434,13 @@
     "strong"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S065",
@@ -2094,7 +2478,13 @@
     "remedy-signal"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S066",
@@ -2124,7 +2514,13 @@
     "strong"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S067",
@@ -2151,7 +2547,13 @@
    "notes": "i12 עוסק בקשר אוגדה–מטכ״ל; זה בפיקוד הפנימי של האוגדה על כוחותיה",
    "flags": [],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i12",
+   "v1_merge": null
   },
   {
    "id": "S068",
@@ -2181,7 +2583,13 @@
     "needs-corroboration"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "squads",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S069",
@@ -2210,7 +2618,13 @@
     "strong"
    ],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": "intel",
+   "park": null,
+   "lane": "focus",
+   "v1": "claims-on-i02",
+   "v1_merge": null
   },
   {
    "id": "S070",
@@ -2239,7 +2653,13 @@
     "single-source"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "intel",
+   "focus2": "mil",
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S071",
@@ -2268,7 +2688,13 @@
     "single-source"
    ],
    "cluster": "command",
-   "cluster_he": "פיקוד, שליטה וזמן תגובה"
+   "cluster_he": "פיקוד, שליטה וזמן תגובה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S072",
@@ -2297,7 +2723,13 @@
     "method-example"
    ],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S073",
@@ -2326,7 +2758,13 @@
     "contested"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S074",
@@ -2353,7 +2791,13 @@
    "notes": "נתון מתוך תחקיר צה״ל עצמו שנמסר לעיתונות — לא אימות עצמאי",
    "flags": [],
    "cluster": "barrier",
-   "cluster_he": "המכשול והחדירה"
+   "cluster_he": "המכשול והחדירה",
+   "focus": "mil",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S075",
@@ -2382,7 +2826,13 @@
     "pattern"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "squads",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": "weapons-return"
   },
   {
    "id": "S076",
@@ -2412,7 +2862,13 @@
     "political"
    ],
    "cluster": "warning",
-   "cluster_he": "התרעה ומודיעין"
+   "cluster_he": "התרעה ומודיעין",
+   "focus": null,
+   "focus2": null,
+   "park": "other",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S077",
@@ -2442,7 +2898,13 @@
     "contested"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S078",
@@ -2471,7 +2933,13 @@
     "ngo-finding"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": "intel",
+   "focus2": "mil",
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S079",
@@ -2508,7 +2976,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S080",
@@ -2538,7 +3012,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S081",
@@ -2574,7 +3054,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S082",
@@ -2603,7 +3089,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S083",
@@ -2630,7 +3122,13 @@
    "notes": "מבוסס על תצהיר המבקר לבג״ץ — עמדה מתדיינת",
    "flags": [],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S084",
@@ -2659,7 +3157,13 @@
     "strong"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S085",
@@ -2689,7 +3193,13 @@
     "political"
    ],
    "cluster": "accountability",
-   "cluster_he": "חקירה ואחריותיות"
+   "cluster_he": "חקירה ואחריותיות",
+   "focus": null,
+   "focus2": null,
+   "park": "accountability",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S086",
@@ -2719,7 +3229,13 @@
     "single-source"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S087",
@@ -2748,7 +3264,13 @@
     "strong"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S088",
@@ -2777,7 +3299,13 @@
     "strong"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S089",
@@ -2814,7 +3342,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S090",
@@ -2844,7 +3378,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S091",
@@ -2875,7 +3415,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S092",
@@ -2913,7 +3459,13 @@
     "political"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S093",
@@ -2942,7 +3494,13 @@
     "inference-risk"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S094",
@@ -2972,7 +3530,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S095",
@@ -3002,7 +3566,13 @@
     "political"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S096",
@@ -3032,7 +3602,13 @@
     "sensitive"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S097",
@@ -3063,7 +3639,13 @@
     "strong"
    ],
    "cluster": "shelter",
-   "cluster_he": "מיגון ומקלוט"
+   "cluster_he": "מיגון ומקלוט",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S098",
@@ -3093,7 +3675,13 @@
     "sensitive-framing"
    ],
    "cluster": "shelter",
-   "cluster_he": "מיגון ומקלוט"
+   "cluster_he": "מיגון ומקלוט",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "hold",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S099",
@@ -3123,7 +3711,13 @@
     "sensitive-framing"
    ],
    "cluster": "shelter",
-   "cluster_he": "מיגון ומקלוט"
+   "cluster_he": "מיגון ומקלוט",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S100",
@@ -3153,7 +3747,13 @@
     "strong"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": "hfc",
+   "focus2": null,
+   "park": null,
+   "lane": "focus",
+   "v1": "incident",
+   "v1_merge": null
   },
   {
    "id": "S101",
@@ -3183,7 +3783,13 @@
     "strong"
    ],
    "cluster": "squads",
-   "cluster_he": "כיתות כוננות והגנה מרחבית"
+   "cluster_he": "כיתות כוננות והגנה מרחבית",
+   "focus": "hfc",
+   "focus2": "hfc",
+   "park": null,
+   "lane": "focus",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S102",
@@ -3212,7 +3818,13 @@
     "needs-corroboration"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S103",
@@ -3241,7 +3853,13 @@
     "gap"
    ],
    "cluster": "alerts",
-   "cluster_he": "התרעה, מידע ותקשורת לאזרח"
+   "cluster_he": "התרעה, מידע ותקשורת לאזרח",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S104",
@@ -3271,7 +3889,13 @@
     "merge-candidate"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S105",
@@ -3301,7 +3925,13 @@
     "needs-primary"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S106",
@@ -3331,7 +3961,13 @@
     "weak-source"
    ],
    "cluster": "evacuation",
-   "cluster_he": "פינוי, קליטה ורווחה"
+   "cluster_he": "פינוי, קליטה ורווחה",
+   "focus": null,
+   "focus2": null,
+   "park": "populations",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S107",
@@ -3362,7 +3998,13 @@
     "political"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   },
   {
    "id": "S108",
@@ -3393,8 +4035,41 @@
     "political"
    ],
    "cluster": "documentation",
-   "cluster_he": "תיעוד, זיהוי וראיות"
+   "cluster_he": "תיעוד, זיהוי וראיות",
+   "focus": null,
+   "focus2": null,
+   "park": "documentation",
+   "lane": "parked",
+   "v1": null,
+   "v1_merge": null
   }
  ],
- "verified_spotcheck": "5 מקורות נבדקו מחדש ידנית ב-4.9.2026: מבקר המדינה 30.6.2026, ToI שדרות, או״ם OSRSG, כאן בג״ץ, 972mag. שני ציטוטים תוקנו (S081, S106)."
+ "verified_spotcheck": "5 מקורות נבדקו מחדש ידנית ב-4.9.2026: מבקר המדינה 30.6.2026, ToI שדרות, או״ם OSRSG, כאן בג״ץ, 972mag. שני ציטוטים תוקנו (S081, S106).",
+ "focus_categories": {
+  "mil": "תגובה צבאית למתקפה",
+  "intel": "מודיעין בזמן אמת",
+  "ems": "שירותי חירום (100 / 101 / מד״א / בתי חולים)",
+  "nova": "פסטיבל נובה",
+  "squads": "כיתות כוננות",
+  "hfc": "פיקוד העורף והעורף האזרחי",
+  "media": "תקשורת ותיקשור"
+ },
+ "focus_order": [
+  "mil",
+  "intel",
+  "ems",
+  "nova",
+  "squads",
+  "hfc",
+  "media"
+ ],
+ "park_names": {
+  "documentation": "תיעוד, זיהוי וראיות",
+  "accountability": "חקירה ואחריותיות",
+  "evacuation": "פינוי, קליטה ורווחה",
+  "hostages": "חטופים ונעדרים",
+  "populations": "אוכלוסיות שלא כוסו",
+  "other": "אחר"
+ },
+ "v1_note": "נבחר 5.9.2026: 32 אירועים בשש קטגוריות. נובה קופלה לתגובה צבאית. i08 ו-i15 (ממחישים, ללא מקור) ירדו. שלב אינו קריטריון בחירה; ציד תיקון הוא חובה לכל אירוע שנכנס."
 }
