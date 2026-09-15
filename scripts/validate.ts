@@ -20,14 +20,33 @@ import { Incident, Parent, Place, Taxonomy, INDEPENDENT_TYPES } from '../data/sc
 import { stageOf, hasIndependentVerification } from '../lib/stage.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DATA = join(ROOT, 'data');
 const STRICT = process.argv.includes('--strict');
+
+/**
+ * Which pool to judge. Both are checked on every push, by the same schema, so
+ * a change to data/schema/index.ts that the fixtures do not satisfy turns the
+ * build red on the commit that makes it - not weeks later when someone next
+ * opens dev and finds it broken.
+ */
+const flag = process.argv.find((a) => a.startsWith('--pool='))?.slice('--pool='.length);
+const POOL = flag ?? 'live';
+if (POOL !== 'live' && POOL !== 'test') {
+  console.error(`\n  --pool=${flag} is not a pool; expected "live" or "test".\n`);
+  process.exit(2);
+}
+/** Fixture ids start with t, real ones with i. Checked below, both ways. */
+const PREFIX = POOL === 'test' ? 't' : 'i';
+
+const SHARED = join(ROOT, 'data');
+const DATA = join(SHARED, POOL);
 
 const errors: string[] = [];
 const warnings: string[] = [];
 const fail = (where: string, msg: string) => errors.push(`${where}: ${msg}`);
 const warn = (where: string, msg: string) => warnings.push(`${where}: ${msg}`);
 const read = (rel: string) => JSON.parse(readFileSync(join(DATA, rel), 'utf8'));
+/** The taxonomy is not pool data: both pools render the same stages. */
+const readShared = (rel: string) => JSON.parse(readFileSync(join(SHARED, rel), 'utf8'));
 
 /** The incidents the site shows. Everything else is work in progress. */
 const published: string[] = read('published.json');
@@ -35,7 +54,7 @@ const isPublished = (id: string) => published.includes(id);
 const issues = (e: { issues: { path: PropertyKey[]; message: string }[] }) =>
   e.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ');
 
-const taxonomy = Taxonomy.parse(read('taxonomy.json'));
+const taxonomy = Taxonomy.parse(readShared('taxonomy.json'));
 
 const parents = (read('parents.json') as unknown[]).map((raw, n) => {
   const r = Parent.safeParse(raw);
@@ -146,11 +165,14 @@ for (const file of files) {
 }
 
 for (const id of published) {
-  if (!seen.has(id)) fail('published.json', `${id} is published but has no file in data/incidents/`);
+  if (!seen.has(id)) fail('published.json', `${id} is published but has no file in data/${POOL}/incidents/`);
+  if (!id.startsWith(PREFIX)) {
+    fail('published.json', `${id} is published from the ${POOL} pool but its id says otherwise - ids start with "${PREFIX}" here`);
+  }
 }
 
 const label = STRICT ? 'strict (staging/prod)' : 'permissive (dev)';
-console.log(`\n  hayom-shaacharei . data validation . ${label}`);
+console.log(`\n  hayom-shaacharei . data validation . ${POOL} pool . ${label}`);
 console.log(`  ${parents.length} parents in ${cells.size} matrix cells | ${published.length} of ${files.length} incidents published | ${claimCount} claims, ${publishable} with a source URL | ${places.length} places | ${taxonomy.stages.length} stages\n`);
 for (const w of warnings.slice(0, 6)) console.log(`  warn  ${w}`);
 if (warnings.length > 6) console.log(`  warn  ... and ${warnings.length - 6} more`);

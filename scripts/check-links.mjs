@@ -9,7 +9,10 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const DIR = join(process.cwd(), 'data', 'incidents');
+// Runs on promotion to staging, so the real ledger is the default; --pool=test
+// exists only so the flag means the same thing in every script.
+const pool = process.argv.find((a) => a.startsWith('--pool='))?.slice(7) ?? 'live';
+const DIR = join(process.cwd(), 'data', pool, 'incidents');
 const claims = readdirSync(DIR).filter((f) => f.endsWith('.json')).flatMap((f) => {
   const inc = JSON.parse(readFileSync(join(DIR, f), 'utf8'));
   return inc.claims.filter((c) => c.url).map((c) => ({ incident: inc.id, id: c.id, url: c.url }));

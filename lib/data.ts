@@ -2,15 +2,31 @@
  * The ledger, as the site reads it.
  *
  * Everything here comes from files in data/. There is no database and no API:
- * the site is built from the repository, which is what makes "the ledger is
- * public and diffable" a fact about the project rather than a promise.
+ * the site is built from the repository, which is what makes "every change to
+ * the ledger is recorded and checkable" a fact about the project rather than a
+ * promise. (The record readers can check is the public data mirror, not this
+ * repository, which stays private - see DIA-370.)
  */
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ENV } from '@/app/env';
-import parentsJson from '@/data/parents.json';
-import placesJson from '@/data/places.json';
+import { POOL } from '@/lib/pool';
 import taxonomyJson from '@/data/taxonomy.json';
-import publishedJson from '@/data/published.json';
 import { stageOf, isContested, type Stage } from './stage';
+
+/**
+ * Everything except the taxonomy comes from the pool this build reads -
+ * data/live for staging and prod, data/test for dev unless told otherwise.
+ * See lib/pool.ts. The taxonomy is shared: stages, colours and question
+ * wording are the product, not the content, and fixtures that invented their
+ * own would be testing a site nobody ships.
+ *
+ * These are read rather than imported because the path is chosen at build
+ * time. A static export has no runtime, so this happens once, on the machine
+ * that builds the site.
+ */
+const DIR = join(process.cwd(), 'data', POOL);
+const readPool = <T,>(file: string): T => JSON.parse(readFileSync(join(DIR, file), 'utf8')) as T;
 
 export type Claim = {
   id: string;
@@ -37,29 +53,25 @@ export type Parent = {
 };
 export type Place = { id: string; he: string; lat: number; lon: number; labelLeft?: boolean };
 
-export const parents = parentsJson as Parent[];
-export const places = placesJson as Place[];
+export const parents = readPool<Parent[]>('parents.json');
+export const places = readPool<Place[]>('places.json');
 export const taxonomy = taxonomyJson;
-export const published = publishedJson as string[];
+export const published = readPool<string[]>('published.json');
 
-// Incident files are read at build time. A static export has no runtime, so
-// this happens once, on the machine that builds the site.
-import { readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
-const DIR = join(process.cwd(), 'data', 'incidents');
-export const incidents: Incident[] = readdirSync(DIR)
+const INCIDENTS_DIR = join(DIR, 'incidents');
+export const incidents: Incident[] = readdirSync(INCIDENTS_DIR)
   .filter((f) => f.endsWith('.json'))
   .sort()
-  .map((f) => JSON.parse(readFileSync(join(DIR, f), 'utf8')) as Incident);
+  .map((f) => JSON.parse(readFileSync(join(INCIDENTS_DIR, f), 'utf8')) as Incident);
 
 /**
  * Which incidents this build renders pages for.
  *
  * staging and prod show only what is published, because staging exists to be
- * the site exactly as it would go out. dev shows everything, because that is
- * where the port is done and an unsourced incident is still a layout worth
- * looking at.
+ * the site exactly as it would go out. dev shows everything in its pool,
+ * because that is where the work is done and a half-finished record is still a
+ * layout worth looking at. On the fixture pool that is the whole point; on
+ * DATA_POOL=live it is the per-incident authoring loop.
  */
 export const visibleIncidents: Incident[] =
   ENV === 'dev' ? incidents : incidents.filter((i) => published.includes(i.id));

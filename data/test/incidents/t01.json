@@ -1,0 +1,299 @@
+{
+  "id": "t01",
+  "parent": "p1",
+  "he": "שרשרת ההתרעה האזורית — מידע שנאסף בשטח לא הגיע לדרג שמוסמך להחליט מה לעשות איתו",
+  "summary": "דיווחים שהגיעו מהשטח נרשמו בערוץ שאינו מחייב מענה, ולא הוגדר מי מוסמך להכריע אם דיווח בודד מצדיק הפצת התרעה אזורית. הוצג מתווה לערוץ דיווח ישיר, והוא הופעל בחלק מהיישובים.",
+  "illustrative": false,
+  "claims": [
+    {
+      "id": "t01-c01",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "12.11.2023",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c01",
+      "archive_url": null,
+      "contests": null,
+      "place": "nahaloz",
+      "quote": "דיווחים שנאספו בשטח הועברו בערוץ שאינו מחייב מענה, ולא נרשמו כהתרעה מחייבת במערכת הפיקודית"
+    },
+    {
+      "id": "t01-c02",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "03.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c02",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בבדיקה נמצא כי לא הוגדר מי הגורם המוסמך להכריע אם דיווח בודד מצדיק הפצת התרעה אזורית"
+    },
+    {
+      "id": "t01-c03",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "19.01.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c03",
+      "archive_url": null,
+      "contests": null,
+      "place": "beeri",
+      "quote": "שלושה דיווחים נפרדים באותו לילה טופלו כאירועים מקומיים ולא חוברו לתמונה אחת"
+    },
+    {
+      "id": "t01-c04",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "02.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c04",
+      "archive_url": null,
+      "contests": null,
+      "place": "kfaraza",
+      "quote": "לתושבי היישובים לא הייתה דרך לדעת אם דיווח שמסרו התקבל, נבדק או נדחה"
+    },
+    {
+      "id": "t01-c05",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "05.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c05",
+      "archive_url": null,
+      "contests": null,
+      "place": "kirya",
+      "quote": "המבנה שבו כל דרג מסנן את הדיווח לפני העברתו מייצר עיכוב מובנה שאינו תלוי בעומס"
+    },
+    {
+      "id": "t01-c06",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "22.02.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c06",
+      "archive_url": null,
+      "contests": null,
+      "place": "netiv",
+      "quote": "הנוהל שהיה בתוקף לא חייב תיעוד של דיווח שלא הוסלם, כך שלא נותר ממנו עקבות"
+    },
+    {
+      "id": "t01-c07",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "06.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c07",
+      "archive_url": null,
+      "contests": null,
+      "place": "erez",
+      "quote": "לא נמצא מנגנון שמאפשר לאחר האירוע לשחזר אילו דיווחים הגיעו ומתי"
+    },
+    {
+      "id": "t01-c08",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "11.04.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c08",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בתשובה נמסר כי מבנה הדיווח הקיים אינו מתאים לאירוע רב־זירתי וכי הנושא נבחן"
+    },
+    {
+      "id": "t01-c09",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "15.04.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c09",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההודעה הרשמית הכירה בכך ששרשרת האישורים ארוכה מדי לאירוע מתפתח"
+    },
+    {
+      "id": "t01-c10",
+      "asserts_stage": 2,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "07.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c10",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הגוף הנבדק אישר בכתב את הממצא ולא חלק על תיאור הכשל"
+    },
+    {
+      "id": "t01-c11",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "09.09.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c11",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הוצג מתווה להקמת ערוץ דיווח ישיר שאינו עובר דרך הדרג המקומי, ביעד של שנה"
+    },
+    {
+      "id": "t01-c12",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "10.09.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c12",
+      "archive_url": null,
+      "contests": null,
+      "place": "kirya",
+      "quote": "לפי התוכנית שהוצגה, הסמכות להפצת התרעה אזורית תעבור לגורם תורן ייעודי"
+    },
+    {
+      "id": "t01-c13",
+      "asserts_stage": 3,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "11.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c13",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ניתוח המתווה מצא שהוא מטפל בשלב ההסלמה אך לא בשלב שבו הדיווח נרשם לראשונה"
+    },
+    {
+      "id": "t01-c14",
+      "asserts_stage": 3,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "12.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c14",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ארגוני התושבים ביקשו שהמתווה יכלול חיווי חוזר לאדם שמסר את הדיווח"
+    },
+    {
+      "id": "t01-c15",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "18.03.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c15",
+      "archive_url": "https://example.com/archive/t01-c15",
+      "contests": null,
+      "place": "zikim",
+      "quote": "דווח כי הערוץ הישיר הופעל בחלק מהיישובים וכי ההטמעה נמשכת"
+    },
+    {
+      "id": "t01-c16",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "20.03.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c16",
+      "archive_url": null,
+      "contests": null,
+      "place": "sderot",
+      "quote": "בסיור שנערך נמצא כי המערכת מותקנת ומאוישת בשעות הפעילות"
+    },
+    {
+      "id": "t01-c17",
+      "asserts_stage": 4,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "05.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c17",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההפעלה תועדה בשמונה יישובים מתוך היקף שלא פורסם במלואו"
+    },
+    {
+      "id": "t01-c18",
+      "asserts_stage": 0,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "06.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c18",
+      "archive_url": null,
+      "contests": "t01-c15",
+      "place": "kissufim",
+      "quote": "לפי הארגון, באחד היישובים שנמנו הערוץ קיים אך לא אויש מעולם בשעות הלילה"
+    },
+    {
+      "id": "t01-c19",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "07.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c19",
+      "archive_url": null,
+      "contests": null,
+      "place": "niroz",
+      "quote": "גם לאחר ההפעלה, דיווח שנמסר בטלפון ליישוב עצמו אינו נכנס למערכת החדשה"
+    },
+    {
+      "id": "t01-c20",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "08.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c20",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "נמסר כי הפער בין הערוץ הישיר לדיווח הטלפוני מוכר ונבחנת דרך לגשר עליו"
+    },
+    {
+      "id": "t01-c21",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "09.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t01/c21",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בהשוואה בין־לאומית, מערכות דומות נכשלות בדיוק בנקודת המעבר בין דיווח אזרחי לרישום מבצעי"
+    }
+  ],
+  "summaries": [
+    {
+      "stage": 2,
+      "lines": [
+        {
+          "text": "ההכרה בכשל התמקדה באורך שרשרת האישורים, ולא בשאלה מי מוסמך להכריע על דיווח בודד.",
+          "cites": [
+            "t01-c08",
+            "t01-c09"
+          ]
+        },
+        {
+          "text": "הגוף הנבדק לא חלק על תיאור הכשל עצמו.",
+          "cites": [
+            "t01-c10"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 3,
+      "lines": [
+        {
+          "text": "המתווה שהוצג מעביר את סמכות ההפצה לגורם תורן ייעודי, ביעד של שנה.",
+          "cites": [
+            "t01-c11",
+            "t01-c12"
+          ]
+        },
+        {
+          "text": "ניתוח חיצוני מצא שהמתווה אינו נוגע בשלב שבו הדיווח נרשם לראשונה.",
+          "cites": [
+            "t01-c13"
+          ]
+        }
+      ]
+    }
+  ]
+}

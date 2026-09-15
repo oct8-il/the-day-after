@@ -25,7 +25,8 @@ export const PHASE = z.enum(['before', 'during', 'after']);
 const DATE = z.string().regex(/^(\d{2}\.)?(\d{2}\.)?\d{4}$/, 'date must be YYYY, MM.YYYY or DD.MM.YYYY');
 
 export const Claim = z.object({
-  id: z.string().regex(/^i\d{2,}-c\d{2,}$/),
+  /** i.. for the real ledger, t.. for fixtures - see lib/pool.ts */
+  id: z.string().regex(/^[it]\d{2,}-c\d{2,}$/),
   asserts_stage: ASSERTS_STAGE,
   source_type: SOURCE_TYPE,
   /** The publication, institution or report — never a person. */
@@ -57,7 +58,10 @@ export const Summary = z.object({
 });
 
 export const Incident = z.object({
-  id: z.string().regex(/^i\d{2,}$/),
+  /** i.. for the real ledger, t.. for fixtures. The prefix is the pool, and
+   *  validate.ts refuses a record whose prefix disagrees with the pool it sits
+   *  in, so a fixture can never be mistaken for a record of anything. */
+  id: z.string().regex(/^[it]\d{2,}$/),
   parent: z.string().regex(/^p\d+$/),
   he: z.string().min(8),
   summary: z.string().min(20),

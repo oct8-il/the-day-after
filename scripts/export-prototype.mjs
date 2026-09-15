@@ -13,7 +13,9 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'docs', 'prototype.html');
-const OUT = join(ROOT, 'data');
+// A one-off from 3 Sep: it seeded the ledger from the frozen prototype. It
+// writes the real pool, not the fixtures.
+const OUT = join(ROOT, 'data', 'live');
 
 const html = readFileSync(SRC, 'utf8');
 const lines = html.split('\n');
