@@ -1,0 +1,117 @@
+{
+  "id": "t04",
+  "parent": "p5",
+  "illustrative": false,
+  "he": "ציוד הקשר של כיתות הכוננות אינו תואם בין יישובים סמוכים",
+  "summary": "כיתות כוננות ביישובים גובלים פועלות על תדרים וציוד שאינם מאפשרים קשר ישיר ביניהן. הוכרז מתווה להאחדה, בלי מועד יעד מחייב.",
+  "claims": [
+    {
+      "id": "t04-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "03.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c01",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בבדיקה נמצא כי אין תקן אחיד לציוד הקשר של כיתות הכוננות"
+    },
+    {
+      "id": "t04-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "28.03.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c02",
+      "archive_url": null,
+      "contests": null,
+      "place": "kissufim",
+      "quote": "שני יישובים במרחק של קילומטרים ספורים אינם יכולים לתקשר ישירות"
+    },
+    {
+      "id": "t04-c03",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "05.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c03",
+      "archive_url": null,
+      "contests": null,
+      "place": "holit",
+      "quote": "הרכש נעשה ברמת היישוב, כך שכל יישוב בחר ציוד אחר"
+    },
+    {
+      "id": "t04-c04",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "14.10.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c04",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "נמסר כי היעדר האחדה מוכר וכי הוא נובע ממבנה הרכש"
+    },
+    {
+      "id": "t04-c05",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "15.10.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c05",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההכרה התמקדה ברכש ולא ביכולת התיאום בשטח"
+    },
+    {
+      "id": "t04-c06",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "02.06.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c06",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הוצג מתווה להאחדת הציוד והתדרים במרחב אחד כפיילוט"
+    },
+    {
+      "id": "t04-c07",
+      "asserts_stage": 3,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "03.06.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c07",
+      "archive_url": null,
+      "contests": null,
+      "place": "kshalom",
+      "quote": "לפי המתווה, ההאחדה תתחיל במרחב אחד ותורחב בהמשך"
+    },
+    {
+      "id": "t04-c08",
+      "asserts_stage": 3,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "09.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c08",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "המתווה אינו קובע מועד יעד, ולכן אינו ניתן למדידה"
+    },
+    {
+      "id": "t04-c09",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "02.2026",
+      "url": "https://example.com/hayom-shaacharei/fixture/t04/c09",
+      "archive_url": null,
+      "contests": null,
+      "place": "niroz",
+      "quote": "נכון לפרסום, היישובים שנבדקו טרם קיבלו ציוד חדש"
+    }
+  ]
+}

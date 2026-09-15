@@ -18,6 +18,30 @@ const environment =
   (branch === 'prod' ? 'prod' : branch === 'staging' ? 'staging' : 'dev');
 
 /**
+ * Which pool of ledger data the build reads: data/live (the real ledger) or
+ * data/test (fixtures). Derived here so there is one rule in one place, and
+ * handed to the app through NEXT_PUBLIC_POOL the same way the environment is.
+ *
+ * dev reads fixtures, because dev is where the UI is built and the real 33
+ * incidents happen not to contain half the states a page has to survive.
+ * DATA_POOL=live switches it back for the per-incident authoring loop.
+ *
+ * staging and prod read the real ledger and nothing else. This is not a
+ * default that can be overridden - it is a refusal. A deployment that shows
+ * invented records is the one failure this project cannot recover from.
+ */
+const pool = process.env.DATA_POOL ?? (environment === 'dev' ? 'test' : 'live');
+
+if (pool !== 'live' && pool !== 'test') {
+  throw new Error(`DATA_POOL is ${JSON.stringify(process.env.DATA_POOL)}; expected "live" or "test".`);
+}
+if (pool === 'test' && environment !== 'dev') {
+  throw new Error(
+    `Refusing to build ${environment} from the test pool. Fixtures are not publishable data.`,
+  );
+}
+
+/**
  * `next dev` serves /_next/ only to the origin it was opened from, so a phone
  * on the same wi-fi loading http://<laptop-ip>:3000 gets the HTML and none of
  * the JavaScript - the page renders and nothing on it reacts. Every private
@@ -40,5 +64,5 @@ export default {
   images: { unoptimized: true },
   reactStrictMode: true,
   allowedDevOrigins: devOrigins,
-  env: { NEXT_PUBLIC_ENV: environment },
+  env: { NEXT_PUBLIC_ENV: environment, NEXT_PUBLIC_POOL: pool },
 };

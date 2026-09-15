@@ -1,0 +1,92 @@
+[
+  {
+    "id": "p1",
+    "short": "מודיעין בזמן אמת",
+    "he": "מודיעין והתרעה בזמן אמת",
+    "description": "מה הצטבר בליל 6–7 באוקטובר, ומה נעשה עם המידע",
+    "domain": "mil",
+    "phase": "before",
+    "icon": "radar",
+    "illustrative": true
+  },
+  {
+    "id": "p2",
+    "short": "המכשול והחדירה",
+    "he": "המכשול, אמצעי התצפית והחדירה",
+    "description": "הגדר, התצפית והירי מרחוק, והמוצבים שעליה",
+    "domain": "mil",
+    "phase": "during",
+    "icon": "fence",
+    "illustrative": true
+  },
+  {
+    "id": "p3",
+    "short": "תגובה צבאית",
+    "he": "התגובה הצבאית וזמן ההגעה",
+    "description": "כמה זמן עבר עד שכוח מספיק הגיע, ומי פיקד עליו",
+    "domain": "mil",
+    "phase": "during",
+    "icon": "clock",
+    "illustrative": true
+  },
+  {
+    "id": "p4",
+    "short": "שירותי חירום",
+    "he": "שירותי החירום והרפואה",
+    "description": "מוקדי 100 ו-101, מד״א, פינוי הפצועים ובתי החולים",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "pulse",
+    "illustrative": true
+  },
+  {
+    "id": "p5",
+    "short": "כיתות כוננות",
+    "he": "כיתות הכוננות ביישובים",
+    "description": "חימוש, הכשרה, אחסון נשק וקשר לצבא",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "shield",
+    "illustrative": true
+  },
+  {
+    "id": "p6",
+    "short": "העורף האזרחי",
+    "he": "העורף האזרחי",
+    "description": "התרעה, מיגון והיערכות, מידע לתושבים ותשתיות תקשורת",
+    "domain": "civ",
+    "phase": "during",
+    "icon": "bell",
+    "illustrative": true
+  },
+  {
+    "id": "p7",
+    "short": "חקירה ואחריותיות",
+    "he": "חקירת האירוע והאחריות עליו",
+    "description": "האם קיים מנגנון בדיקה לאומי, ומה נחקר בפועל",
+    "domain": "soc",
+    "phase": "after",
+    "icon": "gavel",
+    "illustrative": true
+  },
+  {
+    "id": "p8",
+    "short": "פינוי, קליטה ורווחה",
+    "he": "פינוי התושבים, קליטתם ושיקום היישובים",
+    "description": "הוצאה מאזור הסכנה, קליטה ברשויות, דיור ורווחה",
+    "domain": "civ",
+    "phase": "after",
+    "icon": "home",
+    "illustrative": true
+  },
+  {
+    "id": "p9",
+    "short": "תקשורת ותיקשור",
+    "he": "התקשורת והתיקשור ביום האירוע",
+    "description": "שתיקת הדוברויות, מידע לא מאומת ופערי סיקור",
+    "domain": "soc",
+    "phase": "during",
+    "icon": "mic",
+    "illustrative": true
+  }
+]

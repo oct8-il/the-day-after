@@ -39,13 +39,26 @@ jobs:
       - run: npm ci
       # dev may carry illustrative records while the port is in progress.
       # staging and prod may not: strict refuses anything without a live source.
-      - name: validate
+      - name: validate the ledger
         run: |
           if [ "${{ github.ref_name }}" = "staging" ] || [ "${{ github.ref_name }}" = "prod" ]; then
             npm run validate:strict
           else
             npm run validate
           fi
+      # The fixtures dev renders are checked by the same schema, on every push,
+      # including the pushes to staging and prod that never render them. This
+      # is what keeps the two pools the same shape: change data/schema/index.ts
+      # and the commit that changes it is the one that goes red, not the next
+      # person to open dev.
+      - name: validate the fixtures
+        run: npm run validate:test
+      # Valid fixtures are not the same as useful ones. Delete the regressed
+      # incident, or give the one with no summaries a summary, and nothing
+      # above would notice - the gap would surface weeks later as a layout bug
+      # on a phone. This asserts the pool still covers every state on the list.
+      - name: the fixtures still cover every state
+        run: npm run check:fixtures
 
   # ------------------------------------------------------------------- build
   build:

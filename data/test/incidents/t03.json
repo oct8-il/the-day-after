@@ -1,0 +1,81 @@
+{
+  "id": "t03",
+  "parent": "p6",
+  "illustrative": false,
+  "he": "ההודעות ליישוב מגיעות רק דרך אפליקציה, ומי שאינו מתקין אותה אינו מקבל דבר",
+  "summary": "ערוץ ההודעות היישובי מותנה בהתקנת אפליקציה, כך שחלק מהתושבים אינם מקבלים הודעה כלל. הכשל הוכר בתשובה רשמית; לא פורסמה תוכנית לתיקונו.",
+  "claims": [
+    {
+      "id": "t03-c01",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "04.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c01",
+      "archive_url": null,
+      "contests": null,
+      "place": "kfaraza",
+      "quote": "בסקר שנערך ביישוב נמצא שכחמישית מבתי האב אינם משתמשים בערוץ ההודעות כלל"
+    },
+    {
+      "id": "t03-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "11.05.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c02",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההודעות נשלחות בערוץ אחד בלבד, ואין מסלול חלופי לטלפון קווי או למסרון"
+    },
+    {
+      "id": "t03-c03",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "07.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c03",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "מערכות המבוססות על התקנה מרצון מגיעות בממוצע לשני שלישים מן האוכלוסייה"
+    },
+    {
+      "id": "t03-c04",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "19.02.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c04",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בתשובה נמסר כי המגבלה מוכרת וכי נבחנות דרכים להרחיב את ההגעה"
+    },
+    {
+      "id": "t03-c05",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "20.02.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c05",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההודעה הרשמית אישרה שאין כיום מסלול הודעה שאינו מותנה באפליקציה"
+    },
+    {
+      "id": "t03-c06",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "01.2026",
+      "url": "https://example.com/hayom-shaacharei/fixture/t03/c06",
+      "archive_url": null,
+      "contests": null,
+      "place": "netiv",
+      "quote": "גם לאחר ההכרה, אין דרך לתושב לבדוק אם הוא רשום לקבלת ההודעות"
+    }
+  ]
+}

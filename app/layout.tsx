@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { ENV, IS_PROD, IS_HELD, LAUNCHED } from './env';
+import { POOL } from '@/lib/pool';
 import { SITE_NAME, SITE_URL } from './site';
 import './globals.css';
 
@@ -67,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {!IS_PROD && <div className="env-ribbon">{ENV}</div>}
+        {!IS_PROD && <div className="env-ribbon">{`${ENV} · ${POOL}`}</div>}
         {IS_HELD ? <Holding /> : children}
       </body>
     </html>

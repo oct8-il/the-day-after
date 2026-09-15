@@ -1,0 +1,184 @@
+{
+  "id": "t05",
+  "parent": "p3",
+  "illustrative": false,
+  "he": "זמני ההגעה של כוח מסייע ליישוב לא נמדדו באופן שיטתי",
+  "summary": "לא התקיימה מדידה שיטתית של הזמן שחולף בין קריאה לבין הגעת כוח מסייע. הוטמעה מדידה, וגוף בלתי תלוי אימת שהיא מתבצעת ושהנתונים מתפרסמים.",
+  "claims": [
+    {
+      "id": "t05-c01",
+      "asserts_stage": 1,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "02.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c01",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "לא נמצאו נתונים מסודרים על משך הזמן בין קריאה להגעת כוח מסייע"
+    },
+    {
+      "id": "t05-c02",
+      "asserts_stage": 1,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "17.02.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c02",
+      "archive_url": null,
+      "contests": null,
+      "place": "ofakim",
+      "quote": "הנתונים שנמסרו בעבר התבססו על דיווח ידני ולא על מדידה"
+    },
+    {
+      "id": "t05-c03",
+      "asserts_stage": 1,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "04.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c03",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בלי מדידה אחידה אי אפשר להשוות בין מרחבים או לזהות הידרדרות"
+    },
+    {
+      "id": "t05-c04",
+      "asserts_stage": 2,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "08.07.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c04",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "נמסר כי המדידה הקיימת אינה מספקת וכי נדרש מנגנון אחיד"
+    },
+    {
+      "id": "t05-c05",
+      "asserts_stage": 2,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "09.07.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c05",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ההכרה כללה גם את היעדר הפרסום, לא רק את המדידה"
+    },
+    {
+      "id": "t05-c06",
+      "asserts_stage": 3,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "21.11.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c06",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "הוצגה תוכנית להטמעת מדידה אוטומטית ולפרסום רבעוני"
+    },
+    {
+      "id": "t05-c07",
+      "asserts_stage": 3,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "12.2024",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c07",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "ארגונים ביקשו שהפרסום יכלול פילוח לפי מרחב ולא ממוצע ארצי"
+    },
+    {
+      "id": "t05-c08",
+      "asserts_stage": 4,
+      "source_type": "official",
+      "source": "גוף ממלכתי לדוגמה",
+      "date": "16.06.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c08",
+      "archive_url": "https://example.com/archive/t05-c08",
+      "contests": null,
+      "place": null,
+      "quote": "דווח כי המדידה הוטמעה בכל המרחבים וכי הדוח הראשון פורסם"
+    },
+    {
+      "id": "t05-c09",
+      "asserts_stage": 4,
+      "source_type": "press",
+      "source": "כלי תקשורת לדוגמה",
+      "date": "18.06.2025",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c09",
+      "archive_url": null,
+      "contests": null,
+      "place": "netivot",
+      "quote": "הדוח הראשון פורסם וכלל פילוח לפי מרחב"
+    },
+    {
+      "id": "t05-c10",
+      "asserts_stage": 5,
+      "source_type": "oversight",
+      "source": "גוף ביקורת לדוגמה",
+      "date": "03.2026",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c10",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "בבדיקה עצמאית נמצא כי המדידה מתבצעת כמתואר וכי הנתונים המתפרסמים תואמים את הרישום"
+    },
+    {
+      "id": "t05-c11",
+      "asserts_stage": 5,
+      "source_type": "research",
+      "source": "מכון מחקר לדוגמה",
+      "date": "04.2026",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c11",
+      "archive_url": null,
+      "contests": null,
+      "place": null,
+      "quote": "אימות חיצוני של שלושה רבעונים מצא התאמה בין הנתונים לבין רישומי המוקד"
+    },
+    {
+      "id": "t05-c12",
+      "asserts_stage": 1,
+      "source_type": "civil",
+      "source": "ארגון אזרחי לדוגמה",
+      "date": "05.2026",
+      "url": "https://example.com/hayom-shaacharei/fixture/t05/c12",
+      "archive_url": null,
+      "contests": null,
+      "place": "alumim",
+      "quote": "הפילוח שפורסם אינו יורד לרמת היישוב, ולכן אינו עונה על הבקשה המקורית"
+    }
+  ],
+  "summaries": [
+    {
+      "stage": 4,
+      "lines": [
+        {
+          "text": "ההטמעה דווחה כמלאה בכל המרחבים, והדוח הראשון פורסם עם פילוח לפי מרחב.",
+          "cites": [
+            "t05-c08",
+            "t05-c09"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 5,
+      "lines": [
+        {
+          "text": "גוף בלתי תלוי בדק את המנגנון ומצא שהוא פועל כמתואר.",
+          "cites": [
+            "t05-c10"
+          ]
+        },
+        {
+          "text": "אימות חיצוני של שלושה רבעונים מצא התאמה בין הנתונים המתפרסמים לבין הרישום.",
+          "cites": [
+            "t05-c11"
+          ]
+        }
+      ]
+    }
+  ]
+}
