@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.1 · 14 September 2026 · the pre-build interview folded in — breakpoint, deep links, jump mode, computed rules · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v2.2 · 14 September 2026 · the design defines the data shape · both versions of slide 6 specified · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -153,6 +153,7 @@
 <h2 id="stance">1 · Stance and shape</h2>
 <p>Most phone visitors arrive from a social post about one failure, so the item page is the front door and has to carry its own context. It keeps the control panel's stance — a finite, enumerated set of tracked problems, each with a computed state — without looking like a shrunken control room.</p>
 <p><strong>It is a slideshow post, not a story.</strong> That distinction decides the chrome: nothing runs on a timer, nothing counts down, the reader sets the pace, and slide 1 is a cover rather than the first frame of something in flight.</p>
+<div class="note"><strong>This document defines the data shape — not the other way around.</strong> Every screen here is drawn for the ideal case, and §10 is what those screens <em>demand</em> of the data, not a reading of what the data happens to be today. Where implementation cannot meet a demand, that is a compromise: it belongs in §12 as a known shortfall, and the design stays where it is. A screen is never narrowed to fit a field that already exists.</div>
 <table>
   <tr><th>Slide</th><th>Name</th><th>What it is</th><th>State</th></tr>
   <tr><td>1</td><td class="he">השער</td><td>The cover — the post's slide 1, recomposed for the phone</td><td><span class="status st-done">settled</span></td></tr>
@@ -691,10 +692,10 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 4 · one stage left</b><span class="he">כשל מס׳ 13</span> reached stage 4, so this slide holds a single page. Only the fifth rung is drawn, still in the fifth slot. No centre arrows — there is nothing to scroll.</figcaption>
+    <figcaption class="cap"><b>Slide 4 · one stage left</b><span class="he">כשל מס׳ 13</span> reached stage 4, so this slide holds a single page. Only the fifth rung is drawn, still in the fifth slot. No centre arrows — there is nothing to scroll. Stage 5, so it carries the line naming who would count as a checking body.</figcaption>
   </figure>
   <figure class="shot">
-    <div class="vp"><div class="scr scr-3"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
+    <div class="vp"><div class="scr scr-1"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
 
   <div style="padding:16px 20px 0;font-size:12.5px;letter-spacing:0.1px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap">
     <span>7 באוקטובר</span><span style="opacity:0.45">›</span><span>העורף האזרחי</span><span style="opacity:0.45">›</span><span style="color:#e9e6df;font-weight:600">כשל מס׳ 20</span>
@@ -715,7 +716,6 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
     </div>
     <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:15px;font-size:15px;line-height:1.62;color:rgba(233,230,223,0.88)">
       <p style="font-size:17px;line-height:1.45;color:#e9e6df;max-width:300px"><b>לא תועדה הודאה פומבית של הגוף האחראי בכשל.</b></p>
-      <p style="max-width:300px">הודעה רשמית, עדות בוועדה או מסמך פנימי שפורסם — כל אחד מהם נחשב.</p>
       <div style="display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:6px">
         <div style="width:58px;height:58px;border-radius:50%;background:rgba(217,165,79,0.14);display:flex;align-items:center;justify-content:center">
           <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#d9a54f;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h10"></path><path d="M7 21h10"></path><path d="M8 3v4l4 5 4-5V3"></path><path d="M8 21v-4l4-5 4 5v4"></path></svg>
@@ -745,7 +745,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 4 · four stages left</b><span class="he">כשל מס׳ 20</span> is stuck at stage 1. Rungs 2–5 are drawn, the first slot stands empty, and the centre arrows return because the stack is real.</figcaption>
+    <figcaption class="cap"><b>Slide 4 · four stages left</b><span class="he">כשל מס׳ 20</span> is stuck at stage 1. Rungs 2–5 are drawn, the first slot stands empty, and the centre arrows return because the stack is real. Stage 2, so it goes straight from the statement to the mark — no methodology line.</figcaption>
   </figure>
 </div>
 
@@ -770,7 +770,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
 <p>No colour, no carousel, and the body is composed differently from a reached stage: the head group stays where it is, and everything under the rule is <strong>centred horizontally and vertically</strong> as one column.</p>
 <ol>
   <li>The computed statement, 17px bold — <span class="he">לא תועד אימות בלתי תלוי של היישום</span>.</li>
-  <li>One line naming who would count as a checking body — <strong>on stage 5 only</strong>, where "who checks" is the whole content of the stage. Stages 2–4 go straight from the statement to the mark.</li>
+  <li>One line naming who would count as a checking body — <strong>on stage 5 only</strong>, where "who checks" is the whole content of the stage. Stages 2–4 go straight from the statement to the mark, and the screens below show both shapes.</li>
   <li>An <strong>hourglass mark</strong>: a 28px outline glyph in warning yellow <code>#d9a54f</code> on a 58px round backdrop at <code>rgba(217,165,79,.14)</code>.</li>
   <li>Directly beneath it the days-since numeral at 38px/700, and <em>beneath that</em> — not beside it — <span class="he">ימים מאז שהיישום דווח</span> at 13px.</li>
   <li>The dashed <span class="he">יודעים אחרת?</span> box with <span class="he">הגישו מקור</span>, centred, part of the same group.</li>
@@ -1119,7 +1119,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   <li>No stage age anywhere on this slide. Content starts 46–52px below the breadcrumb, not at the top edge.</li>
 </ul>
 
-<div class="note"><strong>Only the MVP ships.</strong> The registers and the ballot are designed and specified below, and none of it is built in this pass — the question, the dimmed scale and <span class="he">הגישו מקור</span> are the whole screen at launch. Two consequences for the MVP head: the question is the <strong>stage-generic</strong> one from <code>taxonomy.questions</code>, not per-item wording that goes stale when an item moves; and the three summary lines are <strong>authored per incident</strong> (<code>opinion.failed</code>, <code>.since</code>, <code>.caveat</code>).</div>
+<div class="note"><strong>Only the MVP ships.</strong> The registers and the ballot are designed and specified below, and none of it is built in this pass — the question, the dimmed scale and <span class="he">הגישו מקור</span> are the whole screen at launch. The whole MVP head is <strong>authored per incident</strong>: the question (<code>opinion.question</code>) and the three summary lines (<code>opinion.failed</code>, <code>.since</code>, <code>.caveat</code>). The question stays <strong>generic in substance and phrased in this item’s context</strong>, as the head rule above requires — a stage-generic string reused verbatim across items is a cheaper thing than the screen asks for. Keeping it fresh when an item moves is an editorial job, not a reason to weaken the question.</div>
 
 <h4>MVP</h4>
 <p>The 1–5 scale is shown dimmed inside a dashed box headed <span class="he">המענה ייפתח בהמשך</span>, so the reader sees what is coming without it pretending to work, plus the one live action: <span class="he">הגישו מקור</span>.</p>
@@ -1216,7 +1216,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 6 · four failures</b>The default. Cards 111px, photo ground at 30% fading to nothing, and the upright repost loop on the share button.</figcaption>
+    <figcaption class="cap"><b>Slide 6 · version A</b>Four failures, no strip. Cards 111px, photo ground at 30% fading to nothing, and the upright repost loop on the share button.</figcaption>
   </figure>
   <figure class="shot">
     <div class="vp"><div class="scr scr-5"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
@@ -1281,7 +1281,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 6 · with the rating</b>Three failures instead of four, and a 1–5 star strip under the share button.</figcaption>
+    <figcaption class="cap"><b>Slide 6 · version B</b>Three failures and the 1–5 star strip under the share button. Neither version is the default — §9 specifies both and picks neither.</figcaption>
   </figure>
 </div>
 
@@ -1315,9 +1315,30 @@ mask-image: linear-gradient(to bottom,
   <li><span class="he">שיתוף כשל מס׳ 13</span> — gold fill, 46px, <strong>repost icon</strong> — the arrow loop <strong>upright</strong>, TikTok-style: two interleaved L arrows, up the left column and down the right, drawn 16 × 15 — a compact near-square loop, not a tall narrow one, naming the item rather than saying "share the failure". The only gold-filled action outside slide 5's save.</li>
 </ol>
 
-<h4>The rating variant</h4>
-<div class="note"><strong>It ships</strong>, so slide 6 holds three cards by default. Answers go to an insert-only <code>feedback(item_id, rating, device_key)</code> table — a client-side write to a hosted database, which keeps <code>output: 'export'</code> intact and is the same store the full slide 5 will need for the ballot. <code>device_key</code> is a random <code>localStorage</code> id: enough to stop one phone rating twenty times, not an identity. The strip is switched by a global flag with an optional per-incident override; the default should stay uniform, because the strip asks about the <em>site</em> and a card count that changes between items reads as instability rather than as a choice.</div>
-<p>A second version carries a lightweight 1–5 star strip under <span class="he">חוות דעת למפתחי האתר?</span>, below the share button and above the wordmark. Outline stars at 23px, no box, no fill — it must not compete with share. It costs one card: three failures instead of four.</p>
+<h4>Two versions, and the choice is not the design's</h4>
+<p>Slide 6 exists in two fully specified forms. <strong>This document does not decide which one ships</strong> — it specifies both and hands the choice over. Everything above this heading is common to the two; everything below differs.</p>
+<table>
+  <tr><th></th><th>Version A — the list alone</th><th>Version B — the list and the strip</th></tr>
+  <tr><td>Cards</td><td>Four</td><td>Three</td></tr>
+  <tr><td>Under the share button</td><td>Nothing; the wordmark follows directly</td><td>The star strip, then the wordmark</td></tr>
+  <tr><td>Strip</td><td>—</td><td><span class="he">חוות דעת למפתחי האתר?</span> at 12.5px muted, five outline stars at 23px, gap 7px, centred. No box, no fill, no ground — it must not compete with share</td></tr>
+  <tr><td>Spare space</td><td>One flexible spacer above the actions</td><td>Split in two — above the actions and below the strip — so no single hole opens under the last card</td></tr>
+  <tr><td>Asks about</td><td>—</td><td>The <em>site</em>, not the item. That is why a card count varying between items would read as instability rather than as a choice: whichever version is picked, pick it once</td></tr>
+</table>
+<div class="note"><strong>What version B needs that version A does not.</strong> Somewhere to put an answer: one row per rating, no identity attached — a rating, the item it was given on, and a per-device key that exists only to stop one phone voting twenty times. That is a demand on storage, not a design decision, and it is the same store slide 5's ballot will need when it is built. If the answer is that no such store exists, the answer is version A.</div>
+
+<h4>Short screens</h4>
+<p>The deck never scrolls, so slide 6 must fit the frame it is given rather than assume 844. <strong>The card list fills the space it has and sheds cards when it cannot</strong> — everything else on the slide is fixed and stays. The floor is two cards; below that the slide has nothing left to say.</p>
+<table>
+  <tr><th>Frame height</th><th>Version A</th><th>Version B</th></tr>
+  <tr><td>≥ 754px</td><td>Four cards</td><td>Three cards</td></tr>
+  <tr><td>705–753px</td><td>Three cards</td><td>Three cards</td></tr>
+  <tr><td>634–704px</td><td>Three cards</td><td>Two cards</td></tr>
+  <tr><td>585–633px</td><td>Two cards</td><td>Two cards</td></tr>
+  <tr><td>Below 585px</td><td>Two cards</td><td colspan="1">Two cards; the strip is the first thing to go</td></tr>
+</table>
+<p class="meta">Measured at 390 wide against the artboards, not estimated: a card plus its gap is 120px, and the rest of the slide is 634px of fixed furniture in version A, 705px in version B.</p>
+<div class="warn"><strong>This is the one place the <code>min-height: 600px</code> guard in §2 is not enough.</strong> A four-card slide 6 needs 754px and an iPhone SE clears the guard at 667 while giving roughly 580 of <code>100dvh</code>. Shedding cards is the answer — <strong>not</strong> raising the guard, which would hand those phones the desktop page over one slide. Every other slide fits under 545px.</div>
 
 <h4>Share</h4>
 <p>The Web Share API where it exists — on iOS and Android that is the native sheet, which is the entire point on a page reached from Instagram. Where it does not, the fallback <strong>copies the bare item link</strong> — <code>/item/i13/</code>, no hash — so a shared link always opens at the gate rather than dropping a stranger onto slide 4. A short toast confirms the copy.</p>
@@ -1329,7 +1350,7 @@ mask-image: linear-gradient(to bottom,
 <p><span class="he">דעת הציבור ›</span> on the right. <strong>The left slot is empty</strong> — slide 6 is the last slide and there is nothing to name. This is the one exception to the footer's next-slide rule, as slide 2 is the exception to its previous-slide rule.</p>
 
 <h2 id="data">10 · What the data must provide</h2>
-<p>The shape below is what the six slides need. It is a change to the schema, not a reading of the current one.</p>
+<p>This is the shape the six slides <strong>call for</strong>. It is written as a diff against the schema as it stands, because that is the clearest way to read it — but the direction runs from the screens outward: these fields exist because a screen needs them, and a screen that needs one is not redrawn because the field is missing. Anything here that cannot be met is a shortfall to record in §12, not an amendment to §1–§9.</p>
 <pre><code>// data/schema/index.ts
 
 - Summary = { stage, lines: [{ text, cites: string[] }] }
@@ -1340,7 +1361,8 @@ mask-image: linear-gradient(to bottom,
 -   summary,                                 // narrative, item-specific
 +   summary,                                 // markdown, SYSTEMIC — no 7.10 manifestation
 +   card_line?,                              // short statement for the slide 6 card
-+   opinion?: { failed, since, caveat },     // slide 5's three head lines
++   opinion?: { question, failed, since, caveat },  // slide 5's head — generic in substance,
++                                            //   phrased in THIS item's context
 +   photo?: {
 +     portrait?:  { file, photographer, source, licence, place, year },   // the gate
 +     landscape?: { file, photographer, source, licence, place, year },   // slide 6 card
@@ -1356,7 +1378,9 @@ mask-image: linear-gradient(to bottom,
   <li><strong>A reached stage with no overview is not an error</strong> — it renders its claims (§6).</li>
   <li><strong>Two photo crops per incident</strong>, portrait and landscape, each optional and each with its own credit. Dimensions are not validated; the crop is trusted. Sourcing and licensing are <span class="mono">DIA-366</span>.</li>
   <li><strong>Deep links per slide and per stage</strong> (§2).</li>
+  <li><strong>The slide 5 question, authored per incident</strong> — generic in substance, phrased in that item’s context. A stage-level default may back it up; it does not replace it.</li>
   <li><strong>Analyst commentary records</strong> and <strong>public answers</strong> — specified in §8, built after the MVP.</li>
+  <li><strong>Somewhere to put a star rating</strong>, if version B of slide 6 is the one that ships (§9).</li>
 </ul>
 
 <h2 id="impl">11 · Implementation rulings</h2>
@@ -1367,15 +1391,16 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Deep links are hashes; the first move pushes, the rest replace</td><td>No extra static pages; Back gets a reader out of Instagram's browser in two presses from anywhere</td></tr>
   <tr><td>Slides 3 and 4 are nested scroll-snap; the page itself never scrolls</td><td>Already accepted with the split. Every stage page must fit the frame</td></tr>
   <tr><td>Screen-reader route: six labelled sections in DOM order, footer labels are real links, arrow keys on a hardware keyboard</td><td>On a phone, a screen-reader swipe means "next element", not "next slide". Nothing on the deck may be gesture-only</td></tr>
-  <tr><td>Ratings write to a hosted database from the client</td><td>Keeps <code>output: 'export'</code>, and it is the store the post-MVP ballot needs anyway</td></tr>
+  <tr><td><em>If</em> the star strip ships (§9), ratings write to a hosted database from the client</td><td>Keeps <code>output: 'export'</code>, and it is the store the post-MVP ballot needs anyway. Conditional: §9 specifies both versions of slide 6 and picks neither</td></tr>
   <tr><td>Proof is a frozen set of 390×844 baselines, plus assertions on measured geometry and on the gestures</td><td>Pixels cannot see a rule; rules cannot see a screen. The RTL trap in §2 becomes a test rather than a memory</td></tr>
   <tr><td>Built and reviewed one slide at a time, on a real phone</td><td>The scrub, the dim and the long press do not exist in a screenshot</td></tr>
 </table>
 
 <h2 id="open">12 · Open decisions</h2>
-<p>Everything the 13 September canvases left open was closed on 14 September. What remains:</p>
+<p>Everything the 13 September canvases left open was closed on 14 September. What remains — including anything §10 asks for that implementation cannot meet, which is recorded here rather than folded back into the design:</p>
 <table>
   <tr><th>Question</th><th>Where it bites</th></tr>
+  <tr><td><strong>Which version of slide 6 ships</strong> — the four-card list alone, or three cards and the star strip. Both are fully specified; the design deliberately does not choose</td><td>Slide 6 · §9. Version B also needs somewhere to put a rating</td></tr>
   <tr><td><strong>Credit for the card photographs.</strong> The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA. Candidates: one credits line at the foot of slide 6, a credits page linked from <span class="he">אודות</span>, or landscape crops only from sources needing no attribution</td><td>Slide 6 — deliberately deferred to the build phase that reaches it</td></tr>
   <tr><td>The evidence map is still the desktop component at mobile width</td><td>Slide 3, stage 1 — it renders real pins; it has not had a 390 design pass</td></tr>
   <tr><td>How many bubbles show before a "more" affordance; moderation; what an open cluster looks like; whether saving sends the comment with the rating</td><td>Slide 5, post-MVP — none of it is built in this pass</td></tr>
@@ -1397,6 +1422,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Item · Cosmetic Fixes</td><td class="mono">46a934cc</td><td>Slide 3 renamed <span class="he">מה נעשה מאז</span>, tighter title gap, gold chip trimmed, wider repost icon</td></tr>
   <tr><td>Item · Stage Split Proposal</td><td class="mono">b05eb150</td><td>The split into <span class="he">מה נעשה מאז</span> and <span class="he">מה עוד לא נעשה</span> — <strong>accepted</strong></td></tr>
   <tr><td>Item · Six Slides</td><td class="mono">976cc81c</td><td>The whole deck after the split: six dots, the new slide, every footer rechained</td></tr>
+  <tr><td>Design review of the interview</td><td class="mono">14 Sep</td><td>Four rulings: the slide 5 question stays item-phrased and the data follows; slide 6 is specified in two versions and the doc picks neither; the methodology line is stage 5’s alone; slide 6 sheds a card on a short screen</td></tr>
   <tr><td>Pre-build interview</td><td class="mono">14 Sep</td><td>24 rulings — breakpoint, deep links and history, jump mode, the computed rules, the schema change, what ships on slides 5 and 6. Build plan: <a href="mobile-item-plan.html">mobile-item-plan.html</a></td></tr>
 </table>
 <p class="meta">Canvases open at <span class="mono">claude.ai/code/artifact/&lt;id&gt;</span>.</p>
