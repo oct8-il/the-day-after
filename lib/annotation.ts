@@ -195,3 +195,102 @@ export function plainText(src: string): string {
     .replace(/[ \t]+/g, ' ')
     .trim();
 }
+
+/* ------------------------------------------------------------------ render */
+/**
+ * The same spans, shaped for a screen (DIA-372).
+ *
+ * parseAnnotation answers "is this well formed"; this answers "what does a
+ * reader see". They share the pre-pass deliberately: the chip a reader taps
+ * covers exactly the span the validator checked, so CI and the page can never
+ * disagree about where a citation begins and ends.
+ *
+ * Everything outside the annotation set is dropped rather than shown. Where the
+ * unsupported mark wraps prose - a heading, a blockquote - the prose survives
+ * and only the mark goes; where it has no prose to keep, like an image, the
+ * whole thing goes. A reader is never shown a syntax error (docs/annotations
+ * .html §5); the validator is where the author hears about it.
+ */
+export type Inline =
+  | { kind: 'text'; text: string }
+  | { kind: 'bold'; children: Inline[] }
+  | { kind: 'mark'; children: Inline[] }
+  | { kind: 'link'; href: string; children: Inline[] };
+
+export type Block =
+  | { kind: 'p'; children: Inline[] }
+  | { kind: 'ul'; items: Inline[][] }
+  | { kind: 'ol'; items: Inline[][] };
+
+/** One cite span as it is drawn: its blocks, and the claims its chip names. */
+export type RenderSpan = { blocks: Block[]; ids: string[] };
+
+const LIST_ITEM = /^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$/;
+/** Marks that wrap prose: the mark goes, the words stay. */
+const STRIP_PREFIX = /^\s*(?:#{1,6}\s+|>\s?)/;
+/** Marks with nothing to keep. */
+const DROP_INLINE = /!\[[^\]\n]*\]\([^)\n]*\)/g;
+
+/** Inline marks, innermost last so the outer pair wins on a tie. */
+function inlines(src: string): Inline[] {
+  const out: Inline[] = [];
+  let rest = src.replace(DROP_INLINE, '');
+  while (rest) {
+    const link = rest.match(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\)/);
+    const bold = rest.match(/\*\*([\s\S]+?)\*\*/);
+    const mark = rest.match(/==([\s\S]+?)==/);
+    const first = [link, bold, mark]
+      .filter((m): m is RegExpMatchArray => !!m)
+      .sort((a, b) => a.index! - b.index!)[0];
+    if (!first) { out.push({ kind: 'text', text: clean(rest) }); break; }
+
+    if (first.index! > 0) out.push({ kind: 'text', text: clean(rest.slice(0, first.index!)) });
+    if (first === link) out.push({ kind: 'link', href: first[2], children: inlines(first[1]) });
+    else if (first === bold) out.push({ kind: 'bold', children: inlines(first[1]) });
+    else out.push({ kind: 'mark', children: inlines(first[1]) });
+    rest = rest.slice(first.index! + first[0].length);
+  }
+  return out.filter((n) => n.kind !== 'text' || n.text !== '');
+}
+
+/** Leftover markers from syntax the set does not carry, taken off quietly. */
+const clean = (s: string) => s.replace(/\*\*|==|`/g, '').replace(/[ \t]+/g, ' ');
+
+/** One span's text as blocks: blank lines separate, list markers gather. */
+function blocks(src: string): Block[] {
+  const out: Block[] = [];
+  for (const chunk of src.split(/\n[ \t]*\n/)) {
+    let para: string[] = [];
+    let list: { kind: 'ul' | 'ol'; items: Inline[][] } | null = null;
+    const flushPara = () => {
+      if (!para.length) return;
+      const kids = inlines(para.join(' ').trim());
+      if (kids.length) out.push({ kind: 'p', children: kids });
+      para = [];
+    };
+    const flushList = () => { if (list) { out.push(list); list = null; } };
+
+    for (const raw of chunk.split('\n')) {
+      const line = raw.replace(STRIP_PREFIX, '');
+      if (!line.trim()) continue;
+      const item = line.match(LIST_ITEM);
+      if (item) {
+        flushPara();
+        const kind = item[1] ? 'ol' : 'ul';
+        if (!list || list.kind !== kind) { flushList(); list = { kind, items: [] }; }
+        list.items.push(inlines(item[2]));
+      } else {
+        flushList();
+        para.push(line.trim());
+      }
+    }
+    flushPara();
+    flushList();
+  }
+  return out;
+}
+
+/** The whole field, ready to draw. Gaps carry no prose, so they are not here. */
+export function renderAnnotation(src: string): RenderSpan[] {
+  return parseAnnotation(src).spans.map((s) => ({ blocks: blocks(s.text), ids: s.ids }));
+}

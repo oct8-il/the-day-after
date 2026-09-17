@@ -21,14 +21,16 @@ export function CitationLinks() {
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as HTMLElement).closest('a[href^="#"]');
-      if (!a || !a.closest('.aisum')) return;
+      if (!a || !a.closest('.aisum, .clip')) return;
       const id = a.getAttribute('href')!.slice(1);
       if (!id) return;
       const target = document.getElementById(id);
       if (!target) return;
       e.preventDefault();
 
-      const n = (a.textContent ?? '').replace(/\D/g, '') || '?';
+      // A footnote carries its number; a chip (DIA-372) carries none, and the
+      // badge is left off rather than shown as a question mark.
+      const n = (a.textContent ?? '').replace(/\D/g, '');
 
       target.closest('details:not([open])')?.setAttribute('open', '');
 
@@ -36,7 +38,7 @@ export function CitationLinks() {
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         history.pushState(null, '', `#${id}`);
 
-        target.dataset.citeNum = n;
+        if (n) target.dataset.citeNum = n;
         target.classList.add('flash');
         setTimeout(() => {
           target.classList.remove('flash');

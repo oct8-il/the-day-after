@@ -405,7 +405,10 @@
   .clip{background:var(--paper);color:var(--paper-ink);padding:16px 22px 20px;border-top:3px double var(--paper-rule);border-bottom:1px solid var(--paper-rule);margin:2px 0 0;max-width:72ch}
   .clip .kick{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11.5px;letter-spacing:.06em;font-weight:600;color:var(--paper-muted);border-bottom:1px solid var(--paper-rule);padding-bottom:6px;margin-bottom:12px}
   .clip p{font-family:"Frank Ruhl Libre",serif;font-size:17.5px;line-height:1.62;margin:0;text-align:justify;color:var(--paper-ink)}
-  .clip p::first-letter{font-size:2.6em;line-height:.85;float:right;margin:4px 0 0 8px;font-weight:700}
+  /* The drop cap opens the clipping, so it belongs to its first paragraph -
+     an annotated summary may run to several (DIA-372). */
+  .clip p:first-of-type::first-letter{font-size:2.6em;line-height:.85;float:right;margin:4px 0 0 8px;font-weight:700}
+  .clip p+p{margin-top:10px}
   .clip .by{font-size:11.5px;color:var(--paper-muted);margin-top:10px;padding-top:6px;border-top:1px dotted var(--paper-rule)}
   @media (max-width:640px){.clip{padding:14px 16px 16px}.clip p{font-size:16.5px;text-align:start}}
   .answerbox{background:var(--surface);border:1px solid var(--line);padding:16px 18px;margin-top:20px}
@@ -479,6 +482,29 @@
   .tile .score{background:color-mix(in srgb,var(--c) 20%,var(--line))}
 
   /* ===== softened bubble tones (neutral-leaning, side still legible) ===== */
+  /* ---------------------------------------------------------- annotation
+     The six marks of docs/annotations.html, drawn. `mark` is the highlight:
+     a tint behind the words, never a second bold. `.chip` is what a cite span
+     draws at its end - the source type of the claims it rests on, +N when
+     there are several, and its own direction so a latin id does not reorder
+     the Hebrew punctuation around it. Inside .clip both switch to the paper
+     palette, because the clipping is not on the page background. */
+  :root{--mark:rgba(224,164,74,.22);--mark-paper:rgba(122,113,95,.30)}
+  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--mark:rgba(185,122,28,.20)}}
+  :root[data-theme="light"]{--mark:rgba(185,122,28,.20)}
+  mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 3px}
+  .chip{display:inline-flex;align-items:center;gap:3px;vertical-align:baseline;margin-inline-start:5px;
+    padding:1px 6px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);
+    unicode-bidi:isolate;line-height:1.5;text-decoration:none}
+  .chip .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--c,var(--accent))}
+  .chip .chip-n{font-size:10.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  .chip:hover,.chip:focus-visible{border-color:var(--c,var(--accent));background:var(--surface)}
+  .clip mark{background:var(--mark-paper)}
+  .clip .chip{border-color:var(--paper-rule);background:transparent}
+  .clip .chip .chip-n{color:var(--paper-muted)}
+  .clip .chip:hover,.clip .chip:focus-visible{background:rgba(0,0,0,.05)}
+  @media (max-width:640px){.chip{padding:3px 8px;margin-inline-start:6px}}
+
   :root{--bub-pro:#7d9c88;--bub-con:#b58c84;--bub-mid:#8a939e}
   @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bub-pro:#5c8a6f;--bub-con:#a97a70;--bub-mid:#7c848e}}
   :root[data-theme="light"]{--bub-pro:#5c8a6f;--bub-con:#a97a70;--bub-mid:#7c848e}

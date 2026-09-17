@@ -6,6 +6,7 @@ import {
   type Claim, type Incident,
 } from '@/lib/data';
 import { parseAnnotation, plainText } from '@/lib/annotation';
+import { Annotated } from '@/app/components/Annotated';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { ItemDock } from '@/app/components/ItemDock';
 import { ItemIntro } from '@/app/components/ItemIntro';
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const st = stageOf(inc);
   return {
     title: inc.he,
-    description: inc.summary.slice(0, 200),
+    description: plainText(inc.summary).slice(0, 200),
     alternates: { canonical: `/item/${id}/` },
     openGraph: { title: inc.he, description: `שלב ${st} · ${stageMeta(st).he}`, url: `/item/${id}/` },
   };
@@ -141,7 +142,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                   <span>{parent.he}</span>
                   <span className="num">תועד לראשונה · {firstDocumented(inc)}</span>
                 </div>
-                <p>{inc.summary}</p>
+                <Annotated text={inc.summary} claims={inc.claims} />
                 <div className="by">תיאור הכשל · נכתב על ידי העורך מתוך המקורות המתועדים למטה</div>
               </div>
 
