@@ -314,7 +314,9 @@
 │   └── corrections/page.tsx    <span class="c">rendered from git history of data/</span>
 ├── public/share/               <span class="c">generated PNGs, committed by CI</span>
 ├── tests/fidelity/             <span class="c">Playwright: 16 baselines + diff</span>
-├── .github/workflows/ci.yml    <span class="c">validate → build → fidelity → share images</span>
+├── .github/workflows/
+│   ├── data.yml            <span class="c">the two pools: validate → fixtures → links</span>
+│   └── build.yml           <span class="c">build → fidelity → Lighthouse → release</span>
 └── docs/                       <span class="c">concept, prototype (frozen), this roadmap</span></pre>
   <p>Hosting is Vercel (decided below). When voting arrives after launch, Supabase attaches to this without changing it: auth and votes live there, a nightly job writes aggregates back into <code>data/</code> as public JSON, and the site stays static.</p>
 </section>

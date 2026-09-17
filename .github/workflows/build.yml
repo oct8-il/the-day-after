@@ -1,18 +1,34 @@
-# One workflow, three tiers.
+# The site's CI: build, fidelity, performance, release. It reads data/ only as
+# an input to the build - the ledger is checked by the `data` workflow.
 #
-#   every push and PR   validate -> build -> fidelity
-#   staging             + link liveness, share images, Lighthouse on mobile
-#   prod                + release: deploy artefacts, corrections page, tag
+# WHEN THIS RUNS
+#   push to dev / staging / prod   always. The environment comes from the
+#                                  branch name, and the promotion between the
+#                                  three branches is a whole-branch
+#                                  fast-forward, so every commit that can
+#                                  become prod is built and compared.
+#   pull request                   unless the only thing that changed is ledger
+#                                  content or prose - see `paths-ignore:`.
+#                                  data/schema/ and data/taxonomy.json are NOT
+#                                  ignored: they are code the app compiles
+#                                  against, not records.
+#   workflow_dispatch              on demand, and the only way to recapture the
+#                                  fidelity baselines.
 #
-# Promotion between the three branches is always a whole-branch fast-forward,
-# so a green run on dev is the same commit that becomes staging, then prod.
+# `data` and `build` are independent workflows and neither waits for the other.
+# Require BOTH on dev, staging and prod in the branch protection rules.
 
-name: ci
+name: build
 
 on:
   push:
     branches: [dev, staging, prod]
   pull_request:
+    paths-ignore:
+      - 'data/live/**'
+      - 'data/test/**'
+      - '**/*.md'
+      - '.github/workflows/data.yml'
   workflow_dispatch:
     inputs:
       capture_baselines:
@@ -21,50 +37,18 @@ on:
         default: false
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: build-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
-  # ---------------------------------------------------------------- validate
-  validate:
-    name: validate data
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '24', cache: npm }
-      - run: npm ci
-      # dev may carry illustrative records while the port is in progress.
-      # staging and prod may not: strict refuses anything without a live source.
-      - name: validate the ledger
-        run: |
-          if [ "${{ github.ref_name }}" = "staging" ] || [ "${{ github.ref_name }}" = "prod" ]; then
-            npm run validate:strict
-          else
-            npm run validate
-          fi
-      # The fixtures dev renders are checked by the same schema, on every push,
-      # including the pushes to staging and prod that never render them. This
-      # is what keeps the two pools the same shape: change data/schema/index.ts
-      # and the commit that changes it is the one that goes red, not the next
-      # person to open dev.
-      - name: validate the fixtures
-        run: npm run validate:test
-      # Valid fixtures are not the same as useful ones. Delete the regressed
-      # incident, or give the one with no summaries a summary, and nothing
-      # above would notice - the gap would surface weeks later as a layout bug
-      # on a phone. This asserts the pool still covers every state on the list.
-      - name: the fixtures still cover every state
-        run: npm run check:fixtures
-
   # ------------------------------------------------------------------- build
   build:
     name: build
     runs-on: ubuntu-latest
-    needs: validate
+    if: ${{ !inputs.capture_baselines }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -127,9 +111,9 @@ jobs:
           git commit -m 'Fidelity baselines captured from prototype-v0.4-final'
           git push
 
-  # ------------------------------------------------- integrated, on staging
-  integrated:
-    name: integrated checks
+  # ------------------------------------------------ performance, on staging
+  lighthouse:
+    name: Lighthouse, mobile
     runs-on: ubuntu-latest
     needs: [build, fidelity]
     if: github.ref_name == 'staging'
@@ -138,10 +122,6 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '24', cache: npm }
       - run: npm ci
-      # A dead link in the ledger is the one failure the project cannot argue
-      # its way out of, so it blocks the promotion rather than being a warning.
-      - name: every source link answers
-        run: npm run check:links
       - uses: actions/download-artifact@v4
         with: { name: site, path: out }
       - name: serve the exported site

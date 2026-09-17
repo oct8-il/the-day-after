@@ -1,0 +1,97 @@
+# The ledger's own CI. Nothing here builds or renders the site.
+#
+# WHEN THIS RUNS
+#   push to dev / staging / prod   always, whatever changed. The promotion
+#                                  between the three branches is a whole-branch
+#                                  fast-forward, so the commit that becomes
+#                                  staging and then prod is verified whole and
+#                                  not only for the files it happened to touch.
+#   pull request                   only when the ledger, its schema or one of
+#                                  its checkers changed - see `paths:` below.
+#                                  A pull request that touches no data does not
+#                                  need the data checks to have an opinion.
+#   workflow_dispatch              on demand, from any branch.
+#
+# Strictness follows the branch the work is going to, not the file: dev may
+# carry illustrative records while a port is in progress, staging and prod may
+# not.
+#
+# `data` and `build` are independent workflows and neither waits for the other.
+# Require BOTH on dev, staging and prod in the branch protection rules: a green
+# build over an invalid ledger is not a green commit.
+
+name: data
+
+on:
+  push:
+    branches: [dev, staging, prod]
+  pull_request:
+    paths:
+      - 'data/**'
+      - 'scripts/validate.ts'
+      - 'scripts/check-fixtures.ts'
+      - 'scripts/check-links.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/data.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: data-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  # ---------------------------------------------------------------- validate
+  validate:
+    name: validate the two pools
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      # On a pull request github.ref_name is the merge ref, so the target
+      # branch is what decides - a pull request into staging is held to
+      # staging's bar.
+      - name: validate the ledger
+        env:
+          TARGET: ${{ github.base_ref || github.ref_name }}
+        run: |
+          if [ "$TARGET" = 'staging' ] || [ "$TARGET" = 'prod' ]; then
+            npm run validate:strict
+          else
+            npm run validate
+          fi
+      # The fixtures dev renders are checked by the same schema, on every push,
+      # including the pushes to staging and prod that never render them. This
+      # is what keeps the two pools the same shape: change data/schema/index.ts
+      # and the commit that changes it is the one that goes red, not the next
+      # person to open dev.
+      - name: validate the fixtures
+        run: npm run validate:test
+      # Valid fixtures are not the same as useful ones. Delete the regressed
+      # incident, or give the one with no summaries a summary, and nothing
+      # above would notice - the gap would surface weeks later as a layout bug
+      # on a phone. This asserts the pool still covers every state on the list.
+      - name: the fixtures still cover every state
+        run: npm run check:fixtures
+
+  # ------------------------------------------------------------------- links
+  # Reaching out to every source in the ledger is slow and depends on other
+  # people's servers, so it runs where a failure means something: on the way to
+  # staging, and by hand. A dead link is the one failure the project cannot
+  # argue its way out of, so it blocks the promotion rather than warning.
+  links:
+    name: every source link answers
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref_name == 'staging' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - run: npm run check:links
