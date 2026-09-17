@@ -5,6 +5,7 @@ import {
   stageOf, isContested, stageMeta, taxonomy, TYPES, QUESTIONS, firstDocumented,
   type Claim, type Incident,
 } from '@/lib/data';
+import { parseAnnotation, plainText } from '@/lib/annotation';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { ItemDock } from '@/app/components/ItemDock';
 import { ItemIntro } from '@/app/components/ItemIntro';
@@ -374,20 +375,26 @@ function StageSummary({ inc, stage }: { inc: Incident; stage: number }) {
     : stage === 6 ? ['הנסיגה · סיכום', 'כל משפט מקושר למקור']
     : ['מה יושם בפועל · סיכום', 'כל משפט מקושר למקור'];
 
-  // Footnote numbers are per summary and follow the order the claims are cited.
+  // Footnote numbers are per overview and follow the order the claims are cited.
   const order: string[] = [];
   const noteOf = (id: string) => {
     if (!order.includes(id)) order.push(id);
     return order.indexOf(id) + 1;
   };
 
+  // One paragraph per cite span, which is how the old lines[] rendered. The
+  // annotation inside a span is not interpreted here yet - the chips, the
+  // highlight and the carousel are DIA-372. Until then the panel shows the
+  // words and the sources under them, which is what it showed before.
+  const spans = parseAnnotation(summary.text).spans;
+
   return (
     <div className="aisum">
       <div className="lbl"><span>{heading[0]}</span><span>{heading[1]}</span></div>
-      {summary.lines.map((line, n) => (
+      {spans.map((span, n) => (
         <p key={n}>
-          {line.text}
-          {line.cites.map((id) => (
+          {plainText(span.text)}
+          {span.ids.map((id) => (
             <sup key={id}><a href={`#${id}`}>[{noteOf(id)}]</a></sup>
           ))}
         </p>

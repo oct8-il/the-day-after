@@ -32,7 +32,7 @@ export const Claim = z.object({
   /** The publication, institution or report — never a person. */
   source: z.string().min(3),
   date: DATE,
-  /** Required to publish. null only while a record is still illustrative. */
+  /** Required to publish. null only while the incident is not yet published. */
   url: z.string().url().nullable(),
   archive_url: z.string().url().nullable().default(null),
   /** id of the claim this one disputes; set together with asserts_stage 0. */
@@ -43,18 +43,57 @@ export const Claim = z.object({
 });
 
 /**
- * An editor-written summary of what the sources say at one stage: the wording
+ * An editor-written overview of what the sources say at one stage: the wording
  * of the acknowledgement, what the announced plan actually covers, what was
- * implemented. Every sentence cites the claims it rests on, so the summary is a
- * convenience and the sources remain the authority. Optional - an incident
- * without one is complete, just terser.
+ * implemented. Optional - an incident without one is complete, just terser.
+ *
+ * One authored text carrying the annotation of docs/annotations.html. The cite
+ * spans inside it are what tie each statement to the claims it rests on, so the
+ * overview stays a convenience and the sources remain the authority.
+ *
+ * Sourcing is NOT enforced here. Until DIA-371 this object carried
+ * `cites.min(1, 'a summary sentence with no citation is an opinion')` and the
+ * schema itself was the guarantee. The cite boundary is now authored inside the
+ * text, where Zod cannot see it, so the guarantee moved to the coverage rule in
+ * scripts/validate.ts. It did not go away.
  */
 export const Summary = z.object({
   stage: STAGE,
-  lines: z.array(z.object({
-    text: z.string().min(10).max(400),
-    cites: z.array(z.string()).min(1, 'a summary sentence with no citation is an opinion'),
-  })).min(1),
+  text: z.string().min(10),
+});
+
+/** One photo crop and the credit it may not ship without. */
+const Crop = z.object({
+  file: z.string().min(1),
+  photographer: z.string().min(1),
+  source: z.string().min(1),
+  licence: z.string().min(1),
+  place: z.string().min(1),
+  year: z.string().regex(/^\d{4}$/, 'year must be YYYY'),
+});
+
+/**
+ * Two crops per incident, each optional: portrait for the gate, landscape for
+ * the share card. Dimensions are not validated - the crop is trusted. Where the
+ * photos come from is DIA-366; this is only their shape.
+ */
+export const Photo = z.object({
+  portrait: Crop.optional(),
+  landscape: Crop.optional(),
+});
+
+/**
+ * The head of slide 5: the standing question, and the three lines that set it
+ * up. Annotated like the overviews, with one difference - `question` and
+ * `caveat` are exempt from the coverage rule, because a question is put to the
+ * reader rather than asserted and a caveat states an absence. See
+ * docs/annotations.html §4.
+ */
+export const Poll = z.object({
+  question: z.string().min(8),
+  failure: z.string().min(8),
+  status: z.string().min(8),
+  caveat: z.string().min(8),
 });
 
 export const Incident = z.object({
@@ -64,8 +103,18 @@ export const Incident = z.object({
   id: z.string().regex(/^[it]\d{2,}$/),
   parent: z.string().regex(/^p\d+$/),
   he: z.string().min(8),
+  /**
+   * Annotated, and SYSTEMIC: the failure invariant to the date. Had the attack
+   * come on 8 October this text would not change, so the 7.10 manifestation
+   * belongs to the stage-1 overview instead.
+   */
   summary: z.string().min(20),
-  illustrative: z.boolean().default(false),
+  /** A short authored statement for the share card - not a truncation of `he`. */
+  card_line: z.string().min(8).optional(),
+  poll: Poll.optional(),
+  photo: Photo.optional(),
+  /** Per-item override on the global star-strip flag. */
+  feedback_strip: z.boolean().optional(),
   claims: z.array(Claim).min(1, 'an incident with no claim is not a record of anything'),
   summaries: z.array(Summary).optional(),
 });
@@ -78,7 +127,6 @@ export const Parent = z.object({
   domain: DOMAIN,
   phase: PHASE,
   icon: z.string().min(2),
-  illustrative: z.boolean().default(false),
 });
 
 export const Place = z.object({
@@ -98,6 +146,8 @@ export const Taxonomy = z.object({
 });
 
 export type Summary = z.infer<typeof Summary>;
+export type Photo = z.infer<typeof Photo>;
+export type Poll = z.infer<typeof Poll>;
 export type Claim = z.infer<typeof Claim>;
 export type Incident = z.infer<typeof Incident>;
 export type Parent = z.infer<typeof Parent>;

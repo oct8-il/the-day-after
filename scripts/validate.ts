@@ -7,8 +7,8 @@
  * strict is what staging and prod run. It judges what the site PUBLISHES, not
  * what happens to sit in data/: an incident appears on the site only if its id
  * is in data/published.json, and every published incident must be fully sourced
- * - no illustrative flag, a live URL on every claim. Incidents not yet
- * published may be as rough as they like, because nobody can see them.
+ * - a live URL on every claim. Incidents not yet published may be as rough as
+ * they like, because nobody can see them.
  *
  * So Phase 2 is a loop: source an incident, add its id to published.json,
  * promote. That commit is the "published" event the corrections page reads.
@@ -18,8 +18,15 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Incident, Parent, Place, Taxonomy, INDEPENDENT_TYPES } from '../data/schema/index.ts';
 import { stageOf, hasIndependentVerification } from '../lib/stage.ts';
+import { checkAnnotated, citedIds, plainText } from '../lib/annotation.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+/**
+ * NOTE (DIA-371): with `illustrative` gone, --strict no longer gates any rule -
+ * the published-with-no-URL check was always unconditional. The flag and the
+ * CI job are kept because staging and prod are supposed to be judged harder
+ * than dev; what that means now is an open question, not a settled one.
+ */
 const STRICT = process.argv.includes('--strict');
 
 /**
@@ -91,6 +98,21 @@ function checkNames(where: string, text: string) {
   if (m) fail(where, `looks like it names an individual: "${m[0].trim()}" - the naming rule allows institutions, units and systems only`);
 }
 
+/**
+ * An authored field, judged against docs/annotations.html.
+ *
+ * `coverage` is what varies between fields, and only that: a chip is checked
+ * wherever it is written. The naming rule runs on the text with the annotation
+ * taken off, so a claim id can never be mistaken for a person.
+ */
+function checkAnnotatedField(where: string, text: string, claimIds: Set<string>, coverage: boolean) {
+  checkNames(where, plainText(text));
+  for (const issue of checkAnnotated(text, { coverage })) fail(where, issue.message);
+  for (const id of citedIds(text)) {
+    if (!claimIds.has(id)) fail(where, `cites "${id}", which is not a claim of this incident`);
+  }
+}
+
 const files = readdirSync(join(DATA, 'incidents')).filter((f) => f.endsWith('.json')).sort();
 let claimCount = 0;
 let publishable = 0;
@@ -108,9 +130,10 @@ for (const file of files) {
   if (!parentIds.has(inc.parent)) fail(where, `parent ${inc.parent} does not exist`);
 
   checkNames(`${where} he`, inc.he);
-  checkNames(`${where} summary`, inc.summary);
+  if (inc.card_line) checkNames(`${where} card_line`, inc.card_line);
 
   const claimIds = new Set(inc.claims.map((c) => c.id));
+  checkAnnotatedField(`${where} summary`, inc.summary, claimIds, true);
   if (!inc.claims.some((c) => c.asserts_stage === 1)) {
     fail(where, 'no stage-1 claim: nothing establishes that this failure was identified');
   }
@@ -144,23 +167,24 @@ for (const file of files) {
   }
 
   for (const sum of inc.summaries ?? []) {
-    const sw = `${where} summary(stage ${sum.stage})`;
+    const sw = `${where} overview(stage ${sum.stage})`;
     if (!inc.claims.some((c) => c.asserts_stage === sum.stage)) {
       fail(sw, 'summarises a stage no claim asserts');
     }
-    sum.lines.forEach((line, n) => {
-      checkNames(`${sw} line ${n + 1}`, line.text);
-      for (const id of line.cites) {
-        if (!claimIds.has(id)) fail(sw, `line ${n + 1} cites "${id}", which is not a claim of this incident`);
-      }
-    });
+    checkAnnotatedField(sw, sum.text, claimIds, true);
+  }
+
+  // The head of slide 5. question and caveat are exempt from the coverage rule
+  // and from nothing else - docs/annotations.html §4.
+  if (inc.poll) {
+    checkAnnotatedField(`${where} poll.failure`, inc.poll.failure, claimIds, true);
+    checkAnnotatedField(`${where} poll.status`, inc.poll.status, claimIds, true);
+    checkAnnotatedField(`${where} poll.question`, inc.poll.question, claimIds, false);
+    checkAnnotatedField(`${where} poll.caveat`, inc.poll.caveat, claimIds, false);
   }
 
   if (stageOf(inc) === 5 && !hasIndependentVerification(inc)) {
     fail(where, 'computed stage is 5 without an independent verifying source');
-  }
-  if (STRICT && isPublished(inc.id) && inc.illustrative) {
-    fail(where, 'published but still marked illustrative - take it out of published.json until it is sourced');
   }
 }
 
