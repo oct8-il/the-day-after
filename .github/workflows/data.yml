@@ -1,16 +1,19 @@
 # The ledger's own CI. Nothing here builds or renders the site.
 #
 # WHEN THIS RUNS
-#   push to dev / staging / prod   always, whatever changed. The promotion
-#                                  between the three branches is a whole-branch
-#                                  fast-forward, so the commit that becomes
-#                                  staging and then prod is verified whole and
-#                                  not only for the files it happened to touch.
-#   pull request                   only when the ledger, its schema or one of
-#                                  its checkers changed - see `paths:` below.
-#                                  A pull request that touches no data does not
-#                                  need the data checks to have an opinion.
-#   workflow_dispatch              on demand, from any branch.
+#   Only when something it can have an opinion about changed: the ledger, its
+#   schema, or one of its checkers. A commit that touches nothing but app code
+#   does not make the ledger any more or less valid, so this workflow sits it
+#   out - see the `changes` job, which is where the rule lives.
+#
+#   Two exemptions. Pushes to staging and prod always run everything, because
+#   promotion is a whole-branch fast-forward and the commit that can become
+#   prod is verified whole rather than for the files it happened to touch. And
+#   a run started by hand always runs.
+#
+#   The rule is a job and not a `paths:` filter on purpose. A `paths:` filter
+#   stops the workflow from starting at all, and a required check that never
+#   starts stays pending forever; a job skipped by an `if:` reports green.
 #
 # Strictness follows the branch the work is going to, not the file: dev may
 # carry illustrative records while a port is in progress, staging and prod may
@@ -26,14 +29,6 @@ on:
   push:
     branches: [dev, staging, prod]
   pull_request:
-    paths:
-      - 'data/**'
-      - 'scripts/validate.ts'
-      - 'scripts/check-fixtures.ts'
-      - 'scripts/check-links.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/data.yml'
   workflow_dispatch:
 
 concurrency:
@@ -44,10 +39,57 @@ env:
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
+  # ----------------------------------------------------------------- changes
+  changes:
+    name: does this touch the ledger?
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          BRANCH: ${{ github.ref_name }}
+          BASE: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -uo pipefail
+          run_it()  { echo 'run=true'  >> "$GITHUB_OUTPUT"; echo "running: $1";  exit 0; }
+          skip_it() { echo 'run=false' >> "$GITHUB_OUTPUT"; echo "skipping: $1"; exit 0; }
+
+          [ "$EVENT" = 'workflow_dispatch' ] && run_it 'started by hand'
+          case "$BRANCH" in
+            staging|prod) run_it 'promotion branch - the commit that can become prod is verified whole' ;;
+          esac
+
+          if [ -n "$BASE" ]; then
+            RANGE="origin/$BASE...HEAD"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != '0000000000000000000000000000000000000000' ] \
+               && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            RANGE="$BEFORE..HEAD"
+          else
+            run_it 'no diff range to read - a new branch or a forced push'
+          fi
+
+          CHANGED=$(git diff --name-only "$RANGE")
+          echo 'changed:'; echo "$CHANGED" | sed 's/^/  /'
+
+          # data/ in full: the two pools, the schema and the taxonomy. Plus the
+          # three checkers, the dependency they all run under, and this file.
+          echo "$CHANGED" | grep -Eq \
+            '^(data/|scripts/validate\.ts$|scripts/check-fixtures\.ts$|scripts/check-links\.mjs$|package\.json$|package-lock\.json$|\.github/workflows/data\.yml$)' \
+            && run_it 'the ledger, its schema or one of its checkers changed'
+
+          skip_it 'nothing here touches the ledger'
+
   # ---------------------------------------------------------------- validate
   validate:
     name: validate the two pools
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -65,9 +107,9 @@ jobs:
           else
             npm run validate
           fi
-      # The fixtures dev renders are checked by the same schema, on every push,
-      # including the pushes to staging and prod that never render them. This
-      # is what keeps the two pools the same shape: change data/schema/index.ts
+      # The fixtures dev renders are checked by the same schema, on every run,
+      # including the runs on staging and prod that never render them. This is
+      # what keeps the two pools the same shape: change data/schema/index.ts
       # and the commit that changes it is the one that goes red, not the next
       # person to open dev.
       - name: validate the fixtures

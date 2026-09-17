@@ -1,19 +1,28 @@
 # The site's CI: build, fidelity, performance, release. It reads data/ only as
-# an input to the build - the ledger is checked by the `data` workflow.
+# an input to the build - the ledger itself is checked by the `data` workflow.
 #
 # WHEN THIS RUNS
-#   push to dev / staging / prod   always. The environment comes from the
-#                                  branch name, and the promotion between the
-#                                  three branches is a whole-branch
-#                                  fast-forward, so every commit that can
-#                                  become prod is built and compared.
-#   pull request                   unless the only thing that changed is ledger
-#                                  content or prose - see `paths-ignore:`.
-#                                  data/schema/ and data/taxonomy.json are NOT
-#                                  ignored: they are code the app compiles
-#                                  against, not records.
-#   workflow_dispatch              on demand, and the only way to recapture the
-#                                  fidelity baselines.
+#   Only when something the build actually consumes changed - see the `changes`
+#   job, which is where the rule lives. Two things that look like data are not:
+#
+#     data/schema/ and data/taxonomy.json are code the app compiles against,
+#     so they build.
+#
+#     data/test/ is what a dev build renders - dev reads the fixture pool
+#     (next.config.mjs), so a fixture change changes the dev site and builds.
+#
+#   What is left out on dev is data/live: dev never renders the real ledger, so
+#   a research pass that touches nothing but data/live cannot change what a dev
+#   build produces. That is the case this rule exists for.
+#
+#   Two exemptions. Pushes to staging and prod always run everything - those
+#   builds DO render data/live, and promotion is a whole-branch fast-forward,
+#   so the commit that can become prod is verified whole. And a run started by
+#   hand always runs; it is also the only way to recapture the baselines.
+#
+#   The rule is a job and not a `paths-ignore:` filter on purpose. A path
+#   filter stops the workflow from starting at all, and a required check that
+#   never starts stays pending forever; a job skipped by an `if:` reports green.
 #
 # `data` and `build` are independent workflows and neither waits for the other.
 # Require BOTH on dev, staging and prod in the branch protection rules.
@@ -24,11 +33,6 @@ on:
   push:
     branches: [dev, staging, prod]
   pull_request:
-    paths-ignore:
-      - 'data/live/**'
-      - 'data/test/**'
-      - '**/*.md'
-      - '.github/workflows/data.yml'
   workflow_dispatch:
     inputs:
       capture_baselines:
@@ -44,11 +48,56 @@ env:
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
+  # ----------------------------------------------------------------- changes
+  changes:
+    name: does this change the site?
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          BRANCH: ${{ github.ref_name }}
+          BASE: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -uo pipefail
+          run_it()  { echo 'run=true'  >> "$GITHUB_OUTPUT"; echo "running: $1";  exit 0; }
+          skip_it() { echo 'run=false' >> "$GITHUB_OUTPUT"; echo "skipping: $1"; exit 0; }
+
+          [ "$EVENT" = 'workflow_dispatch' ] && run_it 'started by hand'
+          case "$BRANCH" in
+            staging|prod) run_it 'promotion branch - this build renders data/live and can become prod' ;;
+          esac
+
+          if [ -n "$BASE" ]; then
+            RANGE="origin/$BASE...HEAD"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != '0000000000000000000000000000000000000000' ] \
+               && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            RANGE="$BEFORE..HEAD"
+          else
+            run_it 'no diff range to read - a new branch or a forced push'
+          fi
+
+          CHANGED=$(git diff --name-only "$RANGE")
+          echo 'changed:'; echo "$CHANGED" | sed 's/^/  /'
+
+          # Everything the build does not read: the real ledger (not rendered
+          # on dev), prose, and the other workflow.
+          REST=$(echo "$CHANGED" | grep -Ev '^data/live/|\.md$|^\.github/workflows/data\.yml$')
+          [ -n "$REST" ] && run_it 'the site changed'
+
+          skip_it 'data/live only - dev renders the fixture pool, so the site is unchanged'
+
   # ------------------------------------------------------------------- build
   build:
     name: build
     runs-on: ubuntu-latest
-    if: ${{ !inputs.capture_baselines }}
+    needs: changes
+    if: needs.changes.outputs.run == 'true' && !inputs.capture_baselines
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -68,7 +117,6 @@ jobs:
     name: fidelity vs. prototype
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ !inputs.capture_baselines }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
