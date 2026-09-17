@@ -6,8 +6,7 @@
     "description": "מה הצטבר בליל 6–7 באוקטובר, ומה נעשה עם המידע",
     "domain": "mil",
     "phase": "before",
-    "icon": "radar",
-    "illustrative": false
+    "icon": "radar"
   },
   {
     "id": "p2",
@@ -16,8 +15,7 @@
     "description": "הגדר, התצפית והירי מרחוק, והמוצבים שעליה",
     "domain": "mil",
     "phase": "during",
-    "icon": "fence",
-    "illustrative": false
+    "icon": "fence"
   },
   {
     "id": "p3",
@@ -26,8 +24,7 @@
     "description": "כמה זמן עבר עד שכוח מספיק הגיע, ומי פיקד עליו",
     "domain": "mil",
     "phase": "during",
-    "icon": "clock",
-    "illustrative": false
+    "icon": "clock"
   },
   {
     "id": "p4",
@@ -36,8 +33,7 @@
     "description": "מוקדי 100 ו-101, מד״א, פינוי הפצועים ובתי החולים",
     "domain": "civ",
     "phase": "during",
-    "icon": "pulse",
-    "illustrative": false
+    "icon": "pulse"
   },
   {
     "id": "p5",
@@ -46,8 +42,7 @@
     "description": "חימוש, הכשרה, אחסון נשק וקשר לצבא",
     "domain": "civ",
     "phase": "during",
-    "icon": "shield",
-    "illustrative": false
+    "icon": "shield"
   },
   {
     "id": "p6",
@@ -56,8 +51,7 @@
     "description": "התרעה, מיגון והיערכות, מידע לתושבים ותשתיות תקשורת",
     "domain": "civ",
     "phase": "during",
-    "icon": "bell",
-    "illustrative": false
+    "icon": "bell"
   },
   {
     "id": "p7",
@@ -66,8 +60,7 @@
     "description": "האם קיים מנגנון בדיקה לאומי, ומה נחקר בפועל",
     "domain": "soc",
     "phase": "after",
-    "icon": "gavel",
-    "illustrative": false
+    "icon": "gavel"
   },
   {
     "id": "p8",
@@ -76,8 +69,7 @@
     "description": "הוצאה מאזור הסכנה, קליטה ברשויות, דיור ורווחה",
     "domain": "civ",
     "phase": "after",
-    "icon": "home",
-    "illustrative": false
+    "icon": "home"
   },
   {
     "id": "p9",
@@ -86,7 +78,6 @@
     "description": "שתיקת הדוברויות, מידע לא מאומת ופערי סיקור",
     "domain": "soc",
     "phase": "during",
-    "icon": "mic",
-    "illustrative": false
+    "icon": "mic"
   }
 ]

@@ -40,16 +40,24 @@ export type Claim = {
   place: string | null;
   quote?: string;
 };
-export type SummaryLine = { text: string; cites: string[] };
-export type Summary = { stage: number; lines: SummaryLine[] };
+/** One authored overview. `text` carries the annotation - see lib/annotation.ts. */
+export type Summary = { stage: number; text: string };
+export type Crop = {
+  file: string; photographer: string; source: string;
+  licence: string; place: string; year: string;
+};
+export type Photo = { portrait?: Crop; landscape?: Crop };
+/** The head of slide 5: the standing question and the three lines above it. */
+export type Poll = { question: string; failure: string; status: string; caveat: string };
 export type Incident = {
   id: string; parent: string; he: string; summary: string;
-  illustrative: boolean; claims: Claim[]; summaries?: Summary[];
+  card_line?: string; poll?: Poll; photo?: Photo; feedback_strip?: boolean;
+  claims: Claim[]; summaries?: Summary[];
 };
 export type Parent = {
   id: string; short: string; he: string; description: string;
   domain: 'mil' | 'civ' | 'soc'; phase: 'before' | 'during' | 'after';
-  icon: string; illustrative: boolean;
+  icon: string;
 };
 export type Place = { id: string; he: string; lat: number; lon: number; labelLeft?: boolean };
 
@@ -123,10 +131,14 @@ export function firstDocumented(incident: { claims: Pick<Claim, 'asserts_stage' 
  * On dev it does - every incident is rendered, including the ones still being
  * worked on. On staging and prod it must not, because only published incidents
  * are built and the validator refuses to publish one with a claim that has no
- * link. The banner warning readers that the data is illustrative is shown only
+ * link. The banner warning readers that the data is provisional is shown only
  * when this is true, so the site never tells a reader its data is provisional
  * when it is not - or that it is sound when it is not.
+ *
+ * A claim without a link is the whole test. There used to be an `illustrative`
+ * flag beside it, from before the pool split; it had been false on every record
+ * for a long time, and DIA-371 removed it.
  */
 export const hasUnsourcedData = visibleIncidents.some(
-  (i) => i.illustrative || i.claims.some((c) => !c.url),
+  (i) => i.claims.some((c) => !c.url),
 );

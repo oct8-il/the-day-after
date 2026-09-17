@@ -1354,31 +1354,32 @@ mask-image: linear-gradient(to bottom,
 <pre><code>// data/schema/index.ts
 
 - Summary = { stage, lines: [{ text, cites: string[] }] }
-+ Summary = { stage, text }                 // markdown; cites are [label](i13-c08) links
++ Summary = { stage, text }                 // annotated — see docs/annotations.html
 
   Incident = {
     id, parent, he,
 -   summary,                                 // narrative, item-specific
-+   summary,                                 // markdown, SYSTEMIC — no 7.10 manifestation
++   summary,                                 // annotated, SYSTEMIC — no 7.10 manifestation
 +   card_line?,                              // short statement for the slide 6 card
-+   opinion?: { question, failed, since, caveat },  // slide 5's head — generic in substance,
++   poll?: { question, failure, status, caveat },   // slide 5's head — generic in substance,
 +                                            //   phrased in THIS item's context
 +   photo?: {
 +     portrait?:  { file, photographer, source, licence, place, year },   // the gate
 +     landscape?: { file, photographer, source, licence, place, year },   // slide 6 card
 +   },
 +   feedback_strip?,                         // override on the global star-strip flag
-    illustrative, claims, summaries?
+-   illustrative,                            // gone: the pool split already says it
+    claims, summaries?
   }</code></pre>
 <ul>
-  <li><strong>A systemic description per incident</strong> (slide 2) and <strong>an overview per reached stage</strong> (slide 3), in markdown: paragraphs, bullets, inline bold on key phrases. Presentation interprets the markdown; there is no separate "bottom line" field.</li>
-  <li><strong>Cite chips are markdown links</strong> whose target is a claim id. The sources carousel is pure presentation — the unique claims the text links to.</li>
-  <li><strong>Validation</strong> parses the markdown: every sentence is cited, every link resolves to a claim of that incident, and inline bold mid-sentence is accepted.</li>
+  <li><strong>A systemic description per incident</strong> (slide 2) and <strong>an overview per reached stage</strong> (slide 3), as authored annotated text. There is no separate "bottom line" field — the opening sentence carries it, in bold.</li>
+  <li><strong>The annotation is <a href="annotations.html">docs/annotations.html</a></strong>: the six features, the <span class="mono">[[text]](claim-id)</span> chip syntax, the coverage rule, the fields each applies to, and what the validator names. <strong>That file supersedes this section</strong> on every one of those points, and nothing about the marks is specified here any more.</li>
+  <li><strong>The sources carousel is pure presentation</strong> — one card per cited document, deduplicated, ordered by first appearance.</li>
   <li><strong>The unreached-stage statement is computed</strong>, not authored — a fallback, not a field. So is the stage date, the item number and the gate's source line (§4).</li>
   <li><strong>A reached stage with no overview is not an error</strong> — it renders its claims (§6).</li>
   <li><strong>Two photo crops per incident</strong>, portrait and landscape, each optional and each with its own credit. Dimensions are not validated; the crop is trusted. Sourcing and licensing are <span class="mono">DIA-366</span>.</li>
   <li><strong>Deep links per slide and per stage</strong> (§2).</li>
-  <li><strong>The slide 5 question, authored per incident</strong> — generic in substance, phrased in that item’s context. A stage-level default may back it up; it does not replace it.</li>
+  <li><strong>The slide 5 head, authored per incident</strong> — <span class="mono">poll.question</span> and the three lines above it. The question stays generic in substance, phrased in that item’s context. A stage-level default may back it up; it does not replace it.</li>
   <li><strong>Analyst commentary records</strong> and <strong>public answers</strong> — specified in §8, built after the MVP.</li>
   <li><strong>Somewhere to put a star rating</strong>, if version B of slide 6 is the one that ships (§9).</li>
 </ul>

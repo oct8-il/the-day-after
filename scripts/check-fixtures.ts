@@ -18,6 +18,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stageOf } from '../lib/stage.ts';
+import { parseAnnotation } from '../lib/annotation.ts';
 import type { Incident, Parent } from '../data/schema/index.ts';
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'data', 'test');
@@ -31,6 +32,14 @@ const incidents: Incident[] = readdirSync(join(DIR, 'incidents'))
 
 const claims = incidents.flatMap((i) => i.claims);
 const some = (fn: (i: Incident) => boolean) => incidents.some(fn);
+
+/** Every annotated field in the pool, so the parser states can be asserted. */
+const annotated: string[] = incidents.flatMap((i) => [
+  i.summary,
+  ...(i.summaries ?? []).map((s) => s.text),
+  ...(i.poll ? [i.poll.failure, i.poll.status, i.poll.question, i.poll.caveat] : []),
+]);
+const spans = annotated.flatMap((t) => parseAnnotation(t).spans);
 
 /**
  * Each line is a state some page has to render. The wording is what a failure
@@ -64,6 +73,23 @@ const required: [string, boolean][] = [
       .every((t) => claims.some((c) => c.source_type === t))],
   ['a parent with no incidents at all (an empty matrix cell)',
     parents.some((p) => !incidents.some((i) => i.parent === p.id))],
+
+  // The annotation (docs/annotations.html). Each of these is a shape the parser
+  // and the renderer have to survive, and none of them is exercised by prose
+  // that happens to be one plain sentence per cite.
+  ['a cite span that runs across a paragraph break',
+    spans.some((s) => s.text.includes('\n\n'))],
+  ['a hyperlink nested inside a cite span',
+    spans.some((s) => /\[[^\]\n]*\]\(https?:/.test(s.text))],
+  ['a highlight run inside a cite span',
+    spans.some((s) => /==[^=\n]+==/.test(s.text))],
+  ['a cite span carrying more than one claim',
+    spans.some((s) => s.ids.length > 1)],
+  ['a poll whose question and caveat carry annotation but no chip',
+    some((i) => i.poll != null
+      && parseAnnotation(i.poll.question).spans.length === 0
+      && parseAnnotation(i.poll.caveat).spans.length === 0
+      && /\*\*|==/.test(i.poll.caveat))],
 ];
 
 const missing = required.filter(([, ok]) => !ok).map(([what]) => what);
