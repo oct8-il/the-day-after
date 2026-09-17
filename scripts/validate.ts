@@ -7,8 +7,9 @@
  * strict is what staging and prod run. It judges what the site PUBLISHES, not
  * what happens to sit in data/: an incident appears on the site only if its id
  * is in data/published.json, and every published incident must be fully sourced
- * - a live URL on every claim. Incidents not yet published may be as rough as
- * they like, because nobody can see them.
+ * - a live URL on every claim, and every statement in its authored text resting
+ * on a cite. Incidents not yet published may be as rough as they like, because
+ * nobody can see them.
  *
  * So Phase 2 is a loop: source an incident, add its id to published.json,
  * promote. That commit is the "published" event the corrections page reads.
@@ -22,10 +23,12 @@ import { checkAnnotated, citedIds, plainText } from '../lib/annotation.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 /**
- * NOTE (DIA-371): with `illustrative` gone, --strict no longer gates any rule -
- * the published-with-no-URL check was always unconditional. The flag and the
- * CI job are kept because staging and prod are supposed to be judged harder
- * than dev; what that means now is an open question, not a settled one.
+ * What --strict gates (DIA-371): the coverage rule, and only that. It is the one
+ * annotation rule that is not a mistake in the writing - an uncovered statement
+ * is a sentence the per-item pass has not sourced yet, and the pass (DIA-306)
+ * covers the ledger one incident at a time. So dev warns and staging refuses,
+ * the same shape as a claim with no source URL. Every other annotation error is
+ * wrong wherever it is written, and fails in both.
  */
 const STRICT = process.argv.includes('--strict');
 
@@ -104,10 +107,16 @@ function checkNames(where: string, text: string) {
  * `coverage` is what varies between fields, and only that: a chip is checked
  * wherever it is written. The naming rule runs on the text with the annotation
  * taken off, so a claim id can never be mistaken for a person.
+ *
+ * Whether an uncovered statement fails or warns is the one thing --strict
+ * decides; see the note on STRICT above.
  */
 function checkAnnotatedField(where: string, text: string, claimIds: Set<string>, coverage: boolean) {
   checkNames(where, plainText(text));
-  for (const issue of checkAnnotated(text, { coverage })) fail(where, issue.message);
+  for (const issue of checkAnnotated(text, { coverage })) {
+    if (issue.code === 'uncovered' && !STRICT) warn(where, issue.message);
+    else fail(where, issue.message);
+  }
   for (const id of citedIds(text)) {
     if (!claimIds.has(id)) fail(where, `cites "${id}", which is not a claim of this incident`);
   }
