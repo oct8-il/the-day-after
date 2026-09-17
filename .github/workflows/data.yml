@@ -1,10 +1,23 @@
 # The ledger's own CI. Nothing here builds or renders the site.
 #
+# TWO POOLS, TWO VERDICTS
+#   data/live is the real ledger, authored one incident at a time. data/test is
+#   the fixture pool dev renders. They go red for different reasons and are put
+#   right by different work - a research pass on one side, fixture maintenance
+#   on the other - so they report as two checks rather than one. A ledger that
+#   stays red for a week while a pass is written must not hide a fixture that
+#   rotted yesterday.
+#
+#   What the two share is data/schema, data/taxonomy.json and the validator
+#   that reads them. Touch any of those and BOTH pools are re-checked on that
+#   same commit. That is the invariant the split must not lose: the two pools
+#   are the same shape, or the split is a lie.
+#
 # WHEN THIS RUNS
-#   Only when something it can have an opinion about changed: the ledger, its
-#   schema, or one of its checkers. A commit that touches nothing but app code
-#   does not make the ledger any more or less valid, so this workflow sits it
-#   out - see the `changes` job, which is where the rule lives.
+#   Only when something it can have an opinion about changed. A commit that
+#   touches nothing but app code does not make the ledger any more or less
+#   valid, so this workflow sits it out - see the `changes` job, which is where
+#   the rule lives.
 #
 #   Two exemptions. Pushes to staging and prod always run everything, because
 #   promotion is a whole-branch fast-forward and the commit that can become
@@ -20,8 +33,9 @@
 # not.
 #
 # `data` and `build` are independent workflows and neither waits for the other.
-# Require BOTH on dev, staging and prod in the branch protection rules: a green
-# build over an invalid ledger is not a green commit.
+# Require the fixture pool, the live ledger AND the build on dev, staging and
+# prod in the branch protection rules: a green build over an invalid ledger is
+# not a green commit.
 
 name: data
 
@@ -40,11 +54,16 @@ env:
 
 jobs:
   # ----------------------------------------------------------------- changes
+  # One rule, two answers. Keeping it in a single job is the point: the moment
+  # the fixture pool and the live ledger decide for themselves what they react
+  # to, the shared-schema case is written twice and drifts on the first path
+  # someone adds to only one of them.
   changes:
-    name: does this touch the ledger?
+    name: which pool does this touch?
     runs-on: ubuntu-latest
     outputs:
-      run: ${{ steps.decide.outputs.run }}
+      test: ${{ steps.decide.outputs.test }}
+      live: ${{ steps.decide.outputs.live }}
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -56,12 +75,12 @@ jobs:
           BEFORE: ${{ github.event.before }}
         run: |
           set -uo pipefail
-          run_it()  { echo 'run=true'  >> "$GITHUB_OUTPUT"; echo "running: $1";  exit 0; }
-          skip_it() { echo 'run=false' >> "$GITHUB_OUTPUT"; echo "skipping: $1"; exit 0; }
+          out()  { echo "$1=$2" >> "$GITHUB_OUTPUT"; }
+          both() { out test true; out live true; echo "both pools: $1"; exit 0; }
 
-          [ "$EVENT" = 'workflow_dispatch' ] && run_it 'started by hand'
+          [ "$EVENT" = 'workflow_dispatch' ] && both 'started by hand'
           case "$BRANCH" in
-            staging|prod) run_it 'promotion branch - the commit that can become prod is verified whole' ;;
+            staging|prod) both 'promotion branch - the commit that can become prod is verified whole' ;;
           esac
 
           if [ -n "$BASE" ]; then
@@ -70,26 +89,59 @@ jobs:
                && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
             RANGE="$BEFORE..HEAD"
           else
-            run_it 'no diff range to read - a new branch or a forced push'
+            both 'no diff range to read - a new branch or a forced push'
           fi
 
           CHANGED=$(git diff --name-only "$RANGE")
           echo 'changed:'; echo "$CHANGED" | sed 's/^/  /'
 
-          # data/ in full: the two pools, the schema and the taxonomy. Plus the
-          # three checkers, the dependency they all run under, and this file.
+          # Shared by both pools: the schema they are parsed against, the
+          # taxonomy they both reference, the validator that reads them and the
+          # annotation library it judges authored text with, the toolchain it
+          # all runs under, and this file.
           echo "$CHANGED" | grep -Eq \
-            '^(data/|scripts/validate\.ts$|scripts/check-fixtures\.ts$|scripts/check-links\.mjs$|package\.json$|package-lock\.json$|\.github/workflows/data\.yml$)' \
-            && run_it 'the ledger, its schema or one of its checkers changed'
+            '^(data/schema/|data/taxonomy\.json$|scripts/validate\.ts$|lib/annotation\.ts$|package\.json$|package-lock\.json$|\.github/workflows/data\.yml$)' \
+            && both 'the schema, the validator or the toolchain changed'
 
-          skip_it 'nothing here touches the ledger'
+          TEST=false
+          LIVE=false
+          echo "$CHANGED" | grep -Eq '^(data/test/|scripts/check-fixtures\.ts$)' && TEST=true
+          echo "$CHANGED" | grep -Eq '^(data/live/|scripts/check-links\.mjs$)'   && LIVE=true
+          out test "$TEST"
+          out live "$LIVE"
+          echo "fixture pool: $TEST | live ledger: $LIVE"
 
-  # ---------------------------------------------------------------- validate
-  validate:
-    name: validate the two pools
+  # ----------------------------------------------------------- fixture pool
+  # The fixtures are checked by the same schema as the ledger, on every run
+  # that touches the schema - including the runs on staging and prod that
+  # never render them. This is what keeps the two pools the same shape: change
+  # data/schema/index.ts and the commit that changes it is the one that goes
+  # red, not the next person to open dev.
+  fixtures:
+    name: the fixture pool
     runs-on: ubuntu-latest
     needs: changes
-    if: needs.changes.outputs.run == 'true'
+    if: needs.changes.outputs.test == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - name: validate the fixtures
+        run: npm run validate:test
+      # Valid fixtures are not the same as useful ones. Delete the regressed
+      # incident, or give the one with no summaries a summary, and nothing
+      # above would notice - the gap would surface weeks later as a layout bug
+      # on a phone. This asserts the pool still covers every state on the list.
+      - name: the fixtures still cover every state
+        run: npm run check:fixtures
+
+  # ------------------------------------------------------------- live ledger
+  ledger:
+    name: the live ledger
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.live == 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -107,19 +159,6 @@ jobs:
           else
             npm run validate
           fi
-      # The fixtures dev renders are checked by the same schema, on every run,
-      # including the runs on staging and prod that never render them. This is
-      # what keeps the two pools the same shape: change data/schema/index.ts
-      # and the commit that changes it is the one that goes red, not the next
-      # person to open dev.
-      - name: validate the fixtures
-        run: npm run validate:test
-      # Valid fixtures are not the same as useful ones. Delete the regressed
-      # incident, or give the one with no summaries a summary, and nothing
-      # above would notice - the gap would surface weeks later as a layout bug
-      # on a phone. This asserts the pool still covers every state on the list.
-      - name: the fixtures still cover every state
-        run: npm run check:fixtures
 
   # ------------------------------------------------------------------- links
   # Reaching out to every source in the ledger is slow and depends on other
@@ -129,7 +168,7 @@ jobs:
   links:
     name: every source link answers
     runs-on: ubuntu-latest
-    needs: validate
+    needs: ledger
     if: github.ref_name == 'staging' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
