@@ -1,0 +1,217 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · The annotation — authored text in the ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    --mark:rgba(224,164,74,.22);
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      --mark:rgba(185,122,28,.20);
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    --mark:rgba(185,122,28,.20);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .frame{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:60px 0 36px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.1;margin:14px 0 10px}
+  .lede{font-size:19px;color:var(--text-2);max-width:64ch;margin:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:29px;line-height:1.2;margin:56px 0 6px;scroll-margin-top:20px}
+  h3{font-size:18px;font-weight:700;margin:30px 0 6px;letter-spacing:.01em}
+  h4{font-size:14.5px;font-weight:700;margin:20px 0 4px;color:var(--text-2);letter-spacing:.04em;text-transform:uppercase}
+  p{margin:10px 0;max-width:72ch}
+  ul,ol{max-width:72ch;padding-inline-start:22px}
+  li{margin:6px 0}
+  code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+  pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:14px 0}
+  pre code{background:none;border:0;padding:0;font-size:13.5px;line-height:1.6}
+  pre.he{direction:rtl;text-align:right}
+  .he{direction:rtl;unicode-bidi:isolate}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  td.mono,th.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px}
+  .yes{color:var(--yes);font-weight:700}
+  .off{color:var(--muted)}
+  .no{color:var(--no);font-weight:700}
+  mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 3px}
+  .note{border-inline-start:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .warn{border-inline-start:3px solid var(--no);background:rgba(217,106,95,.10);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  nav.toc{margin:26px 0 0;font-size:15px;columns:2;column-gap:36px}
+  nav.toc a{display:block;padding:3px 0;color:var(--text-2)}
+  nav.toc a:hover{color:var(--accent)}
+  hr{border:0;border-top:1px solid var(--line);margin:44px 0}
+  .meta{color:var(--muted);font-size:14px}
+  @media (max-width:640px){ nav.toc{columns:1} .frame{padding:0 18px 64px} }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header class="masthead">
+  <div class="kicker">היום שאחרי · data contract</div>
+  <h1>The annotation</h1>
+  <p class="lede">Some fields on an incident record are authored prose rather than plain strings. They carry a small, closed annotation: six features, one citation syntax, one coverage rule. This file is what the author writes to, what the validator rejects against, and what the interpreter renders.</p>
+  <p class="meta">v1.0 · 17 September 2026 · <span class="mono">DIA-365</span></p>
+</header>
+
+<nav class="toc">
+  <a href="#scope">1 · What this governs</a>
+  <a href="#set">2 · The annotation set</a>
+  <a href="#chips">3 · Source chips and the coverage rule</a>
+  <a href="#fields">4 · Where it applies</a>
+  <a href="#readers">5 · The two readers</a>
+  <a href="#carousel">6 · The sources carousel</a>
+  <a href="#example">7 · Worked example</a>
+  <a href="#names">8 · Names</a>
+</nav>
+
+<h2 id="scope">1 · What this governs</h2>
+<p>Three things read the annotated fields, and they have to agree about what the marks mean:</p>
+<ul>
+  <li><strong>The author</strong>, writing an incident's overviews during its per-item pass (<span class="mono">DIA-306</span>).</li>
+  <li><strong>The validator</strong>, which refuses to publish a record that breaks these rules (<span class="mono">DIA-371</span>).</li>
+  <li><strong>The interpreter</strong>, which turns the marks into a screen on both the mobile and the desktop item page (<span class="mono">DIA-372</span>).</li>
+</ul>
+<p>A contract with three consumers does not belong inside any one of them, so it lives here. Where an issue and this file disagree, <strong>this file is right</strong> and the issue is stale.</p>
+<div class="note">This supersedes §10 of <code>docs/mobile-item.html</code> on every point below. §10 was written when the plan was plain markdown with cite chips as ordinary links; both of those are now wrong.</div>
+<p>What this is <em>not</em>: general markdown. The set is closed, and it is closed deliberately — every feature added here is a feature two renderers, a validator and a Hebrew RTL layout have to agree on forever.</p>
+
+<h2 id="set">2 · The annotation set</h2>
+<p>Exactly six features are supported.</p>
+<table>
+  <tr><th>Feature</th><th class="mono">Syntax</th><th>What it is for</th></tr>
+  <tr><td>Bold</td><td class="mono">**text**</td><td>The bottom line. In an overview it carries the opening sentence's verdict; mid-sentence it marks the finding itself.</td></tr>
+  <tr><td>Highlight</td><td class="mono">==text==</td><td>Emphasis of a different kind: the words inside a sentence a reader should not skim past — a figure, a date, a phrase lifted from an official text.</td></tr>
+  <tr><td>Bullet list</td><td class="mono">- item</td><td>Parallel findings that are not ordered.</td></tr>
+  <tr><td>Numbered list</td><td class="mono">1. item</td><td>A sequence: steps of a plan, stages of a process.</td></tr>
+  <tr><td>Hyperlink</td><td class="mono">[text](https://…)</td><td><strong>Navigation.</strong> A report, a law, a background page. Takes the reader somewhere else.</td></tr>
+  <tr><td>Source chip</td><td class="mono">[[text]](i13-c08)</td><td><strong>Citation.</strong> Points into this incident's own claims. §3.</td></tr>
+</table>
+
+<h3>Bold and highlight are not interchangeable</h3>
+<p>Bold is structural — it is how an overview states its conclusion first. Highlight is local — it picks out the load-bearing words inside a sentence that is already being read. A highlight stretched over a whole sentence is a misuse; so is bolding a date.</p>
+<p>Markdown has no standard for highlight. The de-facto convention <code>==text==</code> is adopted because it collides with nothing else in the set, and because it is what every editor that supports highlighting at all already uses.</p>
+
+<h3>Chips and hyperlinks ship side by side</h3>
+<p>This reverses an earlier reading in which a chip stood in place of a link. They are different things and a sentence may carry both.</p>
+<div class="warn"><strong>Only a chip discharges the sourcing rule.</strong> A hyperlink never does. A sentence resting on a bare URL is not sourced, however authoritative the page behind it — the ledger's guarantee is that every published assertion points at a claim record with a quote read off its page, and a link is not one.</div>
+
+<h3>Everything else is dropped</h3>
+<p>Headings, images, blockquotes, tables, nested lists, and anything else that looks like markdown are <strong>stripped silently by the renderer</strong> — not rendered as literal characters, and never shown to a reader as an error. §5 says why the silence is on the renderer's side only.</p>
+
+<h2 id="chips">3 · Source chips and the coverage rule</h2>
+<p>A chip is a hyperlink's shape with doubled brackets, and a claim id where the URL would be:</p>
+<pre><code>[text](https://…)            hyperlink
+[[text]](i13-c08)            source chip
+[[text]](i13-c08, i13-c11)   source chip, several claims</code></pre>
+<p>One rule to learn, and the two kinds of link stay apart both on the page and in the source file.</p>
+
+<h3>Explicit scope</h3>
+<p>Each chip states <strong>exactly which text it covers</strong>. The span is written, not inferred.</p>
+<p>Implicit scope was considered and rejected: the obvious alternative — a chip at the end of a sentence covering backwards to the previous chip — makes the boundary something nobody has to write down, and therefore something nobody has to think about. A citation boundary that is never stated is an opening for negligence.</p>
+
+<h3>Cites are a pre-pass, above markdown</h3>
+<p>The cite spans are extracted first; markdown is then parsed <strong>inside each span, never across one</strong>. So a span may hold paragraph breaks, bullets, numbered lists, bold, highlight and hyperlinks, and one chip may wrap a single sentence, several, or an entire overview.</p>
+<p>A markdown construct that opens inside one span and closes in another is an error, not a rendering puzzle.</p>
+
+<h3 id="coverage">The coverage rule</h3>
+<div class="note"><strong>The coverage rule:</strong> outside a cite span, only whitespace and list markers may appear. Anything else is <strong>uncovered text</strong>, and the record fails to validate.</div>
+<p>That is the whole of it. It is stated as a property of the text rather than of the sentence, so that it holds no matter how the author breaks up the prose.</p>
+
+<h3>On the page</h3>
+<p>The chip draws at the <strong>end of its span</strong>, carrying the source-type mark and a <code>+N</code> when the cite holds several claims. Tapping it opens the cited claims — quote, source, date, link — and <strong>highlights the span it covers</strong>. Because the span is authored, that highlight is exact rather than guessed.</p>
+<p>In RTL the chip sits inside the Hebrew run; latin claim ids stay isolated so the punctuation does not reorder around them.</p>
+
+<h2 id="fields">4 · Where it applies</h2>
+<p>Annotation is not a property of the record; it is a property of named fields. Everything else is a plain string and is rendered as one.</p>
+<table>
+  <tr><th>Field</th><th>Annotation</th><th>Coverage rule</th></tr>
+  <tr><td class="mono">summary</td><td class="yes">yes</td><td class="yes">enforced</td></tr>
+  <tr><td class="mono">summaries[].text</td><td class="yes">yes</td><td class="yes">enforced</td></tr>
+  <tr><td class="mono">poll.failure</td><td class="yes">yes</td><td class="yes">enforced</td></tr>
+  <tr><td class="mono">poll.status</td><td class="yes">yes</td><td class="yes">enforced</td></tr>
+  <tr><td class="mono">poll.question</td><td class="yes">yes</td><td class="no">not enforced</td></tr>
+  <tr><td class="mono">poll.caveat</td><td class="yes">yes</td><td class="no">not enforced</td></tr>
+  <tr><td class="mono">he</td><td class="off">—</td><td class="off">—</td></tr>
+  <tr><td class="mono">card_line</td><td class="off">—</td><td class="off">—</td></tr>
+  <tr><td class="mono">photo.*, feedback_strip</td><td class="off">—</td><td class="off">—</td></tr>
+  <tr><td class="mono">Parent.description</td><td class="off">—</td><td class="off">—</td></tr>
+</table>
+<p>Every annotated field gets the same errors — nested, unclosed or empty cite; a markdown construct crossing a span; an id that does not resolve to a claim of this incident; a duplicate id within one cite. <strong>Coverage is the only rule that varies.</strong></p>
+<p>The two exemptions are deliberate. <strong>The caveat states an absence</strong>, and an absence has nothing to cite. <strong>The question is put to the reader</strong> rather than asserted, so enforcing coverage there would force a chip onto text that is not a claim. Both still parse as annotation — bold, highlight, lists, hyperlinks and chips are all available in them — and a chip written in either is checked like any other.</p>
+
+<h2 id="readers">5 · The two readers</h2>
+<p>The renderer and the validator treat a mistake differently, on purpose.</p>
+<table>
+  <tr><th></th><th>The validator</th><th>The renderer</th></tr>
+  <tr><td>Audience</td><td>The author, before the record ships</td><td>A reader, after it ships</td></tr>
+  <tr><td>On unsupported syntax</td><td>—</td><td>Drops it silently</td></tr>
+  <tr><td>On a broken rule</td><td>Fails the build</td><td>Renders what it can</td></tr>
+</table>
+<p>A reader must never be shown a syntax error; that is the renderer's silence. An author must never be allowed to ship one; that is the validator's job. The two are not a contradiction — they are the same decision seen from either end of the pipeline.</p>
+
+<h3>What the validator names</h3>
+<ol>
+  <li><strong>Uncovered text</strong> — anything but whitespace or a list marker outside a cite span, in the fields §4 marks enforced.</li>
+  <li>A nested cite, an unclosed cite, an empty cite.</li>
+  <li>A markdown construct crossing a span boundary.</li>
+  <li>An id that does not resolve to a claim of <em>this</em> incident.</li>
+  <li>A duplicate id within one cite.</li>
+</ol>
+<p>Accepted without complaint: inline bold and highlight mid-sentence, bullets, numbered lists and hyperlinks inside a span; a span running over paragraph breaks; a reached stage with no overview at all, which falls back to rendering that stage's claims.</p>
+
+<h2 id="carousel">6 · The sources carousel</h2>
+<p>Nothing about the carousel is authored. It is derived from the chips in the text: <strong>one card per cited document</strong>, deduplicated by url — falling back to <code>source + date</code> where a url is absent — and ordered by first appearance in the text. Publication, source type, date, link.</p>
+<p>So a single source backing four sentences appears once, and two separate pieces from the same publication stay two cards. It is a list of <em>documents</em>, not of claims.</p>
+
+<h2 id="example">7 · Worked example</h2>
+<pre class="he"><code>[[**מערכת ההתרעה ביישובי העוטף מעולם לא נבנתה לזהות חדירה קרקעית.** היא תוכננה
+להתרעת רקטות, ובתרחיש של פריצת גדר לא היה לה מה להשמיע.]](i13-c03, i13-c04)
+
+[[ועדת הבדיקה קבעה שהפער היה מוכר, ו[הדוח המלא](https://example.com/report)
+פורסם רק ב==2025==.]](i13-c11)</code></pre>
+<p>Reading it: two cite spans, so two chips, each drawn at the end of its own span. The first covers a bolded bottom line and the sentence that explains it, and rests on two claims. The second carries a hyperlink to the report — navigation, sourcing nothing — and a highlight on the year, and rests on one claim. Between and around the spans there is only whitespace, so the text is fully covered and the record validates.</p>
+
+<h2 id="names">8 · Names</h2>
+<p>So that issues and commits can point at a rule instead of restating it:</p>
+<table>
+  <tr><th>Name</th><th>Means</th></tr>
+  <tr><td><strong>the annotation set</strong></td><td>The six features of §2, and nothing else.</td></tr>
+  <tr><td><strong>a cite span</strong></td><td>The text a single <code>[[…]](ids)</code> covers.</td></tr>
+  <tr><td><strong>the cite pre-pass</strong></td><td>The extraction of cite spans that runs before markdown is parsed.</td></tr>
+  <tr><td><strong>a chip</strong></td><td>The mark a cite span draws at its end.</td></tr>
+  <tr><td><strong>the coverage rule</strong></td><td>§3: outside a cite span, only whitespace and list markers.</td></tr>
+  <tr><td><strong>uncovered text</strong></td><td>What breaks it.</td></tr>
+</table>
+
+<hr>
+<p class="meta">Related: <a href="mobile-item.html">the mobile item design spec</a> (§10 is superseded by this file) · <code>data/schema/index.ts</code> for the fields themselves.</p>
+
+</div>
+</body></html>
