@@ -125,6 +125,10 @@ function checkAnnotatedField(where: string, text: string, claimIds: Set<string>,
 const files = readdirSync(join(DATA, 'incidents')).filter((f) => f.endsWith('.json')).sort();
 let claimCount = 0;
 let publishable = 0;
+/** Published incidents carrying both crops. It is printed in the header rather
+ *  than left to the per-item warnings, which are exactly the kind that scroll
+ *  off the end of a run where something else is already warning. */
+let bothCrops = 0;
 const seen = new Set<string>();
 
 for (const file of files) {
@@ -195,6 +199,20 @@ for (const file of files) {
   if (stageOf(inc) === 5 && !hasIndependentVerification(inc)) {
     fail(where, 'computed stage is 5 without an independent verifying source');
   }
+
+  // Photos (DIA-366). A warning, never a failure: an incident without one is
+  // publishable, it just reaches the gate and the share card with the fallback
+  // instead of a picture. Only published incidents are counted - a draft has
+  // nothing to illustrate yet. The two crops are asked for separately because
+  // they are used in different places and neither substitutes for the other.
+  if (isPublished(inc.id)) {
+    if (!inc.photo) warn(where, 'no photo - the gate and the share card fall back');
+    else {
+      if (!inc.photo.portrait) warn(where, 'no portrait crop - the gate falls back');
+      if (!inc.photo.landscape) warn(where, 'no landscape crop - the share card falls back');
+    }
+    if (inc.photo?.portrait && inc.photo.landscape) bothCrops++;
+  }
 }
 
 for (const id of published) {
@@ -206,7 +224,7 @@ for (const id of published) {
 
 const label = STRICT ? 'strict (staging/prod)' : 'permissive (dev)';
 console.log(`\n  hayom-shaacharei . data validation . ${POOL} pool . ${label}`);
-console.log(`  ${parents.length} parents in ${cells.size} matrix cells | ${published.length} of ${files.length} incidents published | ${claimCount} claims, ${publishable} with a source URL | ${places.length} places | ${taxonomy.stages.length} stages\n`);
+console.log(`  ${parents.length} parents in ${cells.size} matrix cells | ${published.length} of ${files.length} incidents published | ${claimCount} claims, ${publishable} with a source URL | ${bothCrops} of ${published.length} with both photo crops | ${places.length} places | ${taxonomy.stages.length} stages\n`);
 for (const w of warnings.slice(0, 6)) console.log(`  warn  ${w}`);
 if (warnings.length > 6) console.log(`  warn  ... and ${warnings.length - 6} more`);
 for (const e of errors) console.log(`  FAIL  ${e}`);
