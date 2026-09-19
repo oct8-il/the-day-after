@@ -213,13 +213,32 @@ export function Deck({ crumbs, slides, credit, ground }: {
     if (opts?.write ?? true) writeHash(n, null);
   }, [scrollTo, writeHash]);
 
-  /** The track has stopped moving: adopt where it stopped, and record it. */
+  /**
+   * The track has stopped moving: adopt where it stopped, straighten it if it
+   * stopped between two slides, and record it.
+   *
+   * The straightening is the important half. A slide landing a fraction off
+   * its snap point has had three separate causes so far - index arithmetic
+   * against a fractional width, scroll-snap-stop capping a scrollBy, and now
+   * something on the glass that does not reproduce in a headless Chromium at
+   * any width. Rather than chase a fourth, the deck measures where it actually
+   * came to rest and corrects it. The correction is instant and its own
+   * scrollend finds nothing left to do, so it cannot loop.
+   */
   const settle = useCallback(() => {
     target.current = null;
     // A scrub stops between every pair of dots. The landing writes the hash,
     // once, when the finger lifts - not at each stage it passed through.
     if (armedRef.current) return;
     const i = indexNow();
+
+    const el = track.current;
+    const sl = slideEls()[i];
+    if (el && sl) {
+      const dx = sl.getBoundingClientRect().left - el.getBoundingClientRect().left;
+      if (Math.abs(dx) > 0.5) sl.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'instant' });
+    }
+
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
     writeHash(i, null);
   }, [indexNow, writeHash]);
@@ -282,6 +301,15 @@ export function Deck({ crumbs, slides, credit, ground }: {
 
     el.addEventListener('scroll', read, { passive: true });
     if ('onscrollend' in el) el.addEventListener('scrollend', settle, { passive: true });
+
+    /**
+     * The frame is 100dvh, and on iOS the visible viewport changes height as
+     * the URL bar collapses - which fires a resize while the reader is part
+     * way through a swipe. Put the current slide back where it belongs.
+     */
+    const onResize = () => scrollTo(atRef.current, false);
+    window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
     // A finger on the track takes it back from whatever the deck was doing.
     const release = () => { target.current = null; };
     el.addEventListener('pointerdown', release, { passive: true });
@@ -291,8 +319,10 @@ export function Deck({ crumbs, slides, credit, ground }: {
       el.removeEventListener('scroll', read);
       el.removeEventListener('scrollend', settle);
       el.removeEventListener('pointerdown', release);
+      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
     };
-  }, [indexNow, settle]);
+  }, [indexNow, settle, scrollTo]);
 
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this

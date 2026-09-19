@@ -161,6 +161,30 @@ test.describe('the frame and its edges', () => {
     }
   });
 
+  test('a landing that comes to rest off the snap point is straightened', async ({ page }) => {
+    // The deck corrects itself rather than trusting any one scroll API: three
+    // separate causes have put a slide a fraction off its snap point so far,
+    // and the fourth is on a phone and does not reproduce here. This nudges
+    // the track off true and asserts that settling puts it back.
+    await open(page, '#3');
+    await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      t.scrollLeft += 9;              // nine pixels of wrong, deliberately
+      t.dispatchEvent(new Event('scroll'));
+    });
+    await page.waitForTimeout(700);
+    const off = await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      const base = t.getBoundingClientRect().left;
+      let gap = Infinity;
+      for (const s of document.querySelectorAll('.deck-slide')) {
+        gap = Math.min(gap, Math.abs(s.getBoundingClientRect().left - base));
+      }
+      return gap;
+    });
+    expect(off).toBeLessThan(0.5);
+  });
+
   test('the dots are six, 6px, 7px apart, centred, first slide rightmost', async ({ page }) => {
     await open(page);
     const f = await rect(page, '.deck');

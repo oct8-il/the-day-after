@@ -158,6 +158,28 @@ test.describe('the title block', () => {
   });
 });
 
+test('the title is set in the display face, not the body sans', async ({ page }) => {
+  // The prototype names its display face with a bare `.serif`, and every rule
+  // carrying it is scoped to a desktop component - so the class arrived here
+  // meaning nothing and the title rendered in Assistant. A class that does not
+  // exist looks exactly like a class that does until someone reads the screen.
+  await open(page, 't01');
+  const face = await page.evaluate(() =>
+    getComputedStyle(document.querySelector('.deck-gate-title h1')!).fontFamily);
+  expect(face).toMatch(/Frank Ruhl Libre/);
+
+  const body = await page.evaluate(() =>
+    getComputedStyle(document.querySelector('.deck-gate-title p')!).fontFamily);
+  expect(body, 'the source line stays in the body face').not.toMatch(/Frank Ruhl Libre/);
+});
+
+test('the number ghost is set in the display face too', async ({ page }) => {
+  await open(page, 't04');
+  const face = await page.evaluate(() =>
+    getComputedStyle(document.querySelector('.deck-gate-ghost .serif')!).fontFamily);
+  expect(face).toMatch(/Frank Ruhl Libre/);
+});
+
 test('the breadcrumb leaf carries the item number', async ({ page }) => {
   await open(page, 't01');
   expect(await page.locator('.deck-crumbs b').innerText()).toMatch(/^כשל מס׳ \d+$/);

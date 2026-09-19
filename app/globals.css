@@ -964,6 +964,12 @@
   /* The ground is the deck's, not the slide's: the chrome is docked outside the
      track, so a ground inside the slide stops where the track stops and leaves
      a seam under the dots. Shown only while the gate is the slide in view. */
+  /* The prototype names its display face with a bare .serif, but every rule
+     carrying it is scoped to a desktop component, so the class arrives here
+     meaning nothing and the gate's title rendered in the body sans. One rule,
+     for the whole deck. */
+  .deck .serif{font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif}
+
   .deck-ground{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;
     background:#0b0f0b;transition:opacity .18s ease}
   .deck[data-at="0"] .deck-ground{opacity:1}
@@ -995,8 +1001,7 @@
     color-mix(in srgb,color-mix(in srgb,var(--c) 55%,#fff) 17%,transparent) 0%,transparent 60%)}
   .deck-gate-ghost{position:absolute;top:300px;right:24px;left:24px;
     display:flex;align-items:baseline;justify-content:flex-start;gap:10px;pointer-events:none}
-  .deck-gate-ghost .serif{font-family:"Frank Ruhl Libre",serif;font-size:196px;line-height:.82;
-    font-weight:500;color:rgba(233,230,223,.07)}
+  .deck-gate-ghost .serif{font-size:196px;line-height:.82;font-weight:500;color:rgba(233,230,223,.07)}
   .deck-gate-ghost span + span{font-size:15px;font-weight:600;letter-spacing:.04em;color:rgba(233,230,223,.12)}
 
   /* The right-edge fade sits behind the rail, full height, so the labels hold
@@ -1039,6 +1044,8 @@
   .deck-gate-title{position:relative;z-index:1;margin-top:auto;padding:0 20px;
     display:flex;flex-direction:column;gap:12px}
   .deck-gate-title h1{margin:0;font-size:31px;line-height:1.18;font-weight:500;color:#fff;text-wrap:balance}
+  /* The ground is inside .deck but the .serif rule above is scoped to it, so
+     the ghost is covered too. */
   .deck-gate-title p{margin:0;font-size:13px;color:rgba(255,255,255,.72)}
 
   /* The gate's slide has no side gutters of its own: the ground is full-bleed,
