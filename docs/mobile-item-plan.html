@@ -78,7 +78,7 @@
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — build plan</h1>
   <p class="lede">What gets built, in what order, and what was decided before any of it starts. The design is <a href="mobile-item.html">docs/mobile-item.html</a> v2.3; this document is how it becomes code. Where the two differ, the spec wins.</p>
-  <p class="meta">v1.6 · 19 September 2026 · design at v2.3 · <b>Phases 0 and 1 done</b> · Phase 2 next, on a fresh branch off <span class="mono">dev</span></p>
+  <p class="meta">v1.7 · 19 September 2026 · design at v2.3 · <b>Phases 0 and 1 done</b> · Phase 2 next, on a fresh branch off <span class="mono">dev</span></p>
 </header>
 
 <nav class="toc">
@@ -259,8 +259,17 @@ export const Incident = z.object({
 
 <div class="phase">
   <h3><span class="pno">PHASE 2</span> Shell, chrome, gestures</h3>
-  <p>The mobile component tree behind the breakpoint. Horizontal scroll-snap deck, breadcrumb, dots, footer chain, hash routing with the push-once history rule, and jump mode on the dots. Slides 2–6 are placeholders naming themselves. <strong>Nothing here reads item data</strong>, which is why it can start before the helpers and before the content pass.</p>
-  <div class="gate"><b>Gate #1:</b> swipe, dots, jump mode, Back, and a deep link opening at the right slide — on your phone.</div>
+  <p>The mobile component tree behind the breakpoint. Horizontal scroll-snap deck, breadcrumb, dots, footer chain, hash routing with the push-once history rule, and jump mode on the dot row — the stage rail comes with slide 3. Slides 1–6 are placeholders naming themselves. <strong>Nothing here reads item data</strong>: the helpers exist and this phase calls none of them, which is why it can start while the content pass has not. Tracked as <span class="mono">DIA-377</span>.</p>
+  <div class="gate"><b>Gate #1</b>, on the phone, against <code>data/test</code>:
+  <ol style="margin:8px 0 0;padding-inline-start:20px">
+    <li>Swipe moves between slides and lands cleanly on each.</li>
+    <li>The dots read right — first slide rightmost — and no numeric counter has crept in.</li>
+    <li>Long-press arms, the page scrubs under the finger, release lands, and <b>iOS raises neither the selection callout nor the magnifier</b>.</li>
+    <li>Back returns to the gate from slide 5; a second Back leaves the page.</li>
+    <li>A deep link pasted cold opens at the right slide, and survives a refresh.</li>
+    <li>The footer sits above the home indicator with the URL bar both expanded and collapsed.</li>
+  </ol>
+  Three of those six cannot be checked in a simulator, which is what the stop is for.</div>
 </div>
 
 <div class="phase">
