@@ -3,6 +3,24 @@
   "parent": "p3",
   "he": "זמני ההגעה של כוח מסייע ליישוב לא נמדדו באופן שיטתי",
   "summary": "[[לא התקיימה מדידה שיטתית של הזמן שחולף בין קריאה לבין הגעת כוח מסייע.]](t05-c01)\n\n[[הוטמעה מדידה, וגוף בלתי תלוי אימת שהיא מתבצעת ושהנתונים מתפרסמים.]](t05-c08, t05-c10)",
+  "photo": {
+    "portrait": {
+      "file": "alley-portrait.jpg",
+      "photographer": "Hedva Sanderovitz",
+      "source": "PikiWiki — אוסף התמונות החופשי של ישראל",
+      "licence": "CC BY 2.5",
+      "place": "ירושלים",
+      "year": "2015"
+    },
+    "landscape": {
+      "file": "assembly-landscape.jpg",
+      "photographer": "Leif Knutsen",
+      "source": "ויקישיתוף",
+      "licence": "CC BY-SA 3.0",
+      "place": "ירושלים",
+      "year": "2005"
+    }
+  },
   "claims": [
     {
       "id": "t05-c01",
