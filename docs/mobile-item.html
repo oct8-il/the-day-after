@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.2 · 14 September 2026 · the design defines the data shape · both versions of slide 6 specified · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v2.3 · 18 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -161,7 +161,7 @@
   <tr><td>3</td><td class="he">מה נעשה מאז</td><td>A vertical stack of the stages that were reached</td><td><span class="status st-done">settled</span></td></tr>
   <tr><td>4</td><td class="he">מה עוד לא נעשה</td><td>The same stack for the stages that were not, opening at the next one</td><td><span class="status st-done">settled</span></td></tr>
   <tr><td>5</td><td class="he">דעת הציבור</td><td>The failure in three lines, the standing question, both opinion registers, and the ballot</td><td><span class="status st-done">settled</span></td></tr>
-  <tr><td>6</td><td class="he">הלאה</td><td>Other failures, "all 29", share</td><td><span class="status st-done">settled</span></td></tr>
+  <tr><td>6</td><td class="he">הלאה</td><td>Other failures, "all 29", share — version A, four cards</td><td><span class="status st-done">settled</span></td></tr>
 </table>
 <p>Horizontal swipe moves between slides. Slides 3 and 4 add a vertical axis of their own; the page itself never scrolls, so each is a nested scroll-snap and every stage page must fit the frame.</p>
 
@@ -1216,7 +1216,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 6 · version A</b>Four failures, no strip. Cards 111px, photo ground at 30% fading to nothing, and the upright repost loop on the share button.</figcaption>
+    <figcaption class="cap"><b>Slide 6 · version A</b><strong>What ships.</strong> Four failures, no strip. Cards 111px, photo ground at 30% fading to nothing, and the upright repost loop on the share button.</figcaption>
   </figure>
   <figure class="shot">
     <div class="vp"><div class="scr scr-5"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
@@ -1281,7 +1281,7 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
   </div>
 
 </div></div></div>
-    <figcaption class="cap"><b>Slide 6 · version B</b>Three failures and the 1–5 star strip under the share button. Neither version is the default — §9 specifies both and picks neither.</figcaption>
+    <figcaption class="cap"><b>Slide 6 · version B</b>Three failures and the 1–5 star strip under the share button. <strong>Not the MVP</strong> — version A ships; this is held as <span class="mono">DIA-376</span>.</figcaption>
   </figure>
 </div>
 
@@ -1315,8 +1315,8 @@ mask-image: linear-gradient(to bottom,
   <li><span class="he">שיתוף כשל מס׳ 13</span> — gold fill, 46px, <strong>repost icon</strong> — the arrow loop <strong>upright</strong>, TikTok-style: two interleaved L arrows, up the left column and down the right, drawn 16 × 15 — a compact near-square loop, not a tall narrow one, naming the item rather than saying "share the failure". The only gold-filled action outside slide 5's save.</li>
 </ol>
 
-<h4>Two versions, and the choice is not the design's</h4>
-<p>Slide 6 exists in two fully specified forms. <strong>This document does not decide which one ships</strong> — it specifies both and hands the choice over. Everything above this heading is common to the two; everything below differs.</p>
+<h4>Two versions — <strong>A ships</strong></h4>
+<p>Slide 6 exists in two fully specified forms, and the choice has been made: <strong>version A ships for the MVP</strong> — four cards, no strip (Roy, 18 September). Version B stays specified in full below and is held as <span class="mono">DIA-376</span>, post-MVP. Everything above this heading is common to the two; everything below differs.</p>
 <table>
   <tr><th></th><th>Version A — the list alone</th><th>Version B — the list and the strip</th></tr>
   <tr><td>Cards</td><td>Four</td><td>Three</td></tr>
@@ -1325,7 +1325,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Spare space</td><td>One flexible spacer above the actions</td><td>Split in two — above the actions and below the strip — so no single hole opens under the last card</td></tr>
   <tr><td>Asks about</td><td>—</td><td>The <em>site</em>, not the item. That is why a card count varying between items would read as instability rather than as a choice: whichever version is picked, pick it once</td></tr>
 </table>
-<div class="note"><strong>What version B needs that version A does not.</strong> Somewhere to put an answer: one row per rating, no identity attached — a rating, the item it was given on, and a per-device key that exists only to stop one phone voting twenty times. That is a demand on storage, not a design decision, and it is the same store slide 5's ballot will need when it is built. If the answer is that no such store exists, the answer is version A.</div>
+<div class="note"><strong>What version B needs that version A does not.</strong> Somewhere to put an answer: one row per rating, no identity attached — a rating, the item it was given on, and a per-device key that exists only to stop one phone voting twenty times. That is the first non-static dependency in a project whose standing claim is that the site is built from the repository, with no database and no API — which is why it is being taken deliberately, after launch, rather than as a side effect of a star widget. <span class="mono">DIA-376</span>.</div>
 
 <h4>Short screens</h4>
 <p>The deck never scrolls, so slide 6 must fit the frame it is given rather than assume 844. <strong>The card list fills the space it has and sheds cards when it cannot</strong> — everything else on the slide is fixed and stays. The floor is two cards; below that the slide has nothing left to say.</p>
@@ -1392,7 +1392,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Deep links are hashes; the first move pushes, the rest replace</td><td>No extra static pages; Back gets a reader out of Instagram's browser in two presses from anywhere</td></tr>
   <tr><td>Slides 3 and 4 are nested scroll-snap; the page itself never scrolls</td><td>Already accepted with the split. Every stage page must fit the frame</td></tr>
   <tr><td>Screen-reader route: six labelled sections in DOM order, footer labels are real links, arrow keys on a hardware keyboard</td><td>On a phone, a screen-reader swipe means "next element", not "next slide". Nothing on the deck may be gesture-only</td></tr>
-  <tr><td><em>If</em> the star strip ships (§9), ratings write to a hosted database from the client</td><td>Keeps <code>output: 'export'</code>, and it is the store the post-MVP ballot needs anyway. Conditional: §9 specifies both versions of slide 6 and picks neither</td></tr>
+  <tr><td>No store, and no non-static dependency, in the MVP</td><td>Version A ships (§9), so nothing on the item page writes anywhere. The hosted-database question moves to the post-MVP ballot, with the strip, as <span class="mono">DIA-376</span></td></tr>
   <tr><td>Proof is a frozen set of 390×844 baselines, plus assertions on measured geometry and on the gestures</td><td>Pixels cannot see a rule; rules cannot see a screen. The RTL trap in §2 becomes a test rather than a memory</td></tr>
   <tr><td>Built and reviewed one slide at a time, on a real phone</td><td>The scrub, the dim and the long press do not exist in a screenshot</td></tr>
 </table>
@@ -1401,7 +1401,6 @@ mask-image: linear-gradient(to bottom,
 <p>Everything the 13 September canvases left open was closed on 14 September. What remains — including anything §10 asks for that implementation cannot meet, which is recorded here rather than folded back into the design:</p>
 <table>
   <tr><th>Question</th><th>Where it bites</th></tr>
-  <tr><td><strong>Which version of slide 6 ships</strong> — the four-card list alone, or three cards and the star strip. Both are fully specified; the design deliberately does not choose</td><td>Slide 6 · §9. Version B also needs somewhere to put a rating</td></tr>
   <tr><td><strong>Credit for the card photographs.</strong> The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA. Candidates: one credits line at the foot of slide 6, a credits page linked from <span class="he">אודות</span>, or landscape crops only from sources needing no attribution</td><td>Slide 6 — deliberately deferred to the build phase that reaches it</td></tr>
   <tr><td>The evidence map is still the desktop component at mobile width</td><td>Slide 3, stage 1 — it renders real pins; it has not had a 390 design pass</td></tr>
   <tr><td>How many bubbles show before a "more" affordance; moderation; what an open cluster looks like; whether saving sends the comment with the rating</td><td>Slide 5, post-MVP — none of it is built in this pass</td></tr>
@@ -1423,6 +1422,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Item · Cosmetic Fixes</td><td class="mono">46a934cc</td><td>Slide 3 renamed <span class="he">מה נעשה מאז</span>, tighter title gap, gold chip trimmed, wider repost icon</td></tr>
   <tr><td>Item · Stage Split Proposal</td><td class="mono">b05eb150</td><td>The split into <span class="he">מה נעשה מאז</span> and <span class="he">מה עוד לא נעשה</span> — <strong>accepted</strong></td></tr>
   <tr><td>Item · Six Slides</td><td class="mono">976cc81c</td><td>The whole deck after the split: six dots, the new slide, every footer rechained</td></tr>
+  <tr><td>Slide 6, version A</td><td class="mono">DIA-376</td><td>Version A ships for the MVP — four cards, no strip. Version B stays specified and moves post-MVP with the store it needs</td></tr>
   <tr><td>Design review of the interview</td><td class="mono">14 Sep</td><td>Four rulings: the slide 5 question stays item-phrased and the data follows; slide 6 is specified in two versions and the doc picks neither; the methodology line is stage 5’s alone; slide 6 sheds a card on a short screen</td></tr>
   <tr><td>Pre-build interview</td><td class="mono">14 Sep</td><td>24 rulings — breakpoint, deep links and history, jump mode, the computed rules, the schema change, what ships on slides 5 and 6. Build plan: <a href="mobile-item-plan.html">mobile-item-plan.html</a></td></tr>
 </table>

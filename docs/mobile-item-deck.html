@@ -1,0 +1,460 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · the phone deck — where we are</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --ground:#0b0f0b; --ink:#e9e6df; --ink-2:#b5bcc5; --muted:#7c858f;
+    --line:#2b323b; --gold:#e0a44a; --gold-ink:#1a1206;
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43;
+    --no:#d96a5f; --yes:#6fbf8a;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .he{direction:rtl;unicode-bidi:isolate;display:inline-block;font-family:"Frank Ruhl Libre",Georgia,serif}
+
+  /* ---------- stage ---------- */
+  #stage{position:fixed;inset:0;display:grid;place-items:center}
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:clamp(40px,6vw,96px) clamp(40px,8vw,140px) clamp(76px,9vh,110px);
+    flex-direction:column;justify-content:center;
+    opacity:0;transition:opacity .22s ease;
+  }
+  .slide.on{display:flex;opacity:1}
+  .slide.center{align-items:center;text-align:center}
+
+  /* ---------- type scale ---------- */
+  .kicker{
+    font-size:clamp(11px,1.05vw,14px);letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:clamp(18px,2.4vh,30px);font-weight:600;
+  }
+  .kicker.gold{color:var(--gold)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;
+     font-size:clamp(40px,6.4vw,104px);line-height:1.04;margin:0;letter-spacing:-.01em}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;
+     font-size:clamp(32px,4.6vw,72px);line-height:1.1;margin:0;max-width:22ch}
+  .center h2{max-width:24ch}
+  .sub{font-size:clamp(15px,1.5vw,22px);color:var(--ink-2);margin:clamp(16px,2.2vh,28px) 0 0;max-width:46ch;line-height:1.5}
+  .center .sub{margin-left:auto;margin-right:auto}
+  .huge{font-family:"IBM Plex Mono",monospace;font-weight:500;
+        font-size:clamp(90px,19vw,300px);line-height:.86;letter-spacing:-.04em;color:var(--gold)}
+  .huge.plain{color:var(--ink)}
+  .under{font-size:clamp(14px,1.5vw,21px);color:var(--ink-2);margin-top:clamp(18px,2.6vh,34px);max-width:40ch;line-height:1.5}
+  .center .under{margin-left:auto;margin-right:auto}
+
+  /* ---------- pieces ---------- */
+  .rule{height:1px;background:var(--line);margin:clamp(20px,3vh,38px) 0;width:min(100%,560px)}
+  .center .rule{margin-left:auto;margin-right:auto}
+
+  .deckrow{display:flex;gap:clamp(8px,1.1vw,16px);margin-top:clamp(30px,5vh,62px);width:100%}
+  .card{
+    flex:1;border:1px solid var(--line);border-radius:12px;padding:clamp(13px,1.7vw,24px);
+    display:flex;flex-direction:column;gap:6px;min-width:0;background:rgba(255,255,255,.015);
+  }
+  .card .n{font-family:"IBM Plex Mono",monospace;font-size:clamp(11px,1vw,13px);color:var(--muted)}
+  .card .t{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:clamp(15px,1.7vw,26px);direction:rtl;unicode-bidi:isolate;text-align:left;line-height:1.25}
+  .card .d{font-size:clamp(11px,1vw,14px);color:var(--muted);line-height:1.35}
+
+  .ladder{display:flex;flex-direction:column;gap:clamp(6px,1.1vh,14px);margin-top:clamp(30px,5vh,58px);width:100%;max-width:760px}
+  .rung{display:flex;align-items:center;gap:clamp(12px,1.6vw,22px)}
+  .rung .bar{height:clamp(9px,1.5vh,17px);border-radius:3px;background:var(--line);flex:none}
+  .rung .lb{font-size:clamp(12px,1.2vw,17px);color:var(--muted)}
+  .rung.done .bar{background:var(--s5)}
+  .rung.done .lb{color:var(--ink)}
+  .rung.now .bar{background:var(--gold)}
+  .rung.now .lb{color:var(--gold);font-weight:700}
+
+  .zeros{display:flex;gap:clamp(20px,4.6vw,86px);margin-top:clamp(26px,4.4vh,56px);flex-wrap:wrap;justify-content:center}
+  .zero{text-align:center}
+  .zero .v{font-family:"IBM Plex Mono",monospace;font-size:clamp(64px,11.4vw,178px);line-height:.9;color:var(--no);letter-spacing:-.03em}
+  .zero .k{font-size:clamp(11px,1.05vw,15px);color:var(--muted);margin-top:16px;letter-spacing:.06em}
+
+  .stack{display:flex;flex-direction:column;gap:clamp(11px,1.9vh,26px);margin-top:clamp(30px,5vh,58px);width:100%;max-width:780px}
+  .item{display:flex;align-items:baseline;gap:clamp(14px,1.8vw,26px)}
+  .item .v{font-family:"IBM Plex Mono",monospace;font-size:clamp(26px,3.4vw,52px);color:var(--gold);min-width:3.2ch;text-align:right;line-height:1}
+  .item .k{font-size:clamp(13px,1.35vw,20px);color:var(--ink-2);line-height:1.35}
+  .item.mute .v{color:var(--muted)}
+
+  .two{display:flex;gap:clamp(24px,4vw,72px);margin-top:clamp(30px,5vh,58px);width:100%}
+  .col{flex:1;min-width:0}
+  .col h3{font-size:clamp(11px,1.05vw,14px);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;font-weight:600}
+  .col p{margin:0 0 10px;font-size:clamp(13px,1.35vw,20px);line-height:1.45;color:var(--ink-2)}
+  .col.yes h3{color:var(--yes)} .col.no h3{color:var(--no)} .col.gold h3{color:var(--gold)}
+  .col.gold p{color:var(--ink)}
+  .step{display:flex;gap:clamp(14px,1.8vw,26px);align-items:baseline}
+  .step .s{font-family:"IBM Plex Mono",monospace;font-size:clamp(13px,1.3vw,18px);color:var(--gold);min-width:2.4ch}
+  .step .x{font-size:clamp(14px,1.5vw,22px);color:var(--ink-2);line-height:1.4}
+
+  .quote{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:clamp(26px,3.8vw,60px);
+         line-height:1.22;max-width:19ch;margin:0;font-weight:400}
+  .attrib{margin-top:clamp(20px,3vh,36px);font-size:clamp(12px,1.15vw,16px);color:var(--muted);letter-spacing:.04em}
+
+  .tag{display:inline-block;font-size:clamp(11px,1.05vw,14px);font-weight:700;letter-spacing:.04em;
+       padding:4px 12px;border-radius:999px;background:rgba(224,164,74,.14);color:var(--gold);margin-bottom:18px}
+  .tag.done{background:rgba(111,191,138,.15);color:var(--yes)}
+  .tag.open{background:rgba(217,106,95,.13);color:var(--no)}
+
+  .id{font-family:"IBM Plex Mono",monospace;font-size:.86em;color:var(--gold)}
+
+  /* ---------- chrome ---------- */
+  #bar{position:fixed;left:0;right:0;bottom:0;height:clamp(44px,6vh,64px);
+       display:flex;align-items:center;gap:18px;padding:0 clamp(20px,4vw,52px);
+       border-top:1px solid var(--line);background:rgba(18,21,25,.86);backdrop-filter:blur(8px);z-index:5}
+  #dots{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+  #dots i{width:7px;height:7px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .15s,transform .15s}
+  #dots i.on{background:var(--gold);transform:scale(1.32)}
+  #dots i.seen{background:#49525c}
+  #count{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+  #hint{font-size:11.5px;color:#5c646d;letter-spacing:.06em;white-space:nowrap}
+  #progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:6;transition:width .22s ease}
+
+  #notes{position:fixed;left:0;right:0;bottom:clamp(44px,6vh,64px);max-height:44vh;overflow:auto;
+         background:#171b21;border-top:1px solid var(--line);padding:22px clamp(20px,4vw,52px);
+         display:none;z-index:4;box-shadow:0 -18px 40px rgba(0,0,0,.4)}
+  #notes.on{display:block}
+  #notes p{margin:0 0 11px;font-size:15px;line-height:1.6;color:var(--ink-2);max-width:92ch}
+  #notes p:last-child{margin-bottom:0}
+  #notes .lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600}
+  #notes b{color:var(--ink)}
+
+  @media (max-width:760px){
+    .deckrow{flex-wrap:wrap} .card{flex:1 1 30%}
+    .two{flex-direction:column;gap:22px}
+    #hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="stage"></div>
+<div id="notes"><div class="lab">notes</div><div id="notebody"></div></div>
+<div id="bar"><div id="dots"></div><div id="count"></div><div id="hint">← → move · N notes · F full screen</div></div>
+
+<script>
+const S = [];
+const add = (html, note) => S.push({ html, note });
+
+add(`<div class="center">
+  <div class="kicker gold">DIA-360 · 19 September 2026</div>
+  <h1>The phone deck</h1>
+  <p class="sub"><span class="he">היום שאחרי</span> — the item page, rebuilt for the screen people actually arrive on.</p>
+</div>`,
+`<p>Opening frame. This is the build plan and the state of it, not the design — the design is settled at v2.3 and this is how it becomes code.</p>
+<p>Where the whole thing came from: most people reach an item from an Instagram post, on a phone. The desktop page squeezed onto 390px was never the front door it needed to be.</p>`);
+
+add(`<div class="center">
+  <p class="quote">“The design should be the one who’s defining the data shape, and not the other way around.”</p>
+  <div class="attrib">14 SEPTEMBER · THE RULING EVERYTHING ELSE FOLLOWS FROM</div>
+</div>`,
+`<p>This is the sentence to open on, because every awkward-looking decision downstream is obedient to it.</p>
+<p>It came up when the implementor pinned slide 5's question to a stage-generic string — because no per-item field existed. The answer was: that's backwards. The screen asks for a field, the schema grows one.</p>
+<p>The spec now says it in §1: <b>a screen is never narrowed to fit a field that already exists.</b> Where implementation can't meet a demand, that's a compromise recorded as a known shortfall — not a redesign.</p>`);
+
+add(`<div>
+  <div class="kicker">what it is</div>
+  <h2>Six slides, one swipe apart</h2>
+  <div class="deckrow">
+    <div class="card"><div class="n">1</div><div class="t he">השער</div><div class="d">The cover</div></div>
+    <div class="card"><div class="n">2</div><div class="t he">סקירת הכשל</div><div class="d">The failure, systemic</div></div>
+    <div class="card"><div class="n">3</div><div class="t he">מה נעשה מאז</div><div class="d">Stages reached</div></div>
+    <div class="card"><div class="n">4</div><div class="t he">מה עוד לא נעשה</div><div class="d">Stages not</div></div>
+    <div class="card"><div class="n">5</div><div class="t he">דעת הציבור</div><div class="d">The question</div></div>
+    <div class="card"><div class="n">6</div><div class="t he">הלאה</div><div class="d">Other failures, share</div></div>
+  </div>
+</div>`,
+`<p>It's a slideshow post, not a story. Nothing runs on a timer, nothing counts down, the reader sets the pace, and slide 1 is a cover rather than the first frame of something in flight.</p>
+<p>Slides 3 and 4 add a vertical axis of their own — a stage per page. The page itself never scrolls, so every stage page has to fit the frame.</p>
+<p>Slides 3 and 4 are the same component with opposite filters. That split was a late decision and it's what stopped early items having a stack of mostly-empty pages.</p>`);
+
+add(`<div>
+  <div class="kicker">the build</div>
+  <h2>Eleven phases</h2>
+  <div class="ladder">
+    <div class="rung done"><div class="bar" style="width:20%"></div><div class="lb">0 · spec to v2.3</div></div>
+    <div class="rung done"><div class="bar" style="width:26%"></div><div class="lb">1 · data, schema, rules</div></div>
+    <div class="rung now"><div class="bar" style="width:24%"></div><div class="lb">2 · shell, chrome, gestures</div></div>
+    <div class="rung"><div class="bar" style="width:64%"></div><div class="lb">3–8 · a slide each</div></div>
+    <div class="rung"><div class="bar" style="width:15%"></div><div class="lb">9 · baselines</div></div>
+    <div class="rung"><div class="bar" style="width:48%"></div><div class="lb">10 · content, in parallel</div></div>
+  </div>
+</div>`,
+`<p>Phases 0 and 1 are green. Phase 2 is the next thing to open an editor for.</p>
+<p>Phase 10 runs alongside everything from Phase 2 onward — it's the writing, and it doesn't gate the build. It does gate the page <i>looking</i> finished.</p>`);
+
+add(`<div class="center">
+  <div class="huge">2 / 11</div>
+  <p class="under">Phases done. Both of them the kind that doesn’t look like progress until the ones after it go fast.</p>
+</div>`,
+`<p>Say it plainly: nothing has been rendered yet. Not one pixel of the deck exists.</p>
+<p>What exists is the spec that says what to draw, and the data and rules that every slide reads through. That's the part that's expensive to get wrong and cheap to get right first.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 0 · done</span>
+  <h2>The spec stopped moving</h2>
+  <p class="sub"><b>v2.3.</b> Twelve live screens embedded in it at 390×844 — the reference every review reads against, rather than a memory of what was agreed.</p>
+</div>`,
+`<p>Three passes: v2.1 put the interview in, v2.2 resolved four contradictions the implementor's clarification round introduced, v2.3 recorded that version A of slide 6 ships.</p>
+<p>The embedded screens matter more than they sound. A spec that describes a screen in prose gets remembered differently by two people. A spec that contains the screen doesn't.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 1 · done</span>
+  <h2>The schema grew to fit the screens</h2>
+  <div class="stack">
+    <div class="item"><div class="v">4</div><div class="k">new fields — <span class="id">poll</span>, <span class="id">photo</span>, <span class="id">card_line</span>, <span class="id">feedback_strip</span></div></div>
+    <div class="item"><div class="v">1</div><div class="k">guarantee moved, not lost — the cite array became the coverage rule</div></div>
+    <div class="item"><div class="v">2</div><div class="k">pools — the real ledger, and fixtures</div></div>
+  </div>
+</div>`,
+`<p>The cite array is the one worth explaining. Overviews used to be <span class="id">lines[].cites[]</span> — the schema itself guaranteed no sentence went uncited.</p>
+<p>Opening the text to markdown put the cite boundary inside the string, where Zod can't see it. So the guarantee moved to a coverage rule in the validator: every assertion sits inside a cite span, every span resolves to a claim of this incident. It did not go away — that's the whole promise the methodology page makes.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 1 · done</span>
+  <h2>The fixtures cover what the ledger can’t</h2>
+  <div class="stack">
+    <div class="item"><div class="v">6</div><div class="k">records — regressed, contested, one-claim, stage-5-with-no-slide-4</div></div>
+    <div class="item"><div class="v">8</div><div class="k">photo crops, real credits, four items carrying both</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">left deliberately bare, so the fallback has something to render</div></div>
+  </div>
+</div>`,
+`<p>Fixtures aren't a nicety here — they're the only pool that can show most of these screens for months.</p>
+<p>The photo spread changed on contact with the design: the plan was one-both / one-portrait / one-landscape, but slide 6's carousel wants four landscape grounds and there are only five published fixtures. A thinner spread would have shown the fallback three times in a four-card row and taught nothing.</p>
+<p>All eight credits are the files' real Commons metadata. An earlier table had invented places and years and one wrong photographer — that's been corrected.</p>`);
+
+add(`<div class="center">
+  <div class="huge">24</div>
+  <p class="under">Tests over five pure functions. The rules the deck composes from, written down somewhere that fails when someone changes them.</p>
+</div>`,
+`<p>Which stages an item reached. What the gate's source line names. Which neighbours slide 6 shows. The item's number. The date a stage was reached.</p>
+<p>They're pure — they take the ledger as an argument rather than importing it — so each tests against a handful of literals. <span class="id">npm test</span>, no runner to install, a tenth of a second, and a new job in CI.</p>
+<p>The argument for doing this now rather than at Phase 9: a baseline tells you a pixel moved. This tells you which rule broke, three phases before the pixel.</p>`);
+
+add(`<div>
+  <span class="tag">next</span>
+  <h2>Phase 2 reads no data at all</h2>
+  <p class="sub">The deck, the breakpoint, scroll-snap, dots, the footer chain, hash routing with push-once history, and jump mode. Slides 2–6 are placeholders naming themselves.</p>
+</div>`,
+`<p>That's the reason it can start today. It doesn't touch a summary, a photo or a poll — so none of the content pass blocks it.</p>
+<p>It's also the riskiest phase, which is a good reason to take it early: long-press on iOS fights the selection callout and the magnifier, and arming jump mode has to cancel the deck's own scroll-snap so the two gestures don't fight. Gate #1 is on a real phone, not a simulator.</p>`);
+
+add(`<div class="center">
+  <div class="kicker">how it gets reviewed</div>
+  <h2>Eight stops. Seven before the merge.</h2>
+  <p class="sub">Slide by slide, on a real phone, over the dev server. Then one read-through of the real ledger — on staging, not here.</p>
+</div>`,
+`<p>One stop at the end of each phase. They are not automated and they are not a formality — the next three slides are what one actually is.</p>
+<p>The eighth is the odd one out, and it moved. That's the third of the three.</p>`);
+
+add(`<div>
+  <div class="kicker">what a stop is</div>
+  <h2>A gate is not a test</h2>
+  <div class="two">
+    <div class="col">
+      <h3>What the tests can tell you</h3>
+      <p>A rule broke.</p>
+      <p>A pixel moved.</p>
+      <p>The swipe stopped swiping.</p>
+      <p style="color:var(--muted);margin-top:18px">All three compare the build against something already agreed.</p>
+    </div>
+    <div class="col gold">
+      <h3>What only a gate can tell you</h3>
+      <p style="font-family:'Frank Ruhl Libre',Georgia,serif;font-size:clamp(20px,2.4vw,36px);line-height:1.25;color:var(--ink)">“This is exactly to spec, and it’s wrong.”</p>
+      <p style="color:var(--muted);margin-top:18px">Nothing automated can reach that sentence. It is the one judgement a machine has no access to.</p>
+    </div>
+  </div>
+</div>`,
+`<p>This is the distinction worth being clear about, because "review stop" sounds like a ceremony and it isn't one.</p>
+<p>The three automated layers — unit tests on the rules, frozen baselines, Playwright gesture tests — all guard decisions that were already made. They can only catch a departure from a known-good state.</p>
+<p>A gate is where the known-good state gets <b>created</b>. Phase 9 freezes baselines; what it freezes is whatever the gates approved. That's the dependency: you cannot baseline a screen nobody has judged, or you've just frozen a mistake and made it permanent.</p>
+<p>So the order is not test-then-review. It's review, then freeze what the review accepted, then let the tests hold that line for the rest of the project.</p>`);
+
+add(`<div>
+  <div class="kicker">at the end of its phase, before the next one inherits it</div>
+  <h2>One gate, end to end</h2>
+  <div class="stack">
+    <div class="step"><div class="s">01</div><div class="x"><span class="id">npm run dev</span> on the laptop</div></div>
+    <div class="step"><div class="s">02</div><div class="x">The phone, same wifi, the LAN URL — <span class="id">allowedDevOrigins</span> exists for exactly this</div></div>
+    <div class="step"><div class="s">03</div><div class="x">The spec’s embedded screen open beside it, at 390×844</div></div>
+    <div class="step"><div class="s">04</div><div class="x">The named records — not a general look around</div></div>
+    <div class="step"><div class="s">05</div><div class="x">Continue, or fix it here, while only one phase depends on it</div></div>
+  </div>
+</div>`,
+`<p>Step four is the part that makes it repeatable. Each gate names its records: gate #4 is <span class="id">t01</span>, four stages reached with overviews, against <span class="id">t03</span>, two reached with none — the overview and the claims fallback in one sitting. Gate #5 adds <span class="id">t05</span>, which sits at stage 5 and therefore has no slide 4 at all.</p>
+<p>Step five is why they sit between phases rather than at the end. Gate #3 is the clearest case: slide 2 sets the body pattern that slides 3 and 4 reuse, so it gets judged <i>before</i> it propagates. Catch it there and it's one screen; catch it at the end and it's three.</p>
+<p>Expect the page to look unfinished at every one of these. The content pass trails deliberately — review the pattern, not the prose.</p>`);
+
+add(`<div>
+  <span class="tag open">changed my mind</span>
+  <h2>The eighth was in the wrong place</h2>
+  <div class="two">
+    <div class="col">
+      <h3>How I wrote it</h3>
+      <p>A merge blocker, waiting on “enough” of the writing to land.</p>
+      <p style="color:var(--no)">Enough is not a date, a threshold, or yours to control.</p>
+    </div>
+    <div class="col gold">
+      <h3>Where it belongs</h3>
+      <p>On staging, before promotion to prod.</p>
+      <p style="color:var(--muted)">The one build that exists to be the site exactly as it would go out.</p>
+    </div>
+  </div>
+  <div class="rule" style="width:100%"></div>
+  <p style="margin:0;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:clamp(20px,2.6vw,40px);color:var(--gold)">Merging isn’t shipping. <span style="color:var(--muted)">dev renders fixtures.</span></p>
+</div>`,
+`<p>Here's the mistake. I added gate #8 yesterday and made it block the merge — which would have held the branch open for however long a few hundred Hebrew strings take to write. That's a stale branch and a giant merge, bought for nothing.</p>
+<p>For nothing, because <b>merging isn't shipping.</b> The deck branch merges into <span class="id">dev</span>, and dev renders the fixture pool — next.config.mjs enforces it. Merging shows the deck to no reader at all. The thing that exposes it is promotion to staging and then prod, and that is a separate decision you already make by hand.</p>
+<p>So: seven gates, then merge. The eighth becomes the read-through on staging — the real ledger, a real phone, before prod. Its trigger stops being "enough writing" and becomes "you decided to promote", which is a moment that actually exists.</p>`);
+
+add(`<div class="center">
+  <div class="kicker">what the live ledger holds today · 29 published items</div>
+  <div class="zeros">
+    <div class="zero"><div class="v">0</div><div class="k">ANNOTATED SUMMARIES</div></div>
+    <div class="zero"><div class="v">0</div><div class="k">POLLS</div></div>
+    <div class="zero"><div class="v">0</div><div class="k">CARD LINES</div></div>
+    <div class="zero"><div class="v">0</div><div class="k">PHOTOS</div></div>
+  </div>
+</div>`,
+`<p>This is the slide that decides the review plan.</p>
+<p>Gate on live today and slide 1 is 29 number ghosts, slide 2 is a body with no source chips, slides 5 and 6 are empty heads. You'd be confirming that the fallbacks work — which is worth knowing once, not seven times.</p>
+<p>So: fixtures for the seven, and the live read-through becomes gate #8, once the writing and the photos land. It's the judgement I wanted live for. It just can't be made first.</p>`);
+
+add(`<div>
+  <div class="kicker">the long pole</div>
+  <h2>Everything the pages ask someone to write</h2>
+  <div class="stack">
+    <div class="item"><div class="v">29</div><div class="k">systemic summaries — rewritten, annotated <span class="mono">· slide 2</span></div></div>
+    <div class="item"><div class="v">75</div><div class="k">per-stage overviews, give or take <span class="mono">· slide 3</span></div></div>
+    <div class="item"><div class="v">116</div><div class="k">poll strings — question, failure, status, caveat <span class="mono">· slide 5</span></div></div>
+    <div class="item"><div class="v">29</div><div class="k">card lines <span class="mono">· slide 6</span></div></div>
+    <div class="item mute"><div class="v">58</div><div class="k">photo crops, sourced and credited <span class="mono">· DIA-366</span></div></div>
+  </div>
+</div>`,
+`<p>None of it blocks the build — the claims fallback covers a missing overview, and every authored field degrades to something honest.</p>
+<p>It blocks the page looking finished, which is worth saying out loud before slide-by-slide review starts: the first phone you pick up will show fallbacks.</p>
+<p>116 is four fields times 29, and it's the number that grew when the design was allowed to define the shape. The earlier plan said 87.</p>`);
+
+add(`<div class="center">
+  <div class="huge plain">~250</div>
+  <p class="under">Strings, plus 58 photographs. That is the actual distance between a working deck and a finished one.</p>
+</div>`,
+`<p>Worth sitting with for a second. The engineering is nine phases; the writing is a few hundred short pieces of Hebrew that each have to rest on a source.</p>
+<p>It runs in parallel from Phase 2 and it is the thing most likely to set the real date.</p>`);
+
+add(`<div>
+  <span class="tag open">open · phase 3</span>
+  <h2>The gate’s line doesn’t fit</h2>
+  <div class="stack">
+    <div class="item mute"><div class="v">38</div><div class="k">characters — the line in the mock</div></div>
+    <div class="item"><div class="v">75</div><div class="k">characters — the longest real one</div></div>
+    <div class="item"><div class="v">11</div><div class="k">of 29 published items overflow one line</div></div>
+  </div>
+</div>`,
+`<p>Found by writing <span class="id">sourceLine</span> against the real ledger rather than the mock. The worst is <span class="he">סיכום דוח צוות המומחים לבדיקת תחקירי צה"ל · Times of Israel · ועוד 3 מקורות</span>.</p>
+<p>Naming the publisher instead of the document fixes every line — but then the slot no longer names a document, which is the part that makes the attribution worth reading.</p>
+<p>Four ways out: truncate with an ellipsis; drop to the publisher only on overflow; always the publisher; or treat the long ones as a data problem and shorten those source strings. The helper returns both halves, so the decision stays in one place.</p>`);
+
+add(`<div>
+  <div class="kicker">also open</div>
+  <h2>Two more, both parked on purpose</h2>
+  <div class="two">
+    <div class="col">
+      <h3>Card photo credit</h3>
+      <p>The gate has a credit slot. The 111px card has none and cannot grow — and most of these images are CC BY-SA.</p>
+      <p style="color:var(--muted)">Deferred to Phase 8, by your own request.</p>
+    </div>
+    <div class="col">
+      <h3>Stage wording · <span class="id">DIA-367</span></h3>
+      <p>The taxonomy carries a number, a name and a colour. Slides 3 and 4 ask it for a definition, an absence statement, and who counts as a check.</p>
+      <p style="color:var(--muted)">Placeholders until it lands. Nothing else waits on it.</p>
+    </div>
+  </div>
+</div>`,
+`<p>The credit one has three candidate answers ready for when Phase 8 opens: a credits line at the foot of slide 6, a credits page linked from <span class="he">אודות</span>, or landscape crops only from sources that need no attribution.</p>
+<p>DIA-367 is the only content item that shows as a <i>placeholder</i> rather than a fallback — which is why it's tracked separately from the writing.</p>`);
+
+add(`<div>
+  <div class="kicker">decided, and deliberately not built</div>
+  <h2>Slide 6 ships without the strip</h2>
+  <p class="sub">Version A — four cards, no stars. The star rating, and the first endpoint this project would ever own, are <span class="id">DIA-376</span>, post-MVP.</p>
+</div>`,
+`<p>The design doesn't decide whether something ships — so the spec carries both versions in full and the choice was made outside it.</p>
+<p>What it buys: "the site is built from the repository, there is no database and no API" stays a fact about the project through the MVP. No endpoint, no third-party call, nothing to operate.</p>
+<p>And Phase 8 builds version A only. It does not build the strip and leave it inert — that's how dead code gets shipped.</p>`);
+
+add(`<div class="center">
+  <div class="kicker gold">what merges</div>
+  <h2>The deck, read end to end, on the real ledger</h2>
+  <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
+</div>`,
+`<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
+<p>Next action is Phase 2, on a fresh branch off dev.</p>`);
+
+/* ---------- runtime ---------- */
+const stage = document.getElementById('stage');
+const dots  = document.getElementById('dots');
+const count = document.getElementById('count');
+const notes = document.getElementById('notes');
+const nbody = document.getElementById('notebody');
+const prog  = document.getElementById('progress');
+
+S.forEach((s, i) => {
+  const el = document.createElement('section');
+  el.className = 'slide' + (s.html.includes('class="center"') ? ' center' : '');
+  el.innerHTML = s.html;
+  stage.appendChild(el);
+  const d = document.createElement('i');
+  d.addEventListener('click', () => go(i));
+  dots.appendChild(d);
+});
+
+const slides = [...document.querySelectorAll('.slide')];
+let at = 0;
+
+function go(n) {
+  at = Math.max(0, Math.min(S.length - 1, n));
+  slides.forEach((el, i) => el.classList.toggle('on', i === at));
+  [...dots.children].forEach((d, i) => {
+    d.className = i === at ? 'on' : (i < at ? 'seen' : '');
+  });
+  count.textContent = String(at + 1).padStart(2, '0') + ' / ' + String(S.length).padStart(2, '0');
+  prog.style.width = ((at + 1) / S.length * 100) + '%';
+  nbody.innerHTML = S[at].note || '<p style="color:#6c757f">No notes on this one — it says what it says.</p>';
+  try { location.hash = String(at + 1); } catch (e) {}
+}
+
+addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(at + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(at - 1); }
+  else if (e.key === 'Home') go(0);
+  else if (e.key === 'End') go(S.length - 1);
+  else if (e.key === 'n' || e.key === 'N') notes.classList.toggle('on');
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+  }
+});
+
+stage.addEventListener('click', (e) => go(at + (e.clientX < innerWidth * 0.28 ? -1 : 1)));
+
+let x0 = null;
+addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', (e) => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 48) go(at + (dx < 0 ? 1 : -1));
+  x0 = null;
+}, { passive: true });
+
+go(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+</script>
+</body>
+</html>

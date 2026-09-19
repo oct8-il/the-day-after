@@ -77,8 +77,8 @@
 <header class="masthead">
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — build plan</h1>
-  <p class="lede">What gets built, in what order, and what was decided in the 14 September interview before any of it starts. The design is <a href="mobile-item.html">docs/mobile-item.html</a> v2.0; this document is how it becomes code.</p>
-  <p class="meta">v1.3 · 14 September 2026 · every question answered · <b>Phase 0 done</b> · branch <span class="mono">dia-360-mobile-item-restart</span> · Phase 0 complete, Phase 1 next</p>
+  <p class="lede">What gets built, in what order, and what was decided before any of it starts. The design is <a href="mobile-item.html">docs/mobile-item.html</a> v2.3; this document is how it becomes code. Where the two differ, the spec wins.</p>
+  <p class="meta">v1.6 · 19 September 2026 · design at v2.3 · <b>Phases 0 and 1 done</b> · Phase 2 next, on a fresh branch off <span class="mono">dev</span></p>
 </header>
 
 <nav class="toc">
@@ -88,12 +88,13 @@
   <a href="#jump">4 · Jump mode (new, unspecced)</a>
   <a href="#phases">5 · Build phases</a>
   <a href="#verify">6 · Verification</a>
-  <a href="#open">7 · Still open</a>
+  <a href="#open">7 · The open questions, answered</a>
   <a href="#risks">8 · Risks</a>
 </nav>
 
 <h2 id="decisions">1 · Decisions taken</h2>
-<p>Twenty-four rulings from the interview. These go into <span class="mono">mobile-item.html</span> as v2.1 before code is written, so the spec stays the single source.</p>
+<p>Twenty-four rulings from the 14 September interview, four more from the evening of the same day that resolved the contradictions the implementor’s clarification pass introduced, and one from 18 September. All of them are in the spec: v2.1 carried the interview, v2.2 the four, v2.3 the MVP call on slide 6. The tables below are the short form; the spec is the source.</p>
+<div class="note"><strong>The governing principle, stated 14 September.</strong> “The design shouldn’t bother itself with the limitation of depending tech … this design should be the one who’s defining the data shape, and not the other way around.” Every row below that reads as a data change is downstream of that sentence: where the mock showed something the schema could not hold, the schema moved.</div>
 
 <h3>Build shape</h3>
 <table>
@@ -114,10 +115,10 @@
   <tr><td class="q">Item number</td><td>Number by position in <code>published.json</code></td><td>i13 becomes <span class="he">כשל מס׳ 12</span>; the five posts need regenerating</td></tr>
   <tr><td class="q">Stage 6 <span class="he">(נסוג)</span></td><td>Sixth rung, drawn only when reached</td><td>Locator geometry varies by item; <code>--s6</code> enters the mobile palette</td></tr>
   <tr><td class="q">Stage date and age</td><td>Earliest claim asserting that stage</td><td>Purely computed. Stage 1 therefore shows the documentation date (19.10.2023 for i13), which settles D3 by implication</td></tr>
-  <tr><td class="q">Photos</td><td>Port the five post photos now</td><td>5 items get the real gate, 24 the fallback — visibly mixed</td></tr>
+  <tr><td class="q">Photos</td><td>Port the five post photos now</td><td>5 live items get the real gate, 24 the fallback — visibly mixed. Sourcing for the rest is DIA-366. The fixture pool was given its own crops on 18 Sep (DIA-375) so the deck can be built and reviewed before that lands</td></tr>
   <tr><td class="q">Gate source line</td><td>Top official/oversight source, then earliest press, then a count</td><td>Computed; an item with no official source names two outlets</td></tr>
-  <tr><td class="q">Slide 5's question</td><td>Keep the stage-generic question from <code>taxonomy.questions</code></td><td>Renders on all 29, never stale; loses the mock's contextual phrasing</td></tr>
-  <tr><td class="q">Slide 5's three summary lines</td><td>Three authored fields per item</td><td>87 short strings to write, kept in sync with the stage</td></tr>
+  <tr><td class="q">Slide 5’s question <span class="status st-open">revised 14 Sep pm</span></td><td><strong>Authored per incident</strong> — <code>poll.question</code>, generic in substance, phrased in that item’s context. A stage-level default may back it up; it does not replace it</td><td>Reverses the interview ruling. The design names the field and the data follows — 29 questions to write, and the mock’s contextual phrasing is kept rather than lost</td></tr>
+  <tr><td class="q">Slide 5’s head lines</td><td>Authored per item, alongside the question, in one <code>poll</code> block — <code>failure</code>, <code>status</code>, <code>caveat</code></td><td><strong>116</strong> short strings to write (four fields × 29), kept in sync with the stage</td></tr>
   <tr><td class="q">Item card statement</td><td>A short form per incident</td><td>One more authored line per item; cards read uniform</td></tr>
   <tr><td class="q">Other failures on slide 6</td><td>Siblings under the same parent first, then fill</td><td>Deterministic; small parents get filler</td></tr>
 </table>
@@ -130,10 +131,20 @@
   <tr><td class="q">Jump mode feedback</td><td>Live scrub — the page moves under the finger</td><td>Every intermediate screen renders; the perf risk of the build</td></tr>
   <tr><td class="q">Jump mode visual state</td><td>Rail brightens, page dims behind (~40%)</td><td>The heaviest effect on the page, and unmistakably a mode</td></tr>
   <tr><td class="q">Crossing stacks</td><td>Rail stays within its stack; the dots cross slides</td><td>Each control does one thing; stage 1 → stage 5 is two gestures</td></tr>
-  <tr><td class="q">Unreached page text</td><td>The "who would count as a check" line on stage 5 only</td><td>Page shape differs by stage, deliberately</td></tr>
-  <tr><td class="q">Slide 6 rating variant</td><td>Ships — three cards and the stars</td><td><b>Needs somewhere to send answers.</b> First non-static dependency</td></tr>
+  <tr><td class="q">Unreached page text <span class="status st-done">reconfirmed 14 Sep pm</span></td><td>The “who would count as a check” line on stage 5 only</td><td>Page shape differs by stage, deliberately. The implementor’s pass had generalised it to every unreached stage; that was reverted</td></tr>
+  <tr><td class="q">Slide 6 rating variant <span class="status st-open">revised</span></td><td>The spec specs <strong>both versions in full</strong> and does not decide — shipping is not a design call. <b>18 Sep: version A ships for the MVP</b>, four cards, no strip</td><td>The static guarantee survives the MVP: no endpoint, no third-party call, nothing to operate. Version B and its store are <span class="mono">DIA-376</span>, post-MVP</td></tr>
   <tr><td class="q">Standard of proof</td><td>New 390×844 baselines, self-referential</td><td>Catches regressions from freeze-day on, not mistakes made today</td></tr>
-  <tr><td class="q">Review rhythm</td><td>Slide by slide, on a real phone</td><td>Seven review stops before merge</td></tr>
+  <tr><td class="q">Review rhythm</td><td>Slide by slide, on a real phone</td><td>Eight stops — seven on fixtures gating the merge, one on staging gating the promotion</td></tr>
+</table>
+
+<h3>After the implementor’s pass <span class="status st-done">14 Sep, evening · spec v2.2</span></h3>
+<p>The implementor ran a clarification round against v2.1 and edited the spec. Three of those edits contradicted the interview and one exposed a gap the design had never measured. The rulings below resolved all four; the two that reverse a table row above are marked there.</p>
+<table>
+  <tr><th>What came back</th><th>Ruling</th><th>Consequence</th></tr>
+  <tr><td class="q">The slide 5 question had been pinned to a stage-generic string because no per-item field existed</td><td>Reversed — the design calls for the field</td><td><code>poll</code> enters the schema. See the row above</td></tr>
+  <tr><td class="q">The spec had decided that the rating strip ships</td><td>Out of scope for a design document — spec both, decide elsewhere</td><td>§9 carries two fully specified versions. The choice arrived on 18 Sep</td></tr>
+  <tr><td class="q">The methodology line had spread to every unreached stage</td><td>Stage 5 only, as decided</td><td>Reverted in §7</td></tr>
+  <tr><td class="q">Slide 6’s content needs 754px and the breakpoint guard only promises 600px</td><td><strong>The card list sheds cards</strong> rather than the slide scrolling or the design bending for landscape</td><td>A measured ladder, not a guess — see Phase 8. Mobile landscape stays unsupported on purpose: “nobody’s gonna use it anyway”</td></tr>
 </table>
 
 <h2 id="fallout">2 · What those decisions cost</h2>
@@ -144,55 +155,75 @@
   <tr><th>What</th><th>Where</th><th>Count</th></tr>
   <tr><td>Systemic <code>summary</code>, rewritten in markdown with cites</td><td>Slide 2</td><td>29</td></tr>
   <tr><td>Per-reached-stage overview, markdown with cites</td><td>Slide 3</td><td>1–5 each · ~60–90 total</td></tr>
-  <tr><td>Three opinion-head lines</td><td>Slide 5</td><td>87</td></tr>
+  <tr><td>The <code>poll</code> block — question, failure, status, caveat</td><td>Slide 5</td><td>116 <span class="mono">(4 × 29)</span></td></tr>
   <tr><td>Short card statement</td><td>Slide 6</td><td>29</td></tr>
-  <tr><td>Photo fields</td><td>Gate, slide 6 cards</td><td>5 now · 24 in DIA-366</td></tr>
+  <tr><td>Photo fields</td><td>Gate, slide 6 cards</td><td>5 now · 24 in DIA-366 · fixtures done</td></tr>
 </table>
 <p>None of it blocks the build: the claims fallback covers missing overviews, and every authored field degrades to something honest. It does block the page <em>looking finished</em>, which is worth stating plainly before slide-by-slide review starts — the first phone you pick up will show fallbacks.</p>
 
 <div class="warn"><strong>Renumbering invalidates published work.</strong> <span class="mono">Claude outputs/five-posts.html</span> hard-codes the number from the file id — i13→13, i29→29, i01→1 — and the IG dry run went out that way. Numbering by published position makes i13 <span class="he">כשל מס׳ 12</span> on the site. The generator needs the same computed number, and anything already posted is stale. Regenerating the five posts is a task in this plan; anything already public is a call only you can make.</div>
 
-<div class="warn"><strong>The rating strip breaks the static guarantee.</strong> "The site is built from the repository, there is no database and no API" is currently a fact about the project. A star rating that goes somewhere needs an endpoint — a form service, a serverless function, or a third-party form. Decide which before Phase 8; until then the strip is built and inert.</div>
+<div class="note"><strong>The static guarantee survives the MVP.</strong> “The site is built from the repository, there is no database and no API” stays a fact about the project, because version A of slide 6 ships and version A has nothing to send. The star strip — and the first endpoint the project would ever own — is <span class="mono">DIA-376</span>, post-MVP, along with the store decision drafted in §7. Phase 8 builds version A only; it does not build the strip and leave it inert.</div>
 
 <h2 id="data">3 · Data and schema</h2>
 
-<h4>Schema changes</h4>
-<pre><code>// data/schema/index.ts
+<h4>The schema, as shipped <span class="status st-done">DIA-365 · DIA-371</span></h4>
+<p>Written to the design rather than around it. <code>data/schema/index.ts</code>, abridged to what the deck touches:</p>
+<pre><code>export const Summary = z.object({
+  stage: STAGE,
+  text:  z.string().min(10),          // annotated markdown; the cites live inside the text
+});
 
-- Summary = { stage, lines: [{ text, cites: string[] }] }
-+ Summary = { stage, text: string }        // markdown; cites are [label](i13-c08) links
+const Crop = z.object({               // a photo may not ship without its credit
+  file, photographer, source, licence, place,
+  year: z.string().regex(/^\d{4}$/),
+});
 
-  Incident = {
-    id, parent, he,
--   summary: string,                        // narrative, item-specific
-+   summary: string,                        // markdown, SYSTEMIC — no 7.10 manifestation
-+   card_line?: string,                     // short statement for slide 6 cards
-+   opinion?: { failed, since, caveat },    // slide 5's three head lines
-+   photo?: {                              // two crops, independent of each other
-+     portrait?:  { file, photographer, source, licence, place, year },   // the gate
-+     landscape?: { file, photographer, source, licence, place, year },   // slide 6 card
-+   },
-    illustrative, claims, summaries?
-  }</code></pre>
+export const Photo = z.object({       // two crops, each optional, each falling back alone
+  portrait:  Crop.optional(),         // the gate
+  landscape: Crop.optional(),         // the slide 6 card
+});
 
-<h4>Validator</h4>
+export const Poll = z.object({        // the head of slide 5, authored per incident
+  question, failure, status, caveat,  // each .min(8)
+});
+
+export const Incident = z.object({
+  id, parent, he,
+  summary:        z.string().min(20), // annotated, and SYSTEMIC — no 7.10 manifestation
+  card_line:      z.string().min(8).optional(),
+  poll:           Poll.optional(),
+  photo:          Photo.optional(),
+  feedback_strip: z.boolean().optional(),   // per-item override on the global flag
+  claims:         z.array(Claim).min(1),
+  summaries:      z.array(Summary).optional(),
+});</code></pre>
+<p>Two things the earlier draft of this plan predicted and the shipped code does differently: the slide 5 head is one <code>poll</code> object rather than three loose fields, and <code>illustrative</code> is gone rather than carried forward. <code>Summary.lines[].cites[]</code> is gone too — see below.</p>
+
+<h4>Annotation, and where the citation guarantee went</h4>
+<p>The cite array was the schema’s guarantee that no summary sentence is an opinion. Opening the text to markdown put the cite boundary <em>inside</em> the string, where Zod cannot see it, so the guarantee moved rather than lapsed. The contract is <a href="annotations.html">docs/annotations.html</a>:</p>
 <ul>
-  <li>Parse the markdown rather than the array: every sentence carries at least one link, every link resolves to a claim of <em>this</em> incident.</li>
-  <li>Accept inline bold mid-sentence (the emphasis rule from slide 2 supersedes the old bold-opening-line ruling).</li>
-  <li>Reject a <code>summary</code> that names a date in October 2023 — a cheap proxy for the systemic rule, worth trying and easy to drop if it fights the writing.</li>
+  <li>A cite span is <code>[[text]](claim-id)</code>. <code>lib/annotation.ts</code> parses it; <code>scripts/validate.ts</code> enforces it through <code>checkAnnotated(text, { coverage })</code>.</li>
+  <li><strong>The coverage rule</strong> is the guarantee: every assertion is inside a span, and every span resolves to a claim of <em>this</em> incident. It is the one rule <code>--strict</code> gates.</li>
+  <li><code>coverage</code> is the only thing that varies by field. On: <code>summary</code>, every <code>summaries[].text</code>, <code>poll.failure</code>, <code>poll.status</code>. Off: <code>poll.question</code> and <code>poll.caveat</code> — a question is put to the reader rather than asserted, and a caveat states an absence.</li>
   <li>Photo fields validate together: a <code>file</code> with no licence fails rather than rendering an uncredited photograph. Dimensions are <strong>not</strong> checked — the crop is trusted.</li>
-  <li>The two crops are independent: an item may have a portrait and no landscape, or the reverse. Each falls back on its own — the gate to the number ghost, the card to its bare tint.</li>
+  <li>The two crops are independent. Each falls back on its own — the gate to the number ghost, the card to its bare tint.</li>
 </ul>
+<div class="note"><strong>Dropped, and worth recording as dropped.</strong> v1.3 proposed rejecting any <code>summary</code> that names a date in October 2023, as a cheap proxy for the systemic rule. It was never implemented and should not be: the rule is about what a sentence claims, not which numbers it contains, and a systemic summary may legitimately cite a dated document. The rule lives in the writing and in review.</div>
+<div class="warn"><strong>Still unwritten, and it blocks slides 3 and 4.</strong> <code>Taxonomy.stages</code> carries <code>n</code>, <code>he</code> and <code>color</code> and nothing else. The deck asks it for three more per stage — the definition, the absence statement for an unreached stage, and the “who would count as a check” line for stage 5. That is <span class="mono">DIA-367</span>. Phases 5 and 6 render placeholders until it lands; nothing else waits on it.</div>
 
-<h4>New computed helpers (<code>lib/</code>)</h4>
+<h4>The computed helpers <span class="status st-done">written · 19 Sep</span></h4>
+<p>Five rules, pure, with 24 tests. They take the ledger as an argument rather than importing it, so each is testable against a handful of literals; <code>lib/data.ts</code> binds them to the pool the build reads.</p>
 <table>
-  <tr><th>Function</th><th>Rule</th></tr>
-  <tr><td><code>itemNumber(id)</code></td><td>1-based index in <code>published.json</code>; total is <code>published.length</code></td></tr>
-  <tr><td><code>stageDate(inc, n)</code></td><td>Earliest claim asserting stage n, by the existing year-then-month sort</td></tr>
-  <tr><td><code>reached(inc)</code> / <code>unreached(inc)</code></td><td>Partition for slides 3 and 4. The current stage is always in <code>reached</code>, regression included</td></tr>
-  <tr><td><code>sourceLine(inc)</code></td><td>Highest-authority official/oversight claim, then earliest press claim, then <span class="he">ועוד N מקורות</span></td></tr>
-  <tr><td><code>siblings(inc, n)</code></td><td>Same parent first, then a stable fill; never the item itself</td></tr>
+  <tr><th>Function</th><th>Where</th><th>Rule</th></tr>
+  <tr><td><code>stageDate(inc, n)</code></td><td><code>lib/stage.ts</code></td><td>Earliest claim asserting stage n, by year then month; <code>null</code> when nothing asserts it. <code>firstDocumented()</code> now delegates to it rather than keeping a second copy of the sort</td></tr>
+  <tr><td><code>reached(inc)</code></td><td><code>lib/stage.ts</code></td><td>The distinct stages the claims assert, ascending — <em>not</em> every stage up to the current one. An item may hold 1, 3, 4 and 6 with gaps at 2 and 5, and the ladder draws the gap</td></tr>
+  <tr><td><code>unreached(inc)</code></td><td><code>lib/stage.ts</code></td><td>1–5 minus <code>reached</code>. Never stage 6: <span class="he">נסוג</span> is not a goal an item is failing to reach</td></tr>
+  <tr><td><code>sourceLine(inc)</code></td><td><code>lib/deck.ts</code></td><td>Document, outlet, and a count of the rest. <b>Oversight outranks official</b>; earliest wins within a tier; no official or oversight source names two outlets instead</td></tr>
+  <tr><td><code>itemNumber(id, published)</code></td><td><code>lib/deck.ts</code></td><td>1-based position in <code>published.json</code>; <code>null</code> for an unpublished item. <code>itemTotal</code> is the same list’s length, so the number and <span class="he">מתוך 29</span> cannot disagree</td></tr>
+  <tr><td><code>siblings(inc, n, ledger)</code></td><td><code>lib/deck.ts</code></td><td>Same parent first, <b>then onward from this item’s own position, wrapping</b> — so item 30’s card row is not item 2’s. Never itself, never a duplicate, never padded</td></tr>
 </table>
+<div class="note"><strong>Two things the ledger turned out to be that the plan had not noticed.</strong> A claim’s <code>source</code> is published as <em>publisher — document</em> (<span class="he">צה"ל — תחקיר הקרב בקיבוץ בארי</span>) in 147 of 205 claims, so <code>splitSource()</code> takes the halves apart and the gate uses the document for its first slot and the publisher for the outlet, exactly as §4 of the spec describes. And <span class="he">ועוד N מקורות</span> counts <em>distinct publishers</em>, not claims: two pieces from <span class="he">כאן חדשות</span> are one source, and counting them twice would be the line lying about its own evidence.</div>
 
 <h2 id="jump">4 · Jump mode (new, unspecced)</h2>
 <p>Decided in the interview, absent from v2.0 of the spec, and the only hidden gesture on the page. Written here so it can be reviewed before it is built.</p>
@@ -207,60 +238,75 @@
 <div class="note"><strong>Implementation notes, from the platform rather than the design.</strong> A long press on iOS raises the selection callout and the magnifier unless the strip carries <code>-webkit-touch-callout:none</code>, <code>user-select:none</code> and <code>touch-action:none</code>. Arming must cancel the deck's own scroll-snap so the two gestures do not fight. There is no haptics API in Safari, so the feedback is visual or it does not exist. Reduced-motion should drop the scrub to a direct jump on release, keeping the dim.</div>
 
 <h2 id="phases">5 · Build phases</h2>
-<p>Seven review stops, each on a real phone over the dev server (<code>next dev</code> already allows LAN origins). Nothing merges until the last one.</p>
+<p>Eight review stops. Seven of them sit between phases and gate the merge; the eighth sits on staging and gates the promotion to prod. The work happens on a fresh branch off <span class="mono">dev</span> — <span class="mono">dia-360-mobile-item-restart</span> predates the spec rewrite and is dead.</p>
+<div class="note"><strong>What a gate is, since “review stop” undersells it.</strong> <code>npm run dev</code> on the laptop, the phone on the same wifi opening the LAN URL (<code>allowedDevOrigins</code> in <code>next.config.mjs</code> exists for exactly this), the spec’s embedded 390×844 screen open beside it, and the records the gate names — not a general look around. It is not an automated check and it is not a formality: the unit tests, the baselines and the gesture tests all compare the build against something already agreed, and a gate is where that agreement gets <em>made</em>. Phase 9 freezes baselines of whatever the gates accepted, so a screen nobody judged is a mistake about to become permanent. Each one sits at the end of its phase rather than at the end of the build, because a phase’s pattern propagates: gate #3 judges slide 2’s body before slides 3 and 4 inherit it, which is the difference between fixing one screen and fixing three.</div>
+<div class="note"><strong>Which pool a gate runs on.</strong> <b>Fixtures now, live before merge.</b> The instinct is to gate on <code>dev:live</code>, because a gate judges whether the page <em>reads</em> right and that wants real sentences. The live pool cannot carry a gate yet, and the numbers say so plainly: of 33 live incidents, <b>0</b> have an annotated <code>summary</code>, <b>0</b> a <code>poll</code>, <b>0</b> a <code>card_line</code>, <b>0</b> a photo, and <b>2</b> any stage overview at all. Slide 1 would show 29 number ghosts, slide 2 a body with no source chips, slides 5 and 6 empty heads. The fixture pool is the opposite: six records, every <code>summary</code> annotated, both photo branches, both overview branches, and the slide-4 shapes the live ledger has no example of.</div>
+<div class="note"><strong>So:</strong> the seven merge gates run on <code>npm run dev</code> against <code>data/test</code>, and baselines freeze there too — fixtures are versioned, so a baseline moves only when code moves. Reading the deck on real sentences is a judgement that still has to be made; it just cannot be made first, and until the writing lands a gate on the live pool would only confirm that the fallbacks work.</div>
+<div class="warn"><strong>Gate #8 is a promotion gate, not a merge gate.</strong> It was written as a merge blocker waiting on “enough” of the content pass — which is not a date, not a threshold, and not on this plan’s schedule. It would have held the branch open for as long as a few hundred Hebrew strings take to write, and bought nothing: <strong>merging is not shipping.</strong> The branch merges into <span class="mono">dev</span>, and <code>next.config.mjs</code> makes a dev build read <code>data/test</code> — so the merge shows the deck to no reader at all. What exposes it is the promotion to staging and then prod, which is already a decision taken by hand. So the seven gates gate the merge, and the read-through of the real ledger happens on staging, on a phone, before prod — the build that exists to be the site exactly as it would go out.</div>
 
 <div class="phase">
-  <h3><span class="pno">PHASE 0</span> Spec to v2.1 <span class="status st-done">done · 14 Sep</span></h3>
-  <p><code>docs/mobile-item.html</code> is now v2.1. Added: §2 gains the breakpoint and the deep-link and history rules; §3 gains <strong>Jump mode</strong> with its platform notes; §4 gains "Computed, not authored" (source line, item number, the two photo crops); §5 says the text is <code>summary</code> rewritten systemic; §6 gains the computed stage date, the claims fallback, and locator rows for stage 6 and for tapping; §7 narrows the checking-body line to stage 5; §8 states that only the MVP ships and where its head text comes from; §9 gains the sibling rule, the card short form, the rating strip's store and flag, and a Share section; §10 is rewritten around the new schema; <strong>§11 "Implementation rulings" is new</strong>; §12 keeps only what is genuinely open; the round log records the interview.</p>
-  <div class="gate"><b>Gate:</b> read the diff and confirm the spec says what you decided.</div>
+  <h3><span class="pno">PHASE 0</span> Spec to v2.3 <span class="status st-done">done · 18 Sep</span></h3>
+  <p><code>docs/mobile-item.html</code> is at v2.3, in three passes. <strong>v2.1</strong> put the interview into the spec: §2 gained the breakpoint and the deep-link and history rules; §3 gained jump mode with its platform notes; §4 gained “Computed, not authored”; §6 gained the computed stage date, the claims fallback and the stage-6 rung; §10 was rewritten around the new schema; §11 “Implementation rulings” is new. <strong>v2.2</strong> resolved the four contradictions from the implementor’s pass (§1 above) and made the UI-called data shape explicit, so the spec now states the fields it needs rather than accepting the fields that exist. <strong>v2.3</strong> records that version A of slide 6 ships — across §9’s heading and note, both screen captions, §11, §12, the deck table and the round log.</p>
+  <div class="gate"><b>Gate:</b> passed. Twelve 390×844 screens are embedded in the spec and are the reference every later gate reads against.</div>
 </div>
 
 <div class="phase">
-  <h3><span class="pno">PHASE 1</span> Data, schema, validator</h3>
-  <p>Schema change, i13's stage-4 summary migrated to markdown, the new helpers, validator rewritten. The five photos moved into <code>public/photos/</code> with their credits. No UI at all.</p>
-  <div class="gate"><b>Gate:</b> <code>npm run validate</code> green, desktop item page unchanged, i13 carries one real markdown overview.</div>
+  <h3><span class="pno">PHASE 1</span> Data, schema, validator <span class="status st-done">done · 19 Sep</span></h3>
+  <p><strong>Done</strong>, as <span class="mono">DIA-365</span> and <span class="mono">DIA-371</span>: the schema above, the annotation contract and its coverage rule, the two-pool split (<span class="mono">DIA-369</span>), and a fixture pool that covers the deck’s states rather than the desktop page’s (<span class="mono">DIA-375</span>) — including photo crops on four of the five published fixtures, with <code>t04</code> deliberately bare so the no-photo fallback has something to render. <code>validate:test</code> and <code>check:fixtures</code> are green.</p>
+  <p>The five computed helpers are written, typed and tested — see §3 for the rules and where each one lives. <code>npm test</code> runs 24 assertions in about a tenth of a second and is a new <code>unit</code> job in the build workflow; <code>tsc --noEmit</code>, both validators, <code>check:fixtures</code> and <code>next build</code> are all green behind it.</p>
+  <div class="gate"><b>Gate:</b> passed. <b>Carried forward:</b> the <em>live</em> photo port — the five post photos and the 24 after them, <span class="mono">DIA-366</span> — which runs in Phase 10. Split out rather than left as an exception here, because it is content work on its own schedule and nothing in Phases 2–9 waits for it.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 2</span> Shell, chrome, gestures</h3>
-  <p>The mobile component tree behind the breakpoint. Horizontal scroll-snap deck, breadcrumb, dots, footer chain, hash routing with the push-once history rule, and jump mode on the dots. Slides 2–6 are placeholders naming themselves.</p>
+  <p>The mobile component tree behind the breakpoint. Horizontal scroll-snap deck, breadcrumb, dots, footer chain, hash routing with the push-once history rule, and jump mode on the dots. Slides 2–6 are placeholders naming themselves. <strong>Nothing here reads item data</strong>, which is why it can start before the helpers and before the content pass.</p>
   <div class="gate"><b>Gate #1:</b> swipe, dots, jump mode, Back, and a deep link opening at the right slide — on your phone.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 3</span> Slide 1 — <span class="he">השער</span></h3>
-  <p>Photo duotone, right-edge fade, gate-only rail with the age line, title block, source line, credit, and the no-photo fallback with the number ghost.</p>
-  <div class="gate"><b>Gate #2:</b> i13 (photo) and an item without one, side by side.</div>
+  <p>Photo duotone, right-edge fade, gate-only rail with the age line, title block, source line, credit, and the no-photo fallback with the number ghost. The helpers it reads through — <code>itemNumber</code>, <code>stageDate</code>, <code>sourceLine</code> — are written and tested; what is left here is the screen.</p>
+  <div class="gate"><b>Gate #2:</b> a fixture with a portrait and one without, side by side — <code>t01</code> against <code>t04</code>. No live item has a photo, so this gate cannot be taken on <code>dev:live</code> at all until <span class="mono">DIA-366</span> lands.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 4</span> Slide 2 — <span class="he">סקירת הכשל</span></h3>
   <p>The markdown renderer, the chip, source chips per sentence, the sources carousel. This phase sets the body pattern slides 3 and 4 reuse, so it is reviewed carefully.</p>
-  <div class="gate"><b>Gate #3:</b> the body pattern, before it propagates.</div>
+  <div class="gate"><b>Gate #3:</b> the body pattern, before it propagates — on fixtures, which are the only records whose <code>summary</code> carries cite spans.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 5</span> Slide 3 — <span class="he">מה נעשה מאז</span></h3>
   <p>Nested vertical scroll-snap, the head group, the locator with its offset rings, the current-stage pill, the back-to-current pill, jump mode on the rail, the evidence map on stage 1, and the claims fallback for stages with no overview.</p>
-  <div class="gate"><b>Gate #4:</b> i13 (4 reached) and i20 (1 reached). The biggest stop.</div>
+  <div class="gate"><b>Gate #4:</b> <code>t01</code> (four reached, with overviews) against <code>t03</code> (two reached, none) — the overview and the claims fallback in one sitting. The biggest stop. Stage definitions render as placeholders until <span class="mono">DIA-367</span> lands: review the shape, not the wording.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 6</span> Slide 4 — <span class="he">מה עוד לא נעשה</span></h3>
   <p>Same component, opposite filter. The hourglass group, the computed statement, the stage-5 checking-body line, the skip rule for an item at the last stage, the regression rule, and the locator slots that never move.</p>
-  <div class="gate"><b>Gate #5:</b> i13 (one page, no arrows), i20 (four pages, arrows), and an item at stage 5 that has no slide 4 and five dots.</div>
+  <div class="gate"><b>Gate #5:</b> <code>t01</code> (one page, no arrows), <code>t03</code> (a stack of three), and <code>t05</code>, which is at stage 5 and therefore has no slide 4 and five dots. <code>t06</code> is the regressed case. Absence statements are <span class="mono">DIA-367</span> placeholders here too.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 7</span> Slide 5 — <span class="he">דעת הציבור</span>, MVP</h3>
-  <p>Head, the three authored lines with their chips, the stage-generic question, the dimmed scale in its dashed box, <span class="he">הגישו מקור</span>.</p>
-  <div class="gate"><b>Gate #6:</b> the screen, and whether the generic question reads right under real context lines.</div>
+  <p>Head, the authored <code>poll</code> block — the three lines with their chips and the item’s own question — the dimmed scale in its dashed box, <span class="he">הגישו מקור</span>. Coverage is on for <code>failure</code> and <code>status</code>, off for <code>question</code> and <code>caveat</code>, so the chips appear on two of the four lines by design.</p>
+  <div class="gate"><b>Gate #6:</b> the screen, and whether the item’s own question reads as a standing question rather than a prompt about the news — generic in substance, phrased in context, which is the line the writing has to walk. Only <code>t01</code> carries a <code>poll</code> today; filling the other fixtures is <span class="mono">DIA-375</span> and should land before this gate.</div>
 </div>
 
 <div class="phase">
   <h3><span class="pno">PHASE 8</span> Slide 6 — <span class="he">הלאה</span></h3>
-  <p>The 111px card with its photo ground and mask, sibling selection, <span class="he">כל 29 הכשלים</span>, the share action and the upright repost icon, the star strip, the wordmark.</p>
-  <div class="gate"><b>Gate #7:</b> the last slide, and share actually sharing.<br>
+  <p><strong>Version A only.</strong> The 111px card with its photo ground (30%→0% ramp over the duotone) and mask, sibling selection, <span class="he">כל 29 הכשלים</span>, the share action and the upright repost icon, the wordmark. No strip, and nothing built inert.</p>
+  <p>The card list is the only thing on the slide that flexes, and it sheds rather than scrolls. Measured at 390 wide against the artboards — a card plus its gap is 120px, the fixed furniture is 634px in version A:</p>
+  <table>
+    <tr><th>Frame height</th><th>Version A <span class="status st-done">ships</span></th><th>Version B <span class="mono">DIA-376</span></th></tr>
+    <tr><td class="q">≥ 754px</td><td>Four cards</td><td>Three cards</td></tr>
+    <tr><td class="q">705–753px</td><td>Three cards</td><td>Three cards</td></tr>
+    <tr><td class="q">634–704px</td><td>Three cards</td><td>Two cards</td></tr>
+    <tr><td class="q">585–633px</td><td>Two cards</td><td>Two cards</td></tr>
+    <tr><td class="q">Below 585px</td><td>Two cards</td><td>Two cards; the strip goes first</td></tr>
+  </table>
+  <p>Two cards is the floor — below that the slide has nothing left to say. This is the one place the 600px height guard is load-bearing, and an iPhone SE at 667 clears it while landing in the three-card band.</p>
+  <div class="gate"><b>Gate #7:</b> the last slide, and share actually sharing — plus the shedding ladder, checked by resizing rather than by reading the table.<br>
   <b>Raise before this phase starts:</b> photo credit for the card grounds — see §7. Roy asked to be reminded here rather than deciding it in advance.</div>
 </div>
 
@@ -272,19 +318,21 @@
 
 <div class="phase">
   <h3><span class="pno">PHASE 10</span> Content pass <span class="status st-todo">parallel track</span></h3>
-  <p>The writing from §2, plus DIA-366's remaining 24 photos. Runs alongside from Phase 1 onward; does not gate the merge.</p>
+  <p>The writing from §2 — 29 systemic summaries, the per-stage overviews, 116 <code>poll</code> strings, 29 card lines — plus the whole photo port: the five post photos and the 24 after them, <span class="mono">DIA-366</span>. Stage wording, <span class="mono">DIA-367</span>, runs here too and is the one content item that shows as a placeholder rather than as a fallback. Runs alongside from Phase 2 onward.</p>
+  <div class="gate"><b>Gate #8, on staging:</b> the deck read end to end against the real ledger, on a phone, before the promotion to prod. This is the gate the other seven could not be — everything before it is judged on fixtures. It does not block the merge; it blocks the promotion, which is the decision that actually exposes the page. <code>npm run dev:live</code> is the same read locally, for whenever a live item is worth looking at mid-pass.</div>
 </div>
 
 <h2 id="verify">6 · Verification</h2>
-<p>Three layers, because pixels alone cannot see a rule and rules alone cannot see a screen.</p>
+<p>Four layers, because pixels alone cannot see a rule and rules alone cannot see a screen.</p>
 <ol>
-  <li><strong>Frozen 390×844 baselines</strong> — every slide, every stage page, i13 and i20, photo and no-photo.</li>
+  <li><strong>Unit tests on the computed rules</strong> — <code>npm test</code>, <code>node --test</code> over <code>lib/*.test.ts</code>, no runner to install. This is where “reached is the stages claimed, not everything up to the current one” is written down in a form that fails when someone changes it. A baseline says a pixel moved; this says which rule broke.</li>
+  <li><strong>Frozen 390×844 baselines, on the fixture pool</strong> — every slide, every stage page, and the shapes the live ledger cannot show: a one-claim item, an item at the last stage, an item with a portrait and no landscape, an item with no photo at all. Fixtures are versioned, so a baseline only moves when the code moves. The gates are the opposite call and run on <code>dev:live</code> — see §5.</li>
   <li><strong>Behavioural assertions</strong>, which survive a legitimate redesign: the locator renders at <code>right:14px</code> as measured, not as authored; a rung's y-position is identical on slides 3 and 4; an item at the last stage produces five dots; the stage chip on a card keeps contrast over its photo; the page itself never scrolls.</li>
   <li><strong>Gesture tests</strong> — Playwright touch emulation for swipe, long-press arming, scrub and release, and the push-once history rule.</li>
 </ol>
 <div class="note"><strong>The RTL trap, as a test rather than a memory.</strong> <code>padding-inline-end</code> and <code>align-items:flex-end</code> resolve to the left in this page, which cost two review rounds. Every edge-anchored element gets an assertion on its measured <code>getBoundingClientRect()</code>, so it can never quietly flip again.</div>
 
-<h2 id="open">7 · The six open questions, answered</h2>
+<h2 id="open">7 · The open questions, answered</h2>
 
 <h3>Breakpoint <span class="status st-done">decided</span></h3>
 <p>The mobile deck renders at <code>(max-width: 599px) and (min-height: 600px)</code>. Everything else — tablets, landscape phones, desktops — gets the existing item page.</p>
@@ -295,17 +343,10 @@
   <li>Between 320 and 599px the frame is <strong>fluid, not scaled</strong>: the 390 baseline sets the proportions, side gutters stay 20px, and type does not shrink. A scaled 390 canvas would blur text on a 430 screen.</li>
 </ul>
 
-<h3>Where the ratings go <span class="status st-done">decided</span></h3>
-<p><strong>Supabase, called from the client.</strong> A single table, insert-only:</p>
-<pre><code>feedback( id, item_id, rating int 1..5, created_at, device_key )
-  RLS: anon may INSERT, may not SELECT.</code></pre>
-<ul>
-  <li>It keeps <code>output: 'export'</code> intact — no serverless function, no build-target change, no runtime to operate. The static site stays static; one fetch goes out to a third party.</li>
-  <li>It is the same instance the <strong>full slide 5 will need</strong> for public answers and the ballot, so this is not a throwaway: the star strip is the first small use of the store the post-MVP page depends on.</li>
-  <li><code>device_key</code> is a random id in <code>localStorage</code> — enough to stop the same phone rating twenty times, not an identity. The UI shows the saved state from that key.</li>
-  <li>The anon key is public by nature, so the table is spammable. Acceptable here: it is developer feedback, nothing renders from it, and no one sees it but you. Before the <em>ballot</em> ships it needs a real gate (Turnstile or a rate limit), and the standing rule already caps the damage — public answers never move a stage.</li>
-</ul>
-<p>Say the word if you would rather not add the dependency; the alternative is a hosted form service, which is less work now and useless for the ballot later.</p>
+<h3>Where the ratings go <span class="status st-todo">moved to DIA-376</span></h3>
+<p>Version A ships, so the MVP has nothing to send and this question leaves the critical path. The work below is drafted rather than discarded — it is carried in <span class="mono">DIA-376</span>, along with the per-item override, and should be decided when the strip is actually built rather than now.</p>
+<p><strong>The draft answer was Supabase, called from the client.</strong> A single insert-only table — <code>feedback( id, item_id, rating int 1..5, created_at, device_key )</code>, RLS letting anon INSERT and not SELECT. It keeps <code>output: 'export'</code> intact, it is the same instance the full slide 5 would need for public answers and the ballot, and <code>device_key</code> is a random <code>localStorage</code> id — enough to stop one phone rating twenty times, not an identity. The anon key is public by nature and the table is therefore spammable; acceptable for developer feedback, not acceptable for a ballot, which would need a real gate first.</p>
+<p>Also moved: <strong>whether the strip shows on every item.</strong> The answer stands — a global <code>site.feedbackStrip</code> with a per-item <code>feedback_strip</code> override, which the schema already carries — and the reasoning stands with it: the strip asks about the <em>site</em>, not the failure, so the item is not really the axis, and it costs a card. A reader swiping through several failures should not see four cards, then three, then four, for no reason they can perceive. The override is for the exception; making it the mechanism is what would make the slide look unstable.</p>
 
 <h3>Share <span class="status st-done">decided</span></h3>
 <p>Web Share API where it exists — on iOS and Android that is the native sheet, which is the whole point on a page reached from Instagram. Where it does not, the fallback copies <strong>the item link, not the deep link</strong>: <code>/item/i13/</code> with no hash, so a shared link always opens at the gate. A short toast confirms the copy.</p>
@@ -327,14 +368,14 @@
 <h3>Desktop page on a phone <span class="status st-done">closed</span></h3>
 <p>Not a goal. No link, no escape hatch, no "view desktop version". A phone under the breakpoint gets the deck.</p>
 
-<h3 id="remaining">The last two</h3>
+<h3 id="remaining">The two left open</h3>
 
-<h4>Card photo credit <span class="status st-open">deferred by Roy to Phase 8</span></h4>
+<h4>How long the gate’s document slot may be <span class="status st-open">new, 19 Sep</span></h4>
+<p>Writing <code>sourceLine</code> against the real ledger turned up a fit problem the mock could not show. The spec’s example line is <span class="he">תחקיר צה״ל · כאן חדשות · ועוד 2 מקורות</span> — 38 characters. Measured across the 29 published items, the real lines run 11 to <strong>75</strong> characters, and <strong>11 of 29 are over 46</strong>, which is roughly what fits on one line at 11.5px in the gate’s column. The worst is <span class="he">סיכום דוח צוות המומחים לבדיקת תחקירי צה"ל · Times of Israel · ועוד 3 מקורות</span>.</p>
+<p>Naming the publisher instead of the document brings that same line to 43 and every line under the limit — but then the slot no longer names a document, which is the thing that makes the gate’s attribution worth reading. The helper returns both (<code>document</code> and <code>documentPublisher</code>) so the decision stays open and lives in one place. Four ways it could go: keep the document and let the component truncate with an ellipsis; keep the document and drop to the publisher only when it would overflow; use the publisher always; or treat the long ones as a data problem and shorten those <code>source</code> strings. Not decided — it belongs to Phase 3.</p>
+
+<h4>Card photo credit <span class="status st-open">deferred to Phase 8</span></h4>
 <p>The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA, which requires attribution. Not decided now — <strong>Roy asked to be reminded when Phase 8 begins</strong>, and the Phase 8 gate carries that reminder. The three candidate answers, so the reminder arrives with its options: one credits line at the foot of slide 6; a credits page linked from <span class="he">אודות</span>; or landscape crops only from sources that need no attribution.</p>
-
-<h4>Does the star strip show on every item <span class="status st-done">decided</span></h4>
-<p><strong>A global default with a per-item override.</strong> <code>site.feedbackStrip</code> is the switch; an incident may carry <code>feedback_strip: false</code> (or <code>true</code>) to differ. One field, and the strip can be taken down everywhere by editing one line when enough answers have arrived.</p>
-<div class="note"><strong>Why the default should stay uniform.</strong> The strip asks about the <em>site</em>, not the failure, so the item is not really the axis the decision lives on — and it costs a card, so per-item switching means a reader swiping through several failures sees slide 6 hold four cards, then three, then four, with no reason they can perceive. The override exists for the case where one item genuinely should not carry it; turning it into the normal mechanism is what makes the slide look unstable.</div>
 
 <h2 id="risks">8 · Risks</h2>
 <table>
@@ -346,7 +387,7 @@
   <tr><td>The page looks unfinished during review because the content pass trails</td><td>Gates #3–#7</td><td>Expected, stated here; review the pattern, not the prose</td></tr>
 </table>
 
-<p class="meta">Written 14 September 2026, after the design interview. Nothing in this plan has been built.</p>
+<p class="meta">Written 14 September 2026 after the design interview; revised 18 September for the MVP shape of slide 6, and twice on 19 September — when Phase 1 closed, and when gate #8 turned out to be a promotion gate rather than a merge gate. Phases 2–10 have not been built.</p>
 
 </div>
 </body>
