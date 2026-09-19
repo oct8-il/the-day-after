@@ -364,8 +364,8 @@ add(`<div class="center">
 <p>It runs in parallel from Phase 2 and it is the thing most likely to set the real date.</p>`);
 
 add(`<div>
-  <span class="tag open">open · phase 3</span>
-  <h2>The gate’s line doesn’t fit</h2>
+  <span class="tag done">decided · 19 sep</span>
+  <h2>The gate’s line didn’t fit</h2>
   <div class="stack">
     <div class="item mute"><div class="v">38</div><div class="k">characters — the line in the mock</div></div>
     <div class="item"><div class="v">75</div><div class="k">characters — the longest real one</div></div>
@@ -374,7 +374,8 @@ add(`<div>
 </div>`,
 `<p>Found by writing <span class="id">sourceLine</span> against the real ledger rather than the mock. The worst is <span class="he">סיכום דוח צוות המומחים לבדיקת תחקירי צה"ל · Times of Israel · ועוד 3 מקורות</span>.</p>
 <p>Naming the publisher instead of the document fixes every line — but then the slot no longer names a document, which is the part that makes the attribution worth reading.</p>
-<p>Four ways out: truncate with an ellipsis; drop to the publisher only on overflow; always the publisher; or treat the long ones as a data problem and shorten those source strings. The helper returns both halves, so the decision stays in one place.</p>`);
+<p>Four ways out were on the table: truncate with an ellipsis; drop to the publisher only on overflow; always the publisher; or treat the long ones as a data problem and shorten those source strings.</p>
+<p><b>Ruled: the publisher replaces the document, and only on overflow.</b> Where the line fits it names the document, because naming it is what makes the attribution worth reading; where it doesn't, it names that document's publisher instead. The slot means the document on 18 of 29 and the publisher on the rest — the price of not cutting a title mid-word. The helper returns both halves, so the choice is made once, in the component.</p>`);
 
 add(`<div>
   <div class="kicker">also open</div>
