@@ -12,6 +12,7 @@ import { ItemDock } from '@/app/components/ItemDock';
 import { ItemIntro } from '@/app/components/ItemIntro';
 import { CitationLinks } from '@/app/components/CitationLinks';
 import { Header } from '@/app/components/Header';
+import { Deck } from '@/app/components/mobile/Deck';
 import { SourceLink } from '@/app/components/SourceLink';
 
 export const dynamicParams = false;
@@ -72,6 +73,18 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
 
   return (
     <>
+      {/* Two item pages live in this one HTML and a media query picks which is
+          on screen (spec §11). There is no server to sniff a device and no
+          JavaScript swap, so the right one is there on the first paint - see
+          the deck block at the foot of globals.css.
+
+          Phase 2 renders the deck's shell only: it reads no incident data, and
+          its slides name themselves. The breadcrumb's leaf is the one piece of
+          visible chrome that wants data - itemNumber() exists and is tested,
+          and Phase 3 wires it. */}
+      <Deck crumbs={{ ancestors: ['7 באוקטובר', parent.he], leaf: 'כשל' }} />
+
+      <div className="item-desktop">
       <Header compact />
 
       {/* ---------- docked failure header and chapter rail ---------- */}
@@ -288,6 +301,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             </section>
           </div>
         </section>
+      </div>
       </div>
     </>
   );

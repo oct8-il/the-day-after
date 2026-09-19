@@ -11,6 +11,7 @@
     "build": "next build",
     "start": "node scripts/serve-out.mjs",
     "test": "node --test --experimental-strip-types lib/*.test.ts",
+    "test:deck": "playwright test tests/deck --project=phone",
     "validate": "node --experimental-strip-types scripts/validate.ts --pool=live",
     "validate:strict": "node --experimental-strip-types scripts/validate.ts --pool=live --strict",
     "check:links": "node scripts/check-links.mjs",

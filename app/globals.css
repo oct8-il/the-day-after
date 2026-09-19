@@ -876,3 +876,147 @@
 .holding{min-height:100vh;display:grid;place-content:center;text-align:center;gap:10px;padding:24px;background:var(--bg);color:var(--text)}
 .holding-name{font-family:"Frank Ruhl Libre",serif;font-weight:500;font-size:clamp(34px,7vw,64px);line-height:1.05;margin:0}
 .holding-date{font-size:15px;letter-spacing:.06em;color:var(--muted);margin:0;font-variant-numeric:tabular-nums}
+
+/* ===========================================================================
+   The phone deck — shell, chrome and gestures (DIA-377, spec §2 and §3).
+
+   Not a second stylesheet: mobile is a layout under a breakpoint, here, beside
+   everything else. Every selector is prefixed deck- because this file carries
+   unscoped rules — .ladder, .q, .chip, .prose, .lead, .gate — that match by
+   class alone and leak into anything reusing the name. State rides on data
+   attributes rather than classes for the same reason: `on` already exists as a
+   bare rule above.
+
+   The deck is display:none by default, so it costs a desktop reader nothing
+   but the bytes. Both trees ship in this one HTML at one URL (§11) and the
+   media query below picks which is on screen.
+   =========================================================================== */
+
+.deck{display:none}
+
+/* §2. 599 wide covers every phone in portrait and stops below the band where
+   tablets begin; 600 tall is the guard, because the deck is a fixed-height
+   frame with a vertical rhythm drawn at 844 and a landscape phone is 390px
+   tall. Anywhere else — tablet, landscape phone, desktop — the existing item
+   page, which already handles those shapes. */
+@media (max-width:599px) and (min-height:600px){
+  .item-desktop{display:none}
+
+  .deck{
+    /* 100dvh, never 100vh: iOS Safari's collapsing URL bar makes vh taller
+       than the visible viewport, which would push the footer under the browser
+       chrome exactly where the next-slide label lives. */
+    display:flex;flex-direction:column;
+    position:fixed;inset:0;height:100dvh;
+    background:var(--bg);color:var(--text);
+    overflow:hidden;
+    /* Between 320 and 599 the frame is fluid, not scaled: 390 sets the
+       proportions, the gutters stay 20px and the type does not shrink. A
+       scaled 390 canvas blurs its text on a 430 screen. */
+  }
+  .deck:focus{outline:none}
+  .deck-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+
+  /* --- breadcrumb ------------------------------------------------------- */
+  /* §3: one path, top right, never split across two corners. */
+  .deck-crumbs{
+    flex:none;padding:16px 20px 0;
+    display:flex;align-items:center;gap:6px;white-space:nowrap;
+    font-size:12.5px;letter-spacing:.1px;
+    color:color-mix(in srgb,var(--text) 64%,transparent);
+  }
+  .deck-crumbs span{display:inline-flex;align-items:center;gap:6px}
+  .deck-crumbs i{font-style:normal;color:color-mix(in srgb,var(--text) 45%,transparent)}
+  .deck-crumbs b{font-weight:600;color:var(--text)}
+
+  /* --- the rail of slides ----------------------------------------------- */
+  .deck-track{
+    flex:1;min-height:0;
+    display:flex;
+    overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    transition:opacity .12s ease;
+  }
+  .deck-track::-webkit-scrollbar{display:none}
+  .deck-slide{
+    flex:0 0 100%;height:100%;
+    scroll-snap-align:start;scroll-snap-stop:always;
+    position:relative;display:flex;flex-direction:column;overflow:hidden;
+    padding:0 20px;box-sizing:border-box;
+  }
+
+  /* Phase 2 only. Each slide names itself so the frame, the chrome and the
+     gestures can be judged before any of them carries content. */
+  .deck-placeholder{
+    margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;
+    color:color-mix(in srgb,var(--text) 34%,transparent);
+  }
+  .deck-placeholder-n{font-family:"Frank Ruhl Libre",serif;font-size:72px;line-height:1}
+  .deck-placeholder-he{font-size:15px;letter-spacing:.04em}
+
+  /* --- slideshow dots, and jump mode's strip ----------------------------- */
+  /* §3: six dots, 6px, gap 7px, centred above the footer, first slide
+     rightmost. No numeric counter anywhere — the dots are the counter. */
+  .deck-dots{
+    flex:none;direction:rtl;
+    display:flex;justify-content:center;align-items:center;gap:7px;
+    padding:16px 0 14px;
+    /* §3's platform notes: a long press on iOS raises the selection callout
+       and the magnifier without these, and touch-action:none is what stops the
+       browser claiming the drag before the scrub can have it. */
+    -webkit-touch-callout:none;user-select:none;-webkit-user-select:none;
+    touch-action:none;
+    transition:opacity .12s ease;
+  }
+  .deck-dot{
+    width:6px;height:6px;padding:0;border:0;border-radius:50%;
+    background:color-mix(in srgb,var(--text) 30%,transparent);
+    cursor:pointer;
+  }
+  .deck-dot[data-on]{background:var(--text)}
+  /* The gate gives the dots more air above them than the slides do: its
+     screen has 26/16 where every other screen has 16/14. */
+  .deck[data-at="0"] .deck-dots{padding:26px 0 16px}
+
+  /* Armed: the strip goes to full strength and the page behind drops to ~40%,
+     both over 120ms, so arming reads as a change rather than as a glitch. The
+     track's snap is cancelled while armed or the two gestures fight. */
+  .deck[data-armed] .deck-track{opacity:.4;scroll-snap-type:none}
+  .deck[data-armed] .deck-dots{opacity:1}
+  .deck[data-armed] .deck-dot{background:color-mix(in srgb,var(--text) 55%,transparent)}
+  .deck[data-armed] .deck-dot[data-on]{background:var(--text);box-shadow:0 0 0 3px color-mix(in srgb,var(--text) 22%,transparent)}
+
+  /* --- footer ------------------------------------------------------------ */
+  /* §3: a 1px rule at 16% ink, 11px 20px 26px padding, 11.5px at 70% ink. The
+     26px is the home indicator's, and it is why the frame is 100dvh. */
+  .deck-foot{
+    flex:none;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;gap:10px;
+    padding:11px 20px 26px;
+    border-top:1px solid color-mix(in srgb,var(--text) 16%,transparent);
+    font-size:11.5px;color:color-mix(in srgb,var(--text) 70%,transparent);
+  }
+  .deck-prev{justify-self:start}
+  .deck-mid{justify-self:center;display:inline-flex;align-items:center;gap:7px}
+  .deck-next{justify-self:end}
+  .deck-foot a,.deck-foot .deck-hint,.deck-foot .deck-credit{
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    color:inherit;text-decoration:none;
+  }
+  .deck-chev{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;
+    stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* The gate's left slot is the photograph's credit, not a next-slide label:
+     quieter than the rest of the footer, and left-aligned against the edge.
+     Empty until the photograph arrives with Phase 3. */
+  .deck-credit{font-size:10.5px;text-align:left;
+    color:color-mix(in srgb,var(--text) 42%,transparent)}
+
+  /* §3: under reduced motion the scrub becomes a direct jump on release. The
+     dim stays — it is state rather than motion. */
+  @media (prefers-reduced-motion:reduce){
+    .deck-track{scroll-behavior:auto}
+    .deck-track,.deck-dots{transition:none}
+  }
+}
