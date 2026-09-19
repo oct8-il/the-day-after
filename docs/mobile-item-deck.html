@@ -181,21 +181,22 @@ add(`<div>
   <div class="ladder">
     <div class="rung done"><div class="bar" style="width:20%"></div><div class="lb">0 · spec to v2.3</div></div>
     <div class="rung done"><div class="bar" style="width:26%"></div><div class="lb">1 · data, schema, rules</div></div>
-    <div class="rung now"><div class="bar" style="width:24%"></div><div class="lb">2 · shell, chrome, gestures</div></div>
-    <div class="rung"><div class="bar" style="width:64%"></div><div class="lb">3–8 · a slide each</div></div>
+    <div class="rung done"><div class="bar" style="width:24%"></div><div class="lb">2 · shell, chrome, gestures</div></div>
+    <div class="rung now"><div class="bar" style="width:13%"></div><div class="lb">3 · slide 1 — the gate</div></div>
+    <div class="rung"><div class="bar" style="width:53%"></div><div class="lb">4–8 · a slide each</div></div>
     <div class="rung"><div class="bar" style="width:15%"></div><div class="lb">9 · baselines</div></div>
     <div class="rung"><div class="bar" style="width:48%"></div><div class="lb">10 · content, in parallel</div></div>
   </div>
 </div>`,
-`<p>Phases 0 and 1 are green. Phase 2 is the next thing to open an editor for.</p>
+`<p>Phases 0, 1 and 2 are green. Phase 3 is the next thing to open an editor for — and the first that puts an incident on the screen.</p>
 <p>Phase 10 runs alongside everything from Phase 2 onward — it's the writing, and it doesn't gate the build. It does gate the page <i>looking</i> finished.</p>`);
 
 add(`<div class="center">
-  <div class="huge">2 / 11</div>
-  <p class="under">Phases done. Both of them the kind that doesn’t look like progress until the ones after it go fast.</p>
+  <div class="huge">3 / 11</div>
+  <p class="under">Phases done. The deck swipes, routes and remembers — on a phone, with nothing written on it yet.</p>
 </div>`,
-`<p>Say it plainly: nothing has been rendered yet. Not one pixel of the deck exists.</p>
-<p>What exists is the spec that says what to draw, and the data and rules that every slide reads through. That's the part that's expensive to get wrong and cheap to get right first.</p>`);
+`<p>The shape is real now: six slides, one swipe apart, the chrome docked, the URL following the reader, the long press scrubbing. Every slide is still a number and its name.</p>
+<p>That is the whole point of the order. The frame was judged on a phone before a single sentence of the ledger could hide a fault in it.</p>`);
 
 add(`<div>
   <span class="tag done">phase 0 · done</span>
@@ -239,12 +240,25 @@ add(`<div class="center">
 <p>The argument for doing this now rather than at Phase 9: a baseline tells you a pixel moved. This tells you which rule broke, three phases before the pixel.</p>`);
 
 add(`<div>
-  <span class="tag">next</span>
-  <h2>Phase 2 reads no data at all</h2>
-  <p class="sub">The deck, the breakpoint, scroll-snap, dots, the footer chain, hash routing with push-once history, and jump mode. Slides 2–6 are placeholders naming themselves.</p>
+  <span class="tag done">phase 2 · done</span>
+  <h2>Phase 2 read no data at all</h2>
+  <p class="sub">The breakpoint, scroll-snap, the docked chrome, the footer chain, hash routing with push-once history, and jump mode. Every slide a number and its name.</p>
 </div>`,
-`<p>That's the reason it can start today. It doesn't touch a summary, a photo or a poll — so none of the content pass blocks it.</p>
-<p>It's also the riskiest phase, which is a good reason to take it early: long-press on iOS fights the selection callout and the magnifier, and arming jump mode has to cancel the deck's own scroll-snap so the two gestures don't fight. Gate #1 is on a real phone, not a simulator.</p>`);
+`<p>That's why it could start before the writing did. It touched no summary, no photo and no poll, so none of the content pass blocked it.</p>
+<p>It was also the riskiest phase, which is why it went early — and it earned that billing. Gate #1 was on a real phone, and the phone found three things a headless browser had signed off.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 2 · what the phone found</span>
+  <h2>Three faults no runner could see</h2>
+  <div class="stack">
+    <div class="item"><div class="v">1</div><div class="k">Slides landed a fraction off the snap point — <span class="id">i × clientWidth</span> is not where a slide is, and <span class="id">scroll-snap-stop</span> caps the obvious repair at one slide</div></div>
+    <div class="item"><div class="v">2</div><div class="k">A React warning on the long press — history written inside a state updater, which runs during render</div></div>
+    <div class="item"><div class="v">3</div><div class="k">The footer flashed the slide it came from, mid-animation — the scroll handler was fighting the deck's own scroll</div></div>
+  </div>
+</div>`,
+`<p>All three were in code that passed nineteen assertions. That is the argument for the gates, stated as cheaply as it will ever be stated.</p>
+<p>The second one is the one worth carrying forward. React's most useful warnings exist only in a development build and are stripped from the export the suite ran against — so the fault was silent in the build being tested and loud in the build a person opens. CI now runs the deck suite twice, the second time against <span class="id">next dev</span>, and fails on anything written to the console.</p>
+<p>The first is a reminder that a measurement beats a reasoned-about API: <span class="id">scrollBy</span> to slide 4 arrives at slide 2, and no amount of reading the spec would have said so.</p>`);
 
 add(`<div class="center">
   <div class="kicker">how it gets reviewed</div>
@@ -396,7 +410,7 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Next action is Phase 2, on a fresh branch off dev.</p>`);
+<p>Next action is Phase 3 — slide 1, the gate — on a fresh branch off dev. The first phase whose screen carries a real incident.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
