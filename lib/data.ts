@@ -12,7 +12,8 @@ import { join } from 'node:path';
 import { ENV } from '@/app/env';
 import { POOL } from '@/lib/pool';
 import taxonomyJson from '@/data/taxonomy.json';
-import { stageOf, isContested, type Stage } from './stage';
+import { stageOf, isContested, stageDate, reached, unreached, type Stage } from './stage';
+import { itemNumber, siblings, sourceLine, splitSource } from './deck';
 
 /**
  * Everything except the taxonomy comes from the pool this build reads -
@@ -100,29 +101,30 @@ export const QUESTIONS = taxonomy.questions as Record<
   { type: 'scale' | 'ypn'; he: string; sub: string; lo?: string; hi?: string; label: string }
 >;
 
-export { stageOf, isContested };
+export { stageOf, isContested, stageDate, reached, unreached, sourceLine, splitSource };
 export type { Stage };
+
+/**
+ * The deck's rules, bound to the pool this build reads. lib/deck.ts holds them
+ * pure - taking the ledger as an argument - so they can be tested without one
+ * on disk; these are the versions the pages call.
+ */
+export const itemNumberOf = (id: string) => itemNumber(id, published);
+export const itemTotal = published.length;
+export const siblingsOf = (incident: Incident, n: number) =>
+  siblings(incident, n, { published, byId });
 
 /**
  * The earliest source date among an incident's stage-1 ("identified") claims -
  * printed under the failure description as "תועד לראשונה · <date>".
- * Mirrors firstDocumented() in the frozen prototype: dates are "DD.MM.YYYY",
- * sorted by year then month: a claim whose date doesn't parse that way sorts
- * after any that do, rather than breaking the page.
+ *
+ * This is stageDate(incident, 1) with an em dash for "nothing yet". The sort
+ * it used to inline now lives in lib/stage.ts, where every stage uses it - the
+ * gate's age line asks the same question about stage 4 that this asks about
+ * stage 1, and two copies of that rule would drift.
  */
 export function firstDocumented(incident: { claims: Pick<Claim, 'asserts_stage' | 'date'>[] }): string {
-  const dated = incident.claims
-    .filter((c) => c.asserts_stage === 1)
-    .map((c) => c.date)
-    .filter(Boolean)
-    .map((d) => {
-      const m = d.match(/(\d{2})\.(\d{4})/);
-      return m ? ([Number(m[2]), Number(m[1]), d] as [number, number, string])
-        : ([parseInt(d, 10) || 9999, 13, d] as [number, number, string]);
-    });
-  if (!dated.length) return '—';
-  dated.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  return dated[0][2];
+  return stageDate(incident, 1) ?? '—';
 }
 
 /**

@@ -92,6 +92,28 @@ jobs:
 
           skip_it 'data/live only - dev renders the fixture pool, so the site is unchanged'
 
+  # -------------------------------------------------------------------- unit
+  # The rules the deck composes from - which stages an item reached, what the
+  # gate's source line names, which neighbours slide 6 shows - are pure
+  # functions in lib/, and this is where they are held to their spec. They are
+  # checked here rather than in the `data` workflow because they are code, not
+  # ledger: a broken helper is a bug in the site, and it should not report as
+  # an invalid record.
+  #
+  # A screenshot cannot see a rule. A baseline that goes red tells you a pixel
+  # moved; this tells you which rule broke, three phases before the pixel.
+  unit:
+    name: the rules
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.run == 'true' && !inputs.capture_baselines
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24', cache: npm }
+      - run: npm ci
+      - run: npm test
+
   # ------------------------------------------------------------------- build
   build:
     name: build
