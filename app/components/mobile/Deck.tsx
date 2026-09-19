@@ -85,6 +85,10 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
   /** The live index, for the handlers that a scrub re-enters faster than React
    *  re-subscribes them. Kept in step with `at` by every setter below. */
   const atRef = useRef(0);
+  /** Jump mode's live state. A React state setter cannot be read back inside
+   *  the same handler, and its updater runs during the render phase - which is
+   *  not somewhere history or the DOM may be touched. */
+  const armedRef = useRef(false);
 
   /**
    * Whether the deck has already put its one entry on the history stack. Reset
@@ -94,23 +98,78 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
   const pushed = useRef(false);
   /** The slide the reader arrived on. Returning to it is a Back, not a write. */
   const entrySlide = useRef(0);
-  /** Set while we are moving the track ourselves, so the scroll handler does
-   *  not write a hash for a position the hash already caused. */
-  const driving = useRef(false);
+  /**
+   * The slide the deck is currently scrolling itself towards, or null when the
+   * track belongs to the reader.
+   *
+   * While it is set the scroll handler keeps its hands off the index entirely.
+   * It used to only suppress the hash write, which left the handler free to
+   * report intermediate positions during a smooth scroll: clicking the footer
+   * showed the destination, then flashed the slide it had come from as the
+   * animation crossed the midpoint, then settled. The chrome is the
+   * destination's from the moment the destination is chosen.
+   */
+  const target = useRef<number | null>(null);
 
-  /** Scroll the track to a slide. RTL runs scrollLeft negative in most engines,
-   *  so the sign comes from the computed direction rather than an assumption. */
+  const slideEls = () =>
+    [...(track.current?.querySelectorAll<HTMLElement>('.deck-slide') ?? [])];
+
+  /**
+   * Which slide the track is showing, measured rather than calculated.
+   *
+   * `Math.round(scrollLeft / clientWidth)` looks equivalent and is not: the
+   * frame is fluid between 320 and 599, so a slide's width is whatever the
+   * viewport gives it, fractions included, and in RTL scrollLeft is negative
+   * in some engines and zero-based-from-the-right in others. Asking the
+   * elements where they are costs one layout read and is true everywhere.
+   */
+  const indexNow = useCallback(() => {
+    const el = track.current;
+    if (!el) return 0;
+    const base = el.getBoundingClientRect().left;
+    let best = 0, gap = Infinity;
+    slideEls().forEach((sl, i) => {
+      const g = Math.abs(sl.getBoundingClientRect().left - base);
+      if (g < gap) { gap = g; best = i; }
+    });
+    return best;
+  }, []);
+
+  /**
+   * Scroll the track to a slide, by asking the slide to bring itself into view.
+   *
+   * Two separate traps sit behind this one line.
+   *
+   * `i * clientWidth` is not the slide's position. The frame is fluid between
+   * 320 and 599, so a slide's width is whatever the viewport gives it,
+   * fractions included; and a programmatic scroll ends exactly where it is put
+   * and is not re-snapped afterwards. A target computed that way lands a
+   * fraction off the snap point and stays there - the slide that sits a little
+   * to one side until a finger nudges it straight.
+   *
+   * The obvious repair, scrollBy() with a delta measured off the two rects,
+   * is worse: scroll-snap-stop:always stops any scroll operation at the first
+   * snap point it meets, so scrollBy travels exactly one slide however far it
+   * was asked to go. Measured in this browser: scrollBy to slide 4 arrives at
+   * slide 2, with the property on, in both smooth and instant. scrollTo() to
+   * an absolute offset and scrollIntoView() are not capped.
+   *
+   * scrollIntoView is the one that has neither problem: the browser computes
+   * the offset, so there is no arithmetic to drift and no axis whose sign has
+   * to be guessed in RTL.
+   */
   const scrollTo = useCallback((i: number, smooth: boolean) => {
     const el = track.current;
-    if (!el) return;
-    const dir = getComputedStyle(el).direction === 'rtl' ? -1 : 1;
-    const left = dir * i * el.clientWidth;
-    driving.current = true;
-    if (smooth) el.scrollTo({ left, behavior: 'smooth' });
-    else el.scrollLeft = left;
+    const sl = slideEls()[i];
+    if (!el || !sl) return;
     atRef.current = i;
     setAt(i);
-    window.setTimeout(() => { driving.current = false; }, smooth ? 420 : 60);
+    const dx = sl.getBoundingClientRect().left - el.getBoundingClientRect().left;
+    // Already there: scrollIntoView would fire no scroll event, and `target`
+    // would sit set for a landing that never comes.
+    if (Math.abs(dx) < 0.5) { target.current = null; return; }
+    target.current = i;
+    sl.scrollIntoView({ inline: 'start', block: 'nearest', behavior: smooth ? 'smooth' : 'instant' });
   }, []);
 
   /**
@@ -135,6 +194,17 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
     if (opts?.write ?? true) writeHash(n, null);
   }, [scrollTo, writeHash]);
 
+  /** The track has stopped moving: adopt where it stopped, and record it. */
+  const settle = useCallback(() => {
+    target.current = null;
+    // A scrub stops between every pair of dots. The landing writes the hash,
+    // once, when the finger lifts - not at each stage it passed through.
+    if (armedRef.current) return;
+    const i = indexNow();
+    if (i !== atRef.current) { atRef.current = i; setAt(i); }
+    writeHash(i, null);
+  }, [indexNow, writeHash]);
+
   /* ---------------------------------------------------- arrival and history */
   useEffect(() => {
     const entry = parseHash(location.hash);
@@ -153,24 +223,57 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
   }, []);
 
   /* --------------------------------------------------- following the finger */
+  /**
+   * Two jobs, deliberately split.
+   *
+   * `scroll` keeps the chrome under the reader's finger, so the dots move with
+   * a swipe rather than after it - but only while the track is the reader's. A
+   * scroll the deck started reports every position between here and there, and
+   * following those is what made the footer flicker.
+   *
+   * `scrollend` records the landing. The hash is written once, when the track
+   * stops, rather than on every frame of a momentum scroll: Next patches
+   * history.replaceState to sync its Router, and calling that sixty times a
+   * second during a touch scroll is felt on the glass.
+   */
   useEffect(() => {
     const el = track.current;
     if (!el) return;
     let queued = false;
+    let fallback = 0;
+
     const read = () => {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => {
-        queued = false;
-        const i = Math.min(LAST, Math.max(0, Math.round(Math.abs(el.scrollLeft) / el.clientWidth)));
-        atRef.current = i;
-        setAt(i);
-        if (!driving.current) writeHash(i, null);
-      });
+      if (target.current === null) {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          const i = indexNow();
+          if (i !== atRef.current) { atRef.current = i; setAt(i); }
+        });
+      }
+      // Engines without scrollend still have to settle. The timer is also the
+      // safety net for a smooth scroll that never reaches its target because
+      // the reader grabbed the track half way.
+      if (!('onscrollend' in el)) {
+        clearTimeout(fallback);
+        fallback = window.setTimeout(settle, 140);
+      }
     };
+
     el.addEventListener('scroll', read, { passive: true });
-    return () => el.removeEventListener('scroll', read);
-  }, [writeHash]);
+    if ('onscrollend' in el) el.addEventListener('scrollend', settle, { passive: true });
+    // A finger on the track takes it back from whatever the deck was doing.
+    const release = () => { target.current = null; };
+    el.addEventListener('pointerdown', release, { passive: true });
+
+    return () => {
+      clearTimeout(fallback);
+      el.removeEventListener('scroll', read);
+      el.removeEventListener('scrollend', settle);
+      el.removeEventListener('pointerdown', release);
+    };
+  }, [indexNow, settle]);
 
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
@@ -219,20 +322,24 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
    */
   const endPress = useCallback(() => {
     if (press.current) { clearTimeout(press.current.timer); press.current = null; }
-    setArmed((was) => {
-      if (was) {
-        const i = atRef.current;
-        scrollTo(i, false);
-        writeHash(i, null);
-      }
-      return false;
-    });
+    // Read the live flag, and do the work here rather than inside a setState
+    // updater. React runs an updater during the render phase, where touching
+    // history is touching another component's state: Next patches pushState to
+    // sync its Router, so the deck was updating the Router while rendering
+    // itself. The warning named the line; the cause was the shape.
+    if (!armedRef.current) return;
+    armedRef.current = false;
+    setArmed(false);
+    const i = atRef.current;
+    scrollTo(i, false);
+    writeHash(i, null);
   }, [scrollTo, writeHash]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const id = e.pointerId;
     const timer = window.setTimeout(() => {
+      armedRef.current = true;
       setArmed(true);
       dots.current?.setPointerCapture?.(id);
     }, 400);
@@ -242,11 +349,11 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
   const onPointerMove = (e: React.PointerEvent) => {
     const p = press.current;
     // Before arming, a finger that travels is a swipe and not a press.
-    if (p && !armed) {
+    if (p && !armedRef.current) {
       if (Math.hypot(e.clientX - p.x, e.clientY - p.y) > 10) { clearTimeout(p.timer); press.current = null; }
       return;
     }
-    if (!armed) return;
+    if (!armedRef.current) return;
     e.preventDefault();
     const i = nearestDot(e.clientX);
     if (i === atRef.current) return;
@@ -342,7 +449,7 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onContextMenu={(e) => { if (armed) e.preventDefault(); }}
+        onContextMenu={(e) => { if (armedRef.current) e.preventDefault(); }}
       >
         {SLIDES.map((s, i) => (
           <button

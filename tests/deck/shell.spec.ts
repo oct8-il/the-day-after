@@ -36,6 +36,43 @@ const rect = (page: Page, sel: string) =>
     return { top: r.top, right: r.right, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
   }, sel);
 
+/**
+ * Nothing may write to the console.
+ *
+ * React's most useful warnings - "Cannot update a component while rendering a
+ * different component" among them - exist only in a development build and are
+ * stripped from the export this suite usually runs against. A deck that calls
+ * history inside a setState updater is therefore silently wrong in production
+ * and loud in dev, which is the wrong way round for a suite to find it. So the
+ * guard is here, and CI runs the whole file a second time against `next dev`
+ * where those warnings exist. Point FIDELITY_BASE_URL at a dev server and this
+ * catches them locally too.
+ */
+const IGNORE = [
+  /fonts\.googleapis\.com/,        // the CDN, when the runner has no egress to it
+  /ERR_TUNNEL_CONNECTION_FAILED/,
+  /_next\/hmr/,                     // the dev server's own socket
+  /Download the React DevTools/,
+];
+
+test.beforeEach(async ({ page }, testInfo) => {
+  const noise: string[] = [];
+  page.on('pageerror', (e) => noise.push(`pageerror: ${e.message}`));
+  page.on('console', (m) => {
+    if (m.type() !== 'error' && m.type() !== 'warning') return;
+    const text = m.text();
+    if (IGNORE.some((r) => r.test(text))) return;
+    noise.push(`${m.type()}: ${text}`);
+  });
+  testInfo.attach; // keep the collector alive for the assertion below
+  (testInfo as unknown as { _noise: string[] })._noise = noise;
+});
+
+test.afterEach(async ({}, testInfo) => {
+  const noise = (testInfo as unknown as { _noise?: string[] })._noise ?? [];
+  expect(noise, 'the deck wrote to the console').toEqual([]);
+});
+
 async function open(page: Page, hash = '') {
   await page.goto(ITEM + hash);
   await page.waitForSelector('.deck-track');
@@ -100,6 +137,30 @@ test.describe('the frame and its edges', () => {
     expect(Math.round(f.bottom - ink.bottom)).toBe(26);
   });
 
+  test('every landing sits exactly on its snap point', async ({ page }) => {
+    // A programmatic scroll ends where it is put and is not re-snapped, so a
+    // target computed from i * clientWidth lands a fraction off and stays
+    // there - the slide that sits a little to one side until a finger nudges
+    // it straight. Measured, not eyeballed: the distance between the slide's
+    // leading edge and the track's must be zero after every move.
+    await open(page);
+    const offBy = () => page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      const base = t.getBoundingClientRect().left;
+      let gap = Infinity;
+      for (const s of document.querySelectorAll('.deck-slide')) {
+        gap = Math.min(gap, Math.abs(s.getBoundingClientRect().left - base));
+      }
+      return gap;
+    });
+    for (const i of [2, 5, 1, 3, 0]) {
+      await page.locator('.deck-dot').nth(i).click();
+      await page.waitForTimeout(700);
+      expect.soft(await slideNow(page), `dot ${i + 1} lands on its own slide`).toBe(i);
+      expect.soft(await offBy(), `dot ${i + 1} lands on the snap point`).toBeLessThan(0.5);
+    }
+  });
+
   test('the dots are six, 6px, 7px apart, centred, first slide rightmost', async ({ page }) => {
     await open(page);
     const f = await rect(page, '.deck');
@@ -150,6 +211,26 @@ test.describe('the footer chain', () => {
       expect.soft(await page.locator('.deck-prev').innerText(), `slide ${row.slide + 1} prev`).toBe(row.prev);
       expect.soft(await page.locator('.deck-next').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
     }
+  });
+
+  test('the chrome goes to the destination and stays there', async ({ page }) => {
+    // The scroll handler used to report every position a smooth scroll passed
+    // through, so the footer showed the destination, flashed the slide it had
+    // come from as the animation crossed the midpoint, then settled. The
+    // sequence of active dots across a navigation must be exactly two values:
+    // where it was, then where it is.
+    await open(page, '#3');
+    const watch = page.evaluate(() => new Promise<number[]>((done) => {
+      const seen: number[] = [];
+      const id = setInterval(() => {
+        seen.push([...document.querySelectorAll('.deck-dot')].findIndex((d) => d.hasAttribute('data-on')));
+      }, 16);
+      setTimeout(() => { clearInterval(id); done(seen); }, 1200);
+    }));
+    await page.locator('.deck-next a').click();
+    const seen = await watch;
+    const changes = seen.filter((v, i) => i === 0 || v !== seen[i - 1]);
+    expect(changes, 'the active dot went 3 -> 4 and nowhere else').toEqual([2, 3]);
   });
 
   test('the footer labels are real links, not gesture handles', async ({ page }) => {

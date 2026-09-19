@@ -161,6 +161,19 @@ jobs:
         run: npm run test:deck
         env:
           FIDELITY_BASE_URL: http://localhost:4173
+      # ...and again against a development build. React's most useful warnings
+      # - "Cannot update a component while rendering a different component"
+      # among them - exist only in dev and are stripped from the export above,
+      # so a deck that touches history inside a render is silently wrong in the
+      # build this job just tested and loud in the one a reviewer runs. The
+      # suite fails on anything written to the console, which is what catches
+      # them. It cost a round of phone review to learn.
+      - name: serve a development build
+        run: npm run dev -- --port 3000 & npx wait-on http://localhost:3000 -t 60000
+      - name: assert again, where the dev warnings live
+        run: npm run test:deck
+        env:
+          FIDELITY_BASE_URL: http://localhost:3000
       - uses: actions/upload-artifact@v4
         if: failure()
         with: { name: deck-report, path: playwright-report/, retention-days: 14 }
