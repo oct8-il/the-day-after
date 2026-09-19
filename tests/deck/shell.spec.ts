@@ -220,17 +220,27 @@ test.describe('the footer chain', () => {
     // sequence of active dots across a navigation must be exactly two values:
     // where it was, then where it is.
     await open(page, '#3');
-    const watch = page.evaluate(() => new Promise<number[]>((done) => {
-      const seen: number[] = [];
-      const id = setInterval(() => {
-        seen.push([...document.querySelectorAll('.deck-dot')].findIndex((d) => d.hasAttribute('data-on')));
-      }, 16);
-      setTimeout(() => { clearInterval(id); done(seen); }, 1200);
+    // The click happens inside the sampler rather than beside it. Driving it
+    // from the test raced the first sample - on a fast runner the navigation
+    // landed before sampling began, the starting value was never recorded, and
+    // a passing deck read as a failure.
+    const seen: number[] = await page.evaluate(() => new Promise<number[]>((done) => {
+      const read = () =>
+        [...document.querySelectorAll('.deck-dot')].findIndex((d) => d.hasAttribute('data-on'));
+      const saw: number[] = [read()];
+      const id = setInterval(() => saw.push(read()), 16);
+      (document.querySelector('.deck-next a') as HTMLElement).click();
+      setTimeout(() => { clearInterval(id); done(saw); }, 1200);
     }));
-    await page.locator('.deck-next a').click();
-    const seen = await watch;
     const changes = seen.filter((v, i) => i === 0 || v !== seen[i - 1]);
-    expect(changes, 'the active dot went 3 -> 4 and nowhere else').toEqual([2, 3]);
+
+    // What must hold is that the chrome never goes backwards: it may take the
+    // step in one sample or in two, but having left slide 3 it may not show it
+    // again half way through the animation, which is what the flicker was.
+    expect(changes[0], 'starts where it was').toBe(2);
+    expect(changes[changes.length - 1], 'ends where it was sent').toBe(3);
+    expect(changes, 'never returns to a slide it has left').toEqual([...changes].sort((a, b) => a - b));
+    expect(new Set(changes).size, 'no slide appears twice').toBe(changes.length);
   });
 
   test('the footer labels are real links, not gesture handles', async ({ page }) => {
