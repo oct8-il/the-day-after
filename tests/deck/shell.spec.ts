@@ -194,13 +194,16 @@ test.describe('the frame and its edges', () => {
 });
 
 test.describe('the footer chain', () => {
-  const chain = [
-    { slide: 0, prev: 'החליקו לצדדים', next: '' },
+  // `next: null` is "no next-slide link here", which is not the same as an
+  // empty slot: the gate's left slot belongs to the photo credit (§3), and it
+  // carries one on any item that has a photograph.
+  const chain: { slide: number; prev: string; next: string | null }[] = [
+    { slide: 0, prev: 'החליקו לצדדים', next: null },
     { slide: 1, prev: '', next: 'מה נעשה מאז' },
     { slide: 2, prev: 'סקירת הכשל', next: 'מה עוד לא נעשה' },
     { slide: 3, prev: 'מה נעשה מאז', next: 'דעת הציבור' },
     { slide: 4, prev: 'מה עוד לא נעשה', next: 'הלאה' },
-    { slide: 5, prev: 'דעת הציבור', next: '' },
+    { slide: 5, prev: 'דעת הציבור', next: null },
   ];
 
   test('§3’s table, including the two bare ends', async ({ page }) => {
@@ -209,7 +212,11 @@ test.describe('the footer chain', () => {
       await page.locator('.deck-dot').nth(row.slide).click();
       await page.waitForTimeout(450);
       expect.soft(await page.locator('.deck-prev').innerText(), `slide ${row.slide + 1} prev`).toBe(row.prev);
-      expect.soft(await page.locator('.deck-next').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
+      if (row.next === null) {
+        expect.soft(await page.locator('.deck-next a').count(), `slide ${row.slide + 1} has no next link`).toBe(0);
+      } else {
+        expect.soft(await page.locator('.deck-next a').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
+      }
     }
   });
 

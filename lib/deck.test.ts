@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSource, sourceLine, itemNumber, siblings } from './deck.ts';
+import { splitSource, sourceLine, itemNumber, siblings, sourceLineText } from './deck.ts';
 
 const claim = (source_type: string, source: string, date: string) =>
   ({ source_type, source, date });
@@ -108,4 +108,42 @@ test('never itself, never a duplicate, never more than asked', () => {
 test('a small ledger returns what it has rather than padding', () => {
   const out = siblings({ id: 'i01', parent: 'p1' }, 9, LEDGER);
   assert.equal(out.length, 4);
+});
+
+test('the source line names the document while it fits', () => {
+  const line = sourceLineText({
+    document: 'תחקיר צה״ל',
+    documentPublisher: 'צה״ל',
+    outlet: 'כאן חדשות',
+    more: 2,
+  });
+  assert.equal(line, 'תחקיר צה״ל · כאן חדשות · ועוד 2 מקורות');
+});
+
+test('on overflow the publisher replaces the document, and only then', () => {
+  // The worst real one. 75 characters with the document, which is two lines.
+  const long = {
+    document: 'סיכום דוח צוות המומחים לבדיקת תחקירי צה"ל',
+    documentPublisher: 'צה״ל',
+    outlet: 'Times of Israel',
+    more: 3,
+  };
+  const line = sourceLineText(long);
+  assert.ok(!line.includes('סיכום דוח'), 'the document is dropped');
+  assert.ok(line.startsWith('צה״ל'), 'the publisher takes its place');
+  assert.ok(line.length <= 44, `line is ${line.length} characters`);
+});
+
+test('a line with no publisher behind it is left alone', () => {
+  // An item whose only sources are press: there is no document to shorten to,
+  // so truncating would be the only option and the rule declines to.
+  const only = { document: 'ynet', documentPublisher: null, outlet: 'כאן חדשות', more: 1 };
+  assert.equal(sourceLineText(only), 'ynet · כאן חדשות · ועוד 1 מקורות');
+});
+
+test('the tail collapses when there is nothing to count', () => {
+  assert.equal(
+    sourceLineText({ document: 'תחקיר צה״ל', documentPublisher: 'צה״ל', outlet: null, more: 0 }),
+    'תחקיר צה״ל',
+  );
 });
