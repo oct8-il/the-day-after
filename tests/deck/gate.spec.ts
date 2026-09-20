@@ -100,19 +100,61 @@ test.describe('the stage rail', () => {
     for (const r of rungs) {
       expect(Math.round(f.right - r.right), 'every rung 20px off the right edge').toBe(20);
       expect(Math.round(r.h)).toBe(30);
-      expect(Math.round(r.w)).toBe(4);
+      expect(Math.round(r.w)).toBe(6);
     }
   });
 
-  test('a deliberate gap precedes the first unreached rung, and only that one', async ({ page }) => {
-    await open(page, 't01');   // reaches 1-4, so the gap sits before stage 5
-    const tops = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-gate-rung > i')].map((r) => r.getBoundingClientRect().top));
-    const steps = tops.slice(1).map((t, i) => Math.round(t - tops[i]));
-    // 30px rung + 7px row gap = 37 between reached rungs; +18 before the first
-    // unreached one.
-    expect(steps.slice(0, 3)).toEqual([37, 37, 37]);
-    expect(steps[3]).toBe(55);
+  test('the ladder keeps one rhythm, wherever the unreached rungs fall', async ({ page }) => {
+    // This replaces an assertion on the opposite rule - a deliberate 18px break
+    // before the first unreached rung. That break was never decoration: it was
+    // clearance for an age line that hung past its own row. The age line is a
+    // two-line group inside its rung now, nothing overhangs, and the ladder
+    // keeps one step throughout. (DIA-380.)
+    //
+    // Run on fixtures whose unreached rungs fall in different places, because
+    // a rule about "wherever" is not tested by one ladder: t01 reaches 1-4 and
+    // is missing only the last, t03's current stage is second so the gap is in
+    // the middle, t05 is missing nothing, t06 regressed and has six rungs.
+    for (const id of ['t01', 't03', 't05', 't06']) {
+      await open(page, id);
+      const tops = await page.evaluate(() =>
+        [...document.querySelectorAll('.deck-gate-rung > i')].map((r) => r.getBoundingClientRect().top));
+      const steps = tops.slice(1).map((t, i) => Math.round(t - tops[i]));
+      // 30px rung + 10px row gap, every time.
+      expect.soft(new Set(steps).size, `${id} steps: ${steps.join(',')}`).toBe(1);
+      expect.soft(steps[0], `${id} step size`).toBe(40);
+    }
+  });
+
+  test('the label and its age line are centred on the rung as one group', async ({ page }) => {
+    // The reason for the rhythm change, and the only thing that would catch it
+    // drifting back. Centring the label alone put the pair 9px below the centre
+    // of its own rung, so the mark lined up with the first line and the date
+    // hung off the bottom.
+    await open(page, 't01');
+    const off = await page.evaluate(() => {
+      const row = document.querySelector('.deck-gate-rung > span.now')!;
+      const rung = row.previousElementSibling!.getBoundingClientRect();
+      const label = row.firstChild as Text;
+      const r = document.createRange();
+      r.selectNodeContents(row);
+      const text = r.getBoundingClientRect();
+      void label;
+      return (text.top + text.bottom) / 2 - (rung.top + rung.bottom) / 2;
+    });
+    expect(Math.abs(off), 'group centre against rung centre').toBeLessThan(1.5);
+  });
+
+  test('an unreached rung is solid, not dashed', async ({ page }) => {
+    await open(page, 't01');
+    const off = page.locator('.deck-gate-rung > i.off').first();
+    await expect(off).toHaveCSS('border-style', 'none');
+    await expect(off).toHaveCSS('background-color', 'rgba(255, 255, 255, 0.4)');
+    // And it is the same width as a reached one - 6px, not 4.
+    const w = await page.evaluate(() =>
+      [...document.querySelectorAll('.deck-gate-rung > i')].map((r) => Math.round(r.getBoundingClientRect().width)));
+    expect(new Set(w).size).toBe(1);
+    expect(w[0]).toBe(6);
   });
 
   test('the current stage is the one carrying the age line', async ({ page }) => {

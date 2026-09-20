@@ -87,17 +87,14 @@ export function GateGround({ rail, number, total, photo }: Pick<GateProps, 'rail
 }
 
 export function Gate({ rail, age, title, source }: Omit<GateProps, 'number' | 'total' | 'photo'>) {
-  // The rail's gap sits before the first unreached rung, and only there.
-  const firstUnreached = rail.findIndex((r) => !r.reached);
 
   return (
     <div className="deck-gate">
       {/* --- the rail ---------------------------------------------------- */}
       <ol className="deck-gate-rail">
-        {rail.map((r, i) => {
-          const gap = i === firstUnreached ? ' deck-gate-gap' : '';
+        {rail.map((r) => {
           return (
-            <li key={r.n} className={'deck-gate-rung' + gap} style={{ ['--c' as string]: r.color }}>
+            <li key={r.n} className="deck-gate-rung" style={{ ['--c' as string]: r.color }}>
               <i className={r.reached ? '' : 'off'} />
               <span className={r.current ? 'now' : r.reached ? '' : 'off'}>
                 {r.he}

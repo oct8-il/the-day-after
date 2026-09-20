@@ -1020,22 +1020,30 @@
      continuous line reads as one object and the stages are not one object. */
   .deck-gate-rail{position:relative;z-index:1;margin:14px 20px 0 0;padding:0 0 0 20px;
     list-style:none;box-sizing:border-box;width:100%;align-self:flex-start;
-    display:grid;grid-template-columns:4px 1fr;column-gap:9px;row-gap:7px}
+    display:grid;grid-template-columns:6px 1fr;column-gap:9px;row-gap:10px}
   /* Each rung is two grid cells, not a box around them: display:contents keeps
-     the li out of the grid's flow. The gap before the first unreached rung goes
-     on the cells themselves for the same reason. */
+     the li out of the grid's flow. */
   .deck-gate-rung{display:contents}
-  .deck-gate-rung > i{height:30px;border-radius:2px;background:var(--c);display:block}
-  .deck-gate-rung > i.off{background:none;border:1.5px dashed rgba(255,255,255,.4)}
-  .deck-gate-rung.deck-gate-gap > i,.deck-gate-rung.deck-gate-gap > span{margin-top:18px}
-  .deck-gate-rung > span{position:relative;height:30px;display:flex;align-items:center;
+  .deck-gate-rung > i{height:30px;border-radius:3px;background:var(--c);display:block}
+  /* Solid, not dashed: at this width on a photograph the dashes broke into
+     specks and the rung nearly disappeared. Same weight the border was drawn
+     at, so it reads as the same mark. */
+  .deck-gate-rung > i.off{background:rgba(255,255,255,.4)}
+  /* The label and the age line are one two-line group, centred on the rung -
+     29.8px of text inside a 30px rung, so nothing overhangs and no clearance
+     is needed anywhere. That is what lets the ladder keep one rhythm.
+     text-align:right and not a flex cross-axis property: §2's RTL trap is
+     exactly this, and align-items:flex-end resolves LEFT on this page. */
+  .deck-gate-rung > span{position:relative;height:30px;
+    display:flex;flex-direction:column;justify-content:center;
+    text-align:right;line-height:1.2;
     font-size:11.5px;color:rgba(255,255,255,.72);text-shadow:0 1px 3px rgba(0,0,0,.5)}
   .deck-gate-rung > span.off{color:rgba(255,255,255,.5)}
   /* The current stage is bold in a light tint of its own colour, and carries
      the age line directly under its label. */
   .deck-gate-rung > span.now{font-size:13px;font-weight:700;
     color:color-mix(in srgb,var(--c) 42%,#fff);text-shadow:0 1px 3px rgba(0,0,0,.55)}
-  .deck-gate-rung > span b{position:absolute;top:26px;right:0;white-space:nowrap;
+  .deck-gate-rung > span b{position:static;display:block;margin-top:1px;white-space:nowrap;
     font-size:11px;font-weight:600;
     color:color-mix(in srgb,var(--c) 38%,#fff);text-shadow:0 1px 3px rgba(0,0,0,.55)}
   /* The current rung wears a soft halo of its own colour. */
