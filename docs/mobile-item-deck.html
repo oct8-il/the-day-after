@@ -182,20 +182,21 @@ add(`<div>
     <div class="rung done"><div class="bar" style="width:20%"></div><div class="lb">0 · spec to v2.3</div></div>
     <div class="rung done"><div class="bar" style="width:26%"></div><div class="lb">1 · data, schema, rules</div></div>
     <div class="rung done"><div class="bar" style="width:24%"></div><div class="lb">2 · shell, chrome, gestures</div></div>
-    <div class="rung now"><div class="bar" style="width:13%"></div><div class="lb">3 · slide 1 — the gate</div></div>
-    <div class="rung"><div class="bar" style="width:53%"></div><div class="lb">4–8 · a slide each</div></div>
+    <div class="rung done"><div class="bar" style="width:13%"></div><div class="lb">3 · slide 1 — the gate</div></div>
+    <div class="rung now"><div class="bar" style="width:13%"></div><div class="lb">4 · slide 2 — the body</div></div>
+    <div class="rung"><div class="bar" style="width:42%"></div><div class="lb">5–8 · a slide each</div></div>
     <div class="rung"><div class="bar" style="width:15%"></div><div class="lb">9 · baselines</div></div>
     <div class="rung"><div class="bar" style="width:48%"></div><div class="lb">10 · content, in parallel</div></div>
   </div>
 </div>`,
-`<p>Phases 0, 1 and 2 are green. Phase 3 is the next thing to open an editor for — and the first that puts an incident on the screen.</p>
+`<p>Phases 0 to 3 are green. Slide 1 is on the screen and reading from the real fixtures; Phase 4 is next.</p>
 <p>Phase 10 runs alongside everything from Phase 2 onward — it's the writing, and it doesn't gate the build. It does gate the page <i>looking</i> finished.</p>`);
 
 add(`<div class="center">
-  <div class="huge">3 / 11</div>
-  <p class="under">Phases done. The deck swipes, routes and remembers — on a phone, with nothing written on it yet.</p>
+  <div class="huge">4 / 11</div>
+  <p class="under">Phases done. One real screen, five still naming themselves.</p>
 </div>`,
-`<p>The shape is real now: six slides, one swipe apart, the chrome docked, the URL following the reader, the long press scrubbing. Every slide is still a number and its name.</p>
+`<p>The shape was real after Phase 2: six slides one swipe apart, the chrome docked, the URL following the reader, the long press scrubbing. Phase 3 put the first incident on it — the gate reads its rail, its age line, its source line and its number out of the ledger, and falls back to the number ghost where there is no photograph.</p>
 <p>That is the whole point of the order. The frame was judged on a phone before a single sentence of the ledger could hide a fault in it.</p>`);
 
 add(`<div>
@@ -406,18 +407,31 @@ add(`<div>
 <p>And Phase 8 builds version A only. It does not build the strip and leave it inert — that's how dead code gets shipped.</p>`);
 
 add(`<div>
-  <span class="tag">next · phase 3</span>
+  <span class="tag done">phase 3 · done</span>
   <h2>Slide 1 — <span class="he">השער</span></h2>
   <p class="sub">The first screen that carries a real incident. Photo duotone, the right-edge fade, the gate-only rail with its age line, title block, source line, credit — and the no-photo fallback with the number ghost.</p>
   <div class="stack">
     <div class="item"><div class="v">3</div><div class="k">helpers it reads through — <span class="id">itemNumber</span>, <span class="id">stageDate</span>, <span class="id">sourceLine</span> — all written and tested in Phase 1</div></div>
     <div class="item"><div class="v">2</div><div class="k">fixtures side by side at gate #2 — <span class="id">t01</span> with a portrait, <span class="id">t04</span> without</div></div>
-    <div class="item mute"><div class="v">1</div><div class="k">decision needed before the screen can be judged — how the gate's source line handles overflow</div></div>
+    <div class="item"><div class="v">1</div><div class="k">decision taken on the way — the source line falls back to the publisher on overflow, and only then</div></div>
   </div>
 </div>`,
-`<p>Nothing new has to be invented for this phase. The rules were written in Phase 1 and the frame in Phase 2; what is left is the screen.</p>
-<p>Gate #2 cannot be taken on the live pool at all. No live item has a photograph until DIA-366 lands, so the fallback would be the only branch anyone saw.</p>
-<p>The breadcrumb's leaf also becomes real here — Phase 2 left it reading <span class="he">כשל</span> because it was forbidden to call a helper.</p>`);
+`<p>Nothing new had to be invented: the rules were written in Phase 1 and the frame in Phase 2, so what was left was the screen. Gate #2 was taken on the phone and passed, on fixtures — no live item has a photograph until DIA-366 lands, so the live pool would have shown the fallback and nothing else.</p>
+<p>The rail changed after it was built rather than before: seen on a real photograph, the dashed unreached rung broke into specks. It went solid, the rungs went 4px to 6px, and the ladder took one rhythm — which only worked once the age line stopped hanging past its row and joined its label as one group centred on the rung. Design doc first, then the code; the screens in §4 are still the thing to build against.</p>`);
+
+add(`<div>
+  <span class="tag">next</span>
+  <h2>One defect, then the body</h2>
+  <p class="sub">A swipe overshoots and snaps back — on exactly the slides where the docked chrome changes height, and nowhere else.</p>
+  <div class="stack">
+    <div class="item"><div class="v">12</div><div class="k">px the track loses between slide 1 and 2 — the gate gives the dots more air</div></div>
+    <div class="item"><div class="v">3</div><div class="k">px between 2 and 3 — slide 2 carries no previous-slide label, so the footer is shorter</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">px from 3 onward, which is exactly where the fault stops</div></div>
+  </div>
+</div>`,
+`<p>Resizing a scroll container mid-scroll makes the engine recompute its snap positions, and the in-flight snap animation pays for it. <span class="id">DIA-379</span>.</p>
+<p>Worth the detour before Phase 4 for one reason: every gate left is taken by swiping on a phone, so a swipe that misbehaves taxes all six reviews still to come.</p>
+<p>It also could not be seen from here. Chromium lands on the snap point at 390, 393 and 430 every time; the overshoot needs a real momentum scroll on glass. What a headless browser <i>can</i> see is the track's height differing between slides — which is the assertion that goes in with the fix.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">what merges</div>
@@ -425,7 +439,7 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Next action is Phase 3 — slide 1, the gate — on a fresh branch off dev. The first phase whose screen carries a real incident.</p>`);
+<p>Next action is DIA-379 — the swipe overshoot found at gate #2 — and then Phase 4, slide 2, which sets the body pattern slides 3 and 4 inherit.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
