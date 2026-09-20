@@ -455,7 +455,7 @@ add(`<div>
   <div class="stack">
     <div class="item"><div class="v">5</div><div class="k">phone widths measured, 320 to 430 — the card is 212px on every one</div></div>
     <div class="item"><div class="v">1</div><div class="k">fixture written to overrun the column at every width, so the scroll is a measurement and not a hope</div></div>
-    <div class="item"><div class="v">57</div><div class="k">deck assertions now, 18 of them new</div></div>
+    <div class="item"><div class="v">65</div><div class="k">deck assertions now, 26 of them new</div></div>
   </div>
 </div>`,
 `<p>The fixtures were the first problem. Written before the deck had a shape — 115 to 215 characters, no list anywhere — they would have made gate #3 a review of the type and nothing else. Five were rewritten against the claims already in each record: <span class="id">t01</span> overruns the column on every phone, <span class="id">t03</span> overruns only on the two small ones, which is §5's own density not fitting an SE, and <span class="id">t05</span> and <span class="id">t02</span> never do. A reader should not meet a scrollbar on every item.</p>
@@ -471,8 +471,10 @@ add(`<div>
     <div class="item mute"><div class="v">0</div><div class="k">affordance at the cut where the text runs past the frame — §5 asks for none, so none was invented</div></div>
   </div>
 </div>`,
-`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, and whether the text running past the bottom of the frame reads as "there is more" or as "this is broken".</p>
+`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, whether the text running past the bottom of the frame reads as "there is more" or as "this is broken", and whether <span class="id">1.6</span> is the right tolerance — it is the one number the axis lock turns on, and it has never met a real thumb.</p>
 <p>The carousel was docked to the frame when the slide was first built, and it read as a shelf the text ran under rather than as the end of the reading. It now travels with the body — below the last sentence on a long item, at the foot of the column on a short one. <span class="id">§5</span> and the round log say so; the doc is at v2.6.</p>
+<p>Two gesture faults came out of the same change, both found with a thumb and neither visible in a screenshot. The body had quietly become a <i>horizontal</i> scroller — <code>overflow-y:auto</code> computes <code>overflow-x</code> to <code>auto</code>, and the carousel's bleed gave it 40px to travel — so the deck never saw a swipe and slides could only be changed from the bezels. And once that was fixed, a casual scroll a few degrees off vertical was still being read as a swipe. The axis lock answers both: the scroller takes the horizontal axis away from the engine, and the deck carries the sideways drag itself, with sideways having to beat down by 1.6:1 before it counts.</p>
+<p>It turned up a direction bug nobody had named: the same thumb went forward on the gate and backward on slide 2. A test now drags on both and insists they agree.</p>
 <p>Then Phase 5 — slide 3, the stage stack, which is where the scrolling ruling has to hold for a second time.</p>`);
 
 add(`<div class="center">
@@ -481,7 +483,8 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Four of eight phases are built and two gates are passed. Next action is gate #3 on a phone, and then Phase 5 — slide 3, where the scrolling ruling has to hold a second time.</p>`);
+<p>Four of eight phases are built and two gates are passed. Next action is gate #3 on a phone, and then Phase 5 — slide 3, where the scrolling ruling has to hold a second time.</p>
+<p>There are now three documents rather than two: the spec says what the page looks like, the plan says in what order it gets built, and <code>docs/mobile-item-ux.html</code> records what it does under a finger — sectioned by phase, and updated at the end of each one.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
