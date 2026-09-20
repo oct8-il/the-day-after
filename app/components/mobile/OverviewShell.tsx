@@ -7,9 +7,15 @@ import type { ReactNode } from 'react';
  * Slide 2's frame - docs/mobile-item.html §5.
  *
  * Three parts in a column: the title chip, the body, and the sources carousel.
- * The chip and the carousel stay put; only the body moves, because §5's drawn
- * density needs 474px and the column has 582px at 844 but 405px on an iPhone
+ * The chip stays put and everything under it scrolls, because §5's drawn
+ * density needs 474px and the column has 529px at 844 but 352px on an iPhone
  * SE. The frame stopped being a ceiling on 20 September (§11).
+ *
+ * The carousel travels with the text rather than being docked to the frame: it
+ * is the end of the reading, not a permanent shelf. margin-top:auto against a
+ * min-height:100% inner column still drops it to the foot of the column when
+ * the text is short enough to leave room - which is how §5's screen draws it -
+ * but on a long item it waits below the last sentence.
  *
  * It is a client component for one reason: a chip moves the carousel rather
  * than leaving the deck. Most readers arrive inside an in-app browser, where
@@ -62,11 +68,13 @@ export function OverviewShell({ title, cards, children }: {
     <div className="deck-ov">
       <div><span className="deck-ov-title">{title}</span></div>
 
-      {/* The only part that moves. overscroll-behavior keeps a flick at the
-          end of the text from becoming a swipe to the next slide. */}
-      <div className="deck-ov-body" onClick={onChip}>{children}</div>
+      {/* Everything below the chip moves together. overscroll-behavior keeps a
+          flick at the end of the text from becoming a swipe to the next slide. */}
+      <div className="deck-ov-scroll" onClick={onChip}>
+       <div className="deck-ov-inner">
+        <div className="deck-ov-body">{children}</div>
 
-      <ol className="deck-ov-sources" ref={rail} dir="rtl" aria-label="המקורות לסקירה">
+        <ol className="deck-ov-sources" ref={rail} dir="rtl" aria-label="המקורות לסקירה">
         {cards.map((c) => {
           const inner = (
             <>
@@ -91,7 +99,9 @@ export function OverviewShell({ title, cards, children }: {
             </li>
           );
         })}
-      </ol>
+        </ol>
+       </div>
+      </div>
     </div>
   );
 }

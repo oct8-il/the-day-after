@@ -41,7 +41,7 @@ const rect = (page: Page, sel: string) =>
 /** Open an item on slide 2 and let the deck settle on the snap point. */
 async function open(page: Page, id: string) {
   await page.goto(`/item/${id}/#2`);
-  await page.waitForSelector('.deck-ov-body');
+  await page.waitForSelector('.deck-ov-scroll');
   await page.waitForTimeout(300);
 }
 
@@ -53,6 +53,7 @@ test.describe('the column', () => {
     await open(page, 't03');
     const ov = await rect(page, '.deck-ov');
     const title = await rect(page, '.deck-ov-title');
+    const scroll = await rect(page, '.deck-ov-scroll');
     const body = await rect(page, '.deck-ov-body');
     const rail = await rect(page, '.deck-ov-sources');
 
@@ -62,11 +63,13 @@ test.describe('the column', () => {
     expect(rail.height).toBeGreaterThan(60);
 
     // In order, and nothing overlapping its neighbour.
-    expect(title.bottom).toBeLessThanOrEqual(body.top + 0.5);
+    expect(title.bottom).toBeLessThanOrEqual(scroll.top + 0.5);
     expect(body.bottom).toBeLessThanOrEqual(rail.top + 0.5);
-    // §5: 14px between the three parts.
-    expect(Math.round(body.top - title.bottom)).toBe(14);
-    expect(Math.round(rail.top - body.bottom)).toBe(14);
+    // §5: 14px between the parts. The gap under the body is a floor rather
+    // than a figure, because the carousel falls to the foot of a short item.
+    expect(Math.round(scroll.top - title.bottom)).toBe(14);
+    expect(Math.round(body.top - scroll.top)).toBe(0);
+    expect(rail.top - body.bottom).toBeGreaterThanOrEqual(13.5);
   });
 
   test('the title is a chip, and its radius is always half its height', async ({ page }) => {
@@ -225,7 +228,8 @@ test.describe('a chip moves the carousel', () => {
     await open(page, 't01');
     const before = page.url();
 
-    // The third chip, so the rail has somewhere to travel.
+    // The third chip, so the rail has somewhere to travel. The rail rides with
+    // the text now, so the measurement is taken with it on screen.
     const href = await page.evaluate(() => {
       const a = [...document.querySelectorAll<HTMLAnchorElement>('.deck-ov-body a.chip')][2]!;
       a.click();
@@ -275,34 +279,67 @@ test.describe('the body scrolls and the rest does not', () => {
     for (const [id, over] of [['t01', true], ['t03', false], ['t05', false]] as const) {
       await open(page, id);
       const room = await page.evaluate(() => {
-        const b = document.querySelector('.deck-ov-body')!;
+        const b = document.querySelector('.deck-ov-scroll')!;
         return b.scrollHeight - b.clientHeight;
       });
       expect(over ? room > 0 : room === 0, `${id} should ${over ? '' : 'not '}overrun`).toBe(true);
     }
   });
 
-  test('scrolling the body leaves the chip, the carousel and the chrome where they are', async ({ page }) => {
+  test('the carousel travels with the text, and waits below it on a long item', async ({ page }) => {
+    // The reading ends at the sources. On an item that overruns the column they
+    // are past the last sentence rather than sitting over it, so a reader meets
+    // them by finishing rather than by looking down.
+    await open(page, 't01');
+    const hidden = await page.evaluate(() => {
+      const sc = document.querySelector('.deck-ov-scroll')!.getBoundingClientRect();
+      return document.querySelector('.deck-ov-sources')!.getBoundingClientRect().top >= sc.bottom;
+    });
+    expect(hidden, 'the carousel is below the fold before the text is read').toBe(true);
+
+    const start = Math.round((await rect(page, '.deck-ov-sources')).top);
+    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 99999; });
+    await page.waitForTimeout(200);
+    const end = await page.evaluate(() => {
+      const sc = document.querySelector('.deck-ov-scroll')!.getBoundingClientRect();
+      const r = document.querySelector('.deck-ov-sources')!.getBoundingClientRect();
+      return { top: Math.round(r.top), bottom: Math.round(r.bottom), scBottom: Math.round(sc.bottom) };
+    });
+    expect(end.top).toBeLessThan(start);
+    expect(end.bottom).toBeLessThanOrEqual(end.scBottom + 1);
+  });
+
+  test('on a short item it still falls to the foot of the column', async ({ page }) => {
+    // §5's screen. margin-top:auto against a min-height:100% inner column, so
+    // a thin record does not leave the sources floating under two sentences.
+    await open(page, 't05');
+    const scroll = await rect(page, '.deck-ov-scroll');
+    const rail = await rect(page, '.deck-ov-sources');
+    const body = await rect(page, '.deck-ov-body');
+    expect(Math.round(rail.bottom)).toBe(Math.round(scroll.bottom));
+    expect(rail.top - body.bottom).toBeGreaterThan(14);
+  });
+
+  test('scrolling leaves the chip and the chrome where they are', async ({ page }) => {
     await open(page, 't01');
     const where = async () => ({
       title: Math.round((await rect(page, '.deck-ov-title')).top),
-      rail: Math.round((await rect(page, '.deck-ov-sources')).top),
       dots: Math.round((await rect(page, '.deck-dots')).top),
       foot: Math.round((await rect(page, '.deck-foot')).top),
     });
     const before = await where();
 
-    await page.evaluate(() => { document.querySelector('.deck-ov-body')!.scrollTop = 1000; });
+    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 1000; });
     await page.waitForTimeout(200);
 
-    const moved = await page.evaluate(() => document.querySelector('.deck-ov-body')!.scrollTop);
+    const moved = await page.evaluate(() => document.querySelector('.deck-ov-scroll')!.scrollTop);
     expect(moved).toBeGreaterThan(0);
     expect(await where()).toEqual(before);
   });
 
   test('the page itself never scrolls, whatever the body does', async ({ page }) => {
     await open(page, 't01');
-    await page.evaluate(() => { document.querySelector('.deck-ov-body')!.scrollTop = 1000; });
+    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 1000; });
     await page.waitForTimeout(200);
     const page_ = await page.evaluate(() => ({
       y: window.scrollY,

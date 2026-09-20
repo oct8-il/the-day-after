@@ -1177,6 +1177,14 @@
 
   .deck-ov{height:100%;display:flex;flex-direction:column;gap:14px;padding-top:26px;box-sizing:border-box}
 
+  /* The chip is docked; everything under it travels. The inner column is at
+     least as tall as the scroller, so the carousel's margin-top:auto still
+     drops it to the foot of the frame on a short item - §5's screen - while on
+     a long one it waits below the last sentence instead of sitting over it. */
+  .deck-ov-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+  .deck-ov-scroll::-webkit-scrollbar{display:none}
+  .deck-ov-inner{min-height:100%;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+
   /* The fully-rounded chip, unique to this slide; every other slide wears its
      title bare. 999px means the radius is always half the height. */
   .deck-ov-title{display:inline-flex;align-items:center;padding:3px 12px;border-radius:999px;
@@ -1187,10 +1195,8 @@
 
   /* overscroll-behavior:contain stops a flick at the end of the text from
      becoming a swipe to the next slide. */
-  .deck-ov-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-    scrollbar-width:none;display:flex;flex-direction:column;gap:11px;
+  .deck-ov-body{flex:none;display:flex;flex-direction:column;gap:11px;
     font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}
-  .deck-ov-body::-webkit-scrollbar{display:none}
   .deck-ov-body p{margin:0}
   .deck-ov-body strong{font-weight:700}
 
@@ -1222,7 +1228,7 @@
   /* The carousel, docked to the foot of the column and bleeding the slide's
      own 20px so a card can sit against the edge. The card is the link; §5 is
      explicit that it carries no קישור label. */
-  .deck-ov-sources{flex:none;margin:0;margin-inline:-20px;padding:0 20px;list-style:none;
+  .deck-ov-sources{flex:none;margin:auto 0 0;margin-inline:-20px;padding:0 20px;list-style:none;
     display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
     overscroll-behavior-x:contain}
   .deck-ov-sources::-webkit-scrollbar{display:none}
