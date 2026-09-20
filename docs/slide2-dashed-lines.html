@@ -1,0 +1,182 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · the dashed lines on slide 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{--bg:#121519;--surface:#191d23;--surface-2:#20252c;--line:#2b323b;--line-soft:#232931;
+    --text:#e9e6df;--text-2:#b5bcc5;--muted:#8a939e;--accent:#e0a44a;--accent-soft:rgba(224,164,74,.14);
+    --yes:#6fbf8a;--no:#d96a5f;--press:#c18e67;color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,Arial,sans-serif;
+    font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .frame{max-width:1080px;margin:0 auto;padding:0 28px 90px}
+  header{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(30px,4.6vw,46px);
+    line-height:1.12;margin:14px 0 10px}
+  .lede{font-size:19px;color:var(--text-2);max-width:66ch;margin:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:27px;margin:52px 0 6px}
+  h3{font-size:16px;font-weight:700;margin:26px 0 6px}
+  p{margin:10px 0;max-width:74ch}
+  code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--surface-2);
+    border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+  .case{border:1px solid var(--line);border-radius:14px;margin:22px 0;overflow:hidden;background:var(--surface)}
+  .case > .hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;
+    gap:12px;flex-wrap:wrap}
+  .case > .hd b{font-size:16px}
+  .verdict{font-size:12px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:999px}
+  .v-ok{background:rgba(111,191,138,.16);color:var(--yes)}
+  .v-bad{background:rgba(217,106,95,.15);color:var(--no)}
+  .v-mid{background:rgba(224,164,74,.15);color:var(--accent)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .cell{padding:16px 18px;border-top:1px solid var(--line-soft)}
+  .cell + .cell{border-inline-start:1px solid var(--line-soft)}
+  .lab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 10px;font-weight:700}
+  pre{margin:0;background:#13161b;border:1px solid var(--line-soft);border-radius:8px;padding:11px 13px;
+    overflow-x:auto}
+  pre code{background:none;border:0;padding:0;font-size:12.5px;line-height:1.7;white-space:pre}
+  .out{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--text-2)}
+  .blk{display:inline-block;background:var(--surface-2);border:1px solid var(--line-soft);
+    border-radius:5px;padding:2px 9px;margin:0 4px 4px 0;font-size:12.5px}
+  .blk.ul{border-color:rgba(111,191,138,.5);color:var(--yes)}
+  .blk.p{color:var(--text-2)}
+  /* the phone sample */
+  .phone{direction:rtl;background:#0f1216;border:1px solid var(--line-soft);border-radius:10px;
+    padding:15px 16px;font-size:15px;line-height:1.5;color:rgba(233,230,223,.9)}
+  .phone p{margin:0 0 9px;max-width:none}
+  .phone ul{margin:0 0 9px;padding:0;list-style:none}
+  .phone li{position:relative;padding-inline-start:20px;margin:0 0 7px}
+  .phone li::before{content:"—";position:absolute;inset-inline-start:0;color:var(--accent);font-weight:700}
+  .chip{display:inline-flex;align-items:center;gap:5px;vertical-align:baseline;margin-inline-start:6px;
+    font-size:10.5px;color:rgba(233,230,223,.62);white-space:nowrap}
+  .chip i{width:6px;height:6px;border-radius:50%;background:var(--press);display:inline-block}
+  .drop{color:var(--no);text-decoration:line-through;opacity:.75}
+  .prev{direction:rtl;font-size:13.5px;color:var(--text-2);background:#13161b;
+    border:1px solid var(--line-soft);border-radius:8px;padding:11px 13px;line-height:1.55}
+  .note{border-inline-start:3px solid var(--accent);background:var(--accent-soft);
+    border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:74ch}
+  .warn{border-inline-start:3px solid var(--no);background:rgba(217,106,95,.10);
+    border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:74ch}
+  .pick{border-inline-start:3px solid var(--yes);background:rgba(111,191,138,.10);
+    border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:74ch}
+  .meta{font-size:13.5px;color:var(--muted)}
+  @media (max-width:800px){.grid{grid-template-columns:1fr}.cell + .cell{border-inline-start:0}}
+</style></head><body><div class="frame">
+
+<header>
+  <div class="kicker">היום שאחרי · DIA-381 · question 4</div>
+  <h1>The dashed lines on slide 2</h1>
+  <p class="lede">Three ways to author the same two lines. All three pass the coverage rule. They do not
+  produce the same thing — and the one a writer would reach for first is the one that silently fails.</p>
+  <p class="meta" style="margin-top:14px">Every “parser returns” and “link preview” box below is real output
+  from <span class="mono">lib/annotation.ts</span>, not an illustration.</p>
+</header>
+
+<h2>The two lines, as the mock draws them</h2>
+<div class="phone" style="max-width:420px;margin:18px 0">
+  <p>— אותה אזעקה נשמעה לרקטה ולחדירה, ולתושב לא הייתה דרך לדעת במה מדובר.<span class="chip"><i></i>עיתונות</span></p>
+  <p>— ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה מההוראה לרקטה.<span class="chip"><i></i>עיתונות</span></p>
+</div>
+<p>Note the second line. It carries <strong>three</strong> em-dashes: one that is meant to be a bullet, and two
+that are punctuation inside the sentence. Nothing distinguishes them.</p>
+
+<h2>Case A — the em-dash is just a character</h2>
+<div class="case">
+  <div class="hd"><b>Prose. The author types “—”.</b><span class="verdict v-mid">works, but it is not a list</span></div>
+  <div class="grid">
+    <div class="cell"><p class="lab">source</p>
+      <pre><code>[[— אותה אזעקה נשמעה לרקטה ולחדירה]](t01-c05)
+
+[[— ההוראה הנדרשת בחדירה — לנעול…]](t01-c06)</code></pre></div>
+    <div class="cell"><p class="lab">parser returns</p>
+      <span class="blk p">p</span><span class="blk p">p</span>
+      <p class="out" style="margin-top:10px">Two paragraphs. No list anywhere.</p></div>
+  </div>
+  <div class="grid">
+    <div class="cell"><p class="lab">on the phone</p>
+      <div class="phone">
+        <p>— אותה אזעקה נשמעה לרקטה ולחדירה<span class="chip"><i></i>עיתונות</span></p>
+        <p>— ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה<span class="chip"><i></i>עיתונות</span></p>
+      </div>
+      <p class="out" style="margin-top:9px">The marker cannot be styled — it is a letter in the sentence.</p></div>
+    <div class="cell"><p class="lab">what the link preview gets</p>
+      <div class="prev">— אותה אזעקה נשמעה לרקטה ולחדירה ⏎ — ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה</div>
+      <p class="out" style="margin-top:9px">The stray “—” travels to the OG description and the desktop page.</p></div>
+  </div>
+</div>
+
+<h2>Case B — the obvious way, and the trap</h2>
+<div class="case">
+  <div class="hd"><b>A markdown list, cite inside each item.</b><span class="verdict v-bad">silently renders as paragraphs</span></div>
+  <div class="grid">
+    <div class="cell"><p class="lab">source</p>
+      <pre><code>- [[אותה אזעקה נשמעה לרקטה ולחדירה]](t01-c05)
+- [[ההוראה הנדרשת בחדירה — לנעול…]](t01-c06)</code></pre></div>
+    <div class="cell"><p class="lab">parser returns</p>
+      <span class="blk p">p</span><span class="blk p">p</span>
+      <p class="out" style="margin-top:10px"><span class="drop">ul</span> — the <code>-</code> never arrives.</p></div>
+  </div>
+  <div class="grid">
+    <div class="cell"><p class="lab">why</p>
+      <p style="margin-top:0">The parser cuts the text into <strong>cite spans</strong> and the <strong>gaps</strong>
+      between them, and only spans are drawn — “gaps carry no prose, so they are not here”. The <code>- </code>
+      sits outside the <code>[[…]]</code>, so it is a gap. It is dropped before the block parser ever sees it.</p></div>
+    <div class="cell"><p class="lab">on the phone</p>
+      <div class="phone">
+        <p>אותה אזעקה נשמעה לרקטה ולחדירה<span class="chip"><i></i>עיתונות</span></p>
+        <p>ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה<span class="chip"><i></i>עיתונות</span></p>
+      </div>
+      <p class="out" style="margin-top:9px">No bullet, no error, no warning.</p></div>
+  </div>
+</div>
+
+<div class="warn"><strong>This is the part worth writing down.</strong> Case B is what anyone writing markdown
+would type. It passes the validator, passes <code>--strict</code>, and quietly produces the wrong thing. The
+same trap applies to every annotated field — the stage overviews on slide 3 inherit it in Phase 5.</div>
+
+<h2>Case C — the marker inside the cite</h2>
+<div class="case">
+  <div class="hd"><b>The <code>-</code> moves inside the brackets.</b><span class="verdict v-ok">a real list</span></div>
+  <div class="grid">
+    <div class="cell"><p class="lab">source</p>
+      <pre><code>[[- אותה אזעקה נשמעה לרקטה ולחדירה]](t01-c05)
+[[- ההוראה הנדרשת בחדירה — לנעול…]](t01-c06)</code></pre></div>
+    <div class="cell"><p class="lab">parser returns</p>
+      <span class="blk ul">ul</span><span class="blk ul">ul</span>
+      <p class="out" style="margin-top:10px">Real list blocks — but <strong>two lists of one item</strong>,
+      one per span, not one list of two.</p></div>
+  </div>
+  <div class="grid">
+    <div class="cell"><p class="lab">on the phone</p>
+      <div class="phone">
+        <ul><li>אותה אזעקה נשמעה לרקטה ולחדירה<span class="chip"><i></i>עיתונות</span></li></ul>
+        <ul><li>ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה<span class="chip"><i></i>עיתונות</span></li></ul>
+      </div>
+      <p class="out" style="margin-top:9px">The marker is now a rendered bullet, in the accent, and it is not
+      confusable with the punctuation inside the sentence.</p></div>
+    <div class="cell"><p class="lab">what the link preview gets</p>
+      <div class="prev">אותה אזעקה נשמעה לרקטה ולחדירה ⏎ ההוראה הנדרשת בחדירה — לנעול, להחשיך, להסתתר — הפוכה</div>
+      <p class="out" style="margin-top:9px">Clean — <code>plainText</code> strips list markers, so nothing
+      stray reaches the OG description.</p>
+      <p class="out">Cost: a screen reader announces “list, one item” twice.</p></div>
+  </div>
+</div>
+
+<h2>So what it comes down to</h2>
+<p>Three true things: the design draws something that looks like a list; nothing in either pool is authored as
+one; and the annotation contract makes a real list awkward, because a list marker cannot live inside the thing
+a citation covers without being written inside the brackets.</p>
+
+<div class="pick"><strong>What I'd do.</strong> Treat them as <strong>prose — case A</strong>, and change §5 to
+stop calling them “dashed lines”, which implies a list that does not exist. Then record case B in
+<code>docs/annotations.html</code> as a known trap, because it is silent and someone will hit it.
+<br><br>If you want them to be a real list — and the legibility argument for it is the second line, where one
+em-dash out of three is doing a different job — then it is case C <em>plus</em> a small change to
+<code>Annotated</code> to merge adjacent single-item lists. That is a renderer change, not a parser change, so
+it stays inside DIA-381's boundary. It is the better screen; it costs an authoring convention nobody would
+guess and one component change.</div>
+
+<p class="meta">Rendered from the real parser, 20 September 2026. Nothing here is applied to the code.</p>
+</div></body></html>

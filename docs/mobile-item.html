@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.4 · 20 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v2.5 · 20 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -163,7 +163,7 @@
   <tr><td>5</td><td class="he">דעת הציבור</td><td>The failure in three lines, the standing question, both opinion registers, and the ballot</td><td><span class="status st-done">settled</span></td></tr>
   <tr><td>6</td><td class="he">הלאה</td><td>Other failures, "all 29", share — version A, four cards</td><td><span class="status st-done">settled</span></td></tr>
 </table>
-<p>Horizontal swipe moves between slides. Slides 3 and 4 add a vertical axis of their own; the page itself never scrolls, so each is a nested scroll-snap and every stage page must fit the frame.</p>
+<p>Horizontal swipe moves between slides. Slides 3 and 4 add a vertical axis of their own, and slide 2 scrolls its body when the body is longer than the frame. <strong>The page itself still never scrolls</strong> — every one of these is a region inside a slide, not the document moving.</p>
 
 <h2 id="foundations">2 · Foundations</h2>
 <h3>Frame and direction</h3>
@@ -487,7 +487,8 @@
 
 <ul>
   <li>The slide title <span class="he">סקירת הכשל</span> sits in a <strong>fully-rounded chip</strong> — radius 999px, so the corner radius is always half the height — on a <code>rgba(233,230,223,.10)</code> ground with a hairline border, 11.5px/700, letter-spacing .08em. <strong>This chip is unique to slide 2</strong>; every other slide wears its title bare.</li>
-  <li>Lead sentence at 18px, then paragraphs at 15px, then dashed lines for what the system could not do.</li>
+  <li>Lead sentence at 18px, then paragraphs at 15px, then a list of what the system could not do — markers drawn as an em-dash in the accent, not a disc.</li>
+  <li><strong>The body column scrolls</strong> when the text is longer than the frame allows. The title chip stays put and the sources carousel stays docked to the foot of the column; only the text between them moves. Measured: fixed furniture is 262px, so the body has 582px at 844 and 338px at the 600 guard, and the density this section draws needs 474px — which is why the column scrolls rather than the text being cut.</li>
   <li>No stage rail, no photo, no item title on this slide.</li>
   <li>Sources carousel anchored to the bottom of the content column: cards 212px, outlet · two-line clamped quote · date. The card is the link — no <span class="he">קישור</span> label.</li>
 </ul>
@@ -502,6 +503,17 @@
 
 <h2 id="stages">6 · Slide 3 — <span class="he">מה נעשה מאז</span></h2>
 <p>A vertical stack, chronological downward, opening on the current stage — but <strong>only the stages the item actually reached</strong>. The ones it has not are slide 4. Claims live under the stage they belong to; there is no flat list of all claims any more.</p>
+
+<h3>How the stack moves</h3>
+<p>A stage page is <strong>not</strong> required to fit the frame. It scrolls, and the same gesture carries the reader between stages: at the bottom of a stage, scrolling on takes them to the next one; at the top, scrolling back takes them to the previous one. One axis, one gesture, no separate control to find.</p>
+<p><strong>Where a stage opens.</strong> A stage the reader has not been to opens at its top. A stage they have already read <strong>reopens where they left it</strong> — the stack remembers a position per stage for as long as the page is open, so leaving a stage and coming back does not cost the reader the scrolling they already did. That is what makes scrolling back up bearable: they return to the foot of the previous stage, where they were, rather than above everything they just read.</p>
+<ul>
+  <li>Arriving from a deep link — <code>#3-s2</code> — is a first visit: top of that stage, no remembered position.</li>
+  <li>Landing on a stage through jump mode is an ordinary entry and obeys the same memory.</li>
+  <li>A stage shorter than the frame has no position to remember and is always whole.</li>
+  <li>The memory lives as long as the page view. It is not a stored preference and it does not survive a reload.</li>
+</ul>
+<p>The footer's <span class="he">↑↓ שלבים</span> arrows remain the route for anyone who does not scroll, and they land the same way.</p>
 <div class="note"><strong>Why split the stack.</strong> An item early in its life had a stack that was mostly empty pages: <span class="he">כשל מס׳ 20</span> sits at stage 1, so four of its five pages said nothing had happened. Split, the shape of an item is legible from the dots alone — how much is behind it, how much is not. The two slides are the same component with a different filter.</div>
 <div class="shots">
   <figure class="shot">
@@ -1392,7 +1404,7 @@ mask-image: linear-gradient(to bottom,
   <tr><th>Ruling</th><th>Why</th></tr>
   <tr><td>Both trees ship at one URL; a media query chooses</td><td>Static export — there is no server to sniff a device. One canonical URL for every share</td></tr>
   <tr><td>Deep links are hashes; the first move pushes, the rest replace</td><td>No extra static pages; Back gets a reader out of Instagram's browser in two presses from anywhere</td></tr>
-  <tr><td>Slides 3 and 4 are nested scroll-snap; the page itself never scrolls</td><td>Already accepted with the split. Every stage page must fit the frame</td></tr>
+  <tr><td>Slides 3 and 4 hand the vertical axis to the stage stack; slide 2 scrolls its body; the page itself never scrolls</td><td>A stage page is no longer required to fit the frame — it scrolls, and carries the reader into the next stage at its end (§6). The earlier rule that every stage page must fit was retired on 20 September, when slide 2's measured density turned out not to fit an iPhone SE either</td></tr>
   <tr><td>Screen-reader route: six labelled sections in DOM order, footer labels are real links, arrow keys on a hardware keyboard</td><td>On a phone, a screen-reader swipe means "next element", not "next slide". Nothing on the deck may be gesture-only</td></tr>
   <tr><td>No store, and no non-static dependency, in the MVP</td><td>Version A ships (§9), so nothing on the item page writes anywhere. The hosted-database question moves to the post-MVP ballot, with the strip, as <span class="mono">DIA-376</span></td></tr>
   <tr><td>Proof is a frozen set of 390×844 baselines, plus assertions on measured geometry and on the gestures</td><td>Pixels cannot see a rule; rules cannot see a screen. The RTL trap in §2 becomes a test rather than a memory</td></tr>
@@ -1424,6 +1436,8 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Item · Last-minute Changes</td><td class="mono">e4eb48f5</td><td>Ladder track removed, slide 2’s title chipped, slide 3’s title and gold pill, upright repost icon</td></tr>
   <tr><td>Item · Cosmetic Fixes</td><td class="mono">46a934cc</td><td>Slide 3 renamed <span class="he">מה נעשה מאז</span>, tighter title gap, gold chip trimmed, wider repost icon</td></tr>
   <tr><td>Item · Stage Split Proposal</td><td class="mono">b05eb150</td><td>The split into <span class="he">מה נעשה מאז</span> and <span class="he">מה עוד לא נעשה</span> — <strong>accepted</strong></td></tr>
+  <tr><td>Slide 2's five questions</td><td class="mono">DIA-381</td><td>A chip moves the carousel rather than leaving the deck, which makes the carousel load-bearing. One <code>Annotated</code> with a declared chip variant. The lead is the first paragraph, chosen in CSS. Lists in both forms — shared source and source-per-item — the second of which the renderer drops today, against its own contract (<span class="mono">DIA-382</span>)</td></tr>
+  <tr><td>The frame stops being a ceiling</td><td class="mono">20 Sep</td><td>Slide 2's drawn density needs 474px and an iPhone SE offers 405, so the design never fit the phones it is for. The body column scrolls, the chip and the carousel stay docked, and §11's “every stage page must fit the frame” is retired. Slides 3 and 4 take the same behaviour: a stage scrolls, the boundary carries the reader on, and a stage reopens where it was left rather than at its top</td></tr>
   <tr><td>Gate rail, three changes</td><td class="mono">DIA-380</td><td>Unreached rungs solid grey not dashed; one 10px rhythm with the deliberate gap removed; rungs 4px → 6px. The age line joins its label as one group centred on the rung, which is what lets the rhythm close up. Compared head to head against keeping the age below the label, on the built page rather than a redraw</td></tr>
   <tr><td>Item · Six Slides</td><td class="mono">976cc81c</td><td>The whole deck after the split: six dots, the new slide, every footer rechained</td></tr>
   <tr><td>Slide 6, version A</td><td class="mono">DIA-376</td><td>Version A ships for the MVP — four cards, no strip. Version B stays specified and moves post-MVP with the store it needs</td></tr>

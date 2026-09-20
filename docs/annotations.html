@@ -148,6 +148,23 @@
 <p>The chip draws at the <strong>end of its span</strong>, carrying the source-type mark and a <code>+N</code> when the cite holds several claims. Tapping it opens the cited claims — quote, source, date, link — and <strong>highlights the span it covers</strong>. Because the span is authored, that highlight is exact rather than guessed.</p>
 <p>In RTL the chip sits inside the Hebrew run; latin claim ids stay isolated so the punctuation does not reorder around them.</p>
 
+<h3>Lists, and the one place a marker may sit outside a span</h3>
+<p>The coverage rule lets a <strong>list marker</strong> stand in a gap, and that is not an oversight — it is
+how a list whose items each rest on a different source is written. Both forms are legal, and a renderer has to
+draw both:</p>
+<pre><code>[[* the first item
+* the second item]](i13-c08)        one source behind both items
+
+* [[the first item]](i13-c08)        a source per item - the marker
+* [[the second item]](i13-c11)       stands in the gap before its span</code></pre>
+<p>In the second form the marker opens a list item and the span that follows is its content. The marker is
+never part of the cited text: a citation covers a claim, not the glyph in front of it. Consecutive items are
+one list, not a run of one-item lists, and each item carries its own chip.</p>
+<div class="warn"><strong>The renderer does not do this yet.</strong> <code>renderAnnotation</code> draws spans
+and drops gaps, so a marker written the second way disappears and the item renders as a paragraph — with no
+error, because the validator is right to accept it. Nothing in either pool uses list syntax today, so nothing
+on screen is currently wrong; the first record that needs a per-item list will be. See <span class="mono">DIA-382</span>.</div>
+
 <h2 id="fields">4 · Where it applies</h2>
 <p>Annotation is not a property of the record; it is a property of named fields. Everything else is a plain string and is rendered as one.</p>
 <table>
