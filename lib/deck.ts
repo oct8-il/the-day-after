@@ -166,3 +166,42 @@ export function sourceLineText(s: SourceLine): string {
   if (full.length <= FITS || !s.documentPublisher) return full;
   return line(s.documentPublisher);
 }
+
+/**
+ * The stage definitions of docs/mobile-item.html §6 - one line under the stage
+ * name, on a reached page and an unreached one alike.
+ *
+ * A definition may not use its own term: "what was implemented" is not a
+ * definition of "implemented". Stages 3 and 6 were never written; they render
+ * as a placeholder rather than as nothing, so a review of the page reviews its
+ * shape and can see the hole. DIA-367.
+ */
+export const STAGE_DEFINITION: Record<number, string | null> = {
+  1: 'מה שקרה בשטח, כפי שנרשם בתיעוד ציבורי',
+  2: 'הגוף האחראי הודה בפומבי שהכשל התרחש',
+  3: null,
+  4: 'התיקון דווח כמבוצע בשטח בידי הגוף האחראי',
+  5: 'גוף שאינו הגוף האחראי בדק את התיקון בשטח ופרסם ממצאים',
+  6: null,
+};
+
+/** What an unwritten definition says until DIA-367 lands. */
+export const DEFINITION_PLACEHOLDER = 'הגדרת השלב טרם נכתבה';
+
+export const stageDefinition = (n: number): string =>
+  STAGE_DEFINITION[n] ?? DEFINITION_PLACEHOLDER;
+
+/** Whether a stage still carries a placeholder, so a test can name the hole. */
+export const definitionIsDraft = (n: number): boolean => STAGE_DEFINITION[n] == null;
+
+/**
+ * The date a stage was reached, as §6 draws it: the day, then its distance
+ * from the morning of 7 October. Nothing in the data says when a stage was
+ * reached, so both are computed from the earliest claim asserting it - which
+ * is why stage 1 carries the date its manifestation was documented rather
+ * than 7.10 itself.
+ */
+export function stageAge(date: string | null, days: number | null): string | null {
+  if (!date) return null;
+  return days === null ? date : `${date} · ${days} ימים אחרי 7.10`;
+}

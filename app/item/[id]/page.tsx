@@ -15,6 +15,8 @@ import { Header } from '@/app/components/Header';
 import { Deck } from '@/app/components/mobile/Deck';
 import { Gate, GateGround, type GateRung } from '@/app/components/mobile/Gate';
 import { Overview } from '@/app/components/mobile/Overview';
+import { Stages } from '@/app/components/mobile/Stages';
+import { StageArrows } from '@/app/components/mobile/StagesShell';
 import { sourceLine } from '@/lib/deck';
 import { reached as reachedStages, stageDate } from '@/lib/stage';
 import { daysAfter } from '@/lib/days';
@@ -130,7 +132,9 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
         slides={[
           <Gate key="gate" {...gate.props} />,
           <Overview key="overview" summary={inc.summary} claims={inc.claims} />,
+          <Stages key="stages" inc={inc} slide={2} />,
         ]}
+        mid={[null, null, <StageArrows key="arrows" />]}
         ground={<GateGround {...gate.props} />}
         credit={gate.credit}
       />

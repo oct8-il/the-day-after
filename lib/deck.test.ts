@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSource, sourceLine, itemNumber, siblings, sourceLineText } from './deck.ts';
+import { splitSource, sourceLine, itemNumber, siblings, sourceLineText,
+  stageDefinition, definitionIsDraft, stageAge, DEFINITION_PLACEHOLDER } from './deck.ts';
 
 const claim = (source_type: string, source: string, date: string) =>
   ({ source_type, source, date });
@@ -146,4 +147,25 @@ test('the tail collapses when there is nothing to count', () => {
     sourceLineText({ document: 'תחקיר צה״ל', documentPublisher: 'צה״ל', outlet: null, more: 0 }),
     'תחקיר צה״ל',
   );
+});
+
+test('a stage definition never uses its own term, and an unwritten one says so', () => {
+  // §6's rule, and the reason the four that exist are worth guarding: "what
+  // was implemented" is not a definition of "implemented".
+  assert.equal(stageDefinition(1), 'מה שקרה בשטח, כפי שנרשם בתיעוד ציבורי');
+  assert.ok(!stageDefinition(4).includes('יושם'));
+  assert.ok(!stageDefinition(5).includes('אומת'));
+  // 3 and 6 were never written - DIA-367. They render as a placeholder rather
+  // than as nothing, so a review of the page can see the hole.
+  assert.equal(definitionIsDraft(3), true);
+  assert.equal(definitionIsDraft(6), true);
+  assert.equal(stageDefinition(3), DEFINITION_PLACEHOLDER);
+  assert.equal(definitionIsDraft(1), false);
+});
+
+test('the age line reads as a date and a distance, and survives a month-only date', () => {
+  assert.equal(stageAge('25.10.2023', 18), '25.10.2023 · 18 ימים אחרי 7.10');
+  // daysAfter returns null for a month-only date; the day still shows.
+  assert.equal(stageAge('03.2024', null), '03.2024');
+  assert.equal(stageAge(null, null), null);
 });
