@@ -162,12 +162,12 @@ add(`<div class="center">
 
 add(`<div>
   <div class="kicker gold">the shape of it</div>
-  <h2>Four days of building, and the design moved five times</h2>
+  <h2>Five phases in, and the design moved five times</h2>
   <div class="stack">
     <div class="item"><div class="v">4</div><div class="k">numbered revisions to the spec <i>after</i> the first line of code — v2.3 to v2.7 — plus one ruling written straight into §4</div></div>
     <div class="item"><div class="v">5</div><div class="k">issues that do not exist anywhere in the plan: <span class="id">DIA-375</span>, <span class="id">379</span>, <span class="id">380</span>, <span class="id">382</span>, <span class="id">383</span></div></div>
     <div class="item"><div class="v">1</div><div class="k">first pass thrown away whole, and one fix written, measured, approved by its tests and reverted</div></div>
-    <div class="item mute"><div class="v">62</div><div class="k">deck assertions, none of which caught either of those two</div></div>
+    <div class="item mute"><div class="v">83</div><div class="k">deck assertions, none of which caught either of those two</div></div>
   </div>
 </div>`,
 `<p>The number worth staring at is the last one. The tests are good at what they are for — geometry, state, the rules that have a right answer — and they were silent on both of the things that had to be undone. A screenshot cannot see a gesture, and a passing suite is not an opinion.</p>
@@ -390,6 +390,20 @@ add(`<div>
 `<p>Gate 3 earned its keep by rejecting the axis lock. That is the whole argument for a stop that a person takes rather than a runner: the suite can only check the things somebody thought to ask about.</p>
 <p>Next is Phase 5 — slide 3, the stage stack. Two scroll axes on one screen, with the gesture layer between them already known to be wrong.</p>`);
 
+add(`<div>
+  <span class="tag done">phase 5 · built</span>
+  <h2>Slide 3 — <span class="he">מה נעשה מאז</span></h2>
+  <p class="sub">The stages the item reached, one page each. The first screen with two scroll axes at once — and the first one that had to be built around an open bug rather than after it.</p>
+  <div class="stack">
+    <div class="item"><div class="v">0</div><div class="k">lines of gesture code in the slide. The boundary between two stage pages is nested scroll-snap, not a listener</div></div>
+    <div class="item"><div class="v">21</div><div class="k">new deck assertions, 83 in total</div></div>
+    <div class="item mute"><div class="v">3</div><div class="k">things extracted rather than rebuilt — the carousel, the footer's middle slot, and how a slide tells the deck which page it is on</div></div>
+  </div>
+</div>`,
+`<p>The instruction the phase carried was architectural rather than visual: <b>do not fix <span class="id">DIA-383</span> here.</b> The deck's axis decision is already known to be wrong, and a gesture fix argued inside a slide is how a deck ends up with two gesture layers. So the stack reads where the scroll landed and writes nothing — whatever DIA-383 eventually does, this slide inherits it.</p>
+<p>The memory was the only real puzzle. A stage reopens where it was left, so the position is recorded for whichever page is at the top, every frame the reader moves — and never while the stack is scrolling itself. Without that second half, walking away from a stage overwrites where it was left with wherever the animation happened to be, which is the one bug the tests did catch.</p>
+<p><span class="id">t01</span> turned out to exercise both halves of the body on its own: overviews on stages 2 and 3, and the claims fallback on 1 and 4. An overview improves a page; it does not gate one, and most published items have none.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
@@ -420,7 +434,7 @@ add(`<div class="center">
   <p class="sub">Every phase so far has been finished twice: once against the design, and once against a phone.</p>
 </div>`,
 `<p>Close here. The plan's shape held — settle the design, settle the data, build in an order where each phase is judged before the next one inherits its mistakes — and it is the judging that has produced almost everything in this deck.</p>
-<p>Five gates left. On present form each of them costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
+<p>Four gates left. On present form each of them costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
