@@ -447,7 +447,11 @@ test.describe('jump mode', () => {
     await page.waitForTimeout(400);
     expect(await armed(page), 'armed after the hold').toBe(true);
     // §3: the strip goes to full strength and the page behind drops to ~40%.
-    expect(await page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).opacity)).toBe('0.4');
+    // Waited for rather than sampled: the dim is a 120ms transition, and a
+    // loaded runner can read it mid-flight.
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).opacity))
+      .toBe('0.4');
     // Arming must cancel the deck's own snap or the two gestures fight.
     expect(await page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).scrollSnapType)).toBe('none');
 
@@ -464,7 +468,9 @@ test.describe('jump mode', () => {
     expect(await armed(page)).toBe(false);
     expect(await slideNow(page)).toBe(5);
     expect(await page.evaluate(() => location.hash), 'the landing is recorded').toBe('#6');
-    expect(await page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).opacity)).toBe('1');
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).opacity))
+      .toBe('1');
   });
 
   test('a finger that travels before the hold is a swipe, not an arm', async ({ page }) => {

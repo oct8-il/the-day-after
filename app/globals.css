@@ -1162,4 +1162,87 @@
     .deck-track{scroll-behavior:auto}
     .deck-track,.deck-dots{transition:none}
   }
+
+  /* ---------------------------------------------------------------- §5
+     Slide 2 — סקירת הכשל. Three parts in a column: the title chip, the body,
+     the sources carousel. Only the body moves. §5's drawn density needs 474px
+     and this column has 582px at 844 but 405px on an iPhone SE, so the frame
+     stopped being a ceiling on 20 September (§11) — the chip and the carousel
+     stay docked and the text between them scrolls.
+
+     Every value below is read off §5's embedded 390 × 844 screen rather than
+     its prose, which is where the inline styles are. One place they disagree:
+     the prose calls the list marker "the accent" and the screen paints it
+     #d29a7c, which is --t-press. The screen wins, as it did for the rail. */
+
+  .deck-ov{height:100%;display:flex;flex-direction:column;gap:14px;padding-top:26px;box-sizing:border-box}
+
+  /* The fully-rounded chip, unique to this slide; every other slide wears its
+     title bare. 999px means the radius is always half the height. */
+  .deck-ov-title{display:inline-flex;align-items:center;padding:3px 12px;border-radius:999px;
+    background:color-mix(in srgb,var(--text) 10%,transparent);
+    border:1px solid color-mix(in srgb,var(--text) 16%,transparent);
+    font-size:11.5px;font-weight:700;letter-spacing:.08em;line-height:1.5;
+    color:color-mix(in srgb,var(--text) 72%,transparent)}
+
+  /* overscroll-behavior:contain stops a flick at the end of the text from
+     becoming a swipe to the next slide. */
+  .deck-ov-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-width:none;display:flex;flex-direction:column;gap:11px;
+    font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}
+  .deck-ov-body::-webkit-scrollbar{display:none}
+  .deck-ov-body p{margin:0}
+  .deck-ov-body strong{font-weight:700}
+
+  /* The lead is the first paragraph, chosen here rather than in the parser:
+     lib/annotation.ts is shared with the desktop and the link preview and has
+     no reason to learn what a lead is. */
+  .deck-ov-body > p:first-child{font-size:18px;font-weight:400;line-height:1.45;color:var(--text)}
+
+  /* A list of what the system could not do. An em-dash in place of the disc,
+     and the marker outside the citation — docs/annotations.html §3. */
+  .deck-ov-body ul,.deck-ov-body ol{margin:0;padding:0;padding-inline-start:2px;list-style:none;
+    display:flex;flex-direction:column;gap:7px}
+  .deck-ov-body li{display:flex;gap:9px}
+  .deck-ov-body li::before{content:"—";color:var(--t-press);line-height:1.62;flex:none}
+  /* One flex child for the words, or the chip and every run of text would each
+     become a column of their own. */
+  .deck-ov-body li > span{flex:1;min-width:0}
+
+  /* §5's chip names its type as well as its colour, because there is no ledger
+     under the text to open — the carousel is what a tap lands on. */
+  .deck .chip{gap:5px;vertical-align:middle;margin-inline-start:4px;padding:1px 8px 1px 6px;
+    border:0;border-radius:12px;background:color-mix(in srgb,var(--text) 10%,transparent);
+    font-size:11px;font-weight:600;line-height:1.5;white-space:nowrap;
+    color:color-mix(in srgb,var(--text) 80%,transparent)}
+  .deck .chip .chip-dot{width:7px;height:7px;
+    box-shadow:0 0 0 1.5px color-mix(in srgb,var(--text) 27%,transparent)}
+  .deck .chip .chip-n{font-size:11px;color:inherit}
+
+  /* The carousel, docked to the foot of the column and bleeding the slide's
+     own 20px so a card can sit against the edge. The card is the link; §5 is
+     explicit that it carries no קישור label. */
+  .deck-ov-sources{flex:none;margin:0;margin-inline:-20px;padding:0 20px;list-style:none;
+    display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+    overscroll-behavior-x:contain}
+  .deck-ov-sources::-webkit-scrollbar{display:none}
+  .deck-ov-card{flex:none;width:212px}
+  .deck-ov-card > *{display:flex;flex-direction:column;gap:5px;height:100%;box-sizing:border-box;
+    padding:10px 12px;border-radius:10px;text-decoration:none;color:inherit;
+    background:color-mix(in srgb,var(--text) 8%,transparent);
+    border:1px solid color-mix(in srgb,var(--text) 18%,transparent);
+    transition:border-color .16s ease}
+  .deck-ov-card[data-on] > *{border-color:var(--c,var(--accent))}
+  .deck-ov-card-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text)}
+  .deck-ov-dot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--accent));flex:none;
+    box-shadow:0 0 0 1.5px color-mix(in srgb,var(--text) 27%,transparent)}
+  .deck-ov-card-quote{font-size:12.5px;line-height:1.38;
+    color:color-mix(in srgb,var(--text) 85%,transparent);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .deck-ov-card-date{font-size:11px;color:color-mix(in srgb,var(--text) 60%,transparent)}
+
+  @media (prefers-reduced-motion:reduce){
+    .deck-ov-sources{scroll-behavior:auto}
+    .deck-ov-card > *{transition:none}
+  }
 }

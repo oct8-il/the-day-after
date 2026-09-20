@@ -15,6 +15,15 @@ import { TYPES, type Claim } from '@/lib/data';
  * validator has already refused the ones that matter.
  */
 
+/**
+ * How much a chip says out loud. The desktop draws a coloured dot and lets the
+ * ledger below name the source; the phone deck has no ledger, so its chip names
+ * the type as well - docs/mobile-item.html §5. It is a declared prop and not a
+ * media query on purpose: the difference between the surfaces is content, and a
+ * mark may not quietly mean one thing here and another there.
+ */
+export type ChipVariant = 'dot' | 'named';
+
 function Nodes({ nodes }: { nodes: Inline[] }) {
   return (
     <>
@@ -41,7 +50,7 @@ function Nodes({ nodes }: { nodes: Inline[] }) {
  * The id is latin inside a Hebrew run, so the chip isolates its own direction
  * and the surrounding punctuation does not reorder around it.
  */
-function Chip({ ids, claims }: { ids: string[]; claims: Claim[] }) {
+function Chip({ ids, claims, variant }: { ids: string[]; claims: Claim[]; variant: ChipVariant }) {
   const cited = ids.map((id) => claims.find((c) => c.id === id)).filter((c): c is Claim => !!c);
   if (!cited.length) return null;
   const label = cited.map((c) => `${TYPES[c.source_type].he} · ${c.source}`).join(' · ');
@@ -54,6 +63,7 @@ function Chip({ ids, claims }: { ids: string[]; claims: Claim[] }) {
       style={{ ['--c' as string]: TYPES[cited[0].source_type].color }}
     >
       <span className="chip-dot" aria-hidden="true" />
+      {variant === 'named' && <span className="chip-type">{TYPES[cited[0].source_type].he}</span>}
       {cited.length > 1 && <span className="chip-n" dir="ltr">+{cited.length - 1}</span>}
     </a>
   );
@@ -92,12 +102,14 @@ function Span({ blocks, chip, k }: { blocks: Block[]; chip: ReactNode; k: number
  * sentence rather than a paragraph inside a bullet. A span carrying more than
  * that keeps its blocks; the chip still ends the item either way.
  */
-function Item({ span, claims, k }: { span: RenderSpan; claims: Claim[]; k: number }) {
-  const chip = <Chip ids={span.ids} claims={claims} />;
+function Item({ span, claims, k, variant }: { span: RenderSpan; claims: Claim[]; k: number; variant: ChipVariant }) {
+  const chip = <Chip ids={span.ids} claims={claims} variant={variant} />;
   const only = span.blocks.length === 1 && span.blocks[0]?.kind === 'p' ? span.blocks[0] : null;
   return (
     <li>
-      {only ? <><Nodes nodes={only.children} />{chip}</> : <Span blocks={span.blocks} chip={chip} k={k} />}
+      {only
+        ? <span><Nodes nodes={only.children} />{chip}</span>
+        : <Span blocks={span.blocks} chip={chip} k={k} />}
     </li>
   );
 }
@@ -110,7 +122,7 @@ function Item({ span, claims, k }: { span: RenderSpan; claims: Claim[]; k: numbe
  * per-item form. Each item keeps its own chip, because each rests on its own
  * claim; that is the whole reason the form exists.
  */
-export function Annotated({ text, claims }: { text: string; claims: Claim[] }) {
+export function Annotated({ text, claims, chip = 'dot' }: { text: string; claims: Claim[]; chip?: ChipVariant }) {
   const spans = renderAnnotation(text);
   if (!spans.length) return null;
 
@@ -118,7 +130,7 @@ export function Annotated({ text, claims }: { text: string; claims: Claim[] }) {
   for (let i = 0; i < spans.length; i += 1) {
     const span = spans[i]!;
     if (!span.marker) {
-      out.push(<Span key={i} blocks={span.blocks} chip={<Chip ids={span.ids} claims={claims} />} k={i} />);
+      out.push(<Span key={i} blocks={span.blocks} chip={<Chip ids={span.ids} claims={claims} variant={chip} />} k={i} />);
       continue;
     }
     const kind = span.marker;
@@ -128,7 +140,7 @@ export function Annotated({ text, claims }: { text: string; claims: Claim[] }) {
     const List = kind === 'ol' ? 'ol' : 'ul';
     out.push(
       <List key={i}>
-        {run.map((r, j) => <Item key={j} span={r} claims={claims} k={j} />)}
+        {run.map((r, j) => <Item key={j} span={r} claims={claims} k={j} variant={chip} />)}
       </List>,
     );
   }
