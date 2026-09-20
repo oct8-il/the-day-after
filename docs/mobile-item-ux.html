@@ -84,7 +84,7 @@
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — interactions</h1>
   <p class="lede">What the item page does under a finger: every gesture, every control, and the rule behind each one. The design is <a href="mobile-item.html">docs/mobile-item.html</a> and the order of work is <a href="mobile-item-plan.html">docs/mobile-item-plan.html</a>; this is the third of the three, and it records behaviour rather than appearance.</p>
-  <p class="meta">v1.0 · 20 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
+  <p class="meta">v1.1 · 20 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
 </header>
 
 <nav class="toc">
@@ -200,18 +200,7 @@
   <p class="why">The carousel is the end of the reading, not a shelf above it. Docked to the frame it read as something the text ran under. On an item that overruns the column it now waits below the last sentence; on one that fits it still falls to the foot of the column, which is how §5's screen draws it.</p>
 </div>
 
-<div class="rule">
-  <h4>Reading beats swiping</h4>
-  <p>A slide that owns a scroller marks it, and the scroller declares <code>touch-action: pan-y</code>. The engine can then only ever move the text. The deck carries the sideways drag itself: past a 10px deadzone it locks the axis, and <strong>sideways has to beat down by 1.6:1</strong> — about 32° off horizontal — before it counts as a swipe.</p>
-  <p>Committed horizontal, the slide travels with the finger: snap comes off the track, <code>scrollLeft</code> follows the thumb, and release lands with half the drag projected forward as a flick, clamped to one slide either way.</p>
-  <p class="why">The engine decides the axis from the first few pixels and there is no way to tell it which axis matters more. A casual scroll travels a little sideways, and that was enough: the reader asked for the next paragraph and got the next slide. <strong>1.6 is one named constant, and the thing most likely to want tuning against a real thumb.</strong></p>
-</div>
-
-<div class="rule">
-  <h4>A thumb travelling right goes forward, on every slide</h4>
-  <p>Asserted by dragging on the gate, where the engine still owns the gesture, and on slide 2, where the deck does, and insisting they agree.</p>
-  <p class="why">They did not. With the body an accidental horizontal scroller the same drag went forward on one slide and backward on the other. A reader cannot learn a gesture that means two things.</p>
-</div>
+<div class="warn"><strong>The axis is the engine's, and it is wrong — <span class="mono">DIA-383</span>.</strong> A scroll a few degrees off vertical is read as a swipe most of the time, and a thumb travelling right goes <em>forward</em> on the gate but <em>backward</em> on slide 2, because a nested scroller changes the handoff. Both are open.<br><br>An axis lock was written and reverted. It declared <code>touch-action: pan-y</code> on the scroller — the only lever that reliably takes the axis away from the engine — and carried the sideways drag in code, with sideways having to beat down by 1.6:1. It measured correctly and felt wrong in the hand: <code>pan-y</code> is all-or-nothing, so taking the axis means owning the swipe's inertia too, and a hand-driven pan does not have the engine's momentum curve. The issue records what the attempt is still worth, so the next one does not start here.</div>
 
 <div class="rule">
   <h4>The body scrolls down and never sideways</h4>
@@ -234,10 +223,10 @@
 <h2 id="watch">What to watch</h2>
 <table>
   <tr><th class="g">Thing</th><th>Where it bites</th></tr>
-  <tr><td class="g">A drag at roughly 45° does nothing</td><td>With the axis locked to vertical and <code>touch-action: pan-y</code> in force, a drag too diagonal to read as either intent moves neither. Honest, but it is a dead band, and it moves if 1.6 moves.</td></tr>
+  <tr><td class="g">The gesture layer on a slide that scrolls</td><td><span class="mono">DIA-383</span>. A casual scroll is taken as a swipe, and the swipe direction disagrees with the gate. Slides 3 and 4 inherit the same scroller in Phases 5 and 6, so two faults are about to be three.</td></tr>
   <tr><td class="g">No affordance at the cut</td><td>Slide 2's text runs past the bottom of the frame with no fade and no shadow. §5 asks for none, so none was invented — but "there is more" and "this is broken" are one thumb apart.</td></tr>
   <tr><td class="g">The chip costs a line</td><td>Naming the source type in Hebrew makes the chip about 90px wide, so it usually wraps below its sentence rather than sitting at the end of it the way §5 draws.</td></tr>
-  <tr><td class="g">1.6 is untested against a real thumb</td><td>The tolerance was measured with synthetic touch in Chromium. iOS locks axes differently, and this is the number to move first if a scroll still gets taken as a swipe.</td></tr>
+  <tr><td class="g">Gestures cannot be judged from here</td><td>Synthetic touch in Chromium measures an axis decision correctly and says nothing about how a gesture feels. The reverted lock passed every assertion written for it. Anything in this document about a gesture's <em>feel</em> was decided with a thumb, and the next one will be too.</td></tr>
 </table>
 
 </div>

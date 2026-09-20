@@ -455,7 +455,7 @@ add(`<div>
   <div class="stack">
     <div class="item"><div class="v">5</div><div class="k">phone widths measured, 320 to 430 — the card is 212px on every one</div></div>
     <div class="item"><div class="v">1</div><div class="k">fixture written to overrun the column at every width, so the scroll is a measurement and not a hope</div></div>
-    <div class="item"><div class="v">65</div><div class="k">deck assertions now, 26 of them new</div></div>
+    <div class="item"><div class="v">62</div><div class="k">deck assertions now, 23 of them new</div></div>
   </div>
 </div>`,
 `<p>The fixtures were the first problem. Written before the deck had a shape — 115 to 215 characters, no list anywhere — they would have made gate #3 a review of the type and nothing else. Five were rewritten against the claims already in each record: <span class="id">t01</span> overruns the column on every phone, <span class="id">t03</span> overruns only on the two small ones, which is §5's own density not fitting an SE, and <span class="id">t05</span> and <span class="id">t02</span> never do. A reader should not meet a scrollbar on every item.</p>
@@ -471,10 +471,10 @@ add(`<div>
     <div class="item mute"><div class="v">0</div><div class="k">affordance at the cut where the text runs past the frame — §5 asks for none, so none was invented</div></div>
   </div>
 </div>`,
-`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, whether the text running past the bottom of the frame reads as "there is more" or as "this is broken", and whether <span class="id">1.6</span> is the right tolerance — it is the one number the axis lock turns on, and it has never met a real thumb.</p>
+`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, and whether the text running past the bottom of the frame reads as "there is more" or as "this is broken". The gesture layer is not part of that judgement — it is <span class="id">DIA-383</span>, and it wants the device rather than a hurry.</p>
 <p>The carousel was docked to the frame when the slide was first built, and it read as a shelf the text ran under rather than as the end of the reading. It now travels with the body — below the last sentence on a long item, at the foot of the column on a short one. <span class="id">§5</span> and the round log say so; the doc is at v2.6.</p>
-<p>Two gesture faults came out of the same change, both found with a thumb and neither visible in a screenshot. The body had quietly become a <i>horizontal</i> scroller — <code>overflow-y:auto</code> computes <code>overflow-x</code> to <code>auto</code>, and the carousel's bleed gave it 40px to travel — so the deck never saw a swipe and slides could only be changed from the bezels. And once that was fixed, a casual scroll a few degrees off vertical was still being read as a swipe. The axis lock answers both: the scroller takes the horizontal axis away from the engine, and the deck carries the sideways drag itself, with sideways having to beat down by 1.6:1 before it counts.</p>
-<p>It turned up a direction bug nobody had named: the same thumb went forward on the gate and backward on slide 2. A test now drags on both and insists they agree.</p>
+<p>One gesture fault came out of the same change and is fixed: the body had quietly become a <i>horizontal</i> scroller — <code>overflow-y:auto</code> computes <code>overflow-x</code> to <code>auto</code>, and the carousel's bleed gave it 40px to travel — so the deck never saw a swipe and slides could only be changed from the bezels.</p>
+<p>The other two are open, as <span class="id">DIA-383</span>. A casual scroll a few degrees off vertical is still read as a swipe, and a thumb travelling right goes forward on the gate but backward on slide 2. An axis lock was written for both and <b>reverted</b> — it measured correctly in Chromium and felt wrong in the hand. The lever it used, <code>touch-action: pan-y</code>, is all-or-nothing: taking the axis from the engine means owning the swipe's inertia too, and a hand-driven pan does not have the engine's momentum curve. The issue records what the attempt is worth so the next one does not start here.</p>
 <p>Then Phase 5 — slide 3, the stage stack, which is where the scrolling ruling has to hold for a second time.</p>`);
 
 add(`<div class="center">

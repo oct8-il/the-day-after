@@ -70,7 +70,7 @@ export function OverviewShell({ title, cards, children }: {
 
       {/* Everything below the chip moves together. overscroll-behavior keeps a
           flick at the end of the text from becoming a swipe to the next slide. */}
-      <div className="deck-ov-scroll" data-deck-pan-y="" onClick={onChip}>
+      <div className="deck-ov-scroll" onClick={onChip}>
        <div className="deck-ov-inner">
         <div className="deck-ov-body">{children}</div>
 
