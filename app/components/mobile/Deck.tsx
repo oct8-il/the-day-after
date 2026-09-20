@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -99,6 +99,8 @@ export function Deck({ crumbs, slides, credit, ground }: {
 }) {
   const track = useRef<HTMLDivElement>(null);
   const dots = useRef<HTMLDivElement>(null);
+  const crumbBar = useRef<HTMLElement>(null);
+  const bottom = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
   const [armed, setArmed] = useState(false);
   /** The live index, for the handlers that a scrub re-enters faster than React
@@ -242,6 +244,34 @@ export function Deck({ crumbs, slides, credit, ground }: {
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
     writeHash(i, null);
   }, [indexNow, writeHash]);
+
+  /**
+   * The chrome overlays the track rather than sharing a column with it, so the
+   * track's height is the frame's and never changes. What does change is how
+   * much room the chrome needs: the gate gives the dots more air than the other
+   * slides, and a footer with a previous-slide link is taller than one without.
+   *
+   * That difference used to come out of the track's height, and resizing a
+   * scroll container mid-scroll makes the engine recompute its snap positions -
+   * which a swipe in flight pays for, as an overshoot. Now it comes out of the
+   * slides' padding instead, which moves nothing the scroller cares about.
+   *
+   * Measured rather than tabulated: the numbers are the chrome's own, so they
+   * cannot fall out of step with it.
+   */
+  useLayoutEffect(() => {
+    const deck = crumbBar.current?.parentElement;
+    if (!deck) return;
+    const set = () => {
+      deck.style.setProperty('--deck-top', `${Math.ceil(crumbBar.current?.offsetHeight ?? 0)}px`);
+      deck.style.setProperty('--deck-bottom', `${Math.ceil(bottom.current?.offsetHeight ?? 0)}px`);
+    };
+    set();
+    const ro = new ResizeObserver(set);
+    if (crumbBar.current) ro.observe(crumbBar.current);
+    if (bottom.current) ro.observe(bottom.current);
+    return () => ro.disconnect();
+  }, [at]);
 
   /* ---------------------------------------------------- arrival and history */
   useEffect(() => {
@@ -463,7 +493,7 @@ export function Deck({ crumbs, slides, credit, ground }: {
       {ground && <div className="deck-ground" aria-hidden="true">{ground}</div>}
 
       {/* §3: one path, top right, never split across two corners. */}
-      <nav className="deck-crumbs" aria-label="מיקום">
+      <nav className="deck-crumbs" aria-label="מיקום" ref={crumbBar}>
         {crumbs.ancestors.map((a) => (
           <span key={a}>{a}<i aria-hidden="true">›</i></span>
         ))}
@@ -493,6 +523,7 @@ export function Deck({ crumbs, slides, credit, ground }: {
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -
           the dots are the counter. The row is also jump mode's strip. */}
+      <div className="deck-bottom" ref={bottom}>
       <div
         className="deck-dots"
         ref={dots}
@@ -527,6 +558,7 @@ export function Deck({ crumbs, slides, credit, ground }: {
         <div className="deck-mid" />
         <div className="deck-next">{next}</div>
       </footer>
+      </div>
     </div>
   );
 }
