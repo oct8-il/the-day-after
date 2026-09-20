@@ -1112,6 +1112,10 @@
      both over 120ms, so arming reads as a change rather than as a glitch. The
      track's snap is cancelled while armed or the two gestures fight. */
   .deck[data-armed] .deck-track{opacity:.4;scroll-snap-type:none}
+  /* While the deck is being dragged by hand, mandatory snap would pull every
+     write back to the nearest slide. Released on touchend, and the landing is
+     an ordinary scrollTo from there. */
+  .deck-track[data-panning]{scroll-snap-type:none}
   .deck[data-armed] .deck-dots{opacity:1}
   .deck[data-armed] .deck-dot{background:color-mix(in srgb,var(--text) 55%,transparent)}
   .deck[data-armed] .deck-dot[data-on]{background:var(--text);box-shadow:0 0 0 3px color-mix(in srgb,var(--text) 22%,transparent)}
@@ -1189,7 +1193,12 @@
      least as tall as the scroller, so the carousel's margin-top:auto still
      drops it to the foot of the frame on a short item - §5's screen - while on
      a long one it waits below the last sentence instead of sitting over it. */
-  .deck-ov-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+  /* pan-y takes the horizontal axis away from the engine for any touch that
+     starts here, so a thumb a few degrees off vertical can no longer be read
+     as a swipe. Deck.tsx carries the sideways drag itself, with a tolerance
+     that has to be beaten rather than merely met. */
+  .deck-ov-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-width:none;touch-action:pan-y}
   .deck-ov-scroll::-webkit-scrollbar{display:none}
   .deck-ov-inner{min-height:100%;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
 

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type BrowserContext } from '@playwright/test';
 
 /**
  * Slide 2 — סקירת הכשל (DIA-381, spec §5).
@@ -415,64 +415,95 @@ test.describe('the floor', () => {
 test.describe('a swipe starts anywhere', () => {
   test.use({ hasTouch: true });
 
-  test('a horizontal drag from the middle of the text changes slide', async ({ page, context, browserName }) => {
-    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
-    await walkTo2(page, 't01');
-    const at = () => page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
-    expect(await at()).toBe('1');
-
-    const mid = await page.evaluate(() => {
-      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
-      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
-    });
-
+  /** A straight-line touch drag, dispatched over CDP. */
+  async function drag(page: Page, context: BrowserContext, from: { x: number; y: number }, dx: number, dy: number) {
     const cdp = await context.newCDPSession(page);
     const touch = (type: string, x?: number, y?: number) =>
       cdp.send('Input.dispatchTouchEvent', {
         type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
       } as never);
-
-    // Towards the physical right is backwards in RTL, so this lands on the
-    // gate. Started in the middle of the text on purpose: the bezel is not a
-    // control, and a body that scrolls sideways would swallow this.
-    await touch('touchStart', mid.x - 120, mid.y);
-    for (let i = 1; i <= 10; i += 1) {
-      await touch('touchMove', mid.x - 120 + i * 24, mid.y);
-      await page.waitForTimeout(16);
+    await touch('touchStart', from.x, from.y);
+    for (let i = 1; i <= 12; i += 1) {
+      await touch('touchMove', from.x + (dx * i) / 12, from.y + (dy * i) / 12);
+      await page.waitForTimeout(12);
     }
     await touch('touchEnd');
     await page.waitForTimeout(900);
+  }
 
-    expect(await at()).toBe('0');
+  const at = (page: Page) =>
+    page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
+  const mid = (page: Page) =>
+    page.evaluate(() => {
+      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
+      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+    });
+
+  test('a sideways drag from the middle of the text changes slide', async ({ page, context, browserName }) => {
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await walkTo2(page, 't01');
+    expect(await at(page)).toBe('1');
+    // Started in the middle of the text on purpose: the bezel is not a control.
+    await drag(page, context, await mid(page), 240, 0);
+    expect(await at(page)).toBe('2');
+  });
+
+  test('the slide carrying a scroller answers a thumb the same way the gate does', async ({ page, context, browserName }) => {
+    // The regression this replaces: with the body an accidental horizontal
+    // scroller, the same drag went forward on the gate and backward on slide
+    // 2. A reader cannot learn a gesture that means two things.
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await page.goto('/item/t01/');
+    await page.waitForSelector('.deck-gate-rail');
+    await page.waitForTimeout(400);
+    await drag(page, context, { x: 195, y: 400 }, 240, 0);
+    const onGate = await at(page);
+
+    await walkTo2(page, 't01');
+    const before = Number(await at(page));
+    await drag(page, context, await mid(page), 240, 0);
+    const onBody = Number(await at(page)) - before;
+
+    expect(onGate).toBe('1');
+    expect(onBody).toBe(1);
   });
 
   test('a vertical drag in the same place scrolls the text and stays on the slide', async ({ page, context, browserName }) => {
     test.skip(browserName !== 'chromium', 'CDP touch dispatch');
     await walkTo2(page, 't01');
-    const mid = await page.evaluate(() => {
-      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
-      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
-    });
-
-    const cdp = await context.newCDPSession(page);
-    const touch = (type: string, x?: number, y?: number) =>
-      cdp.send('Input.dispatchTouchEvent', {
-        type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
-      } as never);
-
-    await touch('touchStart', mid.x, mid.y + 150);
-    for (let i = 1; i <= 10; i += 1) {
-      await touch('touchMove', mid.x, mid.y + 150 - i * 15);
-      await page.waitForTimeout(16);
-    }
-    await touch('touchEnd');
-    await page.waitForTimeout(600);
-
+    await drag(page, context, await mid(page), 0, -150);
     const after = await page.evaluate(() => ({
       top: document.querySelector('.deck-ov-scroll')!.scrollTop,
       at: document.querySelector('.deck')!.getAttribute('data-at'),
     }));
     expect(after.top).toBeGreaterThan(0);
     expect(after.at).toBe('1');
+  });
+
+  test('a drag that is mostly down is reading, not swiping', async ({ page, context, browserName }) => {
+    // The nitpick this answers: a casual scroll travels a little sideways, and
+    // left to the engine that was enough to hand the gesture to the deck. The
+    // lock wants sideways to beat down by 1.6:1 before it counts.
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    for (const dx of [60, -60]) {
+      await walkTo2(page, 't01');
+      await drag(page, context, await mid(page), dx, -200);
+      const after = await page.evaluate(() => ({
+        top: document.querySelector('.deck-ov-scroll')!.scrollTop,
+        at: document.querySelector('.deck')!.getAttribute('data-at'),
+      }));
+      expect(after.at, `dx ${dx}: the slide must not move`).toBe('1');
+      expect(after.top, `dx ${dx}: the text must`).toBeGreaterThan(0);
+    }
+  });
+
+  test('a flick never skips a slide', async ({ page, context, browserName }) => {
+    // scroll-snap-stop:always is the rule everywhere else on the deck, and the
+    // hand-driven pan has to keep it: a fast thumb may not carry the reader
+    // past a slide they never saw.
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await walkTo2(page, 't01');
+    await drag(page, context, await mid(page), 900, 0);
+    expect(await at(page)).toBe('2');
   });
 });

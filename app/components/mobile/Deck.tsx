@@ -132,6 +132,21 @@ export function Deck({ crumbs, slides, credit, ground }: {
    */
   const target = useRef<number | null>(null);
 
+  /**
+   * The axis lock, for a slide that carries a scroller of its own.
+   *
+   * Inside such a slide the track is not allowed to pan itself: the scroller
+   * declares `touch-action: pan-y`, so the browser will only ever move the
+   * text, and a drag that turns out to be sideways is carried by the code
+   * below instead. Left to the engine, a thumb that travels a few degrees off
+   * vertical is enough to hand the gesture to the horizontal scroller, and the
+   * reader gets the next slide when they meant the next paragraph.
+   *
+   * The preference is deliberately lopsided. Sideways has to beat down by
+   * AXIS:1 to win; anything steeper reads as the reader wanting to read.
+   */
+  const pan = useRef<{ x: number; y: number; axis: null | 'x' | 'y'; from: number; left: number } | null>(null);
+
   const slideEls = () =>
     [...(track.current?.querySelectorAll<HTMLElement>('.deck-slide') ?? [])];
 
@@ -244,6 +259,65 @@ export function Deck({ crumbs, slides, credit, ground }: {
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
     writeHash(i, null);
   }, [indexNow, writeHash]);
+
+  /**
+   * How much more sideways than down a drag has to be before it counts as a
+   * swipe. 1.6 is about 32 degrees off horizontal - a deliberate diagonal - and
+   * it is one number on purpose, because it is the thing most likely to want
+   * tuning against a real thumb.
+   */
+  const AXIS = 1.6;
+  /** Below this the gesture has not said anything yet. */
+  const DEADZONE = 10;
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const el = track.current;
+    if (!el || e.touches.length !== 1) { pan.current = null; return; }
+    // Only where a slide owns a scroller. Everywhere else the engine's own
+    // snap is better than anything written here.
+    if (!(e.target as HTMLElement).closest?.('[data-deck-pan-y]')) { pan.current = null; return; }
+    const t = e.touches[0]!;
+    pan.current = { x: t.clientX, y: t.clientY, axis: null, from: atRef.current, left: el.scrollLeft };
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    const p = pan.current; const el = track.current;
+    if (!p || !el || e.touches.length !== 1) return;
+    const t = e.touches[0]!;
+    const dx = t.clientX - p.x;
+    const dy = t.clientY - p.y;
+
+    if (!p.axis) {
+      if (Math.abs(dx) < DEADZONE && Math.abs(dy) < DEADZONE) return;
+      p.axis = Math.abs(dx) > Math.abs(dy) * AXIS ? 'x' : 'y';
+      if (p.axis === 'x') el.dataset.panning = '';
+    }
+    if (p.axis !== 'x') return;
+    // Direct manipulation: the slide travels with the finger. scrollLeft grows
+    // as content moves left, whatever the direction of the document, so one
+    // expression is right in both.
+    el.scrollLeft = p.left - dx;
+  }, []);
+
+  const endTouch = useCallback((e: React.TouchEvent) => {
+    const p = pan.current; const el = track.current;
+    pan.current = null;
+    if (!p || !el || p.axis !== 'x') return;
+    delete el.dataset.panning;
+
+    // Where the flick would have carried it. Measured, then clamped to one
+    // slide: scroll-snap-stop:always is the rule, and a fast thumb may not
+    // skip past a slide the reader never saw.
+    const dx = (e.changedTouches[0]?.clientX ?? p.x) - p.x;
+    const base = el.getBoundingClientRect().left;
+    const project = dx * 0.5;
+    let best = p.from; let gap = Infinity;
+    slideEls().forEach((sl, i) => {
+      const g = Math.abs(sl.getBoundingClientRect().left + project - base);
+      if (g < gap) { gap = g; best = i; }
+    });
+    scrollTo(Math.max(p.from - 1, Math.min(p.from + 1, best)), true);
+  }, [scrollTo]);
 
   /**
    * The chrome overlays the track rather than sharing a column with it, so the
@@ -500,7 +574,15 @@ export function Deck({ crumbs, slides, credit, ground }: {
         <b>{crumbs.leaf}</b>
       </nav>
 
-      <div className="deck-track" ref={track} dir="rtl">
+      <div
+        className="deck-track"
+        ref={track}
+        dir="rtl"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={endTouch}
+        onTouchCancel={endTouch}
+      >
         {SLIDES.map((s, i) => (
           <section
             key={s.n}
