@@ -222,8 +222,16 @@ export type Block =
   | { kind: 'ul'; items: Inline[][] }
   | { kind: 'ol'; items: Inline[][] };
 
-/** One cite span as it is drawn: its blocks, and the claims its chip names. */
-export type RenderSpan = { blocks: Block[]; ids: string[] };
+/**
+ * One cite span as it is drawn: its blocks, and the claims its chip names.
+ *
+ * `marker` is set when a bare list marker stood in the gap before this span -
+ * the per-item list form of docs/annotations.html §3. The span is then one
+ * item of a list, and consecutive marked spans of the same kind are one list
+ * rather than a run of one-item lists. The marker itself is not in `blocks`,
+ * because a citation covers a claim and not the glyph in front of it.
+ */
+export type RenderSpan = { blocks: Block[]; ids: string[]; marker?: 'ul' | 'ol' };
 
 const LIST_ITEM = /^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$/;
 /** Marks that wrap prose: the mark goes, the words stay. */
@@ -290,7 +298,31 @@ function blocks(src: string): Block[] {
   return out;
 }
 
-/** The whole field, ready to draw. Gaps carry no prose, so they are not here. */
+/**
+ * A list marker standing alone in the gap before a span. The coverage rule has
+ * always allowed it (§3, and uncoveredText implements it), and it is how a list
+ * whose items each rest on a different source is written. Only the gap's last
+ * line can be the marker for the span that follows it.
+ */
+function gapMarker(gap: string): 'ul' | 'ol' | null {
+  const lines = gap.split('\n');
+  const m = /^[ \t]*(?:([-*+])|\d+[.)])[ \t]*$/.exec(lines[lines.length - 1] ?? '');
+  if (!m) return null;
+  return m[1] ? 'ul' : 'ol';
+}
+
+/**
+ * The whole field, ready to draw.
+ *
+ * Gaps carry no prose, so they are not here - but they may carry the one glyph
+ * the coverage rule lets out of a span, so they are read for it. parseAnnotation
+ * pushes exactly one gap before each span it records, so gaps[i] is the text
+ * immediately before spans[i] however the parse ends.
+ */
 export function renderAnnotation(src: string): RenderSpan[] {
-  return parseAnnotation(src).spans.map((s) => ({ blocks: blocks(s.text), ids: s.ids }));
+  const { spans, gaps } = parseAnnotation(src);
+  return spans.map((s, i) => {
+    const marker = gapMarker(gaps[i] ?? '');
+    return { blocks: blocks(s.text), ids: s.ids, ...(marker ? { marker } : {}) };
+  });
 }

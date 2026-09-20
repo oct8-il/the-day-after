@@ -160,10 +160,11 @@ draw both:</p>
 <p>In the second form the marker opens a list item and the span that follows is its content. The marker is
 never part of the cited text: a citation covers a claim, not the glyph in front of it. Consecutive items are
 one list, not a run of one-item lists, and each item carries its own chip.</p>
-<div class="warn"><strong>The renderer does not do this yet.</strong> <code>renderAnnotation</code> draws spans
-and drops gaps, so a marker written the second way disappears and the item renders as a paragraph — with no
-error, because the validator is right to accept it. Nothing in either pool uses list syntax today, so nothing
-on screen is currently wrong; the first record that needs a per-item list will be. See <span class="mono">DIA-382</span>.</div>
+<div class="note"><strong>Both forms draw, since 20 September.</strong> <code>renderAnnotation</code> used to
+map spans and drop gaps, so a marker written the second way disappeared and the item rendered as a paragraph —
+with no error, because the validator was right to accept it. It now reads the gap before each span: a lone
+marker there sets that span's <code>marker</code>, and the renderer gathers consecutive items of the same kind
+into one list. Nothing in either pool used list syntax, so no screen changed. <span class="mono">DIA-382</span>.</div>
 
 <h2 id="fields">4 · Where it applies</h2>
 <p>Annotation is not a property of the record; it is a property of named fields. Everything else is a plain string and is rendered as one.</p>
