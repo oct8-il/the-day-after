@@ -161,6 +161,75 @@ test.describe('the frame and its edges', () => {
     }
   });
 
+  test('the track is the same height on every slide', async ({ page }) => {
+    // The scroll container's size is the one thing a swipe cannot survive
+    // changing mid-flight: resizing it makes the engine recompute its snap
+    // positions, and the in-flight snap pays for that as an overshoot. It used
+    // to share a flex column with the chrome, which is not the same height on
+    // every slide - the gate gives the dots more air, and a footer with a
+    // previous-slide link is taller than one without. Exactly those two
+    // transitions overshot on the phone, and no others. (DIA-379.)
+    //
+    // This is the half of that bug a headless browser can see.
+    await open(page);
+    const heights: number[] = [];
+    for (let i = 0; i < 6; i++) {
+      await page.locator('.deck-dot').nth(i).click();
+      await page.waitForTimeout(450);
+      heights.push(await page.evaluate(() =>
+        Math.round(document.querySelector('.deck-track')!.getBoundingClientRect().height)));
+    }
+    expect(new Set(heights).size, `track heights: ${heights.join(',')}`).toBe(1);
+
+    // ...and it is the frame's, because the chrome overlays it rather than
+    // taking a share of the column.
+    const frame = await rect(page, '.deck');
+    expect(heights[0]).toBe(Math.round(frame.height));
+  });
+
+  test('nothing in the chrome moves between slides', async ({ page }) => {
+    // The track's height being constant is not enough: the chrome's own
+    // halves were still sizing themselves to what each slide gave them, and a
+    // reader swiping saw the dots drop 2px at the gate and the footer's rule
+    // step up 3.4px at slide 3. Assert the positions a reader actually looks
+    // at, not the container that used to carry the fault.
+    await open(page);
+    const seen: { dot: number; rule: number; foot: number }[] = [];
+    for (let i = 0; i < 6; i++) {
+      await page.locator('.deck-dot').nth(i).click();
+      await page.waitForTimeout(450);
+      seen.push(await page.evaluate(() => {
+        const d = document.querySelector('.deck-dot')!.getBoundingClientRect();
+        const f = document.querySelector('.deck-foot')!.getBoundingClientRect();
+        return { dot: Math.round((d.top + d.bottom) / 2), rule: Math.round(f.top), foot: Math.round(f.height) };
+      }));
+    }
+    for (const k of ['dot', 'rule', 'foot'] as const) {
+      expect.soft(new Set(seen.map((x) => x[k])).size, `${k}: ${seen.map((x) => x[k]).join(',')}`).toBe(1);
+    }
+  });
+
+  test('the chrome still clears the slides it sits over', async ({ page }) => {
+    // The room the chrome needs comes out of each slide's padding now. If that
+    // stopped tracking the chrome, content would slide under the footer - so
+    // assert the clearance rather than the mechanism.
+    for (const hash of ['', '#2', '#3', '#6']) {
+      await open(page, hash);
+      const gap = await page.evaluate(() => {
+        const slide = [...document.querySelectorAll('.deck-slide')].find((s) => {
+          const t = document.querySelector('.deck-track')!;
+          return Math.abs(s.getBoundingClientRect().left - t.getBoundingClientRect().left) < 2;
+        })!;
+        const cs = getComputedStyle(slide);
+        const bottom = document.querySelector('.deck-bottom')!.getBoundingClientRect().height;
+        const top = document.querySelector('.deck-crumbs')!.getBoundingClientRect().height;
+        return { padBottom: parseFloat(cs.paddingBottom), bottom, padTop: parseFloat(cs.paddingTop), top };
+      });
+      expect.soft(gap.padBottom, `${hash || 'gate'} bottom clearance`).toBeGreaterThanOrEqual(gap.bottom - 1);
+      expect.soft(gap.padTop, `${hash || 'gate'} top clearance`).toBeGreaterThanOrEqual(gap.top - 1);
+    }
+  });
+
   test('a landing that comes to rest off the snap point is straightened', async ({ page }) => {
     // The deck corrects itself rather than trusting any one scroll API: three
     // separate causes have put a slide a fraction off its snap point so far,
