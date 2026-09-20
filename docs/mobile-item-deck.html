@@ -449,7 +449,7 @@ add(`<div>
 <p>Writing the list forms down turned up a contradiction rather than a convention: the coverage rule has always let a list marker stand outside a cite span, and the validator accepts it, but the renderer drew spans and dropped gaps — so the marker disappeared and the item came out as a paragraph, with no error. Nothing in either pool used list syntax, so no screen was wrong yet. <span class="id">DIA-382</span>, fixed before the first fixture needed it.</p>`);
 
 add(`<div>
-  <span class="tag done">phase 4 · built</span>
+  <span class="tag done">phase 4 · done</span>
   <h2>Slide 2 — <span class="he">סקירת הכשל</span></h2>
   <p class="sub">The first body slide. Title chip, a lead and its paragraphs, a dashed list, a chip per sentence, and the sources carousel at the end of the reading — the chip is docked, everything under it travels.</p>
   <div class="stack">
@@ -463,19 +463,32 @@ add(`<div>
 <p>One thing the spec says twice and differently: §5's prose calls the list marker "the accent" and its screen paints it <span class="id">#d29a7c</span>, which is <span class="id">--t-press</span>. The screen wins, as it did for the rail — the screens carry inline styles, so every value in them is readable.</p>`);
 
 add(`<div>
-  <span class="tag">next</span>
-  <h2>Gate #3, on a phone</h2>
-  <p class="sub">The body pattern, before it propagates. Slides 3 and 4 are the same component with a filter, so a wrong measure here is a wrong measure three times over.</p>
+  <span class="tag done">gate #3 · passed</span>
+  <h2>The body pattern, judged before it propagates</h2>
+  <p class="sub">Taken with a thumb on t01 and t03 — one that scrolls, one that does not. Approved 20 September.</p>
   <div class="stack">
-    <div class="item"><div class="v">2</div><div class="k">fixtures to set side by side — <span class="id">t01</span>, which scrolls, and <span class="id">t03</span>, which does not</div></div>
-    <div class="item mute"><div class="v">0</div><div class="k">affordance at the cut where the text runs past the frame — §5 asks for none, so none was invented</div></div>
+    <div class="item"><div class="v">2</div><div class="k">slides now inherit this pattern without re-deciding it</div></div>
+    <div class="item"><div class="v">1</div><div class="k">thing the gate rejected — and it was the one the tests all passed</div></div>
+    <div class="item mute"><div class="v">3</div><div class="k">documents now: what it looks like, in what order it is built, and what it does under a finger</div></div>
   </div>
 </div>`,
-`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, and whether the text running past the bottom of the frame reads as "there is more" or as "this is broken". The gesture layer is not part of that judgement — it is <span class="id">DIA-383</span>, and it wants the device rather than a hurry.</p>
-<p>The carousel was docked to the frame when the slide was first built, and it read as a shelf the text ran under rather than as the end of the reading. It now travels with the body — below the last sentence on a long item, at the foot of the column on a short one. <span class="id">§5</span> and the round log say so; the doc is at v2.6.</p>
-<p>One gesture fault came out of the same change and is fixed: the body had quietly become a <i>horizontal</i> scroller — <code>overflow-y:auto</code> computes <code>overflow-x</code> to <code>auto</code>, and the carousel's bleed gave it 40px to travel — so the deck never saw a swipe and slides could only be changed from the bezels.</p>
-<p>The other two are open, as <span class="id">DIA-383</span>. A casual scroll a few degrees off vertical is still read as a swipe, and a thumb travelling right goes forward on the gate but backward on slide 2. An axis lock was written for both and <b>reverted</b> — it measured correctly in Chromium and felt wrong in the hand. The lever it used, <code>touch-action: pan-y</code>, is all-or-nothing: taking the axis from the engine means owning the swipe's inertia too, and a hand-driven pan does not have the engine's momentum curve. The issue records what the attempt is worth so the next one does not start here.</p>
-<p>Then Phase 5 — slide 3, the stage stack, which is where the scrolling ruling has to hold for a second time.</p>`);
+`<p>The gate did its job by rejecting something. An axis lock had been written for two real gesture faults — a casual scroll taken as a swipe, and a thumb that went forward on the gate and backward on slide 2 — and it measured correctly on every assertion written for it. In the hand it was wrong, and it was reverted whole. <span class="id">DIA-383</span> keeps both faults and what the attempt is worth, so the next one does not start here.</p>
+<p>The lesson is cheap to write and expensive to learn again: a headless browser can measure which axis a gesture chose and can say nothing at all about how it feels. Everything on the deck that is a matter of <i>feel</i> was decided with a thumb, and the next one will be too.</p>
+<p>The third document is <code>docs/mobile-item-ux.html</code> — every gesture and control, with the reason under each, sectioned by phase and written only for phases that exist. It gets updated at the end of each one.</p>`);
+
+add(`<div>
+  <span class="tag">next</span>
+  <h2>Phase 5 — slide 3, <span class="he">מה נעשה מאז</span></h2>
+  <p class="sub">The stages the item reached, one page each, stacked downward. The biggest stop in the plan, and the first screen with two scroll axes at once.</p>
+  <div class="stack">
+    <div class="item"><div class="v">2</div><div class="k">axes on one screen — the deck sideways, the stack downward, and one gesture layer already known to be wrong between them</div></div>
+    <div class="item"><div class="v">5</div><div class="k">locator slots, of which only the reached ones are drawn — the rest stay as invisible spacers so no rung ever moves</div></div>
+    <div class="item"><div class="v">1</div><div class="k">fallback that has to work from the first build — a reached stage with no written overview renders from its claims</div></div>
+  </div>
+</div>`,
+`<p>Most of the body is slide 2's, reused rather than rebuilt. What is new is the stack: a page per reached stage, the boundary between two pages carrying the reader on with the same gesture that scrolls them, and a position remembered per stage so scrolling back up returns them to the foot of what they just read rather than above all of it.</p>
+<p>New too: the head group — the status tag as the page title, the definition, the date and its age, the gold <span class="he">סטטוס נוכחי</span> pill on the current stage only — the locator in its rings, the back-to-current pill, and the evidence map on stage 1, which is still the desktop component at 390 and has never had a design pass.</p>
+<p>Gate #4 sets <span class="id">t01</span>, which has four reached stages with overviews, against <span class="id">t03</span>, which has two and none — the overview and the claims fallback in one sitting. Stage definitions render as <span class="id">DIA-367</span> placeholders until the wording lands: review the shape, not the words.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">what merges</div>
@@ -483,7 +496,7 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Four of eight phases are built and two gates are passed. Next action is gate #3 on a phone, and then Phase 5 — slide 3, where the scrolling ruling has to hold a second time.</p>
+<p>Four of eight phases are built and three gates are passed. Next action is Phase 5 — slide 3, where the scrolling ruling has to hold a second time, and where the gesture layer DIA-383 left open gets a second screen to be wrong on.</p>
 <p>There are now three documents rather than two: the spec says what the page looks like, the plan says in what order it gets built, and <code>docs/mobile-item-ux.html</code> records what it does under a finger — sectioned by phase, and updated at the end of each one.</p>`);
 
 /* ---------- runtime ---------- */
