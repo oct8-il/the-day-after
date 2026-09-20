@@ -1,0 +1,484 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · the phone deck — the execution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --ground:#0b0f0b; --ink:#e9e6df; --ink-2:#b5bcc5; --muted:#7c858f;
+    --line:#2b323b; --gold:#e0a44a; --gold-ink:#1a1206;
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43;
+    --no:#d96a5f; --yes:#6fbf8a;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .he{direction:rtl;unicode-bidi:isolate;display:inline-block;font-family:"Frank Ruhl Libre",Georgia,serif}
+
+  /* ---------- stage ---------- */
+  #stage{position:fixed;inset:0;display:grid;place-items:center}
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:clamp(40px,6vw,96px) clamp(40px,8vw,140px) clamp(76px,9vh,110px);
+    flex-direction:column;justify-content:center;
+    opacity:0;transition:opacity .22s ease;
+  }
+  .slide.on{display:flex;opacity:1}
+  .slide.center{align-items:center;text-align:center}
+
+  /* ---------- type scale ---------- */
+  .kicker{
+    font-size:clamp(11px,1.05vw,14px);letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:clamp(18px,2.4vh,30px);font-weight:600;
+  }
+  .kicker.gold{color:var(--gold)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;
+     font-size:clamp(40px,6.4vw,104px);line-height:1.04;margin:0;letter-spacing:-.01em}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;
+     font-size:clamp(32px,4.6vw,72px);line-height:1.1;margin:0;max-width:22ch}
+  .center h2{max-width:24ch}
+  .sub{font-size:clamp(15px,1.5vw,22px);color:var(--ink-2);margin:clamp(16px,2.2vh,28px) 0 0;max-width:46ch;line-height:1.5}
+  .center .sub{margin-left:auto;margin-right:auto}
+  .huge{font-family:"IBM Plex Mono",monospace;font-weight:500;
+        font-size:clamp(90px,19vw,300px);line-height:.86;letter-spacing:-.04em;color:var(--gold)}
+  .huge.plain{color:var(--ink)}
+  .under{font-size:clamp(14px,1.5vw,21px);color:var(--ink-2);margin-top:clamp(18px,2.6vh,34px);max-width:40ch;line-height:1.5}
+  .center .under{margin-left:auto;margin-right:auto}
+
+  /* ---------- pieces ---------- */
+  .rule{height:1px;background:var(--line);margin:clamp(20px,3vh,38px) 0;width:min(100%,560px)}
+  .center .rule{margin-left:auto;margin-right:auto}
+
+  .deckrow{display:flex;gap:clamp(8px,1.1vw,16px);margin-top:clamp(30px,5vh,62px);width:100%}
+  .card{
+    flex:1;border:1px solid var(--line);border-radius:12px;padding:clamp(13px,1.7vw,24px);
+    display:flex;flex-direction:column;gap:6px;min-width:0;background:rgba(255,255,255,.015);
+  }
+  .card .n{font-family:"IBM Plex Mono",monospace;font-size:clamp(11px,1vw,13px);color:var(--muted)}
+  .card .t{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:clamp(15px,1.7vw,26px);direction:rtl;unicode-bidi:isolate;text-align:left;line-height:1.25}
+  .card .d{font-size:clamp(11px,1vw,14px);color:var(--muted);line-height:1.35}
+
+  .ladder{display:flex;flex-direction:column;gap:clamp(6px,1.1vh,14px);margin-top:clamp(30px,5vh,58px);width:100%;max-width:760px}
+  .rung{display:flex;align-items:center;gap:clamp(12px,1.6vw,22px)}
+  .rung .bar{height:clamp(9px,1.5vh,17px);border-radius:3px;background:var(--line);flex:none}
+  .rung .lb{font-size:clamp(12px,1.2vw,17px);color:var(--muted)}
+  .rung.done .bar{background:var(--s5)}
+  .rung.done .lb{color:var(--ink)}
+  .rung.now .bar{background:var(--gold)}
+  .rung.now .lb{color:var(--gold);font-weight:700}
+
+  .zeros{display:flex;gap:clamp(20px,4.6vw,86px);margin-top:clamp(26px,4.4vh,56px);flex-wrap:wrap;justify-content:center}
+  .zero{text-align:center}
+  .zero .v{font-family:"IBM Plex Mono",monospace;font-size:clamp(64px,11.4vw,178px);line-height:.9;color:var(--no);letter-spacing:-.03em}
+  .zero .k{font-size:clamp(11px,1.05vw,15px);color:var(--muted);margin-top:16px;letter-spacing:.06em}
+
+  .stack{display:flex;flex-direction:column;gap:clamp(11px,1.9vh,26px);margin-top:clamp(30px,5vh,58px);width:100%;max-width:780px}
+  .item{display:flex;align-items:baseline;gap:clamp(14px,1.8vw,26px)}
+  .item .v{font-family:"IBM Plex Mono",monospace;font-size:clamp(26px,3.4vw,52px);color:var(--gold);min-width:3.2ch;text-align:right;line-height:1}
+  .item .k{font-size:clamp(13px,1.35vw,20px);color:var(--ink-2);line-height:1.35}
+  .item.mute .v{color:var(--muted)}
+
+  .two{display:flex;gap:clamp(24px,4vw,72px);margin-top:clamp(30px,5vh,58px);width:100%}
+  .col{flex:1;min-width:0}
+  .col h3{font-size:clamp(11px,1.05vw,14px);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;font-weight:600}
+  .col p{margin:0 0 10px;font-size:clamp(13px,1.35vw,20px);line-height:1.45;color:var(--ink-2)}
+  .col.yes h3{color:var(--yes)} .col.no h3{color:var(--no)} .col.gold h3{color:var(--gold)}
+  .col.gold p{color:var(--ink)}
+  .step{display:flex;gap:clamp(14px,1.8vw,26px);align-items:baseline}
+  .step .s{font-family:"IBM Plex Mono",monospace;font-size:clamp(13px,1.3vw,18px);color:var(--gold);min-width:2.4ch}
+  .step .x{font-size:clamp(14px,1.5vw,22px);color:var(--ink-2);line-height:1.4}
+
+  .quote{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:clamp(26px,3.8vw,60px);
+         line-height:1.22;max-width:19ch;margin:0;font-weight:400}
+  .attrib{margin-top:clamp(20px,3vh,36px);font-size:clamp(12px,1.15vw,16px);color:var(--muted);letter-spacing:.04em}
+
+  .tag{display:inline-block;font-size:clamp(11px,1.05vw,14px);font-weight:700;letter-spacing:.04em;
+       padding:4px 12px;border-radius:999px;background:rgba(224,164,74,.14);color:var(--gold);margin-bottom:18px}
+  .tag.done{background:rgba(111,191,138,.15);color:var(--yes)}
+  .tag.open{background:rgba(217,106,95,.13);color:var(--no)}
+  .tag.defer{background:rgba(217,165,79,.15);color:var(--gold)}
+  .tag.bug{background:rgba(217,106,95,.13);color:var(--no)}
+  table.board{width:100%;margin-top:clamp(22px,3.4vh,40px);border-collapse:collapse;font-size:clamp(12px,1.2vw,17px)}
+  table.board td{padding:clamp(7px,1vh,12px) 0;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2);line-height:1.4}
+  table.board tr:first-child td{border-top:0}
+  table.board td.w{width:13ch;padding-inline-end:18px;color:var(--gold);font-family:"IBM Plex Mono",monospace;font-size:.86em;white-space:nowrap}
+  table.board td.s{width:15ch;padding-inline-end:18px;color:var(--muted);font-size:.82em;white-space:nowrap;letter-spacing:.06em;text-transform:uppercase}
+
+  .id{font-family:"IBM Plex Mono",monospace;font-size:.86em;color:var(--gold)}
+
+  /* ---------- chrome ---------- */
+  #bar{position:fixed;left:0;right:0;bottom:0;height:clamp(44px,6vh,64px);
+       display:flex;align-items:center;gap:18px;padding:0 clamp(20px,4vw,52px);
+       border-top:1px solid var(--line);background:rgba(18,21,25,.86);backdrop-filter:blur(8px);z-index:5}
+  #dots{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+  #dots i{width:7px;height:7px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .15s,transform .15s}
+  #dots i.on{background:var(--gold);transform:scale(1.32)}
+  #dots i.seen{background:#49525c}
+  #count{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+  #hint{font-size:11.5px;color:#5c646d;letter-spacing:.06em;white-space:nowrap}
+  #progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:6;transition:width .22s ease}
+
+  #notes{position:fixed;left:0;right:0;bottom:clamp(44px,6vh,64px);max-height:44vh;overflow:auto;
+         background:#171b21;border-top:1px solid var(--line);padding:22px clamp(20px,4vw,52px);
+         display:none;z-index:4;box-shadow:0 -18px 40px rgba(0,0,0,.4)}
+  #notes.on{display:block}
+  #notes p{margin:0 0 11px;font-size:15px;line-height:1.6;color:var(--ink-2);max-width:92ch}
+  #notes p:last-child{margin-bottom:0}
+  #notes .lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600}
+  #notes b{color:var(--ink)}
+
+  @media (max-width:760px){
+    .deckrow{flex-wrap:wrap} .card{flex:1 1 30%}
+    .two{flex-direction:column;gap:22px}
+    #hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="stage"></div>
+<div id="notes"><div class="lab">notes</div><div id="notebody"></div></div>
+<div id="bar"><div id="dots"></div><div id="count"></div><div id="hint">← → move · N notes · F full screen</div></div>
+
+<script>
+const S = [];
+const add = (html, note) => S.push({ html, note });
+
+add(`<div class="center">
+  <div class="kicker">היום שאחרי · DIA-360</div>
+  <h1>Mobile item —<br>the execution</h1>
+  <p class="sub">What actually happened once the code started: every ruling taken against a built screen, every steer off the drawn design, every side-quest, every bug. Grouped by whether it is finished or parked.</p>
+  <div class="rule"></div>
+  <p class="under">The plan is a separate deck and it does not change any more. This one does.</p>
+</div>`,
+`<p>Two decks because they answer two questions. <b>The plan</b> says what was decided before any code and in what order it would be built; it is the thing to argue with when the order looks wrong. <b>This deck</b> says what the building taught, which is the part a plan cannot contain by definition.</p>
+<p>Every entry here has the same shape: what happened, what it cost, and what it changed. Where something is still open it says so and names the issue, because a deck that only carries victories is a deck nobody trusts.</p>`);
+
+add(`<div>
+  <div class="kicker gold">the shape of it</div>
+  <h2>Four days of building, and the design moved five times</h2>
+  <div class="stack">
+    <div class="item"><div class="v">4</div><div class="k">numbered revisions to the spec <i>after</i> the first line of code — v2.3 to v2.7 — plus one ruling written straight into §4</div></div>
+    <div class="item"><div class="v">5</div><div class="k">issues that do not exist anywhere in the plan: <span class="id">DIA-375</span>, <span class="id">379</span>, <span class="id">380</span>, <span class="id">382</span>, <span class="id">383</span></div></div>
+    <div class="item"><div class="v">1</div><div class="k">first pass thrown away whole, and one fix written, measured, approved by its tests and reverted</div></div>
+    <div class="item mute"><div class="v">62</div><div class="k">deck assertions, none of which caught either of those two</div></div>
+  </div>
+</div>`,
+`<p>The number worth staring at is the last one. The tests are good at what they are for — geometry, state, the rules that have a right answer — and they were silent on both of the things that had to be undone. A screenshot cannot see a gesture, and a passing suite is not an opinion.</p>
+<p>The four spec revisions are not scope creep. Each of them is the design meeting a phone and losing, and each is recorded in the round log with the date and the reason. A design that never moved after contact would mean nobody was looking.</p>`);
+
+add(`<div class="center">
+  <span class="tag done">done</span>
+  <h2>What is finished</h2>
+  <p class="sub">Phases 2, 3 and 4, three gates, and everything that came up on the way to them.</p>
+</div>`, null);
+
+add(`<div>
+  <span class="tag bug">the restart</span>
+  <h2>The first pass was thrown away</h2>
+  <p class="sub">Eleven defects in one message, and the instruction underneath them: <i>can't you just go by the design???</i></p>
+  <div class="stack">
+    <div class="item"><div class="v">11</div><div class="k">defects in one review — dots stuck, chrome rendered per slide, arrows flipped, spacing off everywhere</div></div>
+    <div class="item"><div class="v">1</div><div class="k">branch stashed, and the phase restarted from <span class="id">dev</span></div></div>
+  </div>
+</div>`,
+`<p>The first attempt was built from the spec's <i>prose</i>. The spec also carries live 390 × 844 screens with inline styles on every element — which means every value in the design is readable rather than interpretable, and the prose is a summary of them.</p>
+<p>Everything since has been built from the screens, with the prose as the explanation. It is the single largest change in how this work is done, and it cost a whole phase to learn.</p>`);
+
+add(`<div>
+  <span class="tag bug">side-quest</span>
+  <h2>The dev server was lying to the phone</h2>
+  <p class="sub">Three separate "bugs" on the phone, one cause: <span class="id">next dev</span> refused <span class="id">/_next/</span> to a LAN origin, so the page arrived as HTML with no JavaScript.</p>
+  <div class="stack">
+    <div class="item"><div class="v">3</div><div class="k">reported faults that were one blocked request</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">of them reproducible from a laptop, where the origin is localhost</div></div>
+  </div>
+</div>`,
+`<p>Nothing hydrated, so nothing that needed JavaScript worked, and each dead thing looked like its own bug. Fixed with <span class="id">allowedDevOrigins</span> in <span class="id">next.config.mjs</span>, covering the private ranges and <span class="id">*.local</span>.</p>
+<p>The lesson is procedural: when three unrelated things break at once on one device, suspect the delivery before the code.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 2 · done</span>
+  <h2>The frame, before it carried anything</h2>
+  <p class="sub">Six slides one swipe apart, the chrome docked, the URL following the reader, the long press scrubbing — and not one byte of incident data.</p>
+  <div class="stack">
+    <div class="item"><div class="v">4</div><div class="k">faults the phone found that the runner could not: a missing credit, a landing off the snap point, a React warning under the scrub, a jitter on footer navigation</div></div>
+    <div class="item"><div class="v">3</div><div class="k">distinct causes behind the landing bug alone</div></div>
+  </div>
+</div>`,
+`<p>The landing bug is the one worth keeping. Three separate wrong answers: <span class="id">i * clientWidth</span> is not a slide's position, because the frame is fluid and widths carry fractions; a programmatic scroll is not re-snapped; and <span class="id">scrollBy</span> with a measured delta gets capped at one snap point by <span class="id">scroll-snap-stop: always</span>, so a jump to slide 4 arrives at slide 2. The answer is to ask the element where it is and to correct on <span class="id">scrollend</span>.</p>
+<p>The React warning was real too: work done inside a state updater runs during render, and Next patches <span class="id">pushState</span> to sync its router. State that a handler re-enters faster than React re-subscribes it lives in a ref.</p>`);
+
+add(`<div>
+  <span class="tag bug">a family, not an incident</span>
+  <h2>Six class names that already meant something</h2>
+  <p class="sub"><span class="id">.gate</span>, <span class="id">.ladder</span>, <span class="id">.q</span>, <span class="id">.chip</span>, <span class="id">.lead</span>, <span class="id">.prose</span> — all bare rules in the ported prototype stylesheet, all matching by class alone.</p>
+  <div class="stack">
+    <div class="item"><div class="v">3</div><div class="k">review rounds spent on collisions before the pattern was named</div></div>
+    <div class="item"><div class="v">1</div><div class="k">whole screen that rendered as nothing while every data assertion passed — <span class="id">.gate</span> met <span class="id">.gate{display:none!important}</span></div></div>
+  </div>
+</div>`,
+`<p>The worst one is instructive: the gate screen was invisible and the tests were green, because the tests asked about data and the stylesheet answered about display. A height assertion is the cheapest thing that notices, and there is one now.</p>
+<p>Two rules came out of it. Every deck selector is prefixed <span class="id">deck-</span>, and state rides on data attributes rather than classes, because <span class="id">on</span> is also a bare rule. The stylesheet gets audited before a new class is named.</p>`);
+
+add(`<div>
+  <span class="tag done">design change · 19 sep</span>
+  <h2>The gate's source line didn't fit</h2>
+  <p class="sub">Written against the real ledger rather than the mock, the line ran to 75 characters where the design drew 38.</p>
+  <div class="stack">
+    <div class="item mute"><div class="v">38</div><div class="k">characters — the line in the mock</div></div>
+    <div class="item"><div class="v">75</div><div class="k">characters — the longest real one</div></div>
+    <div class="item"><div class="v">11</div><div class="k">of 29 published items overflow one line</div></div>
+  </div>
+</div>`,
+`<p>Four ways out were on the table: truncate, drop to the publisher on overflow, always the publisher, or treat the long ones as a data problem. <b>Ruled: the publisher replaces the document, and only on overflow.</b> Where the line fits it names the document, because naming it is what makes the attribution worth reading.</p>
+<p>The pattern repeats through this deck: the mock is drawn against one plausible record, and the ledger is thirty-three of them. Every slot that holds text from the data is a slot that will meet a longer one.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 3 · done</span>
+  <h2>Slide 1 — <span class="he">השער</span>, and a rail that changed after it was built</h2>
+  <p class="sub">The first screen carrying a real incident. Nothing new had to be invented — and then the rail was wrong anyway.</p>
+  <div class="stack">
+    <div class="item"><div class="v">3</div><div class="k">changes to the rail, decided against the built page rather than a redraw — <span class="id">DIA-380</span></div></div>
+    <div class="item"><div class="v">2</div><div class="k">fixtures set side by side at the gate: one with a portrait, one without</div></div>
+  </div>
+</div>`,
+`<p>Seen on a real photograph, the dashed unreached rung broke into specks. It went solid, the rungs went 4px to 6px, and the ladder took one rhythm — which only worked once the age line stopped hanging past its row and joined its label as one group centred on the rung.</p>
+<p>The order matters more than the change: the design doc moved first, to v2.4, with both embedded screens redrawn, and the code followed. A change made only in the code is a change the next person cannot see.</p>`);
+
+add(`<div>
+  <span class="tag done">detour · done</span>
+  <h2>A swipe that overshot, and the twitch that fixing it exposed</h2>
+  <p class="sub">The docked chrome shared the scroller's column, so the track resized between slides and the in-flight snap paid for it. <span class="id">DIA-379</span>.</p>
+  <div class="stack">
+    <div class="item"><div class="v">12</div><div class="k">px the track lost between slide 1 and 2 — the gate gives the dots more air</div></div>
+    <div class="item"><div class="v">3</div><div class="k">px between 2 and 3 — slide 2 carries no previous-slide label, so the footer was shorter</div></div>
+    <div class="item"><div class="v">2</div><div class="k">attempts: the first moved the fault from invisible to visible</div></div>
+  </div>
+</div>`,
+`<p>The first fix took the chrome out of the flex flow. That stopped the scroller resizing and made the dots and the footer rule jump where the track used to. Your words: <i>not encouraging behavior</i>.</p>
+<p>The second removed the difference instead of hiding it — the gate's extra air became top padding only, and the footer's slots took a floor height. A headless browser could never see the overshoot, but it could always see the track height differ between slides, and that assertion shipped with the fix.</p>`);
+
+add(`<div>
+  <span class="tag done">design change · v2.5</span>
+  <h2>The frame stops being a ceiling</h2>
+  <p class="sub">The largest steer off the original design, and it had nothing to do with the data.</p>
+  <div class="stack">
+    <div class="item"><div class="v">474</div><div class="k">px the drawn density of slide 2 occupies</div></div>
+    <div class="item"><div class="v">352</div><div class="k">px the body column has on an iPhone SE — so the design never fitted the phones it is for</div></div>
+    <div class="item mute"><div class="v">409</div><div class="k">characters, the longest real summary; it fits everywhere, which is how we know the ledger was not the problem</div></div>
+  </div>
+</div>`,
+`<p>The body column scrolls, and <span class="id">§11</span>'s "every stage page must fit the frame" is retired — it cannot survive a slide 2 that does not fit either. Slides 3 and 4 inherit the behaviour in Phase 5: a stage scrolls, the boundary carries the reader on, and a stage reopens where it was left rather than at its top.</p>
+<p>This is what a design meeting a device looks like. Nothing was drawn wrong; it was drawn at a density no phone in the range could hold, and nobody could know that until there was a phone.</p>`);
+
+add(`<div>
+  <span class="tag done">side-quest · <span class="id">DIA-382</span></span>
+  <h2>A marker the renderer had always dropped</h2>
+  <p class="sub">Found while writing the list forms down. The coverage rule has always let a bare list marker stand outside a cite span, and the validator accepts it — the renderer threw it away.</p>
+  <div class="stack">
+    <div class="item"><div class="v">53</div><div class="k">annotated fields across both pools, and not one of them took the broken path</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">errors, warnings or wrong screens — it would simply have rendered as a paragraph</div></div>
+  </div>
+</div>`,
+`<p>Writing a contract down turned up a contradiction rather than a convention. <span class="id">uncoveredText</span> implemented the rule; <span class="id">renderAnnotation</span> mapped spans and never looked at the gaps the marker lives in. Legal authoring, silently mis-drawn.</p>
+<p>Safe to fix precisely because nothing used it: the desktop page, the phone deck and the link preview are byte-identical afterwards. The first record that needed a per-item list would have shipped a wrong screen with a green build.</p>`);
+
+add(`<div>
+  <span class="tag done">side-quest · <span class="id">DIA-375</span></span>
+  <h2>The fixtures were too thin for their own gate</h2>
+  <p class="sub">Written before the deck had a shape: 115 to 215 characters, no list anywhere. The design's screen is a lead, three paragraphs and two dashed lines.</p>
+  <div class="stack">
+    <div class="item"><div class="v">10</div><div class="k">cite spans across the 6 fixtures — and 0 across the 33 live records</div></div>
+    <div class="item"><div class="v">1</div><div class="k">fixture rewritten to overrun the column at every width, so the scroll is a measurement and not a hope</div></div>
+    <div class="item mute"><div class="v">2</div><div class="k">left short on purpose — a reader should not meet a scrollbar on every item</div></div>
+  </div>
+</div>`,
+`<p>Gate 3 on the original fixtures would have reviewed the type and nothing else: the slide came up about a third full. Five summaries were rewritten against the claims already in each record, at the systemic level the section asks for.</p>
+<p>A gate is only as good as the worst case it is shown. Fixtures that cannot produce the hard states make a gate that cannot fail.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 4 · done</span>
+  <h2>Slide 2 — <span class="he">סקירת הכשל</span></h2>
+  <p class="sub">The first body slide, and the pattern slides 3 and 4 will reuse. Built from the embedded screen rather than the prose.</p>
+  <div class="stack">
+    <div class="item"><div class="v">5</div><div class="k">phone widths measured, 320 to 430 — the source card is 212px on every one</div></div>
+    <div class="item"><div class="v">5</div><div class="k">questions the phase opened, all five closed in the design doc the same day</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">spec ambiguity found: §5's prose calls the list marker "the accent", its screen paints it <span class="id">--t-press</span>. The screen won</div></div>
+  </div>
+</div>`,
+`<p>A chip lands its source's card and marks it rather than leaving the deck — most readers arrive inside an in-app browser, where leaving is close to one-way. That is what makes the carousel load-bearing, and why it is never shed.</p>
+<p>The five questions were written down before they could be decided by accident: what a chip does when tapped, whether the phone reuses <span class="id">Annotated</span>, which block is the lead, how a list renders, and what happens when the body does not fit. The last one turned out to be the one that retired a rule.</p>`);
+
+add(`<div>
+  <span class="tag done">design change · v2.6</span>
+  <h2>The sources ride with the text</h2>
+  <p class="sub">Docked to the frame, the carousel read as a shelf the text ran under rather than as the end of the reading.</p>
+</div>`,
+`<p>It now scrolls with the body: below the last sentence on an item that overruns the column, still at the foot of the column on one that fits. Nothing about the short items changed.</p>
+<p>This one could only be seen on the built screen. On the artboard the carousel sits at the bottom of a page that ends, and there is no such thing as a page that ends on a phone.</p>`);
+
+add(`<div>
+  <span class="tag bug">found by hand</span>
+  <h2>The body was a horizontal scroller and nobody had noticed</h2>
+  <p class="sub">Slides could only be changed from the bezels. A swipe started over the text did nothing at all.</p>
+  <div class="stack">
+    <div class="item"><div class="v">40</div><div class="k">px of horizontal travel, from the carousel's bleed — enough to make the body the nearest scroller and take every sideways drag</div></div>
+  </div>
+</div>`,
+`<p><span class="id">overflow-y:auto</span> makes the browser compute <span class="id">overflow-x</span> to <span class="id">auto</span> as well. The fix is to remove the overflow rather than to fight for the gesture: the slide gives up its side padding and the three parts take it back, so the scroller's content is exactly as wide as the scroller.</p>
+<p>Proved with real touch events over CDP, not a mouse drag — a mouse does not pan a scroll container, so a mouse-driven test passes against a build where the swipe does not work at all.</p>`);
+
+add(`<div>
+  <span class="tag bug">written, measured, reverted</span>
+  <h2>The axis lock, and what the gate is for</h2>
+  <p class="sub">A casual scroll was being read as a swipe. The fix worked on every assertion written for it and was wrong in the hand.</p>
+  <div class="stack">
+    <div class="item"><div class="v">1.6</div><div class="k">to 1 — how much more sideways than down a drag had to be before it counted. About 32° off horizontal</div></div>
+    <div class="item"><div class="v">4</div><div class="k">new assertions, all passing, none of them able to say how it felt</div></div>
+  </div>
+</div>`,
+`<p><span class="id">touch-action: pan-y</span> is the only lever that reliably takes the axis from the engine, and it is all-or-nothing: it forbids horizontal panning for the whole ancestor chain, so taking the axis means owning the swipe outright, inertia included. A hand-driven pan does not have the engine's momentum curve, and that is what was wrong. The tolerance was never the problem.</p>
+<p>Reverted whole. <span class="id">DIA-383</span> keeps both faults and everything the attempt is worth, so the next one does not start here. This is the clearest case yet for the gates: the suite approved something a thumb rejected in a second.</p>`);
+
+add(`<div>
+  <span class="tag done">design change · v2.7</span>
+  <h2>The rail comes off the dashes, and loses a ring</h2>
+  <p class="sub">Two questions §12 had been holding since Phase 3 on the grounds that they did not block slide 1. They blocked slide 3.</p>
+  <div class="two">
+    <div class="col gold">
+      <h3>Solid, not dashed</h3>
+      <p>The locator's unreached rungs and the unreached status tag follow slide 1. The design now says one thing about an unreached stage on every screen.</p>
+    </div>
+    <div class="col gold">
+      <h3>No current-stage ring</h3>
+      <p>Removed, not restyled. Splitting reached from unreached made it redundant: on slide 3 the current stage is always the last rung drawn, and on slide 4 it is not drawn at all.</p>
+    </div>
+  </div>
+</div>`,
+`<p>The gate keeps its own current-stage mark. Its ladder carries both halves at once, so there the mark is the only thing that says where the item stands — a distinction worth making explicitly, because "remove the highlight" would otherwise have taken it too.</p>
+<p>The evidence map was settled in the same breath: it ships as the desktop component at 390. Ruled rather than deferred — render it, look at it on a phone, and if it is a problem there it becomes one then.</p>`);
+
+add(`<div>
+  <span class="tag done">a third document</span>
+  <h2>What the page does under a finger</h2>
+  <p class="sub"><span class="id">docs/mobile-item-ux.html</span>. The spec says what it looks like, the plan says in what order it is built; neither said what it does.</p>
+  <div class="stack">
+    <div class="item"><div class="v">19</div><div class="k">behaviours recorded, each with the reason under it</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">entries for phases that do not exist yet</div></div>
+  </div>
+</div>`,
+`<p>The reasons are the point. Most were bought with a review round on a real phone, and a change that does not know the reason buys the same round again — why the dot row refuses the browser its own gestures, why a programmatic move is always <span class="id">scrollIntoView</span>, why the chrome belongs to the destination from the moment it is chosen.</p>
+<p>It is sectioned by build phase and updated at the end of each one, the same ritual as this deck.</p>`);
+
+add(`<div>
+  <span class="tag done">gate #3 · passed</span>
+  <h2>Three gates behind us</h2>
+  <p class="sub">Each one taken with a thumb on a real phone, on fixtures, against the spec's embedded screens.</p>
+  <div class="stack">
+    <div class="item"><div class="v">3</div><div class="k">gates passed — the frame, the gate screen, the body pattern</div></div>
+    <div class="item"><div class="v">5</div><div class="k">still to take, and the biggest of them is next</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">thing a gate has rejected that every test approved</div></div>
+  </div>
+</div>`,
+`<p>Gate 3 earned its keep by rejecting the axis lock. That is the whole argument for a stop that a person takes rather than a runner: the suite can only check the things somebody thought to ask about.</p>
+<p>Next is Phase 5 — slide 3, the stage stack. Two scroll axes on one screen, with the gesture layer between them already known to be wrong.</p>`);
+
+add(`<div class="center">
+  <span class="tag defer">deferred</span>
+  <h2>What is parked, and why</h2>
+  <p class="sub">Nothing here is forgotten and nothing here is blocking. Two of them were known before the build; the rest came out of it.</p>
+</div>`,
+`<p>A deferred item with no reason attached becomes a surprise later. Each row below says where it bites, so that the phase that reaches it inherits the reason rather than rediscovering it.</p>`);
+
+add(`<div>
+  <div class="kicker gold">the board</div>
+  <h2>Eight open, none of them blocking</h2>
+  <table class="board">
+    <tr><td class="w">DIA-383</td><td class="s">from the build</td><td>The gesture layer on a slide that scrolls: a casual scroll read as a swipe, and a swipe direction that disagrees with the gate. Slides 3 and 4 inherit the same scroller</td></tr>
+    <tr><td class="w">DIA-367</td><td class="s">from the plan</td><td>Four stage strings never written — definitions for 3 and 6, absence statements for 3 and 4. Renders as placeholders; nothing waits on it</td></tr>
+    <tr><td class="w">DIA-366</td><td class="s">from the plan</td><td>Photographs for the live ledger. Until it lands, the live pool shows the number ghost and nothing else</td></tr>
+    <tr><td class="w">DIA-368</td><td class="s">from the plan</td><td>A fidelity gate for the deck, baselined against the spec's screens rather than against the app</td></tr>
+    <tr><td class="w">DIA-376</td><td class="s">post-mvp</td><td>Slide 6's star strip, and the first endpoint this project would ever own. Version A ships; the strip is not built inert</td></tr>
+    <tr><td class="w">card credit</td><td class="s">phase 8</td><td>The 111px card has no credit slot and cannot grow, and most of these images are CC BY-SA. Three candidate answers are ready</td></tr>
+    <tr><td class="w">the cut</td><td class="s">watching</td><td>Slide 2's text runs past the bottom of the frame with no fade. §5 asks for none, so none was invented — but "there is more" and "this is broken" are one thumb apart</td></tr>
+    <tr><td class="w">the chip</td><td class="s">watching</td><td>Naming the source type in Hebrew makes the chip about 90px wide, so it usually wraps below its sentence rather than sitting at the end of it</td></tr>
+  </table>
+</div>`,
+`<p>The two marked <i>watching</i> are not issues. They are things seen at a gate and left alone deliberately, recorded so that the next person to notice them knows it was a decision rather than an oversight.</p>
+<p>The evidence map used to sit on this board. It came off on 20 September with a ruling rather than a fix: it ships as the desktop component at 390.</p>`);
+
+add(`<div class="center">
+  <div class="kicker gold">why this deck exists</div>
+  <h2>The plan was right about the order and wrong about the cost</h2>
+  <p class="sub">Every phase so far has been finished twice: once against the design, and once against a phone.</p>
+</div>`,
+`<p>Close here. The plan's shape held — settle the design, settle the data, build in an order where each phase is judged before the next one inherits its mistakes — and it is the judging that has produced almost everything in this deck.</p>
+<p>Five gates left. On present form each of them costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
+
+/* ---------- runtime ---------- */
+const stage = document.getElementById('stage');
+const dots  = document.getElementById('dots');
+const count = document.getElementById('count');
+const notes = document.getElementById('notes');
+const nbody = document.getElementById('notebody');
+const prog  = document.getElementById('progress');
+
+S.forEach((s, i) => {
+  const el = document.createElement('section');
+  el.className = 'slide' + (s.html.includes('class="center"') ? ' center' : '');
+  el.innerHTML = s.html;
+  stage.appendChild(el);
+  const d = document.createElement('i');
+  d.addEventListener('click', () => go(i));
+  dots.appendChild(d);
+});
+
+const slides = [...document.querySelectorAll('.slide')];
+let at = 0;
+
+function go(n) {
+  at = Math.max(0, Math.min(S.length - 1, n));
+  slides.forEach((el, i) => el.classList.toggle('on', i === at));
+  [...dots.children].forEach((d, i) => {
+    d.className = i === at ? 'on' : (i < at ? 'seen' : '');
+  });
+  count.textContent = String(at + 1).padStart(2, '0') + ' / ' + String(S.length).padStart(2, '0');
+  prog.style.width = ((at + 1) / S.length * 100) + '%';
+  nbody.innerHTML = S[at].note || '<p style="color:#6c757f">No notes on this one — it says what it says.</p>';
+  try { location.hash = String(at + 1); } catch (e) {}
+}
+
+addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(at + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(at - 1); }
+  else if (e.key === 'Home') go(0);
+  else if (e.key === 'End') go(S.length - 1);
+  else if (e.key === 'n' || e.key === 'N') notes.classList.toggle('on');
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+  }
+});
+
+stage.addEventListener('click', (e) => go(at + (e.clientX < innerWidth * 0.28 ? -1 : 1)));
+
+let x0 = null;
+addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', (e) => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 48) go(at + (dx < 0 ? 1 : -1));
+  x0 = null;
+}, { passive: true });
+
+go(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+</script>
+</body>
+</html>

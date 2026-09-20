@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>היום שאחרי · the phone deck — where we are</title>
+<title>היום שאחרי · the phone deck — the plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -148,7 +148,8 @@ add(`<div class="center">
   <h1>The phone deck</h1>
   <p class="sub"><span class="he">היום שאחרי</span> — the item page, rebuilt for the screen people actually arrive on.</p>
 </div>`,
-`<p>Opening frame. This is the build plan and the state of it, not the design — the design is settled at v2.3 and this is how it becomes code.</p>
+`<p>Opening frame. This is the build <b>plan</b>, not the design and not the progress — the design is settled at v2.3 and this is how it was to become code.</p>
+<p><b>This deck is closed.</b> It says what was decided before any of it was built, and it is left alone so that it can be argued with later. What the building actually taught — every ruling taken against a screen, every steer off the drawn design, every side-quest and every bug — lives in <code>docs/mobile-item-exec.html</code>, which is the one that moves.</p>
 <p>Where the whole thing came from: most people reach an item from an Instagram post, on a phone. The desktop page squeezed onto 390px was never the front door it needed to be.</p>`);
 
 add(`<div class="center">
@@ -192,13 +193,6 @@ add(`<div>
 `<p>Phases 0 to 3 are green. Slide 1 is on the screen and reading from the real fixtures; Phase 4 is next.</p>
 <p>Phase 10 runs alongside everything from Phase 2 onward — it's the writing, and it doesn't gate the build. It does gate the page <i>looking</i> finished.</p>`);
 
-add(`<div class="center">
-  <div class="huge">4 / 11</div>
-  <p class="under">Phases done. One real screen, five still naming themselves.</p>
-</div>`,
-`<p>The shape was real after Phase 2: six slides one swipe apart, the chrome docked, the URL following the reader, the long press scrubbing. Phase 3 put the first incident on it — the gate reads its rail, its age line, its source line and its number out of the ledger, and falls back to the number ghost where there is no photograph.</p>
-<p>That is the whole point of the order. The frame was judged on a phone before a single sentence of the ledger could hide a fault in it.</p>`);
-
 add(`<div>
   <span class="tag done">phase 0 · done</span>
   <h2>The spec stopped moving</h2>
@@ -239,27 +233,6 @@ add(`<div class="center">
 `<p>Which stages an item reached. What the gate's source line names. Which neighbours slide 6 shows. The item's number. The date a stage was reached.</p>
 <p>They're pure — they take the ledger as an argument rather than importing it — so each tests against a handful of literals. <span class="id">npm test</span>, no runner to install, a tenth of a second, and a new job in CI.</p>
 <p>The argument for doing this now rather than at Phase 9: a baseline tells you a pixel moved. This tells you which rule broke, three phases before the pixel.</p>`);
-
-add(`<div>
-  <span class="tag done">phase 2 · done</span>
-  <h2>Phase 2 read no data at all</h2>
-  <p class="sub">The breakpoint, scroll-snap, the docked chrome, the footer chain, hash routing with push-once history, and jump mode. Every slide a number and its name.</p>
-</div>`,
-`<p>That's why it could start before the writing did. It touched no summary, no photo and no poll, so none of the content pass blocked it.</p>
-<p>It was also the riskiest phase, which is why it went early — and it earned that billing. Gate #1 was on a real phone, and the phone found three things a headless browser had signed off.</p>`);
-
-add(`<div>
-  <span class="tag done">phase 2 · what the phone found</span>
-  <h2>Three faults no runner could see</h2>
-  <div class="stack">
-    <div class="item"><div class="v">1</div><div class="k">Slides landed a fraction off the snap point — <span class="id">i × clientWidth</span> is not where a slide is, and <span class="id">scroll-snap-stop</span> caps the obvious repair at one slide</div></div>
-    <div class="item"><div class="v">2</div><div class="k">A React warning on the long press — history written inside a state updater, which runs during render</div></div>
-    <div class="item"><div class="v">3</div><div class="k">The footer flashed the slide it came from, mid-animation — the scroll handler was fighting the deck's own scroll</div></div>
-  </div>
-</div>`,
-`<p>All three were in code that passed nineteen assertions. That is the argument for the gates, stated as cheaply as it will ever be stated.</p>
-<p>The second one is the one worth carrying forward. React's most useful warnings exist only in a development build and are stripped from the export the suite ran against — so the fault was silent in the build being tested and loud in the build a person opens. CI now runs the deck suite twice, the second time against <span class="id">next dev</span>, and fails on anything written to the console.</p>
-<p>The first is a reminder that a measurement beats a reasoned-about API: <span class="id">scrollBy</span> to slide 4 arrives at slide 2, and no amount of reading the spec would have said so.</p>`);
 
 add(`<div class="center">
   <div class="kicker">how it gets reviewed</div>
@@ -365,20 +338,6 @@ add(`<div class="center">
 <p>It runs in parallel from Phase 2 and it is the thing most likely to set the real date.</p>`);
 
 add(`<div>
-  <span class="tag done">decided · 19 sep</span>
-  <h2>The gate’s line didn’t fit</h2>
-  <div class="stack">
-    <div class="item mute"><div class="v">38</div><div class="k">characters — the line in the mock</div></div>
-    <div class="item"><div class="v">75</div><div class="k">characters — the longest real one</div></div>
-    <div class="item"><div class="v">11</div><div class="k">of 29 published items overflow one line</div></div>
-  </div>
-</div>`,
-`<p>Found by writing <span class="id">sourceLine</span> against the real ledger rather than the mock. The worst is <span class="he">סיכום דוח צוות המומחים לבדיקת תחקירי צה"ל · Times of Israel · ועוד 3 מקורות</span>.</p>
-<p>Naming the publisher instead of the document fixes every line — but then the slot no longer names a document, which is the part that makes the attribution worth reading.</p>
-<p>Four ways out were on the table: truncate with an ellipsis; drop to the publisher only on overflow; always the publisher; or treat the long ones as a data problem and shorten those source strings.</p>
-<p><b>Ruled: the publisher replaces the document, and only on overflow.</b> Where the line fits it names the document, because naming it is what makes the attribution worth reading; where it doesn't, it names that document's publisher instead. The slot means the document on 18 of 29 and the publisher on the rest — the price of not cutting a title mid-word. The helper returns both halves, so the choice is made once, in the component.</p>`);
-
-add(`<div>
   <div class="kicker">also open</div>
   <h2>Two more, both parked on purpose</h2>
   <div class="two">
@@ -406,98 +365,14 @@ add(`<div>
 <p>What it buys: "the site is built from the repository, there is no database and no API" stays a fact about the project through the MVP. No endpoint, no third-party call, nothing to operate.</p>
 <p>And Phase 8 builds version A only. It does not build the strip and leave it inert — that's how dead code gets shipped.</p>`);
 
-add(`<div>
-  <span class="tag done">phase 3 · done</span>
-  <h2>Slide 1 — <span class="he">השער</span></h2>
-  <p class="sub">The first screen that carries a real incident. Photo duotone, the right-edge fade, the gate-only rail with its age line, title block, source line, credit — and the no-photo fallback with the number ghost.</p>
-  <div class="stack">
-    <div class="item"><div class="v">3</div><div class="k">helpers it reads through — <span class="id">itemNumber</span>, <span class="id">stageDate</span>, <span class="id">sourceLine</span> — all written and tested in Phase 1</div></div>
-    <div class="item"><div class="v">2</div><div class="k">fixtures side by side at gate #2 — <span class="id">t01</span> with a portrait, <span class="id">t04</span> without</div></div>
-    <div class="item"><div class="v">1</div><div class="k">decision taken on the way — the source line falls back to the publisher on overflow, and only then</div></div>
-  </div>
-</div>`,
-`<p>Nothing new had to be invented: the rules were written in Phase 1 and the frame in Phase 2, so what was left was the screen. Gate #2 was taken on the phone and passed, on fixtures — no live item has a photograph until DIA-366 lands, so the live pool would have shown the fallback and nothing else.</p>
-<p>The rail changed after it was built rather than before: seen on a real photograph, the dashed unreached rung broke into specks. It went solid, the rungs went 4px to 6px, and the ladder took one rhythm — which only worked once the age line stopped hanging past its row and joined its label as one group centred on the rung. Design doc first, then the code; the screens in §4 are still the thing to build against.</p>`);
-
-add(`<div>
-  <span class="tag done">detour · done</span>
-  <h2>A swipe that overshot, and the twitch that fixing it exposed</h2>
-  <p class="sub">The docked chrome shared the scroller's column, so the track resized between slides and the in-flight snap paid for it.</p>
-  <div class="stack">
-    <div class="item"><div class="v">12</div><div class="k">px the track lost between slide 1 and 2 — the gate gives the dots more air</div></div>
-    <div class="item"><div class="v">3</div><div class="k">px between 2 and 3 — slide 2 carries no previous-slide label, so the footer was shorter</div></div>
-    <div class="item"><div class="v">0</div><div class="k">px anywhere now, at 320, 393 and 430 — dot centre, rule, footer and track identical on all six</div></div>
-  </div>
-</div>`,
-`<p>Resizing a scroll container mid-scroll makes the engine recompute its snap positions. <span class="id">DIA-379</span>, two commits.</p>
-<p>The first took the chrome out of the flex flow — track absolute, chrome overlaid, slide padding published as CSS variables by a ResizeObserver. That stopped the scroller resizing, and moved the fault from invisible to visible: the dots and the footer rule now jumped where the track used to. Your words: <i>not encouraging behavior</i>.</p>
-<p>The second removed the difference rather than hiding it. The gate's extra air became top padding only, so the bottom edge never moves; the footer's three slots took a floor height, so the previous-slide label appearing no longer grows the row. A row-level minimum was tried first and rejected — it left slack under the ink and ate the home-indicator clearance.</p>
-<p>The lesson is the one worth keeping: a headless browser could never see the overshoot, but it could always see the track height differ between slides. That assertion shipped with the fix and now guards all six slides at three widths.</p>`);
-
-add(`<div>
-  <span class="tag done">the frame stops being a ceiling</span>
-  <h2>A ruling that arrived before the code did</h2>
-  <p class="sub">Slide 2's five open questions were closed in the design doc the same day they were written down — and the fifth was not small.</p>
-  <div class="stack">
-    <div class="item"><div class="v">474</div><div class="k">px §5's drawn density occupies</div></div>
-    <div class="item"><div class="v">352</div><div class="k">px the body column has on an iPhone SE — so the design never fitted the phones it is for</div></div>
-    <div class="item mute"><div class="v">409</div><div class="k">characters, the longest real summary — it fits everywhere, which is how we know the ledger had nothing to do with it</div></div>
-  </div>
-</div>`,
-`<p>Four of the five were small: a chip moves the carousel instead of leaving the deck; one <span class="id">Annotated</span> with a declared chip variant rather than a media query; the lead is the first paragraph, chosen in CSS, so the shared parser stays unaware that leads exist; and lists are supported in both of their forms.</p>
-<p>The fifth retired a rule. <b>The body column scrolls</b>, the chip and the carousel stay docked — and §11's "every stage page must fit the frame" cannot survive a slide 2 that does not fit either. Slides 3 and 4 take the same behaviour in Phase 5: a stage scrolls, the same gesture carries the reader on at its end, and a stage reopens where it was left rather than at its top.</p>
-<p>Writing the list forms down turned up a contradiction rather than a convention: the coverage rule has always let a list marker stand outside a cite span, and the validator accepts it, but the renderer drew spans and dropped gaps — so the marker disappeared and the item came out as a paragraph, with no error. Nothing in either pool used list syntax, so no screen was wrong yet. <span class="id">DIA-382</span>, fixed before the first fixture needed it.</p>`);
-
-add(`<div>
-  <span class="tag done">phase 4 · done</span>
-  <h2>Slide 2 — <span class="he">סקירת הכשל</span></h2>
-  <p class="sub">The first body slide. Title chip, a lead and its paragraphs, a dashed list, a chip per sentence, and the sources carousel at the end of the reading — the chip is docked, everything under it travels.</p>
-  <div class="stack">
-    <div class="item"><div class="v">5</div><div class="k">phone widths measured, 320 to 430 — the card is 212px on every one</div></div>
-    <div class="item"><div class="v">1</div><div class="k">fixture written to overrun the column at every width, so the scroll is a measurement and not a hope</div></div>
-    <div class="item"><div class="v">62</div><div class="k">deck assertions now, 23 of them new</div></div>
-  </div>
-</div>`,
-`<p>The fixtures were the first problem. Written before the deck had a shape — 115 to 215 characters, no list anywhere — they would have made gate #3 a review of the type and nothing else. Five were rewritten against the claims already in each record: <span class="id">t01</span> overruns the column on every phone, <span class="id">t03</span> overruns only on the two small ones, which is §5's own density not fitting an SE, and <span class="id">t05</span> and <span class="id">t02</span> never do. A reader should not meet a scrollbar on every item.</p>
-<p>A chip lands its source's card and marks it rather than leaving the deck — most readers arrive inside an in-app browser, where leaving is close to one-way, so the card carries the outbound link one tap further on. That is what makes the carousel load-bearing, and why it is never shed.</p>
-<p>One thing the spec says twice and differently: §5's prose calls the list marker "the accent" and its screen paints it <span class="id">#d29a7c</span>, which is <span class="id">--t-press</span>. The screen wins, as it did for the rail — the screens carry inline styles, so every value in them is readable.</p>`);
-
-add(`<div>
-  <span class="tag done">gate #3 · passed</span>
-  <h2>The body pattern, judged before it propagates</h2>
-  <p class="sub">Taken with a thumb on t01 and t03 — one that scrolls, one that does not. Approved 20 September.</p>
-  <div class="stack">
-    <div class="item"><div class="v">2</div><div class="k">slides now inherit this pattern without re-deciding it</div></div>
-    <div class="item"><div class="v">1</div><div class="k">thing the gate rejected — and it was the one the tests all passed</div></div>
-    <div class="item mute"><div class="v">3</div><div class="k">documents now: what it looks like, in what order it is built, and what it does under a finger</div></div>
-  </div>
-</div>`,
-`<p>The gate did its job by rejecting something. An axis lock had been written for two real gesture faults — a casual scroll taken as a swipe, and a thumb that went forward on the gate and backward on slide 2 — and it measured correctly on every assertion written for it. In the hand it was wrong, and it was reverted whole. <span class="id">DIA-383</span> keeps both faults and what the attempt is worth, so the next one does not start here.</p>
-<p>The lesson is cheap to write and expensive to learn again: a headless browser can measure which axis a gesture chose and can say nothing at all about how it feels. Everything on the deck that is a matter of <i>feel</i> was decided with a thumb, and the next one will be too.</p>
-<p>The third document is <code>docs/mobile-item-ux.html</code> — every gesture and control, with the reason under each, sectioned by phase and written only for phases that exist. It gets updated at the end of each one.</p>`);
-
-add(`<div>
-  <span class="tag">next</span>
-  <h2>Phase 5 — slide 3, <span class="he">מה נעשה מאז</span></h2>
-  <p class="sub">The stages the item reached, one page each, stacked downward. The biggest stop in the plan, and the first screen with two scroll axes at once.</p>
-  <div class="stack">
-    <div class="item"><div class="v">2</div><div class="k">axes on one screen — the deck sideways, the stack downward, and one gesture layer already known to be wrong between them</div></div>
-    <div class="item"><div class="v">5</div><div class="k">locator slots, of which only the reached ones are drawn — the rest stay as invisible spacers so no rung ever moves</div></div>
-    <div class="item"><div class="v">1</div><div class="k">fallback that has to work from the first build — a reached stage with no written overview renders from its claims</div></div>
-  </div>
-</div>`,
-`<p>Most of the body is slide 2's, reused rather than rebuilt. What is new is the stack: a page per reached stage, the boundary between two pages carrying the reader on with the same gesture that scrolls them, and a position remembered per stage so scrolling back up returns them to the foot of what they just read rather than above all of it.</p>
-<p>New too: the head group — the status tag as the page title, the definition, the date and its age, the gold <span class="he">סטטוס נוכחי</span> pill on the current stage only — the locator in its rings, the back-to-current pill, and the evidence map on stage 1, which is still the desktop component at 390 and has never had a design pass.</p>
-<p>Gate #4 sets <span class="id">t01</span>, which has four reached stages with overviews, against <span class="id">t03</span>, which has two and none — the overview and the claims fallback in one sitting. Stage definitions render as <span class="id">DIA-367</span> placeholders until the wording lands: review the shape, not the words.</p>`);
-
 add(`<div class="center">
   <div class="kicker gold">what merges</div>
   <h2>The deck, read end to end, on the real ledger</h2>
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Four of eight phases are built and three gates are passed. Next action is Phase 5 — slide 3, where the scrolling ruling has to hold a second time, and where the gesture layer DIA-383 left open gets a second screen to be wrong on.</p>
-<p>There are now three documents rather than two: the spec says what the page looks like, the plan says in what order it gets built, and <code>docs/mobile-item-ux.html</code> records what it does under a finger — sectioned by phase, and updated at the end of each one.</p>`);
+<p>That is where this deck stops. It does not track how far along the build is, and it is not updated as phases land — a plan that keeps being edited to match what happened is a plan you can no longer be wrong about.</p>
+<p>Three documents carry the rest. The spec says what the page looks like, <code>docs/mobile-item-ux.html</code> says what it does under a finger, and <code>docs/mobile-item-exec.html</code> says what the building taught — every decision, steer, side-quest and bug, grouped by done and deferred.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
