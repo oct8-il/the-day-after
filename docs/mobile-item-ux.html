@@ -1,0 +1,234 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · Mobile item — interactions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --s1:#c17367; --s2:#c18e67; --s3:#c1a967; --s4:#91c167; --s5:#67c185; --s6:#db4f43; --flag:#c9a45a;
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --s1:#9c473a; --s2:#9c653a; --s3:#9c823a; --s4:#689c3a; --s5:#3a9c5b; --s6:#ca2c21; --flag:#a8842e;
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .frame{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:60px 0 36px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.1;margin:14px 0 10px}
+  .lede{font-size:19px;color:var(--text-2);max-width:64ch;margin:0}
+  .meta{font-size:13.5px;color:var(--muted);margin-top:14px}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:29px;line-height:1.2;margin:56px 0 6px;scroll-margin-top:20px}
+  h3{font-size:18px;font-weight:700;margin:30px 0 6px;letter-spacing:.01em}
+  h4{font-size:14.5px;font-weight:700;margin:20px 0 4px;color:var(--text-2);letter-spacing:.04em;text-transform:uppercase}
+  p{margin:10px 0;max-width:72ch}
+  ul,ol{max-width:72ch;padding-inline-start:22px}
+  li{margin:6px 0}
+  code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+  pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:14px 0}
+  pre code{background:none;border:0;padding:0;font-size:13.5px;line-height:1.6}
+  .he{direction:rtl;unicode-bidi:isolate;display:inline-block}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  td.q{width:30%;color:var(--text)}
+  .note{border-inline-start:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .warn{border-inline-start:3px solid var(--no);background:rgba(217,106,95,.10);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .status{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;padding:2px 9px;border-radius:3px;white-space:nowrap}
+  .st-done{background:rgba(111,191,138,.16);color:var(--yes)}
+  .st-open{background:rgba(217,165,79,.16);color:var(--partial)}
+  .st-todo{background:var(--surface-2);color:var(--muted)}
+  nav.toc{margin:26px 0 0;font-size:15px;columns:2;column-gap:36px}
+  nav.toc a{display:block;padding:3px 0;color:var(--text-2)}
+  .phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .phase h3{margin-top:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pno{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);letter-spacing:.06em}
+  .gate{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px;font-size:14.5px;color:var(--text-2)}
+  .gate b{color:var(--accent);font-weight:700}
+  @media (max-width:640px){ nav.toc{columns:1} .frame{padding:0 18px 64px} td.q{width:auto} }
+  .rule{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+  .rule h4{margin-top:0}
+  .rule p:last-child{margin-bottom:0}
+  .k{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+  td.g{width:34%}
+  .why{color:var(--text-2);font-size:15px}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header class="masthead">
+  <div class="kicker">היום שאחרי · DIA-360</div>
+  <h1>Mobile item — interactions</h1>
+  <p class="lede">What the item page does under a finger: every gesture, every control, and the rule behind each one. The design is <a href="mobile-item.html">docs/mobile-item.html</a> and the order of work is <a href="mobile-item-plan.html">docs/mobile-item-plan.html</a>; this is the third of the three, and it records behaviour rather than appearance.</p>
+  <p class="meta">v1.2 · 20 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
+</header>
+
+<nav class="toc">
+  <a href="#always">0 · True on every screen</a>
+  <a href="#p2">Phase 2 · The deck, the chrome, the gestures</a>
+  <a href="#p3">Phase 3 · Slide 1 — <span class="he">השער</span></a>
+  <a href="#p4">Phase 4 · Slide 2 — <span class="he">סקירת הכשל</span></a>
+  <a href="#watch">What to watch</a>
+</nav>
+
+<div class="note"><strong>How to read this.</strong> Each entry is a behaviour, then the reason it is that way. The reasons matter more than the behaviours: most of them were bought with a review round on a real phone, and a future change that does not know the reason will buy the same round again. Phases 5 to 8 are absent on purpose — nothing is written here until it exists.</div>
+
+<h2 id="always">0 · True on every screen</h2>
+
+<div class="rule">
+  <h4>The page itself never scrolls</h4>
+  <p>The deck is a fixed frame at <code>100dvh</code>. Every scroll on the item page belongs to a region inside a slide — the horizontal track, slide 2's body, and from Phase 5 the stage stacks. The document does not move.</p>
+  <p class="why"><code>100dvh</code> and not <code>100vh</code>: iOS collapses its URL bar as you scroll, and <code>vh</code> keeps the pre-collapse height, so the deck would sit taller than the window and the footer would hide under the bar.</p>
+</div>
+
+<div class="rule">
+  <h4>Nothing is gesture-only</h4>
+  <p>Every move the deck can make by gesture has a second route that a screen reader or a keyboard can take: six labelled sections in DOM order, footer labels that are real links, arrow keys on a hardware keyboard.</p>
+  <p class="why">On a phone a screen-reader swipe means "next element", not "next slide". A deck whose only route between slides is a horizontal drag is a deck a screen-reader user cannot leave.</p>
+</div>
+
+<div class="rule">
+  <h4>Reduced motion removes motion, never state</h4>
+  <p>Under <code>prefers-reduced-motion</code> animated travel becomes an instant landing — jump mode's live scrub, the chip landing a card, the deck's own smooth scroll. Anything that <em>shows</em> something, such as jump mode's dim, stays.</p>
+  <p class="why">The dim is not decoration; it says the deck is in a different mode. Removing it would remove the only sign that the mode is on.</p>
+</div>
+
+<div class="rule">
+  <h4>The finger is not the only reader</h4>
+  <p>Gestures are proved with real touch events, not mouse drags, and on measured geometry rather than screenshots.</p>
+  <p class="why">A mouse does not pan a scroll container. A mouse-driven test passed against a build where the body had quietly become a horizontal scroller and the swipe did not work at all.</p>
+</div>
+
+<h2 id="p2">Phase 2 · The deck, the chrome, the gestures <span class="status st-done">done</span></h2>
+<p>DIA-377. The frame, the chrome that rides on it, and every way between slides. Nothing here renders incident data, which is why it could be judged on its own.</p>
+
+<h3>Moving between slides</h3>
+<table>
+  <tr><th class="g">Gesture</th><th>What happens</th></tr>
+  <tr><td class="g">Horizontal swipe</td><td>The main route. A horizontal scroll-snap track; the slide travels with the finger and lands on a snap point.</td></tr>
+  <tr><td class="g">A fast flick</td><td>Moves <strong>one</strong> slide, never two. <code>scroll-snap-stop: always</code>.</td></tr>
+  <tr><td class="g">Footer <span class="he">‹ ›</span></td><td>Real links, labelled with the destination slide's name. Slide 1 has no previous label and slide 6 no next; those ends are bare rather than disabled.</td></tr>
+  <tr><td class="g">Arrow keys</td><td>Mapped spatially, so in RTL the right arrow goes back and the left arrow forward.</td></tr>
+  <tr><td class="g">Tapping a dot</td><td>Nothing. The dots are a counter and jump mode's strip, not six buttons — at six dots across 390px a tap target would be smaller than a fingertip.</td></tr>
+</table>
+
+<div class="rule">
+  <h4>A slide never lands off its snap point</h4>
+  <p>Every programmatic move is <code>scrollIntoView({inline:'start'})</code> on the slide element, and a <code>settle()</code> on <code>scrollend</code> corrects anything more than half a pixel out.</p>
+  <p class="why">Three separate bugs came from calculating instead of measuring. <code>i * clientWidth</code> is not a slide's position — the frame is fluid between 320 and 599 so widths carry fractions, and a programmatic scroll is not re-snapped. <code>scrollBy</code> with a measured delta is worse: <code>scroll-snap-stop: always</code> caps it at one snap point, so a jump to slide 4 arrived at slide 2.</p>
+</div>
+
+<div class="rule">
+  <h4>The chrome is the destination's from the moment the destination is chosen</h4>
+  <p>While the deck is driving itself towards a slide, the scroll handler reports nothing. The landing is recorded once, on <code>scrollend</code>.</p>
+  <p class="why">Without it, tapping the footer showed the destination, flashed the slide it came from as the animation crossed the midpoint, then settled. The reader reads that as a bug, because it is one.</p>
+</div>
+
+<h3>Jump mode — the dot row</h3>
+<div class="rule">
+  <h4>Press and hold, scrub, release</h4>
+  <p>A 400ms press on the dot row arms the mode. The page then scrubs live under the finger — the deck follows the dot the thumb is over — and release lands there. The mode ends with the finger: there is nothing to dismiss.</p>
+  <p>Armed, the strip goes to full strength and the deck behind it drops to 40% over 120ms. Arming also takes <code>scroll-snap-type</code> off the track.</p>
+  <p class="why">Snap and scrub fight otherwise: the track keeps pulling to the nearest slide while the thumb is still moving. The dim is state, so it survives reduced motion; the live scrub does not, and becomes a jump on release.</p>
+</div>
+<div class="rule">
+  <h4>A finger that travels before the hold is a swipe, not an arm</h4>
+  <p>Movement during the 400ms cancels the press.</p>
+  <p class="why">The dot row sits in the bottom quarter of the screen, which is where a thumb naturally swipes. Without the cancel, half the swipes started down there would arm instead.</p>
+</div>
+<div class="rule">
+  <h4>The strip refuses the browser its own gestures</h4>
+  <p><code>-webkit-touch-callout:none</code>, <code>user-select:none</code>, <code>touch-action:none</code> on the dot row.</p>
+  <p class="why">A long press on iOS otherwise raises the selection callout and the magnifier, on top of the mode the press just armed. There is no haptics API in Safari, so the feedback is visual or it does not exist.</p>
+</div>
+
+<h3>The URL and the Back button</h3>
+<div class="rule">
+  <h4>One entry on the history stack, however far the reader travels</h4>
+  <p>Slides are hashes — <code>#3</code> for a slide, <code>#3-s2</code> for a stage. The <em>first</em> move pushes a history entry; every move after it replaces. Returning to the slide the reader arrived on is a <code>history.back()</code> rather than a write.</p>
+  <p class="why">Most readers arrive from a post, inside an in-app browser. Two presses of Back have to get them out from anywhere in the deck. A push per slide would bury the exit six deep.</p>
+</div>
+<div class="rule">
+  <h4>The gate is the bare URL, never <code>#1</code></h4>
+  <p>A cold deep link opens on its slide and survives a refresh.</p>
+  <p class="why">One canonical address per item. <code>#1</code> and no hash would be two links to the same screen, and both would be shared.</p>
+</div>
+
+<h2 id="p3">Phase 3 · Slide 1 — <span class="he">השער</span> <span class="status st-done">done</span></h2>
+<p>DIA-378. The first screen carrying a real incident, and deliberately the least interactive one in the deck.</p>
+<div class="rule">
+  <h4>Nothing on the gate is a control</h4>
+  <p>The stage rail is a picture of where the item stands, not a way to go anywhere. The photo credit is text. The only interactive things on the screen are the deck's own chrome.</p>
+  <p class="why">It is the screen a reader lands on from a post, and the one place where the item has to say what it is before it asks for anything. Its whole job is to be read.</p>
+</div>
+<div class="rule">
+  <h4>Edge-anchored things are anchored physically</h4>
+  <p>The rail sits against the right edge by a physical value and is asserted on a measured <code>getBoundingClientRect()</code>.</p>
+  <p class="why">§2's RTL trap: <code>padding-inline-end</code> and <code>align-items:flex-end</code> both resolve <em>left</em> in RTL. It has cost two review rounds, and a logical property that reads correctly in the source is exactly the kind of thing nobody re-reads.</p>
+</div>
+
+<h2 id="p4">Phase 4 · Slide 2 — <span class="he">סקירת הכשל</span> <span class="status st-done">done</span></h2>
+<p>DIA-381. The first body slide, and the first screen with a scroller of its own — which is where most of the interaction rules below come from. Slides 3 and 4 inherit them.</p>
+
+<div class="rule">
+  <h4>The chip is docked; everything under it travels</h4>
+  <p>The slide title stays where it is. The body and the sources carousel scroll together as one column.</p>
+  <p class="why">The carousel is the end of the reading, not a shelf above it. Docked to the frame it read as something the text ran under. On an item that overruns the column it now waits below the last sentence; on one that fits it still falls to the foot of the column, which is how §5's screen draws it.</p>
+</div>
+
+<div class="warn"><strong>The axis is the engine's, and it is wrong — <span class="mono">DIA-383</span>.</strong> A scroll a few degrees off vertical is read as a swipe most of the time, and a thumb travelling right goes <em>forward</em> on the gate but <em>backward</em> on slide 2, because a nested scroller changes the handoff. Both are open.<br><br>An axis lock was written and reverted. It declared <code>touch-action: pan-y</code> on the scroller — the only lever that reliably takes the axis away from the engine — and carried the sideways drag in code, with sideways having to beat down by 1.6:1. It measured correctly and felt wrong in the hand: <code>pan-y</code> is all-or-nothing, so taking the axis means owning the swipe's inertia too, and a hand-driven pan does not have the engine's momentum curve. The issue records what the attempt is still worth, so the next one does not start here.</div>
+
+<div class="rule">
+  <h4>The body scrolls down and never sideways</h4>
+  <p>The slide gives up its own side padding and the three parts take it back, so the scroller's content is exactly as wide as the scroller.</p>
+  <p class="why"><code>overflow-y:auto</code> makes the browser compute <code>overflow-x</code> to <code>auto</code> as well, and the carousel's bleed gave that axis 40px to travel. The browser hands a horizontal drag to the nearest scroller that can take it, so the deck never saw the swipe and slides could only be changed from the bezels. <code>touch-action: pan-y</code> alone would not have fixed it — it forbids horizontal panning for the whole ancestor chain, so it would have killed the swipe rather than passing it on.</p>
+</div>
+
+<div class="rule">
+  <h4>A source chip lands its card; it does not leave the deck</h4>
+  <p>Tapping a chip scrolls the carousel to that claim's card and marks it. The card itself carries the outbound link, one tap further on. A chip resting on several claims lands the first of them, and the rest are adjacent, because the carousel is deduplicated in order of first appearance.</p>
+  <p class="why">Most readers arrive inside an in-app browser, where leaving is close to one-way. This is also what makes the carousel load-bearing, and why it is never shed. The rail is moved by a measured delta rather than arithmetic: it is RTL, and <code>scrollLeft</code>'s sign there is not worth remembering.</p>
+</div>
+
+<div class="rule">
+  <h4>The carousel keeps its own horizontal axis</h4>
+  <p>A drag started on the carousel scrolls the carousel, not the deck, and does not chain to the deck at either end.</p>
+  <p class="why">It is a carousel; owning sideways drags on itself is the whole point. Chaining at the end would fling the reader to the next slide while they were browsing sources.</p>
+</div>
+
+<h2 id="watch">What to watch</h2>
+<table>
+  <tr><th class="g">Thing</th><th>Where it bites</th></tr>
+  <tr><td class="g">The gesture layer on a slide that scrolls</td><td><span class="mono">DIA-383</span>. A casual scroll is taken as a swipe, and the swipe direction disagrees with the gate. Slides 3 and 4 inherit the same scroller in Phases 5 and 6, so two faults are about to be three.</td></tr>
+  <tr><td class="g">No affordance at the cut</td><td>Slide 2's text runs past the bottom of the frame with no fade and no shadow. §5 asks for none, so none was invented — but "there is more" and "this is broken" are one thumb apart.</td></tr>
+  <tr><td class="g">The chip costs a line</td><td>Naming the source type in Hebrew makes the chip about 90px wide, so it usually wraps below its sentence rather than sitting at the end of it the way §5 draws.</td></tr>
+  <tr><td class="g">Gestures cannot be judged from here</td><td>Synthetic touch in Chromium measures an axis decision correctly and says nothing about how a gesture feels. The reverted lock passed every assertion written for it. Anything in this document about a gesture's <em>feel</em> was decided with a thumb, and the next one will be too.</td></tr>
+</table>
+
+</div>
+</body>
+</html>

@@ -435,18 +435,47 @@ add(`<div>
 <p>The lesson is the one worth keeping: a headless browser could never see the overshoot, but it could always see the track height differ between slides. That assertion shipped with the fix and now guards all six slides at three widths.</p>`);
 
 add(`<div>
-  <span class="tag">next</span>
-  <h2>Phase 4 — slide 2, <span class="he">סקירת הכשל</span></h2>
-  <p class="sub">The failure described, in authored text that carries its sources inside it. The first body slide, and the pattern slides 3 and 4 will reuse without re-deciding.</p>
+  <span class="tag done">the frame stops being a ceiling</span>
+  <h2>A ruling that arrived before the code did</h2>
+  <p class="sub">Slide 2's five open questions were closed in the design doc the same day they were written down — and the fifth was not small.</p>
   <div class="stack">
-    <div class="item"><div class="v">10</div><div class="k">cite spans across the 6 fixtures — and 0 across the 33 live records, which is why gate #3 is taken on fixtures</div></div>
-    <div class="item"><div class="v">2</div><div class="k">slides inherit whatever is settled here</div></div>
-    <div class="item mute"><div class="v">0</div><div class="k">new parsing — <span class="id">lib/annotation.ts</span> landed with DIA-372 and is shared with the desktop</div></div>
+    <div class="item"><div class="v">474</div><div class="k">px §5's drawn density occupies</div></div>
+    <div class="item"><div class="v">352</div><div class="k">px the body column has on an iPhone SE — so the design never fitted the phones it is for</div></div>
+    <div class="item mute"><div class="v">409</div><div class="k">characters, the longest real summary — it fits everywhere, which is how we know the ledger had nothing to do with it</div></div>
   </div>
 </div>`,
-`<p>The interpreter is not this phase's work. <span class="id">DIA-372</span> shipped the parser, the chip syntax and the coverage rule, and <code>docs/annotations.html</code> is the authority where an issue disagrees with it. What Phase 4 owns is the phone's half: how the body reads inside one 844-tall frame, the chip at the end of a sentence, and the sources carousel under it.</p>
-<p>Gate #3 is the careful one. Slides 3 and 4 are the same component with a filter, so a wrong measure here is a wrong measure three times over — which is the whole reason the plan puts a single-slide phase in front of them.</p>
-<p>Drafted as <span class="id">DIA-381</span>, in DIA-377's shape, sitting in the backlog for you to edit before it starts. It carries five questions the phase has to close — what a chip does when tapped, whether the phone reuses <span class="id">Annotated</span>, which block is the lead, how a list renders, and what happens when the body does not fit — written down because that is the kind of thing that gets decided by accident and then inherited twice.</p>`);
+`<p>Four of the five were small: a chip moves the carousel instead of leaving the deck; one <span class="id">Annotated</span> with a declared chip variant rather than a media query; the lead is the first paragraph, chosen in CSS, so the shared parser stays unaware that leads exist; and lists are supported in both of their forms.</p>
+<p>The fifth retired a rule. <b>The body column scrolls</b>, the chip and the carousel stay docked — and §11's "every stage page must fit the frame" cannot survive a slide 2 that does not fit either. Slides 3 and 4 take the same behaviour in Phase 5: a stage scrolls, the same gesture carries the reader on at its end, and a stage reopens where it was left rather than at its top.</p>
+<p>Writing the list forms down turned up a contradiction rather than a convention: the coverage rule has always let a list marker stand outside a cite span, and the validator accepts it, but the renderer drew spans and dropped gaps — so the marker disappeared and the item came out as a paragraph, with no error. Nothing in either pool used list syntax, so no screen was wrong yet. <span class="id">DIA-382</span>, fixed before the first fixture needed it.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 4 · built</span>
+  <h2>Slide 2 — <span class="he">סקירת הכשל</span></h2>
+  <p class="sub">The first body slide. Title chip, a lead and its paragraphs, a dashed list, a chip per sentence, and the sources carousel at the end of the reading — the chip is docked, everything under it travels.</p>
+  <div class="stack">
+    <div class="item"><div class="v">5</div><div class="k">phone widths measured, 320 to 430 — the card is 212px on every one</div></div>
+    <div class="item"><div class="v">1</div><div class="k">fixture written to overrun the column at every width, so the scroll is a measurement and not a hope</div></div>
+    <div class="item"><div class="v">62</div><div class="k">deck assertions now, 23 of them new</div></div>
+  </div>
+</div>`,
+`<p>The fixtures were the first problem. Written before the deck had a shape — 115 to 215 characters, no list anywhere — they would have made gate #3 a review of the type and nothing else. Five were rewritten against the claims already in each record: <span class="id">t01</span> overruns the column on every phone, <span class="id">t03</span> overruns only on the two small ones, which is §5's own density not fitting an SE, and <span class="id">t05</span> and <span class="id">t02</span> never do. A reader should not meet a scrollbar on every item.</p>
+<p>A chip lands its source's card and marks it rather than leaving the deck — most readers arrive inside an in-app browser, where leaving is close to one-way, so the card carries the outbound link one tap further on. That is what makes the carousel load-bearing, and why it is never shed.</p>
+<p>One thing the spec says twice and differently: §5's prose calls the list marker "the accent" and its screen paints it <span class="id">#d29a7c</span>, which is <span class="id">--t-press</span>. The screen wins, as it did for the rail — the screens carry inline styles, so every value in them is readable.</p>`);
+
+add(`<div>
+  <span class="tag">next</span>
+  <h2>Gate #3, on a phone</h2>
+  <p class="sub">The body pattern, before it propagates. Slides 3 and 4 are the same component with a filter, so a wrong measure here is a wrong measure three times over.</p>
+  <div class="stack">
+    <div class="item"><div class="v">2</div><div class="k">fixtures to set side by side — <span class="id">t01</span>, which scrolls, and <span class="id">t03</span>, which does not</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">affordance at the cut where the text runs past the frame — §5 asks for none, so none was invented</div></div>
+  </div>
+</div>`,
+`<p>Things to look at with a thumb rather than a screenshot: whether the chip naming its type earns the line it costs, whether landing a card reads as an answer to tapping the chip, and whether the text running past the bottom of the frame reads as "there is more" or as "this is broken". The gesture layer is not part of that judgement — it is <span class="id">DIA-383</span>, and it wants the device rather than a hurry.</p>
+<p>The carousel was docked to the frame when the slide was first built, and it read as a shelf the text ran under rather than as the end of the reading. It now travels with the body — below the last sentence on a long item, at the foot of the column on a short one. <span class="id">§5</span> and the round log say so; the doc is at v2.6.</p>
+<p>One gesture fault came out of the same change and is fixed: the body had quietly become a <i>horizontal</i> scroller — <code>overflow-y:auto</code> computes <code>overflow-x</code> to <code>auto</code>, and the carousel's bleed gave it 40px to travel — so the deck never saw a swipe and slides could only be changed from the bezels.</p>
+<p>The other two are open, as <span class="id">DIA-383</span>. A casual scroll a few degrees off vertical is still read as a swipe, and a thumb travelling right goes forward on the gate but backward on slide 2. An axis lock was written for both and <b>reverted</b> — it measured correctly in Chromium and felt wrong in the hand. The lever it used, <code>touch-action: pan-y</code>, is all-or-nothing: taking the axis from the engine means owning the swipe's inertia too, and a hand-driven pan does not have the engine's momentum curve. The issue records what the attempt is worth so the next one does not start here.</p>
+<p>Then Phase 5 — slide 3, the stage stack, which is where the scrolling ruling has to hold for a second time.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">what merges</div>
@@ -454,7 +483,8 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Three of eight phases are behind us and two gates are passed. Next action is Phase 4, slide 2 — the body pattern, judged once, before slides 3 and 4 inherit it.</p>`);
+<p>Four of eight phases are built and two gates are passed. Next action is gate #3 on a phone, and then Phase 5 — slide 3, where the scrolling ruling has to hold a second time.</p>
+<p>There are now three documents rather than two: the spec says what the page looks like, the plan says in what order it gets built, and <code>docs/mobile-item-ux.html</code> records what it does under a finger — sectioned by phase, and updated at the end of each one.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
