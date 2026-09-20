@@ -38,6 +38,23 @@ const rect = (page: Page, sel: string) =>
     return { top: r.top, right: r.right, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
   }, sel);
 
+/**
+ * Open an item at the gate and walk to slide 2, the way a reader arrives.
+ *
+ * For the gesture tests only. A cold deep link to #2 makes slide 2 the entry
+ * slide, and §11's push-once rule then turns a swipe back onto it into
+ * history.back() - which, in a fixture with nothing behind the page, leaves it
+ * for about:blank and the assertion reads a torn-down document rather than a
+ * bug. Arriving with something behind you is the honest case anyway.
+ */
+async function walkTo2(page: Page, id: string) {
+  await page.goto(`/item/${id}/`);
+  await page.waitForSelector('.deck-gate-rail');
+  await page.evaluate(() => { location.hash = '#2'; });
+  await page.waitForSelector('.deck-ov-scroll');
+  await page.waitForTimeout(500);
+}
+
 /** Open an item on slide 2 and let the deck settle on the snap point. */
 async function open(page: Page, id: string) {
   await page.goto(`/item/${id}/#2`);
@@ -95,9 +112,12 @@ test.describe('the column', () => {
     await open(page, 't03');
     const slide = await rect(page, '.deck-ov');
     const chip = await rect(page, '.deck-ov-title');
+    const ink = await rect(page, '.deck-ov-body > p:first-child');
     expect(chip.width).toBeLessThan(slide.width * 0.75);
-    // And it sits against the physical right edge, because the deck is RTL.
-    expect(Math.round(chip.right)).toBe(Math.round(slide.right));
+    // And it starts where the text does. The slide gives up its side padding
+    // so the carousel can reach the edge, so the reference is the ink and not
+    // the box - and in RTL "starts" is the physical right.
+    expect(Math.round(chip.right)).toBe(Math.round(ink.right));
   });
 });
 
@@ -215,10 +235,10 @@ test.describe('the sources carousel', () => {
     await open(page, 't03');
     const rail = await rect(page, '.deck-ov-sources');
     const first = await rect(page, '.deck-ov-card');
-    // The rail bleeds the slide's 20px and pads it back, so the card's right
-    // edge lands where the text's does.
-    const body = await rect(page, '.deck-ov-body');
-    expect(Math.round(first.right)).toBe(Math.round(body.right));
+    // The rail runs the full width and pads 20px, so the card's right edge
+    // lands where the text's does while a card can still reach the edge.
+    const ink = await rect(page, '.deck-ov-body > p:first-child');
+    expect(Math.round(first.right)).toBe(Math.round(ink.right));
     expect(first.right).toBeLessThanOrEqual(rail.right + 0.5);
   });
 });
@@ -337,6 +357,27 @@ test.describe('the body scrolls and the rest does not', () => {
     expect(await where()).toEqual(before);
   });
 
+  test('the body scrolls down and never sideways', async ({ page }) => {
+    // overflow-y:auto computes overflow-x to auto, so anything wider than the
+    // scroller turns the body into a horizontal scroller - and then a swipe
+    // started in the middle of the text scrolls nothing instead of changing
+    // slide, because the browser hands the gesture to the nearest scroller.
+    // The carousel keeps its own horizontal axis; it is a carousel.
+    for (const id of ['t01', 't03', 't05'] as const) {
+      await open(page, id);
+      const axes = await page.evaluate(() => {
+        const sc = document.querySelector('.deck-ov-scroll')!;
+        const rail = document.querySelector('.deck-ov-sources')!;
+        return {
+          bodyX: sc.scrollWidth - sc.clientWidth,
+          railX: rail.scrollWidth - rail.clientWidth,
+        };
+      });
+      expect(axes.bodyX, `${id}: the body must not scroll sideways`).toBe(0);
+      expect(axes.railX, `${id}: the carousel still does`).toBeGreaterThan(0);
+    }
+  });
+
   test('the page itself never scrolls, whatever the body does', async ({ page }) => {
     await open(page, 't01');
     await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 1000; });
@@ -363,5 +404,75 @@ test.describe('the floor', () => {
     expect(m.chips).toBe(1);
     expect(m.cards).toBe(1);
     expect(m.body).toBeGreaterThan(40);
+  });
+});
+
+/**
+ * The swipe is the main way between slides, and it has to work from the middle
+ * of the screen. A mouse drag cannot prove it: mice do not pan a scroll
+ * container, so the gesture has to be real touch, dispatched over CDP.
+ */
+test.describe('a swipe starts anywhere', () => {
+  test.use({ hasTouch: true });
+
+  test('a horizontal drag from the middle of the text changes slide', async ({ page, context, browserName }) => {
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await walkTo2(page, 't01');
+    const at = () => page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
+    expect(await at()).toBe('1');
+
+    const mid = await page.evaluate(() => {
+      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
+      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+    });
+
+    const cdp = await context.newCDPSession(page);
+    const touch = (type: string, x?: number, y?: number) =>
+      cdp.send('Input.dispatchTouchEvent', {
+        type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
+      } as never);
+
+    // Towards the physical right is backwards in RTL, so this lands on the
+    // gate. Started in the middle of the text on purpose: the bezel is not a
+    // control, and a body that scrolls sideways would swallow this.
+    await touch('touchStart', mid.x - 120, mid.y);
+    for (let i = 1; i <= 10; i += 1) {
+      await touch('touchMove', mid.x - 120 + i * 24, mid.y);
+      await page.waitForTimeout(16);
+    }
+    await touch('touchEnd');
+    await page.waitForTimeout(900);
+
+    expect(await at()).toBe('0');
+  });
+
+  test('a vertical drag in the same place scrolls the text and stays on the slide', async ({ page, context, browserName }) => {
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await walkTo2(page, 't01');
+    const mid = await page.evaluate(() => {
+      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
+      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+    });
+
+    const cdp = await context.newCDPSession(page);
+    const touch = (type: string, x?: number, y?: number) =>
+      cdp.send('Input.dispatchTouchEvent', {
+        type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
+      } as never);
+
+    await touch('touchStart', mid.x, mid.y + 150);
+    for (let i = 1; i <= 10; i += 1) {
+      await touch('touchMove', mid.x, mid.y + 150 - i * 15);
+      await page.waitForTimeout(16);
+    }
+    await touch('touchEnd');
+    await page.waitForTimeout(600);
+
+    const after = await page.evaluate(() => ({
+      top: document.querySelector('.deck-ov-scroll')!.scrollTop,
+      at: document.querySelector('.deck')!.getAttribute('data-at'),
+    }));
+    expect(after.top).toBeGreaterThan(0);
+    expect(after.at).toBe('1');
   });
 });

@@ -1175,7 +1175,15 @@
      the prose calls the list marker "the accent" and the screen paints it
      #d29a7c, which is --t-press. The screen wins, as it did for the rail. */
 
+  /* The slide gives up its own side padding and the three parts take it back,
+     so the scroller's content is exactly as wide as the scroller. Otherwise the
+     carousel's bleed overflows it horizontally - and overflow-y:auto computes
+     overflow-x to auto, so the body becomes a horizontal scroller and eats the
+     swipe between slides. A finger in the middle of the text has to reach the
+     deck, and it only does when there is nothing nearer to scroll. */
+  .deck-slide:has(.deck-ov){padding-inline:0}
   .deck-ov{height:100%;display:flex;flex-direction:column;gap:14px;padding-top:26px;box-sizing:border-box}
+  .deck-ov-head,.deck-ov-body{padding-inline:20px}
 
   /* The chip is docked; everything under it travels. The inner column is at
      least as tall as the scroller, so the carousel's margin-top:auto still
@@ -1228,7 +1236,7 @@
   /* The carousel, docked to the foot of the column and bleeding the slide's
      own 20px so a card can sit against the edge. The card is the link; §5 is
      explicit that it carries no קישור label. */
-  .deck-ov-sources{flex:none;margin:auto 0 0;margin-inline:-20px;padding:0 20px;list-style:none;
+  .deck-ov-sources{flex:none;margin:auto 0 0;padding:0 20px;list-style:none;
     display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
     overscroll-behavior-x:contain}
   .deck-ov-sources::-webkit-scrollbar{display:none}

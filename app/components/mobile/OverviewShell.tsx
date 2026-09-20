@@ -66,7 +66,7 @@ export function OverviewShell({ title, cards, children }: {
 
   return (
     <div className="deck-ov">
-      <div><span className="deck-ov-title">{title}</span></div>
+      <div className="deck-ov-head"><span className="deck-ov-title">{title}</span></div>
 
       {/* Everything below the chip moves together. overscroll-behavior keeps a
           flick at the end of the text from becoming a swipe to the next slide. */}
