@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -77,7 +77,26 @@ export function parseHash(hash: string): { slide: number; stage: number | null }
 const hashFor = (i: number, stage: number | null) =>
   i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
-export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string } }) {
+export function Deck({ crumbs, slides, credit, ground }: {
+  crumbs: { ancestors: string[]; leaf: string };
+  /**
+   * The slides that have been built, by index. A hole is a placeholder naming
+   * itself, which is how the deck shipped in Phase 2 and how slides 2-6 still
+   * stand. They arrive as nodes rather than being imported here because they
+   * are server-rendered: the gate is the first thing a reader sees and should
+   * not wait for hydration, and this component is a client one.
+   */
+  slides?: (ReactNode | null)[];
+  /** The gate's photo credit, which §3 gives the footer's left slot on slide 1. */
+  credit?: string | null;
+  /**
+   * The gate's ground, painted behind the whole frame rather than inside slide
+   * 1. The chrome is docked - it sits in the deck's own column, outside the
+   * track - so a ground painted inside the slide would stop where the track
+   * stops and leave a seam under the dots. It is shown only on the gate.
+   */
+  ground?: ReactNode;
+}) {
   const track = useRef<HTMLDivElement>(null);
   const dots = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
@@ -194,13 +213,32 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
     if (opts?.write ?? true) writeHash(n, null);
   }, [scrollTo, writeHash]);
 
-  /** The track has stopped moving: adopt where it stopped, and record it. */
+  /**
+   * The track has stopped moving: adopt where it stopped, straighten it if it
+   * stopped between two slides, and record it.
+   *
+   * The straightening is the important half. A slide landing a fraction off
+   * its snap point has had three separate causes so far - index arithmetic
+   * against a fractional width, scroll-snap-stop capping a scrollBy, and now
+   * something on the glass that does not reproduce in a headless Chromium at
+   * any width. Rather than chase a fourth, the deck measures where it actually
+   * came to rest and corrects it. The correction is instant and its own
+   * scrollend finds nothing left to do, so it cannot loop.
+   */
   const settle = useCallback(() => {
     target.current = null;
     // A scrub stops between every pair of dots. The landing writes the hash,
     // once, when the finger lifts - not at each stage it passed through.
     if (armedRef.current) return;
     const i = indexNow();
+
+    const el = track.current;
+    const sl = slideEls()[i];
+    if (el && sl) {
+      const dx = sl.getBoundingClientRect().left - el.getBoundingClientRect().left;
+      if (Math.abs(dx) > 0.5) sl.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'instant' });
+    }
+
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
     writeHash(i, null);
   }, [indexNow, writeHash]);
@@ -263,6 +301,15 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
 
     el.addEventListener('scroll', read, { passive: true });
     if ('onscrollend' in el) el.addEventListener('scrollend', settle, { passive: true });
+
+    /**
+     * The frame is 100dvh, and on iOS the visible viewport changes height as
+     * the URL bar collapses - which fires a resize while the reader is part
+     * way through a swipe. Put the current slide back where it belongs.
+     */
+    const onResize = () => scrollTo(atRef.current, false);
+    window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
     // A finger on the track takes it back from whatever the deck was doing.
     const release = () => { target.current = null; };
     el.addEventListener('pointerdown', release, { passive: true });
@@ -272,8 +319,10 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
       el.removeEventListener('scroll', read);
       el.removeEventListener('scrollend', settle);
       el.removeEventListener('pointerdown', release);
+      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
     };
-  }, [indexNow, settle]);
+  }, [indexNow, settle, scrollTo]);
 
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
@@ -393,7 +442,7 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
           <Chevron d={CHEVRON.right} />{SLIDES[at - 1].he}
         </a>;
   const next = onGate
-    ? <span className="deck-credit" />
+    ? <span className="deck-credit">{credit ?? ''}</span>
     : at < LAST
       ? <a className="deck-link" href={hashFor(at + 1, null)} onClick={(e) => { e.preventDefault(); go(at + 1); }}>
           {SLIDES[at + 1].he}<Chevron d={CHEVRON.left} />
@@ -411,6 +460,8 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
       tabIndex={-1}
       onKeyDown={onKey}
     >
+      {ground && <div className="deck-ground" aria-hidden="true">{ground}</div>}
+
       {/* §3: one path, top right, never split across two corners. */}
       <nav className="deck-crumbs" aria-label="מיקום">
         {crumbs.ancestors.map((a) => (
@@ -428,13 +479,14 @@ export function Deck({ crumbs }: { crumbs: { ancestors: string[]; leaf: string }
             aria-label={`${s.n} מתוך ${SLIDES.length} · ${s.he}`}
             aria-current={i === at ? 'true' : undefined}
           >
-            {/* Phase 2 renders no incident data. Each slide names itself so the
-                chrome, the gestures and the history can be judged on their own,
-                which is the whole point of taking this phase first. */}
-            <div className="deck-placeholder">
-              <span className="deck-placeholder-n">{s.n}</span>
-              <span className="deck-placeholder-he">{s.he}</span>
-            </div>
+            {slides?.[i] ?? (
+              // Not built yet: the slide names itself, as every slide did in
+              // Phase 2 while the frame was being judged on its own.
+              <div className="deck-placeholder">
+                <span className="deck-placeholder-n">{s.n}</span>
+                <span className="deck-placeholder-he">{s.he}</span>
+              </div>
+            )}
           </section>
         ))}
       </div>

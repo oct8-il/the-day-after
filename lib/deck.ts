@@ -140,3 +140,29 @@ export function siblings<T extends { id: string; parent: string }>(
   }
   return taken;
 }
+
+/**
+ * `<document> · <outlet> · ועוד N מקורות`.
+ *
+ * Overflow is the reason this is a function rather than a template: written
+ * against the real ledger the line runs to 75 characters where the mock had 38,
+ * and overflows one line on 11 of 29 published items. Where it fits, the slot
+ * names the document, because naming it is what makes the attribution worth
+ * reading; where it does not, it names that document's publisher instead, and
+ * every line fits. (Roy, 19 September — spec §4.)
+ *
+ * The threshold is a character count rather than a measurement because the line
+ * has to be chosen on the server, where there is no layout to measure. 13px
+ * Assistant at 390 minus two 20px gutters fits about 46 characters; 44 is that
+ * with a margin for the widest glyphs.
+ */
+const FITS = 44;
+
+export function sourceLineText(s: SourceLine): string {
+  const tail = [s.outlet, s.more > 0 ? `ועוד ${s.more} מקורות` : null].filter(Boolean);
+  const line = (head: string | null) => [head, ...tail].filter(Boolean).join(' · ');
+
+  const full = line(s.document);
+  if (full.length <= FITS || !s.documentPublisher) return full;
+  return line(s.documentPublisher);
+}

@@ -13,6 +13,11 @@ import { ItemIntro } from '@/app/components/ItemIntro';
 import { CitationLinks } from '@/app/components/CitationLinks';
 import { Header } from '@/app/components/Header';
 import { Deck } from '@/app/components/mobile/Deck';
+import { Gate, GateGround, type GateRung } from '@/app/components/mobile/Gate';
+import { sourceLine } from '@/lib/deck';
+import { reached as reachedStages, stageDate } from '@/lib/stage';
+import { daysAfter } from '@/lib/days';
+import { itemNumberOf, published, STAGES } from '@/lib/data';
 import { SourceLink } from '@/app/components/SourceLink';
 
 export const dynamicParams = false;
@@ -65,6 +70,43 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
   const places = placeNames(inc.claims);
   const siblings = childrenOf(inc.parent).filter((x) => x.id !== inc.id);
 
+  /* ---------- slide 1 of the phone deck (DIA-378, spec §4) ----------
+     Composed here rather than inside the component: everything on that screen
+     is computed by a helper written and tested in Phase 1, and the component's
+     job is to arrange what it is handed. */
+  const gate = (() => {
+    const number = itemNumberOf(inc.id);
+    const has = new Set<number>(reachedStages(inc));
+    // Five rungs. Stage 6 is not a goal an item is failing to reach, so it
+    // joins the rail only when it has happened.
+    const rungs = STAGES.filter((x) => x.n <= 5 || has.has(x.n));
+    const rail: GateRung[] = rungs.map((x) => ({
+      n: x.n, he: x.he, color: x.color,
+      reached: has.has(x.n),
+      current: x.n === st,
+    }));
+
+    const on = stageDate(inc, st);
+    const after = on ? daysAfter(on) : null;
+    const age = on ? (after === null ? on : `${after} ימים אחרי 7.10 · ${on}`) : null;
+
+    const portrait = inc.photo?.portrait ?? null;
+
+    return {
+      leaf: number === null ? 'כשל' : `כשל מס׳ ${number}`,
+      credit: portrait
+        ? `צילום: ${portrait.photographer} · ${portrait.source} · ${portrait.licence}`
+        : null,
+      props: {
+        rail, age, title: inc.he, source: sourceLine(inc),
+        number, total: published.length,
+        photo: portrait
+          ? { src: `/photos/${portrait.file}`, alt: '', credit: '' }
+          : null,
+      },
+    };
+  })();
+
   const chapters = [
     { n: 1, t: 'הבעיה', color: 'var(--s2)', d: 'מה נכשל' },
     { n: 2, t: 'ההתקדמות', color: S.color, d: 'מה נעשה מאז' },
@@ -82,7 +124,12 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           its slides name themselves. The breadcrumb's leaf is the one piece of
           visible chrome that wants data - itemNumber() exists and is tested,
           and Phase 3 wires it. */}
-      <Deck crumbs={{ ancestors: ['7 באוקטובר', parent.he], leaf: 'כשל' }} />
+      <Deck
+        crumbs={{ ancestors: ['7 באוקטובר', parent.he], leaf: gate.leaf }}
+        slides={[<Gate key="gate" {...gate.props} />]}
+        ground={<GateGround {...gate.props} />}
+        credit={gate.credit}
+      />
 
       <div className="item-desktop">
       <Header compact />

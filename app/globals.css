@@ -882,7 +882,7 @@
 
    Not a second stylesheet: mobile is a layout under a breakpoint, here, beside
    everything else. Every selector is prefixed deck- because this file carries
-   unscoped rules — .ladder, .q, .chip, .prose, .lead, .gate — that match by
+   unscoped rules — .ladder, .q, .chip, .prose, .lead, .deck-gate — that match by
    class alone and leak into anything reusing the name. State rides on data
    attributes rather than classes for the same reason: `on` already exists as a
    bare rule above.
@@ -921,7 +921,7 @@
   /* --- breadcrumb ------------------------------------------------------- */
   /* §3: one path, top right, never split across two corners. */
   .deck-crumbs{
-    flex:none;padding:16px 20px 0;
+    position:relative;z-index:2;flex:none;padding:16px 20px 0;
     display:flex;align-items:center;gap:6px;white-space:nowrap;
     font-size:12.5px;letter-spacing:.1px;
     color:color-mix(in srgb,var(--text) 64%,transparent);
@@ -932,6 +932,7 @@
 
   /* --- the rail of slides ----------------------------------------------- */
   .deck-track{
+    position:relative;z-index:1;
     flex:1;min-height:0;
     display:flex;
     overflow-x:auto;overflow-y:hidden;
@@ -956,11 +957,114 @@
   .deck-placeholder-n{font-family:"Frank Ruhl Libre",serif;font-size:72px;line-height:1}
   .deck-placeholder-he{font-size:15px;letter-spacing:.04em}
 
+  /* --- slide 1, the gate (spec §4) --------------------------------------- */
+  /* The gate is the one screen that paints the whole frame, and it is dark in
+     both themes - so its inks are literally white here rather than mixed from
+     --ink. Its ground is #0b0f0b, not the body's. */
+  /* The ground is the deck's, not the slide's: the chrome is docked outside the
+     track, so a ground inside the slide stops where the track stops and leaves
+     a seam under the dots. Shown only while the gate is the slide in view. */
+  /* The prototype names its display face with a bare .serif, but every rule
+     carrying it is scoped to a desktop component, so the class arrives here
+     meaning nothing and the gate's title rendered in the body sans. One rule,
+     for the whole deck. */
+  .deck .serif{font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif}
+
+  .deck-ground{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;
+    background:#0b0f0b;transition:opacity .18s ease}
+  .deck[data-at="0"] .deck-ground{opacity:1}
+  .deck-gate{position:absolute;inset:0;display:flex;flex-direction:column}
+  .deck-gate-ground{position:absolute;inset:0;overflow:hidden}
+  .deck-gate-ground > i{position:absolute;inset:0;display:block}
+
+  /* Duotone. mix-blend-mode:color takes hue and saturation from the tint and
+     luminosity from the photograph, so the result is monochrome in the stage's
+     hue whatever the original's colours were. No grayscale filter is needed,
+     and legibility never depends on the photograph. */
+  .deck-gate-photo{position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;filter:contrast(1.16) brightness(.92)}
+  .deck-gate-tint{background:var(--c);mix-blend-mode:color;opacity:.55}
+
+  /* No photograph: the field the duotone would have left, falling to black. */
+  .deck-gate-field{background:linear-gradient(175deg,
+    color-mix(in srgb,var(--c) 47%,#0b0f0b) 0%,
+    color-mix(in srgb,var(--c) 36%,#0b0f0b) 22%,
+    color-mix(in srgb,var(--c) 23%,#0b0f0b) 46%,
+    color-mix(in srgb,var(--c) 11%,#0b0f0b) 68%,
+    color-mix(in srgb,var(--c) 5%,#0b0f0b) 86%,
+    #0d150b 100%)}
+  .deck-gate-grain{background:repeating-linear-gradient(180deg,
+    rgba(255,255,255,.032) 0,rgba(255,255,255,.032) 1px,transparent 1px,transparent 9px)}
+  /* A lightened stage colour, not the raw one: the spec's value is a tint of
+     the stage above the field rather than more of the field itself. */
+  .deck-gate-glow{background:radial-gradient(120% 70% at 78% 6%,
+    color-mix(in srgb,color-mix(in srgb,var(--c) 55%,#fff) 17%,transparent) 0%,transparent 60%)}
+  .deck-gate-ghost{position:absolute;top:300px;right:24px;left:24px;
+    display:flex;align-items:baseline;justify-content:flex-start;gap:10px;pointer-events:none}
+  .deck-gate-ghost .serif{font-size:196px;line-height:.82;font-weight:500;color:rgba(233,230,223,.07)}
+  .deck-gate-ghost span + span{font-size:15px;font-weight:600;letter-spacing:.04em;color:rgba(233,230,223,.12)}
+
+  /* The right-edge fade sits behind the rail, full height, so the labels hold
+     against a bright photograph without a box being drawn around them. */
+  .deck-gate-edge{background:linear-gradient(to left,
+    rgba(6,10,6,.72) 0%,rgba(6,10,6,.5) 7%,rgba(6,10,6,.28) 16%,
+    rgba(6,10,6,.1) 26%,rgba(6,10,6,0) 36%)}
+  /* One continuous shading pass, never a fade to black. */
+  .deck-gate-shade{background:linear-gradient(180deg,
+    rgba(10,16,8,.45) 0%,rgba(10,16,8,.18) 14%,rgba(10,16,8,.06) 30%,
+    rgba(10,16,8,.16) 46%,rgba(10,16,8,.5) 62%,rgba(10,16,8,.8) 76%,
+    rgba(10,16,8,.92) 90%,rgba(10,16,8,.95) 100%)}
+
+  /* The rail: vertical, right edge, attached to the breadcrumb rather than the
+     title. The rungs stand free - no track runs behind them, because a
+     continuous line reads as one object and the stages are not one object. */
+  .deck-gate-rail{position:relative;z-index:1;margin:14px 20px 0 0;padding:0 0 0 20px;
+    list-style:none;box-sizing:border-box;width:100%;align-self:flex-start;
+    display:grid;grid-template-columns:6px 1fr;column-gap:9px;row-gap:10px}
+  /* Each rung is two grid cells, not a box around them: display:contents keeps
+     the li out of the grid's flow. */
+  .deck-gate-rung{display:contents}
+  .deck-gate-rung > i{height:30px;border-radius:3px;background:var(--c);display:block}
+  /* Solid, not dashed: at this width on a photograph the dashes broke into
+     specks and the rung nearly disappeared. Same weight the border was drawn
+     at, so it reads as the same mark. */
+  .deck-gate-rung > i.off{background:rgba(255,255,255,.4)}
+  /* The label and the age line are one two-line group, centred on the rung -
+     29.8px of text inside a 30px rung, so nothing overhangs and no clearance
+     is needed anywhere. That is what lets the ladder keep one rhythm.
+     text-align:right and not a flex cross-axis property: §2's RTL trap is
+     exactly this, and align-items:flex-end resolves LEFT on this page. */
+  .deck-gate-rung > span{position:relative;height:30px;
+    display:flex;flex-direction:column;justify-content:center;
+    text-align:right;line-height:1.2;
+    font-size:11.5px;color:rgba(255,255,255,.72);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+  .deck-gate-rung > span.off{color:rgba(255,255,255,.5)}
+  /* The current stage is bold in a light tint of its own colour, and carries
+     the age line directly under its label. */
+  .deck-gate-rung > span.now{font-size:13px;font-weight:700;
+    color:color-mix(in srgb,var(--c) 42%,#fff);text-shadow:0 1px 3px rgba(0,0,0,.55)}
+  .deck-gate-rung > span b{position:static;display:block;margin-top:1px;white-space:nowrap;
+    font-size:11px;font-weight:600;
+    color:color-mix(in srgb,var(--c) 38%,#fff);text-shadow:0 1px 3px rgba(0,0,0,.55)}
+  /* The current rung wears a soft halo of its own colour. */
+  .deck-gate-rung:has(> span.now) > i{box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 22%,transparent)}
+
+  .deck-gate-title{position:relative;z-index:1;margin-top:auto;padding:0 20px;
+    display:flex;flex-direction:column;gap:12px}
+  .deck-gate-title h1{margin:0;font-size:31px;line-height:1.18;font-weight:500;color:#fff;text-wrap:balance}
+  /* The ground is inside .deck but the .serif rule above is scoped to it, so
+     the ghost is covered too. */
+  .deck-gate-title p{margin:0;font-size:13px;color:rgba(255,255,255,.72)}
+
+  /* The gate's slide has no side gutters of its own: the ground is full-bleed,
+     and the rail and the title carry their own. */
+  .deck-slide:first-child{padding:0}
+
   /* --- slideshow dots, and jump mode's strip ----------------------------- */
   /* §3: six dots, 6px, gap 7px, centred above the footer, first slide
      rightmost. No numeric counter anywhere — the dots are the counter. */
   .deck-dots{
-    flex:none;direction:rtl;
+    position:relative;z-index:2;flex:none;direction:rtl;
     display:flex;justify-content:center;align-items:center;gap:7px;
     padding:16px 0 14px;
     /* §3's platform notes: a long press on iOS raises the selection callout
@@ -992,7 +1096,7 @@
   /* §3: a 1px rule at 16% ink, 11px 20px 26px padding, 11.5px at 70% ink. The
      26px is the home indicator's, and it is why the frame is 100dvh. */
   .deck-foot{
-    flex:none;
+    position:relative;z-index:2;flex:none;
     display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;gap:10px;
     padding:11px 20px 26px;
     border-top:1px solid color-mix(in srgb,var(--text) 16%,transparent);

@@ -161,6 +161,30 @@ test.describe('the frame and its edges', () => {
     }
   });
 
+  test('a landing that comes to rest off the snap point is straightened', async ({ page }) => {
+    // The deck corrects itself rather than trusting any one scroll API: three
+    // separate causes have put a slide a fraction off its snap point so far,
+    // and the fourth is on a phone and does not reproduce here. This nudges
+    // the track off true and asserts that settling puts it back.
+    await open(page, '#3');
+    await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      t.scrollLeft += 9;              // nine pixels of wrong, deliberately
+      t.dispatchEvent(new Event('scroll'));
+    });
+    await page.waitForTimeout(700);
+    const off = await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      const base = t.getBoundingClientRect().left;
+      let gap = Infinity;
+      for (const s of document.querySelectorAll('.deck-slide')) {
+        gap = Math.min(gap, Math.abs(s.getBoundingClientRect().left - base));
+      }
+      return gap;
+    });
+    expect(off).toBeLessThan(0.5);
+  });
+
   test('the dots are six, 6px, 7px apart, centred, first slide rightmost', async ({ page }) => {
     await open(page);
     const f = await rect(page, '.deck');
@@ -194,13 +218,16 @@ test.describe('the frame and its edges', () => {
 });
 
 test.describe('the footer chain', () => {
-  const chain = [
-    { slide: 0, prev: 'החליקו לצדדים', next: '' },
+  // `next: null` is "no next-slide link here", which is not the same as an
+  // empty slot: the gate's left slot belongs to the photo credit (§3), and it
+  // carries one on any item that has a photograph.
+  const chain: { slide: number; prev: string; next: string | null }[] = [
+    { slide: 0, prev: 'החליקו לצדדים', next: null },
     { slide: 1, prev: '', next: 'מה נעשה מאז' },
     { slide: 2, prev: 'סקירת הכשל', next: 'מה עוד לא נעשה' },
     { slide: 3, prev: 'מה נעשה מאז', next: 'דעת הציבור' },
     { slide: 4, prev: 'מה עוד לא נעשה', next: 'הלאה' },
-    { slide: 5, prev: 'דעת הציבור', next: '' },
+    { slide: 5, prev: 'דעת הציבור', next: null },
   ];
 
   test('§3’s table, including the two bare ends', async ({ page }) => {
@@ -209,7 +236,11 @@ test.describe('the footer chain', () => {
       await page.locator('.deck-dot').nth(row.slide).click();
       await page.waitForTimeout(450);
       expect.soft(await page.locator('.deck-prev').innerText(), `slide ${row.slide + 1} prev`).toBe(row.prev);
-      expect.soft(await page.locator('.deck-next').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
+      if (row.next === null) {
+        expect.soft(await page.locator('.deck-next a').count(), `slide ${row.slide + 1} has no next link`).toBe(0);
+      } else {
+        expect.soft(await page.locator('.deck-next a').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
+      }
     }
   });
 
