@@ -1,4 +1,5 @@
-import { renderAnnotation, type Block, type Inline } from '@/lib/annotation';
+import type { ReactNode } from 'react';
+import { renderAnnotation, type Block, type Inline, type RenderSpan } from '@/lib/annotation';
 import { TYPES, type Claim } from '@/lib/data';
 
 /**
@@ -59,14 +60,14 @@ function Chip({ ids, claims }: { ids: string[]; claims: Claim[] }) {
 }
 
 /** One span's blocks, with the chip drawn into whatever ends it. */
-function Span({ blocks, ids, claims, k }: { blocks: Block[]; ids: string[]; claims: Claim[]; k: number }) {
+function Span({ blocks, chip, k }: { blocks: Block[]; chip: ReactNode; k: number }) {
   const last = blocks.length - 1;
   return (
     <>
       {blocks.map((b, i) => {
-        const chip = i === last ? <Chip ids={ids} claims={claims} /> : null;
+        const end = i === last ? chip : null;
         if (b.kind === 'p') {
-          return <p key={`${k}-${i}`}><Nodes nodes={b.children} />{chip}</p>;
+          return <p key={`${k}-${i}`}><Nodes nodes={b.children} />{end}</p>;
         }
         const List = b.kind === 'ol' ? 'ol' : 'ul';
         return (
@@ -74,7 +75,7 @@ function Span({ blocks, ids, claims, k }: { blocks: Block[]; ids: string[]; clai
             {b.items.map((item, j) => (
               <li key={j}>
                 <Nodes nodes={item} />
-                {j === b.items.length - 1 ? chip : null}
+                {j === b.items.length - 1 ? end : null}
               </li>
             ))}
           </List>
@@ -84,14 +85,52 @@ function Span({ blocks, ids, claims, k }: { blocks: Block[]; ids: string[]; clai
   );
 }
 
+/**
+ * One span that is a list item, because a marker stood in the gap before it.
+ *
+ * The common case is a single paragraph, and it is unwrapped so the item is the
+ * sentence rather than a paragraph inside a bullet. A span carrying more than
+ * that keeps its blocks; the chip still ends the item either way.
+ */
+function Item({ span, claims, k }: { span: RenderSpan; claims: Claim[]; k: number }) {
+  const chip = <Chip ids={span.ids} claims={claims} />;
+  const only = span.blocks.length === 1 && span.blocks[0]?.kind === 'p' ? span.blocks[0] : null;
+  return (
+    <li>
+      {only ? <><Nodes nodes={only.children} />{chip}</> : <Span blocks={span.blocks} chip={chip} k={k} />}
+    </li>
+  );
+}
+
+/**
+ * The field, drawn.
+ *
+ * Spans are laid out in order, except that a run of consecutive spans carrying
+ * the same list marker is gathered into one list - docs/annotations.html §3's
+ * per-item form. Each item keeps its own chip, because each rests on its own
+ * claim; that is the whole reason the form exists.
+ */
 export function Annotated({ text, claims }: { text: string; claims: Claim[] }) {
   const spans = renderAnnotation(text);
   if (!spans.length) return null;
-  return (
-    <>
-      {spans.map((s, k) => (
-        <Span key={k} blocks={s.blocks} ids={s.ids} claims={claims} k={k} />
-      ))}
-    </>
-  );
+
+  const out: ReactNode[] = [];
+  for (let i = 0; i < spans.length; i += 1) {
+    const span = spans[i]!;
+    if (!span.marker) {
+      out.push(<Span key={i} blocks={span.blocks} chip={<Chip ids={span.ids} claims={claims} />} k={i} />);
+      continue;
+    }
+    const kind = span.marker;
+    const run: RenderSpan[] = [];
+    while (i < spans.length && spans[i]!.marker === kind) { run.push(spans[i]!); i += 1; }
+    i -= 1;
+    const List = kind === 'ol' ? 'ol' : 'ul';
+    out.push(
+      <List key={i}>
+        {run.map((r, j) => <Item key={j} span={r} claims={claims} k={j} />)}
+      </List>,
+    );
+  }
+  return <>{out}</>;
 }
