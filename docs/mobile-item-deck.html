@@ -420,18 +420,33 @@ add(`<div>
 <p>The rail changed after it was built rather than before: seen on a real photograph, the dashed unreached rung broke into specks. It went solid, the rungs went 4px to 6px, and the ladder took one rhythm — which only worked once the age line stopped hanging past its row and joined its label as one group centred on the rung. Design doc first, then the code; the screens in §4 are still the thing to build against.</p>`);
 
 add(`<div>
-  <span class="tag">next</span>
-  <h2>One defect, then the body</h2>
-  <p class="sub">A swipe overshoots and snaps back — on exactly the slides where the docked chrome changes height, and nowhere else.</p>
+  <span class="tag done">detour · done</span>
+  <h2>A swipe that overshot, and the twitch that fixing it exposed</h2>
+  <p class="sub">The docked chrome shared the scroller's column, so the track resized between slides and the in-flight snap paid for it.</p>
   <div class="stack">
-    <div class="item"><div class="v">12</div><div class="k">px the track loses between slide 1 and 2 — the gate gives the dots more air</div></div>
-    <div class="item"><div class="v">3</div><div class="k">px between 2 and 3 — slide 2 carries no previous-slide label, so the footer is shorter</div></div>
-    <div class="item mute"><div class="v">0</div><div class="k">px from 3 onward, which is exactly where the fault stops</div></div>
+    <div class="item"><div class="v">12</div><div class="k">px the track lost between slide 1 and 2 — the gate gives the dots more air</div></div>
+    <div class="item"><div class="v">3</div><div class="k">px between 2 and 3 — slide 2 carries no previous-slide label, so the footer was shorter</div></div>
+    <div class="item"><div class="v">0</div><div class="k">px anywhere now, at 320, 393 and 430 — dot centre, rule, footer and track identical on all six</div></div>
   </div>
 </div>`,
-`<p>Resizing a scroll container mid-scroll makes the engine recompute its snap positions, and the in-flight snap animation pays for it. <span class="id">DIA-379</span>.</p>
-<p>Worth the detour before Phase 4 for one reason: every gate left is taken by swiping on a phone, so a swipe that misbehaves taxes all six reviews still to come.</p>
-<p>It also could not be seen from here. Chromium lands on the snap point at 390, 393 and 430 every time; the overshoot needs a real momentum scroll on glass. What a headless browser <i>can</i> see is the track's height differing between slides — which is the assertion that goes in with the fix.</p>`);
+`<p>Resizing a scroll container mid-scroll makes the engine recompute its snap positions. <span class="id">DIA-379</span>, two commits.</p>
+<p>The first took the chrome out of the flex flow — track absolute, chrome overlaid, slide padding published as CSS variables by a ResizeObserver. That stopped the scroller resizing, and moved the fault from invisible to visible: the dots and the footer rule now jumped where the track used to. Your words: <i>not encouraging behavior</i>.</p>
+<p>The second removed the difference rather than hiding it. The gate's extra air became top padding only, so the bottom edge never moves; the footer's three slots took a floor height, so the previous-slide label appearing no longer grows the row. A row-level minimum was tried first and rejected — it left slack under the ink and ate the home-indicator clearance.</p>
+<p>The lesson is the one worth keeping: a headless browser could never see the overshoot, but it could always see the track height differ between slides. That assertion shipped with the fix and now guards all six slides at three widths.</p>`);
+
+add(`<div>
+  <span class="tag">next</span>
+  <h2>Phase 4 — slide 2, <span class="he">סקירת הכשל</span></h2>
+  <p class="sub">The failure described, in authored text that carries its sources inside it. The first body slide, and the pattern slides 3 and 4 will reuse without re-deciding.</p>
+  <div class="stack">
+    <div class="item"><div class="v">10</div><div class="k">cite spans across the 6 fixtures — and 0 across the 33 live records, which is why gate #3 is taken on fixtures</div></div>
+    <div class="item"><div class="v">2</div><div class="k">slides inherit whatever is settled here</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">new parsing — <span class="id">lib/annotation.ts</span> landed with DIA-372 and is shared with the desktop</div></div>
+  </div>
+</div>`,
+`<p>The interpreter is not this phase's work. <span class="id">DIA-372</span> shipped the parser, the chip syntax and the coverage rule, and <code>docs/annotations.html</code> is the authority where an issue disagrees with it. What Phase 4 owns is the phone's half: how the body reads inside one 844-tall frame, the chip at the end of a sentence, and the sources carousel under it.</p>
+<p>Gate #3 is the careful one. Slides 3 and 4 are the same component with a filter, so a wrong measure here is a wrong measure three times over — which is the whole reason the plan puts a single-slide phase in front of them.</p>
+<p>Drafted as <span class="id">DIA-381</span>, in DIA-377's shape, sitting in the backlog for you to edit before it starts. It carries five questions the phase has to close — what a chip does when tapped, whether the phone reuses <span class="id">Annotated</span>, which block is the lead, how a list renders, and what happens when the body does not fit — written down because that is the kind of thing that gets decided by accident and then inherited twice.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">what merges</div>
@@ -439,7 +454,7 @@ add(`<div class="center">
   <p class="sub">Eight gates behind it. Nothing before that is the finished thing — and nothing after it is a surprise.</p>
 </div>`,
 `<p>Close here. The plan's whole shape is: settle the design, settle the data, then build in an order where each phase is judged before the next one inherits its mistakes.</p>
-<p>Next action is DIA-379 — the swipe overshoot found at gate #2 — and then Phase 4, slide 2, which sets the body pattern slides 3 and 4 inherit.</p>`);
+<p>Three of eight phases are behind us and two gates are passed. Next action is Phase 4, slide 2 — the body pattern, judged once, before slides 3 and 4 inherit it.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
