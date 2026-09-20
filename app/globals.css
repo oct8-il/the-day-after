@@ -1084,7 +1084,7 @@
   .deck-dots{
     direction:rtl;
     display:flex;justify-content:center;align-items:center;gap:7px;
-    padding:16px 0 14px;
+    padding:16px 0;
     /* §3's platform notes: a long press on iOS raises the selection callout
        and the magnifier without these, and touch-action:none is what stops the
        browser claiming the drag before the scrub can have it. */
@@ -1100,7 +1100,13 @@
   .deck-dot[data-on]{background:var(--text)}
   /* The gate gives the dots more air above them than the slides do: its
      screen has 26/16 where every other screen has 16/14. */
-  .deck[data-at="0"] .deck-dots{padding:26px 0 16px}
+  /* The gate is given more air above its dots than the other slides - §3's
+     screens read 26/16 against 16/14. The air above is free: it is empty space
+     between the slide and the dots, and nothing is anchored to it. The 2px
+     below is not, because the dots are measured up from the rule beneath them
+     and a reader swiping sees them drop. So the top differs and the bottom
+     does not. */
+  .deck[data-at="0"] .deck-dots{padding-top:26px}
 
   /* Armed: the strip goes to full strength and the page behind drops to ~40%,
      both over 120ms, so arming reads as a change rather than as a glitch. The
@@ -1114,13 +1120,29 @@
   /* §3: a 1px rule at 16% ink, 11px 20px 26px padding, 11.5px at 70% ink. The
      26px is the home indicator's, and it is why the frame is 100dvh. */
   .deck-foot{
-    display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;gap:10px;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:10px;
     padding:11px 20px 26px;
     border-top:1px solid color-mix(in srgb,var(--text) 16%,transparent);
     font-size:11.5px;color:color-mix(in srgb,var(--text) 70%,transparent);
   }
+  /* A slot holding a link with a chevron is 21.2px tall; one holding bare text
+     is 17.8, and an empty one is nothing at all - so the row grew by 3.4px at
+     slide 3, where the previous-slide label first appears, and the rule under
+     the dots stepped up with it. The slots keep the tallest of those whatever
+     they hold. §3 specifies the footer's padding, not its height, so reserving
+     the row costs the design nothing. */
+  /* Every slot is the same height whatever it holds, and its content is
+     centred in it. Without that the row sized itself to the slide - a link
+     with a chevron is 21.2px, bare text 17.8, an empty slot nothing at all -
+     so the rule under the dots stepped up 3.4px at slide 3, where the
+     previous-slide label first appears, and back down at slide 6. The floor
+     is on the slots rather than on the row: with align-items:baseline a slot
+     taller than its text pushes the row open from underneath instead, which
+     left slack under the ink and broke the 26px the footer keeps for the home
+     indicator. §3 specifies this footer's padding, not its height. */
+  .deck-prev,.deck-mid,.deck-next{min-height:22px;display:flex;align-items:center}
   .deck-prev{justify-self:start}
-  .deck-mid{justify-self:center;display:inline-flex;align-items:center;gap:7px}
+  .deck-mid{justify-self:center;gap:7px}
   .deck-next{justify-self:end}
   .deck-foot a,.deck-foot .deck-hint,.deck-foot .deck-credit{
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap;

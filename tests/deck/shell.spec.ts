@@ -187,6 +187,28 @@ test.describe('the frame and its edges', () => {
     expect(heights[0]).toBe(Math.round(frame.height));
   });
 
+  test('nothing in the chrome moves between slides', async ({ page }) => {
+    // The track's height being constant is not enough: the chrome's own
+    // halves were still sizing themselves to what each slide gave them, and a
+    // reader swiping saw the dots drop 2px at the gate and the footer's rule
+    // step up 3.4px at slide 3. Assert the positions a reader actually looks
+    // at, not the container that used to carry the fault.
+    await open(page);
+    const seen: { dot: number; rule: number; foot: number }[] = [];
+    for (let i = 0; i < 6; i++) {
+      await page.locator('.deck-dot').nth(i).click();
+      await page.waitForTimeout(450);
+      seen.push(await page.evaluate(() => {
+        const d = document.querySelector('.deck-dot')!.getBoundingClientRect();
+        const f = document.querySelector('.deck-foot')!.getBoundingClientRect();
+        return { dot: Math.round((d.top + d.bottom) / 2), rule: Math.round(f.top), foot: Math.round(f.height) };
+      }));
+    }
+    for (const k of ['dot', 'rule', 'foot'] as const) {
+      expect.soft(new Set(seen.map((x) => x[k])).size, `${k}: ${seen.map((x) => x[k]).join(',')}`).toBe(1);
+    }
+  });
+
   test('the chrome still clears the slides it sits over', async ({ page }) => {
     // The room the chrome needs comes out of each slide's padding now. If that
     // stopped tracking the chrome, content would slide under the footer - so
