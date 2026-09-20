@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.6 · 20 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v2.7 · 20 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -527,7 +527,7 @@
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c18e67;opacity:0.85;"></div></div>
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c1a967;opacity:0.85;"></div></div>
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;box-shadow:0 0 0 2px #121519,0 0 0 4px #91c167;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);"></div></div>
+    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
   </div>
   <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
     <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה נעשה מאז</div>
@@ -570,8 +570,8 @@
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;box-shadow:0 0 0 2px #121519,0 0 0 4px #c17367;"></div></div>
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c18e67;opacity:0.85;"></div></div>
     <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c1a967;opacity:0.85;"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;box-shadow:0 0 0 2px #121519,0 0 0 3px #e0a44a;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;"></div></div>
+    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
   </div>
   <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
     <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה נעשה מאז</div>
@@ -612,11 +612,11 @@
 <h4>Page head</h4>
 <p>The <strong>slide title <span class="he">מה נעשה מאז</span></strong> comes first, bare and right-aligned like every other slide’s — slide 3 was the one screen missing it. Everything below is pushed down to make room. Then one group, in this order, closed by a hairline rule before the body:</p>
 <ol>
-  <li><strong>Status tag as the page title</strong> — square corners (radius 3), stage-colour fill, dark ink <code>#1b1d16</code>, 19px/700, e.g. <span class="he">4 · יושם</span>. An unreached stage gets the same tag as a dashed outline in muted ink.</li>
+  <li><strong>Status tag as the page title</strong> — square corners (radius 3), stage-colour fill, dark ink <code>#1b1d16</code>, 19px/700, e.g. <span class="he">4 · יושם</span>. An unreached stage gets the same tag as a <strong>solid</strong> outline in muted ink.</li>
   <li><strong>The stage definition</strong>, 13.5px at 74% ink.</li>
   <li><strong>Date, then age</strong>: <span class="he">25.10.2023 · 18 ימים אחרי 7.10</span>.</li>
 </ol>
-<p>On the <strong>current stage only</strong>, a gold pill sits to the left of the status tag, bottom-aligned with it and deliberately much smaller — 10px/700, dark ink on <code>#e0a44a</code>, fully rounded: <span class="he">סטטוס נוכחי</span> — the words alone, no day count. It is the same gold that rings the current rung in the locator, so the two say the same thing in the same colour.</p>
+<p>On the <strong>current stage only</strong>, a gold pill sits to the left of the status tag, bottom-aligned with it and deliberately much smaller — 10px/700, dark ink on <code>#e0a44a</code>, fully rounded: <span class="he">סטטוס נוכחי</span> — the words alone, no day count. It is the only place the current stage is named on the page — the locator no longer rings it, because on this slide the current stage is always the last rung drawn.</p>
 <div class="note"><strong>A definition may not use its own term.</strong> <span class="he">מה יושם</span> is not a definition of <span class="he">יושם</span>. The three written so far:<br>
 <span class="he">1 · זוהה — מה שקרה בשטח, כפי שנרשם בתיעוד ציבורי</span><br>
 <span class="he">4 · יושם — התיקון דווח כמבוצע בשטח בידי הגוף האחראי</span><br>
@@ -633,23 +633,21 @@
 <p>The gate's ladder reused, minus the labels — the title tag already names the stage.</p>
 <table>
   <tr><th>Property</th><th>Value</th></tr>
-  <tr><td>Rungs</td><td>Five, 5 × 26px, radius 2, gap 9px, stage colours at 80% when unmarked, dashed when unreached</td></tr>
+  <tr><td>Rungs</td><td>Five, 5 × 26px, radius 2, gap 9px, stage colours at 80% when unmarked; an unreached rung is a <strong>solid</strong> grey bar at 40% ink, as on the gate</td></tr>
   <tr><td>Which are drawn</td><td>Only the stages belonging to <em>this</em> slide. The others keep their slots as invisible spacers, so <strong>a rung never moves position between slide 3 and slide 4</strong></td></tr>
   <tr><td>Spacing</td><td>Even — the gap before the unreached rung belongs to the gate, not here</td></tr>
   <tr><td>Position</td><td><code>right: 14px</code> physically; ~10px of clear space to the screen edge</td></tr>
-  <tr><td>Viewed stage</td><td>Ring in that stage's own colour, 2px</td></tr>
-  <tr><td>Current stage</td><td>Ring in gold <code>#e0a44a</code>, 1px — half the viewed ring</td></tr>
-  <tr><td>Collision</td><td>When viewed and current are the same stage, the viewed ring wins</td></tr>
+  <tr><td>Viewed stage</td><td>Ring in that stage's own colour, 2px. <strong>The only ring on the locator</strong></td></tr>
+  <tr><td>Current stage</td><td>Nothing. Splitting reached from unreached made the mark redundant: on slide 3 the current stage is always the last rung drawn, and on slide 4 it is not drawn at all. A second ring that says what the reader can already count is a second ring to mistake for the first</td></tr>
   <tr><td>Stage 6 <span class="he">(נסוג)</span></td><td>A sixth rung, drawn only when the item has reached it. The ladder is five slots on every other item</td></tr>
   <tr><td>Tapping</td><td>None — the rungs are indicators. Navigation is the vertical swipe, the back-to-current pill, and jump mode (§3)</td></tr>
 </table>
 <pre><code>/* ring, offset by 2px — a hugging border in the stage's own colour
    is invisible against the same-coloured fill */
-box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed  */
-box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></pre>
+box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed */</code></pre>
 
 <h4>Back to the current stage</h4>
-<p>A pill — <span class="he">חזרה לשלב הנוכחי</span> — appears only when the reader is not on the current stage, with the arrow pointing the way (down from stage 1, up from stage 5). The gold ring is the passive indication that works from every page. On slide 4 the same pill <strong>walks back a slide</strong> instead of a page, so its chevron points right, at slide 3.</p>
+<p>A pill — <span class="he">חזרה לשלב הנוכחי</span> — appears only when the reader is not on the current stage, with the arrow pointing the way (down from stage 1, up from stage 5). It is the only indication that the reader is off the current stage, now that the locator does not ring it; the locator says where they are, not where the item is. On slide 4 the same pill <strong>walks back a slide</strong> instead of a page, so its chevron points right, at slide 3.</p>
 
 <h2 id="notyet">7 · Slide 4 — <span class="he">מה עוד לא נעשה</span></h2>
 <p>The same component as slide 3 with the opposite filter: the stages the item has <strong>not</strong> reached, opening at the next one. Everything structural is inherited — head group, locator geometry, footer, the nested vertical scroll — so this section only records what differs.</p>
@@ -664,13 +662,13 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
     <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;opacity:0.85;"></div></div>
     <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c18e67;opacity:0.85;"></div></div>
     <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c1a967;opacity:0.85;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;box-shadow:0 0 0 2px #121519,0 0 0 3px #e0a44a;"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
+    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
   </div>
   <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
     <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה עוד לא נעשה</div>
     <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:13px;border-bottom:1px solid rgba(233,230,223,0.14);margin-bottom:4px">
-      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px dashed rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">5 · אומת עצמאית</span></div>
+      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px solid rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">5 · אומת עצמאית</span></div>
       <div style="font-size:13.5px;line-height:1.4;color:rgba(233,230,223,0.74)">גוף שאינו הגוף האחראי בדק את התיקון בשטח ופרסם ממצאים</div>
       <div style="font-size:12px;color:rgba(233,230,223,0.5)">טרם תועד</div>
     </div>
@@ -715,16 +713,16 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 3px #e0a44a;         /* current */</code></
     <span>7 באוקטובר</span><span style="opacity:0.45">›</span><span>העורף האזרחי</span><span style="opacity:0.45">›</span><span style="color:#e9e6df;font-weight:600">כשל מס׳ 20</span>
   </div>
   <div style="position:absolute;top:112px;right:14px;display:flex;flex-direction:column;gap:9px;align-items:flex-end">
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;box-shadow:0 0 0 2px #121519,0 0 0 3px #e0a44a;"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;border:1.5px dashed rgba(233,230,223,0.38);"></div></div>
+    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
+    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
   </div>
   <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
     <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה עוד לא נעשה</div>
     <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:13px;border-bottom:1px solid rgba(233,230,223,0.14);margin-bottom:4px">
-      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px dashed rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">2 · הוכר</span></div>
+      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px solid rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">2 · הוכר</span></div>
       <div style="font-size:13.5px;line-height:1.4;color:rgba(233,230,223,0.74)">הגוף האחראי הודה בפומבי שהכשל התרחש</div>
       <div style="font-size:12px;color:rgba(233,230,223,0.5)">טרם תועד</div>
     </div>
@@ -1416,8 +1414,8 @@ mask-image: linear-gradient(to bottom,
 <table>
   <tr><th>Question</th><th>Where it bites</th></tr>
   <tr><td><strong>Credit for the card photographs.</strong> The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA. Candidates: one credits line at the foot of slide 6, a credits page linked from <span class="he">אודות</span>, or landscape crops only from sources needing no attribution</td><td>Slide 6 — deliberately deferred to the build phase that reaches it</td></tr>
-  <tr><td><strong>Does the rest of the design follow the rail off the dashes?</strong> Slide 1's unreached rung is now solid grey. Two other places still say dashed, for the reason the rung used to: the <strong>locator rungs</strong> on slides 3 and 4 (§6, “dashed when unreached”), and the <strong>status tag</strong> that titles an unreached stage page (§6, “the same tag as a dashed outline in muted ink”). Leaving them is a page that no longer says one thing; changing them is a decision nobody has taken. The tag is also doing a different job — a page title on a plain surface, not a 6px mark over a photograph — so it may honestly differ where the locator may not</td><td>Slides 3 and 4, when their locator is built in Phases 5 and 6. Does not block slide 1</td></tr>
-  <tr><td>The evidence map is still the desktop component at mobile width</td><td>Slide 3, stage 1 — it renders real pins; it has not had a 390 design pass</td></tr>
+  
+  <tr><td>The evidence map is still the desktop component at mobile width</td><td>Slide 3, stage 1 — <strong>it ships as it is.</strong> Ruled 20 September: render the desktop component at 390 and look at it on a phone; if it is a problem there, it becomes one then. No 390 pass is scheduled</td></tr>
   <tr><td>How many bubbles show before a "more" affordance; moderation; what an open cluster looks like; whether saving sends the comment with the rating</td><td>Slide 5, post-MVP — none of it is built in this pass</td></tr>
 </table>
 
@@ -1439,6 +1437,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Slide 2's five questions</td><td class="mono">DIA-381</td><td>A chip moves the carousel rather than leaving the deck, which makes the carousel load-bearing. One <code>Annotated</code> with a declared chip variant. The lead is the first paragraph, chosen in CSS. Lists in both forms — shared source and source-per-item — the second of which the renderer drops today, against its own contract (<span class="mono">DIA-382</span>)</td></tr>
   <tr><td>The frame stops being a ceiling</td><td class="mono">20 Sep</td><td>Slide 2's drawn density needs 474px and an iPhone SE offers 405, so the design never fit the phones it is for. The body column scrolls, the chip stays docked, and §11's “every stage page must fit the frame” is retired. Slides 3 and 4 take the same behaviour: a stage scrolls, the boundary carries the reader on, and a stage reopens where it was left rather than at its top</td></tr>
   <tr><td>The sources ride with the text</td><td class="mono">20 Sep</td><td>Seen on the built slide, the docked carousel read as a shelf the text ran under rather than as the end of the reading. It now scrolls with the body and waits below the last sentence on an item that overruns the column, and still falls to the foot of the column on one that fits — which is what §5's screen draws either way (Roy)</td></tr>
+  <tr><td>The whole rail comes off the dashes, and loses a ring</td><td class="mono">20 Sep</td><td>The locator's unreached rungs and the unreached status tag follow slide 1: solid, not dashed — the design now says one thing about an unreached stage everywhere. The locator's gold current-stage ring is removed outright: splitting reached from unreached made it redundant, since on slide 3 the current stage is always the last rung drawn and on slide 4 it is not drawn at all. The gate keeps its own current-stage mark, where the ladder carries both halves and the mark is the only thing that says where the item stands (Roy)</td></tr>
   <tr><td>Gate rail, three changes</td><td class="mono">DIA-380</td><td>Unreached rungs solid grey not dashed; one 10px rhythm with the deliberate gap removed; rungs 4px → 6px. The age line joins its label as one group centred on the rung, which is what lets the rhythm close up. Compared head to head against keeping the age below the label, on the built page rather than a redraw</td></tr>
   <tr><td>Item · Six Slides</td><td class="mono">976cc81c</td><td>The whole deck after the split: six dots, the new slide, every footer rechained</td></tr>
   <tr><td>Slide 6, version A</td><td class="mono">DIA-376</td><td>Version A ships for the MVP — four cards, no strip. Version B stays specified and moves post-MVP with the store it needs</td></tr>
