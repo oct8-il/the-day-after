@@ -77,8 +77,12 @@ test.describe('the stack', () => {
       };
     });
     expect(m.x).toBe(0);
+    // Proximity, not mandatory: a remembered position part-way down a page is
+    // not a snap point, and mandatory left the scroller floating there until
+    // the next touch - which read as the arrows undershooting. The engine
+    // normalises "y proximity" to "y", proximity being the initial value.
     expect(m.snap).toContain('y');
-    expect(m.snap).toContain('mandatory');
+    expect(m.snap).not.toContain('mandatory');
     expect(m.stop).toBe('always');
   });
 
@@ -105,6 +109,31 @@ test.describe('where a stage opens', () => {
     expect(await here(page)).toBe('1');
     const top = await page.evaluate(() => Math.round(document.querySelector('.deck-stack')!.scrollTop));
     expect(top).toBe(0);
+  });
+
+  test('a stage only passed through opens at its top', async ({ page }) => {
+    // Recording the position every frame looked like "where they left it" and
+    // was not: scrolling straight through a stage wrote its foot, so coming
+    // back by the arrows landed at its end with its title above the fold.
+    await open(page, 't01', '#3-s1');
+    // Scroll on, through stage 2, and come to rest in stage 3.
+    await page.evaluate(() => {
+      const st = document.querySelector('.deck-stack')!;
+      const three = document.querySelector('.deck-stage[data-stage="3"]')!;
+      st.scrollTop += three.getBoundingClientRect().top - st.getBoundingClientRect().top;
+    });
+    await page.waitForTimeout(500);
+    expect(await here(page)).toBe('3');
+
+    await page.click('.deck-mid button[aria-label="השלב הקודם"]');
+    await page.waitForTimeout(800);
+    expect(await here(page)).toBe('2');
+    const into = await page.evaluate(() => {
+      const st = document.querySelector('.deck-stack')!;
+      const two = document.querySelector('.deck-stage[data-stage="2"]')!;
+      return Math.round(st.getBoundingClientRect().top - two.getBoundingClientRect().top);
+    });
+    expect(Math.abs(into)).toBeLessThan(2);
   });
 
   test('a stage already read reopens where it was left', async ({ page }) => {
@@ -285,8 +314,8 @@ test.describe('the page body', () => {
       const lead = p.querySelector('.deck-stage-body > p:first-child');
       return {
         lead: lead ? getComputedStyle(lead).fontSize : null,
-        chips: p.querySelectorAll('a.chip').length,
-        named: [...p.querySelectorAll('a.chip')].every((a) => (a.textContent ?? '').trim().length > 0),
+        chips: p.querySelectorAll('button.chip').length,
+        named: [...p.querySelectorAll('button.chip')].every((a) => (a.textContent ?? '').trim().length > 0),
         cards: p.querySelectorAll('.deck-ov-card').length,
       };
     });
@@ -307,7 +336,7 @@ test.describe('the page body', () => {
       return {
         fallback: p.querySelectorAll('.deck-stage-claim').length,
         quotes: [...p.querySelectorAll('.deck-stage-quote')].map((q) => (q.textContent ?? '').trim()),
-        chips: p.querySelectorAll('a.chip').length,
+        chips: p.querySelectorAll('button.chip').length,
         cards: p.querySelectorAll('.deck-ov-card').length,
       };
     });
@@ -316,6 +345,45 @@ test.describe('the page body', () => {
     // No overview means no cite spans, so no chips - the card is the link.
     expect(m.chips).toBe(0);
     expect(m.cards).toBe(m.fallback);
+  });
+
+  test('a chip on a stage page opens its drawer, and the stack scrolls to it', async ({ page }) => {
+    // The same interaction as slide 2 - DIA-386 gives it to every slide that
+    // has chips, and the deck owns it rather than any one screen.
+    await open(page, 't01', '#3-s2');
+    const m = await page.evaluate(() => {
+      const p = document.querySelector('.deck-stage[data-stage="2"]')!;
+      const chip = p.querySelector<HTMLElement>('button.chip')!;
+      chip.click();
+      const d = document.getElementById(chip.getAttribute('aria-controls')!)!;
+      return {
+        shown: !d.hasAttribute('hidden'),
+        expanded: chip.getAttribute('aria-expanded'),
+        inStage: d.closest('.deck-stage') === p,
+        quote: (d.querySelector('.deck-drawer-quote')?.textContent ?? '').trim().length,
+      };
+    });
+    expect(m.shown).toBe(true);
+    expect(m.expanded).toBe('true');
+    expect(m.inStage).toBe(true);
+    expect(m.quote).toBeGreaterThan(0);
+
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => {
+      const d = document.querySelector('.deck-drawer:not([hidden])')!;
+      const b = document.querySelector('.deck-stack')!.getBoundingClientRect();
+      return d.getBoundingClientRect().bottom <= b.bottom + 1;
+    })).toBe(true);
+  });
+
+  test('the carousel is no longer a target, on any slide', async ({ page }) => {
+    await open(page, 't01', '#3-s2');
+    await page.evaluate(() =>
+      document.querySelector<HTMLElement>('.deck-stage[data-stage="2"] button.chip')!.click());
+    await page.waitForTimeout(400);
+    // Nothing in the body points at it any more: no card is marked.
+    expect(await page.evaluate(() =>
+      document.querySelectorAll('.deck-ov-card[data-on]').length)).toBe(0);
   });
 
   test('the evidence map is on stage 1, and before the carousel', async ({ page }) => {

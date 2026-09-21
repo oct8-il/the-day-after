@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import type { ReactNode } from 'react';
 import { renderAnnotation, type Block, type Inline, type RenderSpan } from '@/lib/annotation';
 import { TYPES, type Claim } from '@/lib/data';
@@ -50,45 +51,123 @@ function Nodes({ nodes }: { nodes: Inline[] }) {
  * The id is latin inside a Hebrew run, so the chip isolates its own direction
  * and the surrounding punctuation does not reorder around it.
  */
-function Chip({ ids, claims, variant }: { ids: string[]; claims: Claim[]; variant: ChipVariant }) {
-  const cited = ids.map((id) => claims.find((c) => c.id === id)).filter((c): c is Claim => !!c);
+const cite = (ids: string[], claims: Claim[]) =>
+  ids.map((id) => claims.find((c) => c.id === id)).filter((c): c is Claim => !!c);
+
+function Chip({ ids, claims, variant, drawer }: {
+  ids: string[]; claims: Claim[]; variant: ChipVariant; drawer: string | null;
+}) {
+  const cited = cite(ids, claims);
   if (!cited.length) return null;
   const label = cited.map((c) => `${TYPES[c.source_type].he} · ${c.source}`).join(' · ');
-
-  return (
-    <a
-      className="chip"
-      href={`#${cited[0].id}`}
-      aria-label={`המקורות למשפט: ${label}`}
-      style={{ ['--c' as string]: TYPES[cited[0].source_type].color }}
-    >
+  const skin = { ['--c' as string]: TYPES[cited[0]!.source_type].color };
+  const inner = (
+    <>
       <span className="chip-dot" aria-hidden="true" />
-      {variant === 'named' && <span className="chip-type">{TYPES[cited[0].source_type].he}</span>}
+      {variant === 'named' && <span className="chip-type">{TYPES[cited[0]!.source_type].he}</span>}
       {cited.length > 1 && <span className="chip-n" dir="ltr">+{cited.length - 1}</span>}
+    </>
+  );
+
+  // The mark means one thing on both surfaces; what it *does* is the surface's
+  // answer (§5, DIA-386). The desktop has a ledger under the text to jump to;
+  // the phone has neither a ledger nor - since 21 September - a carousel to
+  // point at, so the chip is a disclosure and the evidence comes to the reader.
+  return drawer ? (
+    <button
+      type="button"
+      className="chip"
+      aria-expanded="false"
+      aria-controls={drawer}
+      aria-label={`המקורות למשפט: ${label}`}
+      style={skin}
+    >{inner}</button>
+  ) : (
+    <a className="chip" href={`#${cited[0]!.id}`} aria-label={`המקורות למשפט: ${label}`} style={skin}>
+      {inner}
     </a>
   );
 }
 
+/**
+ * What the chip opens: the quote and the way out, in flow beneath the block
+ * the chip ends, so the text below moves down rather than being covered.
+ *
+ * Several claims stack in one drawer **in the order the author wrote them in
+ * the cite**, not the carousel's order. The carousel is deduplicated by first
+ * appearance; this answers what *this sentence* rests on, and the two are
+ * meant to disagree.
+ */
+function Drawer({ id, ids, claims }: { id: string; ids: string[]; claims: Claim[] }) {
+  const cited = cite(ids, claims);
+  if (!cited.length) return null;
+  return (
+    <div
+      className="deck-drawer"
+      id={id}
+      hidden
+      role="region"
+      aria-label="המקור"
+      style={{ ['--c' as string]: TYPES[cited[0]!.source_type].color }}
+    >
+      <button type="button" className="deck-drawer-x" aria-label="סגירה">×</button>
+      {cited.map((c) => (
+        <div key={c.id} className="deck-drawer-src" style={{ ['--c' as string]: TYPES[c.source_type].color }}>
+          <div className="deck-drawer-head">
+            <span className="deck-drawer-type">{TYPES[c.source_type].he}</span>
+            <span className="deck-drawer-name">{c.source}</span>
+            <span className="deck-drawer-date" dir="ltr">{c.date}</span>
+          </div>
+          {c.quote
+            ? <p className="deck-drawer-quote">{`„${c.quote}“`}</p>
+            : <p className="deck-drawer-noq">לא צוטט קטע מהמקור.</p>}
+          {/* The outlet name and an arrow, not the whole block: a wrapping
+              link makes the quote unselectable, and a quote is what a reader
+              copies. */}
+          {c.url
+            ? <a className="deck-drawer-go" href={c.url} target="_blank" rel="noopener noreferrer">
+                {c.source} <span className="deck-drawer-arr" aria-hidden="true">↗</span>
+              </a>
+            : <span className="deck-drawer-go" data-dead="">{c.source}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /** One span's blocks, with the chip drawn into whatever ends it. */
-function Span({ blocks, chip, k }: { blocks: Block[]; chip: ReactNode; k: number }) {
+function Span({ blocks, chip, after, k }: {
+  blocks: Block[]; chip: ReactNode; after?: ReactNode; k: number;
+}) {
   const last = blocks.length - 1;
   return (
     <>
       {blocks.map((b, i) => {
         const end = i === last ? chip : null;
+        const tail = i === last ? after : null;
         if (b.kind === 'p') {
-          return <p key={`${k}-${i}`}><Nodes nodes={b.children} />{end}</p>;
+          return (
+            <Fragment key={`${k}-${i}`}>
+              <p><Nodes nodes={b.children} />{end}</p>
+              {tail}
+            </Fragment>
+          );
         }
         const List = b.kind === 'ol' ? 'ol' : 'ul';
         return (
-          <List key={`${k}-${i}`}>
-            {b.items.map((item, j) => (
-              <li key={j}>
-                <Nodes nodes={item} />
-                {j === b.items.length - 1 ? end : null}
-              </li>
-            ))}
-          </List>
+          <Fragment key={`${k}-${i}`}>
+            <List>
+              {b.items.map((item, j) => (
+                <li key={j}>
+                  {/* The item's words get their own wrapper: `li` is a flex row
+                      carrying the em-dash marker, and a chip dropped straight
+                      into it becomes a flex item and stretches. */}
+                  <span><Nodes nodes={item} />{j === b.items.length - 1 ? end : null}</span>
+                </li>
+              ))}
+            </List>
+            {tail}
+          </Fragment>
         );
       })}
     </>
@@ -102,8 +181,10 @@ function Span({ blocks, chip, k }: { blocks: Block[]; chip: ReactNode; k: number
  * sentence rather than a paragraph inside a bullet. A span carrying more than
  * that keeps its blocks; the chip still ends the item either way.
  */
-function Item({ span, claims, k, variant }: { span: RenderSpan; claims: Claim[]; k: number; variant: ChipVariant }) {
-  const chip = <Chip ids={span.ids} claims={claims} variant={variant} />;
+function Item({ span, claims, k, variant, drawer }: {
+  span: RenderSpan; claims: Claim[]; k: number; variant: ChipVariant; drawer: string | null;
+}) {
+  const chip = <Chip ids={span.ids} claims={claims} variant={variant} drawer={drawer} />;
   const only = span.blocks.length === 1 && span.blocks[0]?.kind === 'p' ? span.blocks[0] : null;
   return (
     <li>
@@ -122,26 +203,56 @@ function Item({ span, claims, k, variant }: { span: RenderSpan; claims: Claim[];
  * per-item form. Each item keeps its own chip, because each rests on its own
  * claim; that is the whole reason the form exists.
  */
-export function Annotated({ text, claims, chip = 'dot' }: { text: string; claims: Claim[]; chip?: ChipVariant }) {
+export function Annotated({ text, claims, chip = 'dot', drawers }: {
+  text: string;
+  claims: Claim[];
+  chip?: ChipVariant;
+  /**
+   * A prefix for the drawer ids, and the switch that turns them on. One page
+   * can carry several of these - a stage stack has one per stage - so the
+   * prefix is the caller's to keep unique.
+   */
+  drawers?: string;
+}) {
   const spans = renderAnnotation(text);
   if (!spans.length) return null;
+  const idOf = (n: number) => (drawers ? `${drawers}-d${n}` : null);
 
   const out: ReactNode[] = [];
   for (let i = 0; i < spans.length; i += 1) {
     const span = spans[i]!;
     if (!span.marker) {
-      out.push(<Span key={i} blocks={span.blocks} chip={<Chip ids={span.ids} claims={claims} variant={chip} />} k={i} />);
+      const id = idOf(i);
+      out.push(
+        <Span
+          key={i}
+          blocks={span.blocks}
+          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} />}
+          after={id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
+          k={i}
+        />,
+      );
       continue;
     }
     const kind = span.marker;
-    const run: RenderSpan[] = [];
-    while (i < spans.length && spans[i]!.marker === kind) { run.push(spans[i]!); i += 1; }
+    const run: { span: RenderSpan; n: number }[] = [];
+    while (i < spans.length && spans[i]!.marker === kind) { run.push({ span: spans[i]!, n: i }); i += 1; }
     i -= 1;
     const List = kind === 'ol' ? 'ol' : 'ul';
+    // The list stays one list; each item's drawer follows the whole list, in
+    // the items' order, so a bullet's evidence never breaks the run apart.
     out.push(
-      <List key={i}>
-        {run.map((r, j) => <Item key={j} span={r} claims={claims} k={j} variant={chip} />)}
-      </List>,
+      <Fragment key={i}>
+        <List>
+          {run.map((r, j) => (
+            <Item key={j} span={r.span} claims={claims} k={j} variant={chip} drawer={idOf(r.n)} />
+          ))}
+        </List>
+        {run.map((r) => {
+          const id = idOf(r.n);
+          return id ? <Drawer key={r.n} id={id} ids={r.span.ids} claims={claims} /> : null;
+        })}
+      </Fragment>,
     );
   }
   return <>{out}</>;

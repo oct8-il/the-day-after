@@ -1,18 +1,17 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
-
 /**
  * The sources carousel, and the chip that lands a card in it.
  *
  * Written for slide 2 (docs/mobile-item.html §5) and reused by every stage
- * page on slides 3 and 4, which draw the same thing under the same rules: the
- * card is the link, the chip moves the rail rather than leaving the deck, and
- * the rail is deduplicated in order of first appearance so a chip resting on
- * two claims lands two adjacent cards.
+ * page on slide 3, which draws the same thing under the same rules: the card
+ * is the link, and the rail is deduplicated in order of first appearance.
  *
- * One rail per page, each with its own ref, because a stage stack has several
- * on screen at once and a chip belongs to the page it was written in.
+ * It stopped being the chip's target on 21 September (DIA-386): a chip now
+ * opens a drawer under its own passage, which is an answer slide 5 can give
+ * too, having chips and no carousel. The rail is the slide's sources as a
+ * set, for a reader who wants breadth without reading the body. Nothing in
+ * the body points at it any more.
  */
 
 export type SourceCard = {
@@ -26,41 +25,10 @@ export type SourceCard = {
   url: string | null;
 };
 
-/**
- * The landing. A chip's href is the claim id, the same target it carries on
- * the desktop; here it moves the rail instead of the page. Measured, because
- * the rail is RTL and scrollLeft's sign there is not worth remembering.
- */
-export function useSourceRail() {
-  const rail = useRef<HTMLOListElement>(null);
-
-  const onChip = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const chip = (e.target as HTMLElement).closest<HTMLAnchorElement>('a.chip');
-    const box = rail.current;
-    if (!chip || !box) return;
-    const id = chip.getAttribute('href')?.slice(1);
-    const card = id ? box.querySelector<HTMLElement>(`[data-claim="${CSS.escape(id)}"]`) : null;
-    if (!card) return;
-
-    e.preventDefault();
-    for (const el of box.querySelectorAll('[data-on]')) el.removeAttribute('data-on');
-    card.setAttribute('data-on', '');
-
-    const dx = card.getBoundingClientRect().left - box.getBoundingClientRect().left;
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (Math.abs(dx) > 0.5) box.scrollBy({ left: dx, behavior: still ? 'instant' : 'smooth' });
-  }, []);
-
-  return { rail, onChip };
-}
-
-export function SourceRail({ cards, railRef }: {
-  cards: SourceCard[];
-  railRef: React.RefObject<HTMLOListElement | null>;
-}) {
+export function SourceRail({ cards }: { cards: SourceCard[] }) {
   if (!cards.length) return null;
   return (
-    <ol className="deck-ov-sources" ref={railRef} dir="rtl" aria-label="המקורות לסקירה">
+    <ol className="deck-ov-sources" dir="rtl" aria-label="המקורות לסקירה">
       {cards.map((c) => {
         const inner = (
           <>

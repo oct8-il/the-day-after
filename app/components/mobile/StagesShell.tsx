@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { SourceRail, useSourceRail, type SourceCard } from './SourceRail';
+import { SourceRail, type SourceCard } from './SourceRail';
 
 /**
  * Slide 3's stack - docs/mobile-item.html §6.
@@ -45,7 +45,6 @@ function Chevron({ d }: { d: string }) {
 
 /** One page. Its own rail, because a stack has several on screen at once. */
 function Page({ page, index }: { page: StagePage; index: number }) {
-  const { rail, onChip } = useSourceRail();
   const { head } = page;
   return (
     <section
@@ -53,7 +52,6 @@ function Page({ page, index }: { page: StagePage; index: number }) {
       data-stage={head.n}
       data-index={index}
       aria-label={`שלב ${head.n} · ${head.he}`}
-      onClick={onChip}
     >
       <div className="deck-stage-kicker">מה נעשה מאז</div>
 
@@ -69,7 +67,7 @@ function Page({ page, index }: { page: StagePage; index: number }) {
       </div>
 
       <div className="deck-stage-body">{page.body}</div>
-      <SourceRail cards={page.cards} railRef={rail} />
+      <SourceRail cards={page.cards} />
     </section>
   );
 }
@@ -99,6 +97,8 @@ export function StagesShell({ slide, pages, rail, current }: {
    * left with the place the animation happened to be at.
    */
   const driving = useRef(false);
+  /** What a driven scroll asked for, so its landing can be checked against it. */
+  const want = useRef<{ page: number; into: number } | null>(null);
 
   const pageEls = useCallback(
     () => [...(stack.current?.querySelectorAll<HTMLElement>('.deck-stage') ?? [])], []);
@@ -129,9 +129,17 @@ export function StagesShell({ slide, pages, rail, current }: {
     atRef.current = i;
     setAt(i);
     if (opts?.top) seen.current.set(i, 0);
+
+    const room = box.scrollHeight - box.clientHeight;
+    const to = Math.max(0, Math.min(room, box.scrollTop + dy + remembered));
+    // A scroll that is already there fires no scroll event, so nothing would
+    // ever clear the intent - and the reader's next scroll would be pulled
+    // back to it. Arriving on the stage you are already on is the common case.
+    if (Math.abs(to - box.scrollTop) < 1) return;
+
     driving.current = true;
-    box.scrollTo({ top: box.scrollTop + dy + remembered, behavior: opts?.smooth ? 'smooth' : 'instant' });
-    if (!opts?.smooth) driving.current = false;
+    want.current = { page: i, into: remembered };
+    box.scrollTo({ top: to, behavior: opts?.smooth ? 'smooth' : 'instant' });
   }, [pageEls]);
 
   /* ------------------------------------------------ arrival and the URL tail */
@@ -176,31 +184,49 @@ export function StagesShell({ slide, pages, rail, current }: {
   }, [open, pages.length]);
 
   /* ------------------------------------------------- following the scroll */
-  const onScroll = useCallback(() => {
+  /**
+   * Where the scroll came to rest, and only there.
+   *
+   * Recording every frame looked like the same thing and was not: scrolling
+   * straight through a stage on the way to the next one wrote that stage's
+   * foot into the memory, so coming back to it by the arrows landed at its
+   * end with its title above the fold. A stage the reader passed through is
+   * not a stage they left off in.
+   *
+   * Debounced rather than hung off `scrollend`, which is young enough that a
+   * phone may not have it - and the memory going missing is the kind of fault
+   * that looks like nothing until someone tries to come back.
+   */
+  const rest = useCallback(() => {
     const box = stack.current;
     if (!box) return;
+    driving.current = false;
     const i = indexNow();
-    // Recorded for the page that is at the top, which is the one the reader is
-    // in. Measured every frame they move, so leaving a stage by scrolling on
-    // remembers the foot of it without anything having to notice the leaving.
-    if (!driving.current) {
-      const el = pageEls()[i];
-      if (el) {
-        const dy = box.getBoundingClientRect().top - el.getBoundingClientRect().top;
-        seen.current.set(i, Math.max(0, Math.round(dy)));
-      }
+    const el = pageEls()[i];
+    if (!el) return;
+    const dy = Math.round(box.getBoundingClientRect().top - el.getBoundingClientRect().top);
+
+    // What a driven scroll asked for and where the engine put it can differ by
+    // a snap. Corrected here rather than hoped for - the same self-correction
+    // the deck learned in Phase 2, and the reason a nudge used to fix this.
+    const asked = want.current;
+    want.current = null;
+    if (asked && asked.page === i && Math.abs(dy - asked.into) > 1) {
+      box.scrollTo({ top: box.scrollTop + (asked.into - dy), behavior: 'instant' });
+      return;
     }
-    if (i !== atRef.current) { atRef.current = i; setAt(i); }
+
+    seen.current.set(i, Math.max(0, dy));
   }, [indexNow, pageEls]);
 
-  /** A driven scroll is over; the stack belongs to the reader again. */
-  useEffect(() => {
-    const box = stack.current;
-    if (!box) return;
-    const done = () => { driving.current = false; };
-    box.addEventListener('scrollend', done);
-    return () => box.removeEventListener('scrollend', done);
-  }, []);
+  const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const onScroll = useCallback(() => {
+    const i = indexNow();
+    if (i !== atRef.current) { atRef.current = i; setAt(i); }
+    if (settle.current) clearTimeout(settle.current);
+    settle.current = setTimeout(rest, 140);
+  }, [indexNow, rest]);
 
   const here = pages[at]?.head.n ?? current;
   const off = here !== current;

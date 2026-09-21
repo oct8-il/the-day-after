@@ -313,6 +313,74 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
   }, []);
 
   /**
+   * The source drawer - docs/mobile-item.html §5, DIA-386.
+   *
+   * A chip opens the evidence under its own passage, on every slide that has
+   * chips. It lives here rather than in a slide because it is one interaction
+   * shared by three of them, and because "one drawer at a time" and "leaving
+   * the slide closes it" are both facts about the deck rather than about any
+   * one screen.
+   *
+   * Delegated: the chips and drawers are server-rendered markup inside slides
+   * this component only receives as nodes, so the state is the DOM's.
+   */
+  useEffect(() => {
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    if (!deck) return;
+
+    const shut = (d: Element) => {
+      d.setAttribute('hidden', '');
+      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
+    };
+    const shutAll = () => deck.querySelectorAll('.deck-drawer:not([hidden])').forEach(shut);
+
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const close = t.closest('.deck-drawer-x');
+      if (close) {
+        const d = close.closest('.deck-drawer');
+        if (d) { shut(d); e.preventDefault(); }
+        return;
+      }
+      const chip = t.closest<HTMLElement>('button.chip[aria-controls]');
+      if (!chip) return;
+      e.preventDefault();
+
+      const d = deck.querySelector<HTMLElement>(`#${CSS.escape(chip.getAttribute('aria-controls')!)}`);
+      if (!d) return;
+      const wasOpen = !d.hasAttribute('hidden');
+      shutAll();
+      if (wasOpen) return;
+
+      d.removeAttribute('hidden');
+      chip.setAttribute('aria-expanded', 'true');
+
+      // §5: if it would open below the fold the column scrolls the minimum
+      // needed to show it, never more, so the passage above stays on screen.
+      const box = d.closest<HTMLElement>('.deck-ov-scroll,.deck-stack');
+      if (!box) return;
+      const r = d.getBoundingClientRect();
+      const b = box.getBoundingClientRect();
+      const over = r.bottom + 8 - b.bottom;
+      if (over <= 0) return;
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      box.scrollBy({ top: Math.min(over, Math.max(0, r.top - b.top)), behavior: still ? 'instant' : 'smooth' });
+    };
+
+    deck.addEventListener('click', onClick);
+    return () => deck.removeEventListener('click', onClick);
+  }, []);
+
+  /** Leaving the slide closes it: an open drawer is a question already answered. */
+  useEffect(() => {
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    deck?.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => {
+      d.setAttribute('hidden', '');
+      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
+    });
+  }, [at]);
+
+  /**
    * A slide that owns pages moved between them. The deck owns the URL, so it
    * rewrites the tail; the stack only says that there is a new one.
    */

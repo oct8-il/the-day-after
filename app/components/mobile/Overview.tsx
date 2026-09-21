@@ -37,7 +37,7 @@ export function Overview({ summary, claims }: { summary: string; claims: Claim[]
 
   return (
     <OverviewShell title={TITLE} cards={cards}>
-      <Annotated text={summary} claims={claims} chip="named" />
+      <Annotated text={summary} claims={claims} chip="named" drawers="ov" />
     </OverviewShell>
   );
 }

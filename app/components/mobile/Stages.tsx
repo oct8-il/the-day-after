@@ -93,7 +93,7 @@ export function Stages({ inc, slide }: { inc: Incident; slide: number }) {
         body: (
           <>
             {summary
-              ? <Annotated text={summary} claims={inc.claims} chip="named" />
+              ? <Annotated text={summary} claims={inc.claims} chip="named" drawers={`st${x.n}`} />
               : <Claims claims={mine} />}
             {pins.length > 0 && (
               <div className="deck-stage-map"><EvidenceMap pins={pins} /></div>

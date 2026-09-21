@@ -1232,6 +1232,60 @@
   .deck .chip .chip-dot{width:7px;height:7px;
     box-shadow:0 0 0 1.5px color-mix(in srgb,var(--text) 27%,transparent)}
   .deck .chip .chip-n{font-size:11px;color:inherit}
+  /* On the phone the chip is a disclosure, so it has an open state: filled in
+     its own type colour at low alpha, with a border in it. Which chip opened
+     the drawer is never a guess. */
+  .deck button.chip{appearance:none;font:inherit;cursor:pointer;
+    border:1px solid transparent;transition:background .13s,border-color .13s,color .13s}
+  .deck button.chip[aria-expanded="true"]{color:var(--text);
+    background:color-mix(in srgb,var(--c) 26%,transparent);
+    border-color:color-mix(in srgb,var(--c) 52%,transparent)}
+
+  /* ---------------------------------------------------------------- §5
+     The source drawer (DIA-386). In flow, directly beneath the block the chip
+     ends, so the text below moves down rather than being covered. The 2px edge
+     is the source type's colour on the physical right - the same colour as the
+     dot in the chip that opened it, which ties the two together without a line
+     being drawn between them. */
+  .deck-drawer{position:relative;margin:-4px 0 14px;border-radius:10px;
+    background:color-mix(in srgb,var(--text) 5.5%,transparent);
+    border:1px solid color-mix(in srgb,var(--text) 10%,transparent);
+    border-right:2px solid var(--c);
+    animation:deck-drawer-open .16s ease}
+  .deck-drawer[hidden]{display:none}
+  @keyframes deck-drawer-open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+  .deck-drawer-src{padding:11px 13px 12px}
+  .deck-drawer-src + .deck-drawer-src{border-top:1px solid color-mix(in srgb,var(--text) 9%,transparent)}
+  .deck-drawer-head{display:flex;align-items:baseline;gap:7px;margin-bottom:6px}
+  /* Physical left, and :first-of-type rather than :first-child - the close
+     button is the drawer's first child. */
+  .deck-drawer-src:first-of-type .deck-drawer-head{padding-left:26px}
+  .deck-drawer-type{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.02em;color:var(--c)}
+  .deck-drawer-name{min-width:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    color:color-mix(in srgb,var(--text) 62%,transparent)}
+  .deck-drawer-date{flex:none;margin-inline-start:auto;font-size:10px;
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:color-mix(in srgb,var(--text) 42%,transparent)}
+
+  /* Unclamped on purpose: the carousel clamps to two lines because it is a
+     strip to skim, and this is where a reader went to read it. */
+  .deck-drawer-quote{margin:0 0 8px;font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif;
+    font-size:14.5px;line-height:1.5;color:color-mix(in srgb,var(--text) 92%,transparent)}
+  .deck-drawer-noq{margin:0 0 8px;font-size:12.5px;font-style:italic;
+    color:color-mix(in srgb,var(--text) 50%,transparent)}
+  .deck-drawer-go{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+    color:var(--c);text-decoration:none}
+  .deck-drawer-go[data-dead]{color:color-mix(in srgb,var(--text) 45%,transparent)}
+  .deck-drawer-arr{display:inline-block;font-size:12px;transform:scaleX(-1)}
+
+  /* Physical left, not inset-inline-end: here the logical property and the
+     date's margin-inline-start:auto resolve to the same side, so a logical
+     one would put the × on top of the date. */
+  .deck-drawer-x{position:absolute;left:8px;top:7px;width:22px;height:22px;border:0;border-radius:50%;
+    padding:0;font:inherit;font-size:13px;line-height:1;cursor:pointer;
+    background:color-mix(in srgb,var(--text) 9%,transparent);
+    color:color-mix(in srgb,var(--text) 60%,transparent)}
 
   /* The carousel, docked to the foot of the column and bleeding the slide's
      own 20px so a card can sit against the edge. The card is the link; §5 is
@@ -1276,8 +1330,13 @@
   /* The stack. scroll-snap makes the boundary a property of the scroller
      rather than of a listener, so the deck's own axis decision stays the only
      one in the build. */
+  /* Proximity rather than mandatory. A stage reopens where it was left, and a
+     position part-way down a page is not a snap point - under mandatory the
+     engine left the scroller floating there and corrected only on the next
+     touch, which read as the arrows undershooting. Proximity snaps at the
+     boundaries, which is all §6 asks for, and leaves a rest position alone. */
   .deck-stack{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-    scroll-snap-type:y mandatory;scrollbar-width:none}
+    scroll-snap-type:y proximity;scrollbar-width:none}
   .deck-stack::-webkit-scrollbar{display:none}
 
   /* The page carries no horizontal padding of its own and each part takes it
