@@ -460,6 +460,20 @@ add(`<div>
 <p>Slide 3's spec was written when <span class="id">.deck-stage</span> could only mean slide 3. Six assertions started counting both stacks the moment the second one existed, which is a test reading the wrong thing rather than a screen doing the wrong thing — the selectors are now scoped to slide 3's subtree.</p>
 <p>And two of the new spec's own assertions were simply wrong. A 1.5px border snaps to the device pixel, so measuring it says nothing at dpr 1; and <span class="id">stroke</span> is inherited, so the hourglass reports the warning colour on its svg and all four of its paths. What is asserted now is that nothing <i>outside</i> the mark carries it, which is what the ruling actually said.</p>`);
 
+add(`<div>
+  <span class="tag done">ux backlog · 1</span>
+  <h2>The photograph leaves with the cover</h2>
+  <p class="sub">The first item from the design session, against Phase 2. Two faults in one transition — and both of them were placements rather than code.</p>
+  <div class="stack">
+    <div class="item"><div class="v">0</div><div class="k">lines of JavaScript in the answer. The ground moves into slide 1 and the gate keeps its own clearance</div></div>
+    <div class="item"><div class="v">10</div><div class="k">pixels the gate's title dropped at the swipe's midpoint, with the title still on screen</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">reason for the old placement, retired — <span class="id">DIA-379</span> removed the seam the ground was lifted out to avoid</div></div>
+  </div>
+</div>`,
+`<p>The ground was painted at deck level and faded in and out on <span class="id">data-at</span>, so slide 2's text travelled across the photograph until the midpoint and the photograph then dissolved underneath it. It is slide 1's own now and leaves with it — one object, one edge. The seam that justified the old placement cannot form any more: the track is <span class="id">inset:0</span> with the chrome over it, and an absolute box is laid against its containing block's <i>padding</i> box, so the ground covers the slide's clearance as well as its content.</p>
+<p>The second fault shared the midpoint and was a separate mechanism. Every slide takes its bottom padding from one measured chrome height, and the gate's dot row is 10px taller — so the flip moved the gate's title down and slide 2's carousel up while both were visible. The air above the gate's dots is the gate's clearance, not the dot row's, so the gate holds it: the chrome is one height everywhere now.</p>
+<p>The assertion added for it fails by exactly 10px against the old rule, which is the only way to know a geometry test is worth having.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
