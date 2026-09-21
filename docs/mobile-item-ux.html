@@ -84,7 +84,7 @@
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — interactions</h1>
   <p class="lede">What the item page does under a finger: every gesture, every control, and the rule behind each one. The design is <a href="mobile-item.html">docs/mobile-item.html</a> and the order of work is <a href="mobile-item-plan.html">docs/mobile-item-plan.html</a>; this is the third of the three, and it records behaviour rather than appearance.</p>
-  <p class="meta">v1.3 · 20 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
+  <p class="meta">v1.4 · 21 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
 </header>
 
 <nav class="toc">
@@ -96,7 +96,7 @@
   <a href="#watch">What to watch</a>
 </nav>
 
-<div class="note"><strong>How to read this.</strong> Each entry is a behaviour, then the reason it is that way. The reasons matter more than the behaviours: most of them were bought with a review round on a real phone, and a future change that does not know the reason will buy the same round again. Phases 5 to 8 are absent on purpose — nothing is written here until it exists.</div>
+<div class="note"><strong>How to read this.</strong> Each entry is a behaviour, then the reason it is that way. The reasons matter more than the behaviours: most of them were bought with a review round on a real phone, and a future change that does not know the reason will buy the same round again. Phases 5 to 8 are absent on purpose — nothing is written here until it exists. The one exception is an entry tagged <span class="status st-todo">designed</span>: behaviour that has been decided and handed to an issue but is not in the build yet. It loses the tag when it lands.</div>
 
 <h2 id="always">0 · True on every screen</h2>
 
@@ -147,6 +147,15 @@
   <h4>The chrome is the destination's from the moment the destination is chosen</h4>
   <p>While the deck is driving itself towards a slide, the scroll handler reports nothing. The landing is recorded once, on <code>scrollend</code>.</p>
   <p class="why">Without it, tapping the footer showed the destination, flashed the slide it came from as the animation crossed the midpoint, then settled. The reader reads that as a bug, because it is one.</p>
+</div>
+
+<h3>Leaving the gate</h3>
+
+<div class="rule">
+  <h4>The photograph leaves with the cover <span class="status st-todo">designed · DIA-385 · not built</span></h4>
+  <p>The gate's ground belongs to slide 1 and travels with it — full frame, under the breadcrumb, the dots and the footer — as one object with one clean edge. No fade, no timer, nothing linked to scroll progress. Coming back to the gate is the same motion reversed. The no-photo ground behaves identically.</p>
+  <p>With it: a slide's clearance for the chrome is its own and does not change mid-swipe. Nothing visible moves vertically during a horizontal swipe.</p>
+  <p class="why">It is the one transition every reader makes. As built, the ground sits behind the whole frame and the slides have none of their own, so slide 2's text crosses the photograph until the midpoint, where the photo fades on a 180ms timer and the gate's title drops about 10px because every slide shares one measured clearance. A dissolve tied to the finger was prototyped beside this and rejected: the text still crosses the image for the first third of the gesture. A cover that leaves whole never puts text over the photograph, and it is what a post's first image does — which is what this screen is. Chosen on a phone, 21 September (Roy).</p>
 </div>
 
 <h3>Jump mode — the dot row</h3>
