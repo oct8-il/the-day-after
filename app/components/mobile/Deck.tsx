@@ -77,7 +77,7 @@ export function parseHash(hash: string): { slide: number; stage: number | null }
 const hashFor = (i: number, stage: number | null) =>
   i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
-export function Deck({ crumbs, slides, credit, ground }: {
+export function Deck({ crumbs, slides, mid, credit, ground }: {
   crumbs: { ancestors: string[]; leaf: string };
   /**
    * The slides that have been built, by index. A hole is a placeholder naming
@@ -87,6 +87,13 @@ export function Deck({ crumbs, slides, credit, ground }: {
    * not wait for hydration, and this component is a client one.
    */
   slides?: (ReactNode | null)[];
+  /**
+   * What a slide puts in the middle of the footer, by index. Slides 3 and 4
+   * use it for the vertical arrows - §6's route for a reader who does not
+   * scroll. It lives here rather than in the slide because the footer is
+   * docked chrome and is rendered once, not per slide.
+   */
+  mid?: (ReactNode | null)[];
   /** The gate's photo credit, which §3 gives the footer's left slot on slide 1. */
   credit?: string | null;
   /**
@@ -227,6 +234,21 @@ export function Deck({ crumbs, slides, credit, ground }: {
    * came to rest and corrects it. The correction is instant and its own
    * scrollend finds nothing left to do, so it cannot loop.
    */
+  /**
+   * The page a slide that owns pages is on, read off the deck's own root.
+   *
+   * A stage stack writes its position there rather than reaching into this
+   * component: the deck owns the URL, and the stack owns which page it is
+   * showing, and neither has to import the other to agree. The slide index is
+   * written beside it so a stale value from another slide cannot be read.
+   */
+  const stageNow = useCallback((i: number) => {
+    const d = crumbBar.current?.parentElement as HTMLElement | undefined;
+    if (!d || d.dataset.stageAt !== String(i)) return null;
+    const n = Number(d.dataset.stage);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  }, []);
+
   const settle = useCallback(() => {
     target.current = null;
     // A scrub stops between every pair of dots. The landing writes the hash,
@@ -242,8 +264,8 @@ export function Deck({ crumbs, slides, credit, ground }: {
     }
 
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
-    writeHash(i, null);
-  }, [indexNow, writeHash]);
+    writeHash(i, stageNow(i));
+  }, [indexNow, writeHash, stageNow]);
 
   /**
    * The chrome overlays the track rather than sharing a column with it, so the
@@ -289,6 +311,84 @@ export function Deck({ crumbs, slides, credit, ground }: {
     return () => window.removeEventListener('popstate', onPop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /**
+   * The source drawer - docs/mobile-item.html §5, DIA-386.
+   *
+   * A chip opens the evidence under its own passage, on every slide that has
+   * chips. It lives here rather than in a slide because it is one interaction
+   * shared by three of them, and because "one drawer at a time" and "leaving
+   * the slide closes it" are both facts about the deck rather than about any
+   * one screen.
+   *
+   * Delegated: the chips and drawers are server-rendered markup inside slides
+   * this component only receives as nodes, so the state is the DOM's.
+   */
+  useEffect(() => {
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    if (!deck) return;
+
+    const shut = (d: Element) => {
+      d.setAttribute('hidden', '');
+      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
+    };
+    const shutAll = () => deck.querySelectorAll('.deck-drawer:not([hidden])').forEach(shut);
+
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const close = t.closest('.deck-drawer-x');
+      if (close) {
+        const d = close.closest('.deck-drawer');
+        if (d) { shut(d); e.preventDefault(); }
+        return;
+      }
+      const chip = t.closest<HTMLElement>('button.chip[aria-controls]');
+      if (!chip) return;
+      e.preventDefault();
+
+      const d = deck.querySelector<HTMLElement>(`#${CSS.escape(chip.getAttribute('aria-controls')!)}`);
+      if (!d) return;
+      const wasOpen = !d.hasAttribute('hidden');
+      shutAll();
+      if (wasOpen) return;
+
+      d.removeAttribute('hidden');
+      chip.setAttribute('aria-expanded', 'true');
+
+      // §5: if it would open below the fold the column scrolls the minimum
+      // needed to show it, never more, so the passage above stays on screen.
+      const box = d.closest<HTMLElement>('.deck-ov-scroll,.deck-stack');
+      if (!box) return;
+      const r = d.getBoundingClientRect();
+      const b = box.getBoundingClientRect();
+      const over = r.bottom + 8 - b.bottom;
+      if (over <= 0) return;
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      box.scrollBy({ top: Math.min(over, Math.max(0, r.top - b.top)), behavior: still ? 'instant' : 'smooth' });
+    };
+
+    deck.addEventListener('click', onClick);
+    return () => deck.removeEventListener('click', onClick);
+  }, []);
+
+  /** Leaving the slide closes it: an open drawer is a question already answered. */
+  useEffect(() => {
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    deck?.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => {
+      d.setAttribute('hidden', '');
+      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
+    });
+  }, [at]);
+
+  /**
+   * A slide that owns pages moved between them. The deck owns the URL, so it
+   * rewrites the tail; the stack only says that there is a new one.
+   */
+  useEffect(() => {
+    const onStage = () => writeHash(atRef.current, stageNow(atRef.current));
+    window.addEventListener('deck:stagechange', onStage);
+    return () => window.removeEventListener('deck:stagechange', onStage);
+  }, [writeHash, stageNow]);
 
   /* --------------------------------------------------- following the finger */
   /**
@@ -555,7 +655,7 @@ export function Deck({ crumbs, slides, credit, ground }: {
         {/* §3's centre slot carries ↑↓ שלבים on slides 3 and 4, and only when
             that stack holds more than one page. The stack is Phase 5, so the
             slot is held open and empty rather than filled with a guess. */}
-        <div className="deck-mid" />
+        <div className="deck-mid">{mid?.[at] ?? null}</div>
         <div className="deck-next">{next}</div>
       </footer>
       </div>

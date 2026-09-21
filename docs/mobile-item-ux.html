@@ -84,7 +84,7 @@
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — interactions</h1>
   <p class="lede">What the item page does under a finger: every gesture, every control, and the rule behind each one. The design is <a href="mobile-item.html">docs/mobile-item.html</a> and the order of work is <a href="mobile-item-plan.html">docs/mobile-item-plan.html</a>; this is the third of the three, and it records behaviour rather than appearance.</p>
-  <p class="meta">v1.2 · 20 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
+  <p class="meta">v1.4 · 21 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
 </header>
 
 <nav class="toc">
@@ -92,10 +92,11 @@
   <a href="#p2">Phase 2 · The deck, the chrome, the gestures</a>
   <a href="#p3">Phase 3 · Slide 1 — <span class="he">השער</span></a>
   <a href="#p4">Phase 4 · Slide 2 — <span class="he">סקירת הכשל</span></a>
+  <a href="#p5">Phase 5 · Slide 3 — <span class="he">מה נעשה מאז</span></a>
   <a href="#watch">What to watch</a>
 </nav>
 
-<div class="note"><strong>How to read this.</strong> Each entry is a behaviour, then the reason it is that way. The reasons matter more than the behaviours: most of them were bought with a review round on a real phone, and a future change that does not know the reason will buy the same round again. Phases 5 to 8 are absent on purpose — nothing is written here until it exists.</div>
+<div class="note"><strong>How to read this.</strong> Each entry is a behaviour, then the reason it is that way. The reasons matter more than the behaviours: most of them were bought with a review round on a real phone, and a future change that does not know the reason will buy the same round again. Phases 5 to 8 are absent on purpose — nothing is written here until it exists. The one exception is an entry tagged <span class="status st-todo">designed</span>: behaviour that has been decided and handed to an issue but is not in the build yet. It loses the tag when it lands.</div>
 
 <h2 id="always">0 · True on every screen</h2>
 
@@ -146,6 +147,15 @@
   <h4>The chrome is the destination's from the moment the destination is chosen</h4>
   <p>While the deck is driving itself towards a slide, the scroll handler reports nothing. The landing is recorded once, on <code>scrollend</code>.</p>
   <p class="why">Without it, tapping the footer showed the destination, flashed the slide it came from as the animation crossed the midpoint, then settled. The reader reads that as a bug, because it is one.</p>
+</div>
+
+<h3>Leaving the gate</h3>
+
+<div class="rule">
+  <h4>The photograph leaves with the cover <span class="status st-todo">designed · DIA-385 · not built</span></h4>
+  <p>The gate's ground belongs to slide 1 and travels with it — full frame, under the breadcrumb, the dots and the footer — as one object with one clean edge. No fade, no timer, nothing linked to scroll progress. Coming back to the gate is the same motion reversed. The no-photo ground behaves identically.</p>
+  <p>With it: a slide's clearance for the chrome is its own and does not change mid-swipe. Nothing visible moves vertically during a horizontal swipe.</p>
+  <p class="why">It is the one transition every reader makes. As built, the ground sits behind the whole frame and the slides have none of their own, so slide 2's text crosses the photograph until the midpoint, where the photo fades on a 180ms timer and the gate's title drops about 10px because every slide shares one measured clearance. A dissolve tied to the finger was prototyped beside this and rejected: the text still crosses the image for the first third of the gesture. A cover that leaves whole never puts text over the photograph, and it is what a post's first image does — which is what this screen is. Chosen on a phone, 21 September (Roy).</p>
 </div>
 
 <h3>Jump mode — the dot row</h3>
@@ -218,6 +228,45 @@
   <h4>The carousel keeps its own horizontal axis</h4>
   <p>A drag started on the carousel scrolls the carousel, not the deck, and does not chain to the deck at either end.</p>
   <p class="why">It is a carousel; owning sideways drags on itself is the whole point. Chaining at the end would fling the reader to the next slide while they were browsing sources.</p>
+</div>
+
+<h2 id="p5">Phase 5 · Slide 3 — <span class="he">מה נעשה מאז</span> <span class="status st-open">in progress</span></h2>
+<p>DIA-384. The stages the item reached, one page each. The first screen with two scroll axes at once, and the pattern slide 4 inherits in Phase 6.</p>
+
+<div class="rule">
+  <h4>One gesture, two jobs, and no code between them</h4>
+  <p>The stack is a single scroller with nested scroll-snap: each stage page is a snap point, <code>scroll-snap-stop: always</code>. Scrolling on at the bottom of a stage takes the reader to the next; scrolling back at the top takes them to the previous. There is no listener, no threshold and no boundary detection anywhere in the slide.</p>
+  <p class="why">Deliberate, and the one architectural instruction this phase carried. <span class="mono">DIA-383</span> is open on the deck's own axis decision; a second gesture layer here would mean fixing the same thing twice and in two places. The boundary is a property of the scroller, so whatever DIA-383 eventually does, this slide inherits it.</p>
+</div>
+
+<div class="rule">
+  <h4>A stage reopens where it was left</h4>
+  <p>A stage the reader has not been to opens at its top. One they have already read reopens where they left it, for as long as the page is open. A deep link to <code>#3-s2</code> is a first visit. A landing through jump mode is an ordinary entry and obeys the memory. A stage shorter than the frame has nothing to remember. Nothing survives a reload.</p>
+  <p class="why">It is what makes scrolling back up bearable: the reader returns to the foot of the stage they just read rather than above everything in it. The position is recorded for whichever page is at the top, every frame the reader moves — and never while the stack is scrolling itself, because a driven scroll passes through positions nobody chose.</p>
+</div>
+
+<div class="rule">
+  <h4>The locator is an indicator, not a control</h4>
+  <p>Tapping a rung does nothing. Five slots; only the stages belonging to this slide are drawn and the rest keep their place as invisible spacers. One ring, on the stage being viewed.</p>
+  <p class="why">Held slots are why a rung never moves between slide 3 and slide 4 — the same stage is in the same place on both, so the ladder reads as one object across a swipe. The current stage lost its own ring on 20 September: splitting reached from unreached made it redundant, since here it is always the last rung drawn.</p>
+</div>
+
+<div class="rule">
+  <h4>The pill's row keeps its height whether or not the pill is in it</h4>
+  <p><span class="he">חזרה לשלב הנוכחי</span> appears only when the reader is off the current stage, with its arrow pointing the way. The row it sits in is always there.</p>
+  <p class="why">DIA-379 again: a chrome that changes height resizes the scroller, and resizing a scroll container mid-scroll makes the engine recompute its snap positions. That was an overshoot on the deck; here it would be a stage page jumping under a thumb.</p>
+</div>
+
+<div class="rule">
+  <h4>The footer's arrows are the route for a reader who does not scroll</h4>
+  <p><span class="he">↑↓ שלבים</span> in the middle of the docked footer. Two real buttons, drawn as the screens draw the glyphs.</p>
+  <p class="why">Nothing on the deck may be gesture-only. The footer is rendered once as docked chrome rather than per slide, so the control is given to the deck and talks to the stack through an event — which is also why slide 4 gets it in Phase 6 without a second implementation.</p>
+</div>
+
+<div class="rule">
+  <h4>The URL's tail follows the page</h4>
+  <p>Moving between stages rewrites the hash to <code>#3-s2</code> and so on, under the same push-once rule as the slides. A refresh lands back on the stage that was showing.</p>
+  <p class="why">The deck owns the URL and the stack owns which page it is showing. The stack publishes its page on the deck's own root and the deck reads it from there, so neither has to import the other to agree.</p>
 </div>
 
 <h2 id="watch">What to watch</h2>
