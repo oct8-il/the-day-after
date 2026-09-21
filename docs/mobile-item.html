@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.8 · 20 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v2.9 · 21 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -171,6 +171,7 @@
   <li>Design frame <code>390 × 844</code>, <code>dir="rtl"</code>, <code>lang="he"</code>.</li>
   <li>Side gutter <code>20px</code>. On slide 3 the body's end gutter is <code>36px</code> to clear the locator.</li>
   <li>Bottom padding <code>26px</code> under the footer row for the home indicator. No fake status bar, ever.</li>
+  <li><strong>The gate is dark in both themes; slides 2–6 follow the phone.</strong> One chrome over two grounds, so over the gate the breadcrumb, the dots, the footer's text and its rule wear the gate's ink <code>#e9e6df</code> at §3's opacities, over slide 2 they wear the theme's, and in between the two are mixed by where the track is — no timer. On a dark phone the two inks are the same colour and none of it shows. <span class="mono">DIA-403</span></li>
 </ul>
 
 <h3>Where the deck takes over</h3>
@@ -1459,6 +1460,7 @@ mask-image: linear-gradient(to bottom,
   <tr><td>Item · Last-minute Changes</td><td class="mono">e4eb48f5</td><td>Ladder track removed, slide 2’s title chipped, slide 3’s title and gold pill, upright repost icon</td></tr>
   <tr><td>Item · Cosmetic Fixes</td><td class="mono">46a934cc</td><td>Slide 3 renamed <span class="he">מה נעשה מאז</span>, tighter title gap, gold chip trimmed, wider repost icon</td></tr>
   <tr><td>Item · Stage Split Proposal</td><td class="mono">b05eb150</td><td>The split into <span class="he">מה נעשה מאז</span> and <span class="he">מה עוד לא נעשה</span> — <strong>accepted</strong></td></tr>
+  <tr><td>Gate · Front Door</td><td class="mono">DIA-403</td><td>On a light phone the gate kept the theme's dark ink and lost its chrome — dots, hint and credit gone against the photograph. The chrome now travels with the cover: the gate's ink over the gate, the theme's over slide 2, mixed in between by the track's position. The alternative — making the whole deck dark in both themes — was built first and reversed the same day: it meant the light site had a dark island in it, and the twelve screens would never be seen in the theme half the readers use. The accepted cost is the middle of the first swipe, where one ink sits over two grounds and is weak against both</td></tr>
   <tr><td>The source drawer</td><td class="mono">DIA-383</td><td>A chip opens the quote and the way out under its own passage, on slides 2, 3 and 5, replacing the ruling that it moves the carousel — which slide 5, having chips and no carousel, could never honour. The carousel keeps its place and its cards and loses its job as a target. Slide 4 has neither chips nor carousel and is untouched</td></tr>
   <tr><td>Slide 2's five questions</td><td class="mono">DIA-381</td><td>A chip moves the carousel rather than leaving the deck, which makes the carousel load-bearing. One <code>Annotated</code> with a declared chip variant. The lead is the first paragraph, chosen in CSS. Lists in both forms — shared source and source-per-item — the second of which the renderer drops today, against its own contract (<span class="mono">DIA-382</span>)</td></tr>
   <tr><td>The frame stops being a ceiling</td><td class="mono">20 Sep</td><td>Slide 2's drawn density needs 474px and an iPhone SE offers 405, so the design never fit the phones it is for. The body column scrolls, the chip stays docked, and §11's “every stage page must fit the frame” is retired. Slides 3 and 4 take the same behaviour: a stage scrolls, the boundary carries the reader on, and a stage reopens where it was left rather than at its top</td></tr>

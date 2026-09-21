@@ -432,6 +432,45 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     return () => window.removeEventListener('deck:stagechange', onStage);
   }, [writeHash, stageNow]);
 
+  /* ------------------------------------------------- the chrome's own ink */
+  /**
+   * The gate is dark in both themes and slides 2-6 follow the theme, so on a
+   * light phone one chrome sits over two grounds. §3's answer (DIA-403) is
+   * that the ink travels with the cover: the gate's `#e9e6df` while the gate
+   * is in view, the theme's by the time slide 2 is, and a mix of the two in
+   * between, set by where the track is rather than by a clock. Stop mid-swipe
+   * and it holds.
+   *
+   * On a dark phone the two inks are the same colour, so none of this shows.
+   *
+   * The property is removed rather than set to the theme's ink past slide 2,
+   * so every chrome rule's `var(--ck, var(--text))` falls back to exactly what
+   * it read before this existed - which is what keeps slides 2-6 untouched.
+   *
+   * This is the deck's reading of the track's position between two slides.
+   * The footer's label crossfade (DIA-401) wants the same number and should
+   * take it from here rather than add a second listener.
+   */
+  const ink = useCallback(() => {
+    const el = track.current;
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    if (!el || !deck) return;
+    const one = el.clientWidth || 1;
+    // RTL runs scrollLeft negative from 0 at the gate; the sign is the
+    // engine's business, so only the distance is read here.
+    let p = Math.min(1, Math.max(0, Math.abs(el.scrollLeft) / one));
+    // Reduced motion: §3 swaps at the midpoint rather than blending.
+    if (reduced()) p = p > 0.5 ? 1 : 0;
+    // Quantised, because a custom property written sixty times a second
+    // invalidates style on every frame of a scroll for changes no eye reads.
+    const q = Math.round(p * 50) / 50;
+    if (q >= 1) deck.style.removeProperty('--ck');
+    else if (q <= 0) deck.style.setProperty('--ck', 'var(--gate-ink)');
+    else deck.style.setProperty('--ck', `color-mix(in srgb,var(--text) ${q * 100}%,var(--gate-ink))`);
+  }, []);
+
+  useEffect(() => { ink(); }, [ink, at]);
+
   /* --------------------------------------------------- following the finger */
   /**
    * Two jobs, deliberately split.
@@ -453,6 +492,9 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     let fallback = 0;
 
     const read = () => {
+      // Every scroll, the deck's own included: the ink is a function of where
+      // the track is, not of who moved it.
+      ink();
       if (target.current === null) {
         if (queued) return;
         queued = true;
@@ -494,7 +536,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       window.removeEventListener('resize', onResize);
       window.visualViewport?.removeEventListener('resize', onResize);
     };
-  }, [indexNow, settle, scrollTo]);
+  }, [indexNow, settle, scrollTo, ink]);
 
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
