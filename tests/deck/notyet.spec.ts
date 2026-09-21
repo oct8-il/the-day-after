@@ -69,10 +69,19 @@ test.describe('the item that has no slide 4', () => {
 
   test('the footer chain skips it rather than pointing at nothing', async ({ page }) => {
     await open(page, 't05', '#3');
-    const m = await page.evaluate(() => ({
-      next: (document.querySelector('.deck-next')?.textContent ?? '').trim(),
-      prev: (document.querySelector('.deck-prev')?.textContent ?? '').trim(),
-    }));
+    // The slot holds two layers since DIA-401; the one at full strength is
+    // the label. Reading the slot whole would read the waiting one too.
+    const m = await page.evaluate(() => {
+      const shown = (slot: string) => {
+        const layers = [...document.querySelectorAll(`${slot} [data-lyr]`)];
+        const on = layers.find((l) => Number(getComputedStyle(l).opacity) > 0.5) ?? layers[0];
+        return (on?.textContent ?? '').trim();
+      };
+      return {
+        next: shown('.deck-next'),
+        prev: shown('.deck-prev'),
+      };
+    });
     expect(m.next).toContain('דעת הציבור');
     expect(m.next).not.toContain('מה עוד לא נעשה');
     expect(m.prev).toContain('סקירת הכשל');

@@ -89,6 +89,25 @@ async function goTo(page: Page, i: number) {
   }
 }
 
+/**
+ * The footer slot's showing layer.
+ *
+ * Since DIA-401 each side slot holds two layers - the slide being left and the
+ * one being arrived at - and both are in the DOM at all times. At rest one is
+ * at full strength and the other at nothing, so "the label" means the layer
+ * whose opacity is 1.
+ */
+const SHOWING = (slot: string) =>
+  `${slot} [data-lyr="a"], ${slot} [data-lyr="b"]`;
+
+const shown = (page: Page, slot: string) =>
+  page.evaluate((sel) => {
+    const layers = [...document.querySelectorAll(sel)];
+    const on = layers.find((l) => Number(getComputedStyle(l).opacity) > 0.5) ?? layers[0]!;
+    const link = on.querySelector('a');
+    return { text: (on.textContent ?? '').trim(), href: link?.getAttribute('href') ?? null, links: on.querySelectorAll('a').length };
+  }, SHOWING(slot));
+
 async function open(page: Page, hash = '') {
   await page.goto(ITEM + hash);
   await page.waitForSelector('.deck-track');
@@ -392,11 +411,12 @@ test.describe('the footer chain', () => {
     await open(page);
     for (const row of chain) {
       await goTo(page, row.slide);
-      expect.soft(await page.locator('.deck-prev').innerText(), `slide ${row.slide + 1} prev`).toBe(row.prev);
+      expect.soft((await shown(page, '.deck-prev')).text, `slide ${row.slide + 1} prev`).toBe(row.prev);
+      const nextSlot = await shown(page, '.deck-next');
       if (row.next === null) {
-        expect.soft(await page.locator('.deck-next a').count(), `slide ${row.slide + 1} has no next link`).toBe(0);
+        expect.soft(nextSlot.links, `slide ${row.slide + 1} has no next link`).toBe(0);
       } else {
-        expect.soft(await page.locator('.deck-next a').innerText(), `slide ${row.slide + 1} next`).toBe(row.next);
+        expect.soft(nextSlot.text, `slide ${row.slide + 1} next`).toBe(row.next);
       }
     }
   });
@@ -417,7 +437,11 @@ test.describe('the footer chain', () => {
         [...document.querySelectorAll('.deck-dot')].findIndex((d) => d.hasAttribute('data-on'));
       const saw: number[] = [read()];
       const id = setInterval(() => saw.push(read()), 16);
-      (document.querySelector('.deck-next a') as HTMLElement).click();
+      // The showing layer's link, not the first one in the DOM: the other
+      // layer is painted at nothing and is not what a thumb would hit.
+      const layers = [...document.querySelectorAll('.deck-next [data-lyr]')];
+      const on = layers.find((l) => Number(getComputedStyle(l).opacity) > 0.5) ?? layers[0]!;
+      (on.querySelector('a') as HTMLElement).click();
       setTimeout(() => { clearInterval(id); done(saw); }, 1200);
     }));
     const changes = seen.filter((v, i) => i === 0 || v !== seen[i - 1]);
@@ -435,8 +459,8 @@ test.describe('the footer chain', () => {
     // §11: nothing on the deck may be gesture-only. A screen reader's swipe
     // means "next element", so the way forward has to be in the tree.
     await open(page, '#3');
-    await expect(page.locator('.deck-prev a')).toHaveAttribute('href', '#2');
-    await expect(page.locator('.deck-next a')).toHaveAttribute('href', '#4');
+    expect((await shown(page, '.deck-prev')).href).toBe('#2');
+    expect((await shown(page, '.deck-next')).href).toBe('#4');
   });
 
   test('six labelled sections in DOM order', async ({ page }) => {

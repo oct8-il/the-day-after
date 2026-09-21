@@ -431,11 +431,20 @@ test.describe('the footer', () => {
 
   test('the slide chain still reads as §3 draws it', async ({ page }) => {
     await open(page, 't01');
-    const m = await page.evaluate(() => ({
-      prev: (document.querySelector('.deck-prev')?.textContent ?? '').trim(),
-      next: (document.querySelector('.deck-next')?.textContent ?? '').trim(),
-      mid: (document.querySelector('.deck-mid')?.textContent ?? '').trim(),
-    }));
+    // The slot holds two layers since DIA-401; the one at full strength is
+    // the label. Reading the slot whole would read the waiting one too.
+    const m = await page.evaluate(() => {
+      const shown = (slot: string) => {
+        const layers = [...document.querySelectorAll(`${slot} [data-lyr]`)];
+        const on = layers.find((l) => Number(getComputedStyle(l).opacity) > 0.5) ?? layers[0];
+        return (on?.textContent ?? '').trim();
+      };
+      return {
+        prev: shown('.deck-prev'),
+        next: shown('.deck-next'),
+        mid: (document.querySelector('.deck-mid')?.textContent ?? '').trim(),
+      };
+    });
     expect(m.prev).toContain('סקירת הכשל');
     expect(m.next).toContain('מה עוד לא נעשה');
     expect(m.mid).toContain('שלבים');

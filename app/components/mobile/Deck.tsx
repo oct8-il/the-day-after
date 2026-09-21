@@ -145,10 +145,20 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   ground?: ReactNode;
 }) {
   const track = useRef<HTMLDivElement>(null);
+  const foot = useRef<HTMLElement>(null);
   const dots = useRef<HTMLDivElement>(null);
   const crumbBar = useRef<HTMLElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
+  /**
+   * Which pair of slides the footer's labels are showing.
+   *
+   * `floor` of the track's position in slide units, so it changes only where a
+   * swipe ends - never under the finger. The pair is [base, base + 1] and the
+   * mix between them is `--p` (DIA-401).
+   */
+  const [base, setBase] = useState(0);
+  const baseRef = useRef(0);
   const SLIDES = useMemo(() => slidesOf(omit), [omit]);
   const LAST = SLIDES.length - 1;
 
@@ -469,25 +479,42 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
    * The footer's label crossfade (DIA-401) wants the same number and should
    * take it from here rather than add a second listener.
    */
-  const ink = useCallback(() => {
+  const frame = useCallback(() => {
     const el = track.current;
     const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
     if (!el || !deck) return;
     const one = el.clientWidth || 1;
     // RTL runs scrollLeft negative from 0 at the gate; the sign is the
     // engine's business, so only the distance is read here.
-    let p = Math.min(1, Math.max(0, Math.abs(el.scrollLeft) / one));
-    // Reduced motion: §3 swaps at the midpoint rather than blending.
-    if (reduced()) p = p > 0.5 ? 1 : 0;
+    const f = Math.min(LAST, Math.max(0, Math.abs(el.scrollLeft) / one));
+    const soft = !reduced();
+
+    /* The chrome's ink, over the gate and off it (DIA-403). */
+    let ck = Math.min(1, f);
+    if (!soft) ck = ck > 0.5 ? 1 : 0;
     // Quantised, because a custom property written sixty times a second
     // invalidates style on every frame of a scroll for changes no eye reads.
-    const q = Math.round(p * 50) / 50;
+    const q = Math.round(ck * 50) / 50;
     if (q >= 1) deck.style.removeProperty('--ck');
     else if (q <= 0) deck.style.setProperty('--ck', 'var(--gate-ink)');
     else deck.style.setProperty('--ck', `color-mix(in srgb,var(--text) ${q * 100}%,var(--gate-ink))`);
+
+    /* The footer's labels (DIA-401). The pair on show is the interval the
+       track is inside - floor(f) - which changes only where a swipe ends, so
+       React re-renders the layers at rest and never mid-gesture. `--p` is the
+       mix inside that interval; the two opacities are `--p` and `1 - --p`, so
+       they sum to 1 by construction rather than by arithmetic done twice. */
+    const b = Math.min(LAST - 1, Math.floor(f));
+    if (b !== baseRef.current) { baseRef.current = b; setBase(b); }
+    let p = f - b;
+    if (!soft) p = p > 0.5 ? 1 : 0;
+    const fp = Math.round(Math.min(1, Math.max(0, p)) * 100) / 100;
+    foot.current?.style.setProperty('--p', String(fp));
+    // §3: the layer above half strength is the one a thumb can reach.
+    if (foot.current) foot.current.dataset.lead = fp < 0.5 ? 'a' : 'b';
   }, []);
 
-  useEffect(() => { ink(); }, [ink, at]);
+  useEffect(() => { frame(); }, [frame, at, base]);
 
   /* --------------------------------------------------- following the finger */
   /**
@@ -510,9 +537,9 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     let fallback = 0;
 
     const read = () => {
-      // Every scroll, the deck's own included: the ink is a function of where
-      // the track is, not of who moved it.
-      ink();
+      // Every scroll, the deck's own included: the ink and the footer's mix
+      // are functions of where the track is, not of who moved it.
+      frame();
       if (target.current === null) {
         if (queued) return;
         queued = true;
@@ -554,7 +581,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       window.removeEventListener('resize', onResize);
       window.visualViewport?.removeEventListener('resize', onResize);
     };
-  }, [indexNow, settle, scrollTo, ink]);
+  }, [indexNow, settle, scrollTo, frame]);
 
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
@@ -665,21 +692,27 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   // and the last slide carries no next label because there is nothing after it.
   // On the gate both slots are its own: the swipe hint, and the photo credit
   // that arrives with the photograph in Phase 3.
-  const onGate = at === 0;
-  const prev = onGate
-    ? <span className="deck-hint">החליקו לצדדים</span>
-    : at === 1
-      ? null
-      : <a className="deck-link" href={hashFor(at - 1, null)} onClick={(e) => { e.preventDefault(); go(at - 1); }}>
-          <Chevron d={CHEVRON.right} />{SLIDES[at - 1]!.he}
-        </a>;
-  const next = onGate
-    ? <span className="deck-credit" data-rows={credit && credit.length > ONE_ROW ? '2' : undefined}>{credit ?? ''}</span>
-    : at < LAST
-      ? <a className="deck-link" href={hashFor(at + 1, null)} onClick={(e) => { e.preventDefault(); go(at + 1); }}>
-          {SLIDES[at + 1]!.he}<Chevron d={CHEVRON.left} />
-        </a>
-      : null;
+  //
+  // Both are functions of a slide index rather than of `at`, because the
+  // footer shows two slides at once while a swipe is in flight (DIA-401): the
+  // labels of the slide being left and of the one being arrived at, mixed by
+  // where the track is.
+  const prevFor = (i: number) =>
+    i === 0
+      ? <span className="deck-hint">החליקו לצדדים</span>
+      : i === 1
+        ? null
+        : <a className="deck-link" href={hashFor(i - 1, null)} onClick={(e) => { e.preventDefault(); go(i - 1); }}>
+            <Chevron d={CHEVRON.right} />{SLIDES[i - 1]!.he}
+          </a>;
+  const nextFor = (i: number) =>
+    i === 0
+      ? <span className="deck-credit" data-rows={credit && credit.length > ONE_ROW ? '2' : undefined}>{credit ?? ''}</span>
+      : i < LAST
+        ? <a className="deck-link" href={hashFor(i + 1, null)} onClick={(e) => { e.preventDefault(); go(i + 1); }}>
+            {SLIDES[i + 1]!.he}<Chevron d={CHEVRON.left} />
+          </a>
+        : null;
 
   return (
     <div
@@ -756,13 +789,24 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
         ))}
       </div>
 
-      <footer className="deck-foot">
-        <div className="deck-prev">{prev}</div>
+      {/* Each side slot holds two layers in one cell - the slide being left and
+          the one being arrived at - and the deck sets their mix from the
+          track's position. The cell is as wide as the wider of the two, so
+          nothing in the row moves while they trade places (DIA-401). */}
+      <footer className="deck-foot" ref={foot}>
+        <div className="deck-prev">
+          <span className="deck-lyr" data-lyr="a">{prevFor(base)}</span>
+          <span className="deck-lyr" data-lyr="b">{prevFor(base + 1)}</span>
+        </div>
         {/* §3's centre slot carries ↑↓ שלבים on slides 3 and 4, and only when
-            that stack holds more than one page. The stack is Phase 5, so the
-            slot is held open and empty rather than filled with a guess. */}
+            that stack holds more than one page. It is the stack's own control
+            rather than a label about a neighbour, so it does not cross-fade:
+            it belongs to the slide the reader is on. */}
         <div className="deck-mid">{mid?.[at] ?? null}</div>
-        <div className="deck-next">{next}</div>
+        <div className="deck-next">
+          <span className="deck-lyr" data-lyr="a">{nextFor(base)}</span>
+          <span className="deck-lyr" data-lyr="b">{nextFor(base + 1)}</span>
+        </div>
       </footer>
       </div>
     </div>
