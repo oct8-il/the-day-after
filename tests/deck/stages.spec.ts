@@ -44,16 +44,23 @@ async function open(page: Page, id: string, hash = '#3') {
   await page.waitForTimeout(400);
 }
 
+/**
+ * Everything below reads slide 3's own subtree, spelled out in full inside
+ * each `evaluate` because the page cannot see this file's constants. Since
+ * Phase 6 there are two stacks in the deck, and the second one answers to
+ * every selector this file used to spell bare.
+ */
+
 /** Which stage number the stack is showing, as the deck itself reports it. */
 const here = (page: Page) =>
-  page.evaluate(() => document.querySelector<HTMLElement>('.deck')!.dataset.stage);
+  page.evaluate(() => document.querySelector<HTMLElement>('.deck')!.dataset.stage2);
 
 test.describe('the stack', () => {
   test('one page per reached stage, and it opens on the current one', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate(() => ({
-      pages: [...document.querySelectorAll('.deck-stage')].map((s) => s.getAttribute('data-stage')),
-      top: Math.round(document.querySelector('.deck-stack')!.scrollTop),
+      pages: [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')].map((s) => s.getAttribute('data-stage')),
+      top: Math.round(document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.scrollTop),
     }));
     // t01 reached 1-4. The unreached ones are slide 4's, not this slide's.
     expect(m.pages).toEqual(['1', '2', '3', '4']);
@@ -68,12 +75,12 @@ test.describe('the stack', () => {
     // from - the carousel reaches the edges by padding, not by bleeding out.
     await open(page, 't01');
     const m = await page.evaluate(() => {
-      const st = document.querySelector('.deck-stack')!;
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
       return {
         x: st.scrollWidth - st.clientWidth,
         snap: getComputedStyle(st).scrollSnapType,
         stop: getComputedStyle(document.querySelector('.deck-stage')!).scrollSnapStop,
-        scrollers: document.querySelectorAll('.deck-stage').length,
+        scrollers: document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage').length,
       };
     });
     expect(m.x).toBe(0);
@@ -89,8 +96,8 @@ test.describe('the stack', () => {
   test('a page is at least a frame tall, so a short stage still fills one', async ({ page }) => {
     await open(page, 't03');
     const m = await page.evaluate(() => {
-      const st = document.querySelector('.deck-stack')!;
-      return [...document.querySelectorAll('.deck-stage')]
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      return [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')]
         .map((s) => Math.round(s.getBoundingClientRect().height) >= st.clientHeight - 1);
     });
     expect(m.every(Boolean)).toBe(true);
@@ -98,7 +105,7 @@ test.describe('the stack', () => {
 
   test('the floor: one reached stage still makes a stack', async ({ page }) => {
     await open(page, 't02');
-    expect(await page.evaluate(() => document.querySelectorAll('.deck-stage').length)).toBe(1);
+    expect(await page.evaluate(() => document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage').length)).toBe(1);
     expect(await here(page)).toBe('1');
   });
 });
@@ -107,7 +114,7 @@ test.describe('where a stage opens', () => {
   test('a deep link is a first visit — the top of that stage, no memory', async ({ page }) => {
     await open(page, 't01', '#3-s1');
     expect(await here(page)).toBe('1');
-    const top = await page.evaluate(() => Math.round(document.querySelector('.deck-stack')!.scrollTop));
+    const top = await page.evaluate(() => Math.round(document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.scrollTop));
     expect(top).toBe(0);
   });
 
@@ -118,8 +125,8 @@ test.describe('where a stage opens', () => {
     await open(page, 't01', '#3-s1');
     // Scroll on, through stage 2, and come to rest in stage 3.
     await page.evaluate(() => {
-      const st = document.querySelector('.deck-stack')!;
-      const three = document.querySelector('.deck-stage[data-stage="3"]')!;
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      const three = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="3"]')!;
       st.scrollTop += three.getBoundingClientRect().top - st.getBoundingClientRect().top;
     });
     await page.waitForTimeout(500);
@@ -129,8 +136,8 @@ test.describe('where a stage opens', () => {
     await page.waitForTimeout(800);
     expect(await here(page)).toBe('2');
     const into = await page.evaluate(() => {
-      const st = document.querySelector('.deck-stack')!;
-      const two = document.querySelector('.deck-stage[data-stage="2"]')!;
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      const two = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"]')!;
       return Math.round(st.getBoundingClientRect().top - two.getBoundingClientRect().top);
     });
     expect(Math.abs(into)).toBeLessThan(2);
@@ -141,7 +148,7 @@ test.describe('where a stage opens', () => {
     // to the foot of the stage they just read rather than above all of it.
     await open(page, 't01', '#3-s1');
     const stackTop = await page.evaluate(() => {
-      const st = document.querySelector('.deck-stack')!;
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
       st.scrollTop += 260;
       return st.scrollTop;
     });
@@ -155,7 +162,7 @@ test.describe('where a stage opens', () => {
     await page.waitForTimeout(700);
 
     expect(await here(page)).toBe('1');
-    const back = await page.evaluate(() => Math.round(document.querySelector('.deck-stack')!.scrollTop));
+    const back = await page.evaluate(() => Math.round(document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.scrollTop));
     expect(Math.abs(back - Math.round(stackTop))).toBeLessThan(12);
   });
 
@@ -177,7 +184,7 @@ test.describe('the head group', () => {
   test('the tag is the page title, and only the current stage wears the pill', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate(() => {
-      const pages = [...document.querySelectorAll('.deck-stage')];
+      const pages = [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')];
       const tag = pages[0]!.querySelector('.deck-stage-tag')!;
       const s = getComputedStyle(tag);
       return {
@@ -208,7 +215,7 @@ test.describe('the head group', () => {
     // see the hole instead of reading the gap as intentional.
     await open(page, 't01', '#3-s3');
     const def = await page.evaluate(() =>
-      (document.querySelector('.deck-stage[data-stage="3"] .deck-stage-def')?.textContent ?? '').trim());
+      (document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="3"] .deck-stage-def')?.textContent ?? '').trim());
     expect(def).toBe('הגדרת השלב טרם נכתבה');
   });
 
@@ -226,7 +233,7 @@ test.describe('the locator', () => {
   test('five slots, only the reached ones drawn, and the rest hold their place', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate(() => {
-      const rungs = [...document.querySelectorAll('.deck-loc-rung')];
+      const rungs = [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')];
       return {
         slots: rungs.length,
         drawn: rungs.map((r) => r.hasAttribute('data-drawn')),
@@ -245,7 +252,7 @@ test.describe('the locator', () => {
   test('the viewed stage is the only ring, and it follows the page', async ({ page }) => {
     await open(page, 't01');
     const ringed = () => page.evaluate(() =>
-      [...document.querySelectorAll('.deck-loc-rung')].map((r) => r.hasAttribute('data-on')));
+      [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')].map((r) => r.hasAttribute('data-on')));
     expect(await ringed()).toEqual([false, false, false, true].concat([false]));
 
     await page.click('.deck-mid button[aria-label="השלב הקודם"]');
@@ -255,7 +262,7 @@ test.describe('the locator', () => {
     // And nothing else on the locator is marked - the current stage lost its
     // gold ring on 20 September, because it is always the last rung drawn.
     const shadows = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-loc-rung')]
+      [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')]
         .map((r) => getComputedStyle(r).boxShadow)
         .filter((b) => b !== 'none').length);
     expect(shadows).toBe(1);
@@ -273,7 +280,7 @@ test.describe('the locator', () => {
   test('a rung is in the same place whatever the page', async ({ page }) => {
     await open(page, 't01');
     const at = () => page.evaluate(() =>
-      [...document.querySelectorAll('.deck-loc-rung')].map((r) => Math.round(r.getBoundingClientRect().top)));
+      [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')].map((r) => Math.round(r.getBoundingClientRect().top)));
     const before = await at();
     await page.click('.deck-mid button[aria-label="השלב הקודם"]');
     await page.waitForTimeout(700);
@@ -284,23 +291,23 @@ test.describe('the locator', () => {
 test.describe('back to the current stage', () => {
   test('the pill appears only off the current stage, and its row never resizes', async ({ page }) => {
     await open(page, 't01');
-    const row = await rect(page, '.deck-stage-backrow');
+    const row = await rect(page, '.deck-track > .deck-slide:nth-child(3) .deck-stage-backrow');
     expect(await page.evaluate(() =>
-      !!document.querySelector('.deck-stage-back:not([hidden])'))).toBe(false);
+      !!document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage-back:not([hidden])'))).toBe(false);
 
     await page.click('.deck-mid button[aria-label="השלב הקודם"]');
     await page.waitForTimeout(700);
     expect(await page.evaluate(() =>
-      !!document.querySelector('.deck-stage-back:not([hidden])'))).toBe(true);
+      !!document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage-back:not([hidden])'))).toBe(true);
 
     // The row keeps its height either way. A chrome that resizes the scroller
     // mid-scroll is exactly what DIA-379 turned out to be.
-    expect(await rect(page, '.deck-stage-backrow')).toEqual(row);
+    expect(await rect(page, '.deck-track > .deck-slide:nth-child(3) .deck-stage-backrow')).toEqual(row);
   });
 
   test('it walks back to the current stage', async ({ page }) => {
     await open(page, 't01', '#3-s1');
-    await page.click('.deck-stage-back');
+    await page.click('.deck-track > .deck-slide:nth-child(3) .deck-stage-back');
     await page.waitForTimeout(800);
     expect(await here(page)).toBe('4');
   });
@@ -310,7 +317,7 @@ test.describe('the page body', () => {
   test('a stage with an overview reads like slide 2', async ({ page }) => {
     await open(page, 't01', '#3-s2');
     const m = await page.evaluate(() => {
-      const p = document.querySelector('.deck-stage[data-stage="2"]')!;
+      const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"]')!;
       const lead = p.querySelector('.deck-stage-body > p:first-child');
       return {
         lead: lead ? getComputedStyle(lead).fontSize : null,
@@ -332,7 +339,7 @@ test.describe('the page body', () => {
     // have none today, and every one of them has to render.
     await open(page, 't03', '#3-s1');
     const m = await page.evaluate(() => {
-      const p = document.querySelector('.deck-stage[data-stage="1"]')!;
+      const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"]')!;
       return {
         fallback: p.querySelectorAll('.deck-stage-claim').length,
         quotes: [...p.querySelectorAll('.deck-stage-quote')].map((q) => (q.textContent ?? '').trim()),
@@ -352,7 +359,7 @@ test.describe('the page body', () => {
     // has chips, and the deck owns it rather than any one screen.
     await open(page, 't01', '#3-s2');
     const m = await page.evaluate(() => {
-      const p = document.querySelector('.deck-stage[data-stage="2"]')!;
+      const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"]')!;
       const chip = p.querySelector<HTMLElement>('button.chip')!;
       chip.click();
       const d = document.getElementById(chip.getAttribute('aria-controls')!)!;
@@ -371,7 +378,7 @@ test.describe('the page body', () => {
     await page.waitForTimeout(500);
     expect(await page.evaluate(() => {
       const d = document.querySelector('.deck-drawer:not([hidden])')!;
-      const b = document.querySelector('.deck-stack')!.getBoundingClientRect();
+      const b = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.getBoundingClientRect();
       return d.getBoundingClientRect().bottom <= b.bottom + 1;
     })).toBe(true);
   });
@@ -389,7 +396,7 @@ test.describe('the page body', () => {
   test('the evidence map is on stage 1, and before the carousel', async ({ page }) => {
     await open(page, 't01', '#3-s1');
     const m = await page.evaluate(() => {
-      const one = document.querySelector('.deck-stage[data-stage="1"]')!;
+      const one = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"]')!;
       const map = one.querySelector('.deck-stage-map');
       const rail = one.querySelector('.deck-ov-sources');
       return {

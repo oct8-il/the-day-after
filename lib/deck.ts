@@ -205,3 +205,55 @@ export function stageAge(date: string | null, days: number | null): string | nul
   if (!date) return null;
   return days === null ? date : `${date} · ${days} ימים אחרי 7.10`;
 }
+
+/* ------------------------------------------------------------ slide 4 (§7) */
+/**
+ * What a stage says when it has not happened.
+ *
+ * §7's screens draw two of these - stage 2 and stage 5 - and the other two
+ * were never written. They render as a placeholder rather than as nothing, the
+ * same way an unwritten definition does. DIA-367.
+ */
+export const STAGE_ABSENCE: Record<number, string | null> = {
+  2: 'לא תועדה הודאה פומבית של הגוף האחראי בכשל.',
+  3: null,
+  4: null,
+  5: 'לא תועד אימות בלתי תלוי של היישום.',
+};
+
+export const ABSENCE_PLACEHOLDER = 'ניסוח היעדר השלב טרם נכתב.';
+
+export const stageAbsence = (n: number): string => STAGE_ABSENCE[n] ?? ABSENCE_PLACEHOLDER;
+export const absenceIsDraft = (n: number): boolean => STAGE_ABSENCE[n] == null;
+
+/**
+ * Who would count as a checking body - stage 5 only, where "who checks" is the
+ * whole content of the stage. Stages 2 to 4 go straight from the statement to
+ * the mark, which is why this returns null rather than an empty string.
+ */
+export const checkingBody = (n: number): string | null =>
+  n === 5
+    ? 'מבקר המדינה, ועדת חקירה, מחקר או עיתונות — כל אחד מהם נחשב. עד שאחד מהם יפרסם בדיקה, השלב נשאר ריק.'
+    : null;
+
+/**
+ * What the days-since numeral is counting, named after the event that put the
+ * item where it is now.
+ *
+ * §7's two screens draw stage 1 and stage 4; the rest follow the same shape.
+ * Worth a second look at the gate - three of these five have never been seen
+ * on a screen.
+ */
+const SINCE: Record<number, string> = {
+  1: 'ימים מאז שהכשל זוהה',
+  2: 'ימים מאז שהכשל הוכר',
+  3: 'ימים מאז שהוכרזה התוכנית',
+  4: 'ימים מאז שהיישום דווח',
+  5: 'ימים מאז שהאימות פורסם',
+  6: 'ימים מאז שהשלב נסוג',
+};
+
+export const sinceLabel = (current: number): string => SINCE[current] ?? 'ימים מאז';
+
+/** §7: an unreached stage has no date to show, and says so. */
+export const NOT_YET_DOCUMENTED = 'טרם תועד';
