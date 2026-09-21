@@ -474,6 +474,20 @@ add(`<div>
 <p>The second fault shared the midpoint and was a separate mechanism. Every slide takes its bottom padding from one measured chrome height, and the gate's dot row is 10px taller — so the flip moved the gate's title down and slide 2's carousel up while both were visible. The air above the gate's dots is the gate's clearance, not the dot row's, so the gate holds it: the chrome is one height everywhere now.</p>
 <p>The assertion added for it fails by exactly 10px against the old rule, which is the only way to know a geometry test is worth having.</p>`);
 
+add(`<div>
+  <span class="tag done">ux backlog · 2</span>
+  <h2>The dots were six buttons</h2>
+  <p class="sub">An interaction nobody asked for, ruled out by a sentence in §3 that was read as being about the other strip.</p>
+  <div class="stack">
+    <div class="item"><div class="v">6</div><div class="k">pixels wide, which is the whole argument — §3 rules out a tap on either strip and gives both a long press instead</div></div>
+    <div class="item"><div class="v">5</div><div class="k">places the deck's own tests navigated by clicking a dot, a route that no longer exists</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">routes lost — the swipe, the footer's links, the arrow keys, jump mode and a deep link were all already there</div></div>
+  </div>
+</div>`,
+`<p>Each dot was a <span class="id">role="tab"</span> button that navigated on click, and the row was a tablist. §3 says the locator's rungs are "far under any touch-target minimum, so they are not tappable" and that <i>both</i> strips take a long press instead — the sentence names the dot row and was read as being about the rail alone.</p>
+<p>Removing the click by itself would have left tabs that do nothing when activated, which is worse than no tabs, so the row is presentational: spans, <span class="id">aria-hidden</span>, no roles. Nothing is lost by that. The count it carried is in each slide's own label, and every route it offered is still there — which is exactly why §3 calls jump mode safe to leave undiscovered.</p>
+<p>The lesson is about the tests rather than the dots. Five of them used the dot click as their way between slides, so an invented interaction had quietly become load-bearing in the suite. They use the arrow keys now — the one route that works from every slide, the gate included.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
