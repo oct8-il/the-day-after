@@ -1170,6 +1170,24 @@
      left slack under the ink and broke the 26px the footer keeps for the home
      indicator. §3 specifies this footer's padding, not its height. */
   .deck-prev,.deck-mid,.deck-next{min-height:22px;display:flex;align-items:center}
+  /* The two labels a swipe is between live in one cell, stacked, and the deck
+     sets `--p` from the track's position: the outgoing layer is 1 - p, the
+     incoming one is p, so the pair always sums to 1 and the slot is never
+     empty and never doubled (DIA-401). The cell is as wide and as tall as the
+     wider and taller of the two, so nothing in the row moves as they trade.
+     `display:grid` with both layers in the same cell is what does that. */
+  .deck-prev,.deck-next{display:grid;grid-template-areas:"lyr";align-items:center}
+  .deck-prev .deck-lyr,.deck-next .deck-lyr{
+    grid-area:lyr;display:flex;align-items:center;min-width:0;
+  }
+  .deck-prev{justify-items:start}
+  .deck-next{justify-items:end}
+  .deck-lyr[data-lyr="a"]{opacity:calc(1 - var(--p,0))}
+  .deck-lyr[data-lyr="b"]{opacity:var(--p,0)}
+  /* §3: the layer above half strength is the one a thumb reaches. The other is
+     still painted, so this cannot be done with visibility. */
+  .deck-foot[data-lead="a"] .deck-lyr[data-lyr="b"]{pointer-events:none}
+  .deck-foot[data-lead="b"] .deck-lyr[data-lyr="a"]{pointer-events:none}
   .deck-prev{justify-self:start}
   .deck-mid{justify-self:center;gap:7px}
   .deck-next{justify-self:end}
