@@ -167,7 +167,7 @@ add(`<div>
     <div class="item"><div class="v">4</div><div class="k">numbered revisions to the spec <i>after</i> the first line of code — v2.3 to v2.7 — plus one ruling written straight into §4</div></div>
     <div class="item"><div class="v">5</div><div class="k">issues that do not exist anywhere in the plan: <span class="id">DIA-375</span>, <span class="id">379</span>, <span class="id">380</span>, <span class="id">382</span>, <span class="id">383</span></div></div>
     <div class="item"><div class="v">1</div><div class="k">first pass thrown away whole, and one fix written, measured, approved by its tests and reverted</div></div>
-    <div class="item mute"><div class="v">83</div><div class="k">deck assertions, none of which caught either of those two</div></div>
+    <div class="item mute"><div class="v">90</div><div class="k">deck assertions, none of which caught either of those two</div></div>
   </div>
 </div>`,
 `<p>The number worth staring at is the last one. The tests are good at what they are for — geometry, state, the rules that have a right answer — and they were silent on both of the things that had to be undone. A screenshot cannot see a gesture, and a passing suite is not an opinion.</p>
@@ -403,6 +403,20 @@ add(`<div>
 `<p>The instruction the phase carried was architectural rather than visual: <b>do not fix <span class="id">DIA-383</span> here.</b> The deck's axis decision is already known to be wrong, and a gesture fix argued inside a slide is how a deck ends up with two gesture layers. So the stack reads where the scroll landed and writes nothing — whatever DIA-383 eventually does, this slide inherits it.</p>
 <p>The memory was the only real puzzle. A stage reopens where it was left, so the position is recorded for whichever page is at the top, every frame the reader moves — and never while the stack is scrolling itself. Without that second half, walking away from a stage overwrites where it was left with wherever the animation happened to be, which is the one bug the tests did catch.</p>
 <p><span class="id">t01</span> turned out to exercise both halves of the body on its own: overviews on stages 2 and 3, and the claims fallback on 1 and 4. An overview improves a page; it does not gate one, and most published items have none.</p>`);
+
+add(`<div>
+  <span class="tag done">gate #4 · round one</span>
+  <h2>Two from the phone, and one of them was a design change</h2>
+  <p class="sub">The arrows undershot, and the chip's whole target moved while the gate was being taken.</p>
+  <div class="stack">
+    <div class="item"><div class="v">2</div><div class="k">causes behind one symptom — a memory that recorded pass-throughs, and a snap mode a remembered position can never satisfy</div></div>
+    <div class="item"><div class="v">3</div><div class="k">slides the new chip interaction serves, one of which is not built yet</div></div>
+    <div class="item mute"><div class="v">0</div><div class="k">changes to the carousel itself — it keeps its place and its cards and loses only its job as a target</div></div>
+  </div>
+</div>`,
+`<p>The undershoot was two faults wearing one coat. The stage memory was written every frame the reader moved, which looked like "where they left it" and was not: scrolling straight through a stage on the way to the next one wrote that stage's <i>foot</i>, so coming back landed at its end with its title above the fold. And the stack snapped <span class="id">y mandatory</span>, which a remembered position part-way down a page can never be — the engine left the scroller floating and corrected only on the next touch, which is what the nudge was doing.</p>
+<p>The second is not a bug at all. <span class="id">DIA-386</span> moved the chip's target while the gate was open: a chip now opens a drawer under its own passage instead of moving the carousel. The old ruling could never have been kept — slide 5 has chips and no carousel, and nobody had noticed because slide 5 is not built. The gate found the symptom; the design session found the reason.</p>
+<p>Worth keeping: the deck owns the drawer rather than any slide, because "one at a time" and "leaving the slide closes it" are facts about the deck. Slides 2 and 3 got it in one change, and slide 5 gets it for free in Phase 7.</p>`);
 
 add(`<div class="center">
   <span class="tag defer">deferred</span>
