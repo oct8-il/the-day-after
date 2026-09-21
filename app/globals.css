@@ -1133,6 +1133,34 @@
      slide 1 asks for 10px more clearance than it needs. Nothing moves
      vertically during a horizontal swipe. */
 
+  /* Armed, the strip opens: §3's dots go from a 13px pitch to 30px - gap 7 to
+     22, dot 6 to 8 - over the same 120ms as the dim, and the row is shifted so
+     that the dot under the thumb does not move (DIA-399). Six dots at a 13px
+     pitch is 71px for the whole deck, under the thumb doing the scrubbing;
+     open, it is a movement rather than a twitch. */
+  .deck-dots{transform:translateX(var(--shift,0))}
+  .deck[data-armed] .deck-dots{gap:22px}
+  .deck[data-armed] .deck-dot{width:8px;height:8px}
+  .deck-dots,.deck-dot{transition:gap .12s ease,width .12s ease,height .12s ease,transform .12s ease,opacity .12s ease}
+  /* Abandoned - the finger has gone up and away - the strip fades back and the
+     label says what releasing does. It fades rather than closes: the finger is
+     still down and may come back, and a row that re-closed under it would put
+     a different dot where the thumb is, so returning would resume somewhere
+     the reader never scrubbed to. */
+  .deck[data-away] .deck-dot{opacity:.4}
+  .deck[data-away] .deck-dot[data-on]{opacity:.55}
+  /* The label sits above the strip, centred on the dot it names and clamped
+     inside the frame. It carries the slide's name and no number: the dots are
+     still the counter. */
+  .deck-jump{
+    position:absolute;z-index:3;bottom:100%;margin-bottom:10px;
+    left:clamp(20px,var(--lx,50%),calc(100% - 20px));transform:translateX(-50%);
+    padding:5px 11px;border-radius:999px;white-space:nowrap;
+    background:var(--ck,var(--text));color:var(--bg);
+    font-size:12px;font-weight:600;line-height:1.4;
+    pointer-events:none;
+  }
+
   /* Armed: the strip goes to full strength and the page behind drops to ~40%,
      both over 120ms, so arming reads as a change rather than as a glitch. The
      track's snap is cancelled while armed or the two gestures fight. */

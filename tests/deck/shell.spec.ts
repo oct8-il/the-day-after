@@ -569,11 +569,16 @@ test.describe('jump mode', () => {
     // Arming must cancel the deck's own snap or the two gestures fight.
     expect(await page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).scrollSnapType)).toBe('none');
 
-    await page.mouse.move(b.x, b.y, { steps: 8 });
+    // Re-measured now that the strip has opened (DIA-399): a dot's centre on
+    // the closed row is a different slide's centre once the row spreads, so
+    // coordinates taken before the hold would scrub to the wrong place.
+    const b2 = await dotCentre(page, 3);
+    await page.mouse.move(b2.x, b2.y, { steps: 8 });
     await page.waitForTimeout(150);
     expect(await slideNow(page), 'the page scrubs live under the finger').toBe(3);
 
-    await page.mouse.move(c.x, c.y, { steps: 6 });
+    const c2 = await dotCentre(page, 5);
+    await page.mouse.move(c2.x, c2.y, { steps: 6 });
     await page.waitForTimeout(150);
     await page.mouse.up();
     await page.waitForTimeout(350);
@@ -632,7 +637,10 @@ test.describe('jump mode under reduced motion', () => {
     // The dim is state rather than motion, so it stays.
     expect(await page.evaluate(() => getComputedStyle(document.querySelector('.deck-track')!).opacity)).toBe('0.4');
 
-    await page.mouse.move(c.x, c.y, { steps: 8 });
+    // The strip opens under reduced motion too - without the transition, but
+    // to the same geometry - so the target is re-measured after the hold.
+    const c2 = await (async () => { const r = await page.locator('.deck-dot').nth(5).boundingBox(); return { x: r!.x + r!.width / 2, y: r!.y + r!.height / 2 }; })();
+    await page.mouse.move(c2.x, c2.y, { steps: 8 });
     await page.waitForTimeout(200);
     expect(await slideNow(page), 'the page does not scrub under the finger').toBe(0);
 

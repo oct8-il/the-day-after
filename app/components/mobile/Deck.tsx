@@ -699,8 +699,49 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
    * without the sign of the axis appearing anywhere.
    */
   const press = useRef<{ timer: number; x: number; y: number; id: number } | null>(null);
+  /** The slide the reader armed on, which is where abandoning puts them back. */
+  const origin = useRef(0);
+  /** Above the strip by enough to mean "not this after all" (§3, DIA-399). */
+  const OUT = 70;
+  const [away, setAway] = useState(false);
+  const awayRef = useRef(false);
+  const [label, setLabel] = useState<string | null>(null);
   const reduced = () =>
     typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /**
+   * Hold the dot under the thumb still while the row opens around it.
+   *
+   * §3's strip goes from a 13px pitch to 30px. A dot `i` sits `(i - c) × pitch`
+   * from the row's centre, where `c` is the middle index - 2.5 on a six-slide
+   * deck, 2 on a five-slide one, which is why the number is derived and not
+   * written down. Widening moves it by `(i - c) × (30 - 13)`, so the row is
+   * translated back by exactly that. The sign is the axis's: in RTL the dots
+   * run leftwards from the first, so the shift is positive x.
+   */
+  const spread = (i: number) => {
+    const row = dots.current;
+    if (!row) return;
+    const c = (SLIDES.length - 1) / 2;
+    row.style.setProperty('--shift', `${(i - c) * (30 - 13)}px`);
+  };
+
+  /**
+   * Put the label over the dot it names, and keep it inside the frame.
+   *
+   * Measured rather than computed: by the time a dot is being scrubbed the row
+   * has finished opening, so its position is a fact. The clamp is what stops
+   * the first and last dots pushing the pill off the screen.
+   */
+  const place = (i: number) => {
+    const row = dots.current;
+    const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
+    const dot = row?.querySelectorAll('.deck-dot')[i] as HTMLElement | undefined;
+    if (!row || !deck || !dot) return;
+    const r = dot.getBoundingClientRect();
+    const f = deck.getBoundingClientRect();
+    deck.style.setProperty('--lx', `${Math.round(r.left + r.width / 2 - f.left)}px`);
+  };
 
   const nearestDot = (clientX: number) => {
     const row = dots.current;
@@ -734,6 +775,20 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     if (!armedRef.current) return;
     armedRef.current = false;
     setArmed(false);
+    setLabel(null);
+    dots.current?.style.removeProperty('--shift');
+    // Abandoned: the reader took the finger up above the strip, so the deck
+    // goes back to the slide they armed on and the URL is not touched. It is
+    // not a landing, so there is nothing to record.
+    if (awayRef.current) {
+      awayRef.current = false;
+      setAway(false);
+      const home = origin.current;
+      atRef.current = home;
+      setAt(home);
+      scrollTo(home, false);
+      return;
+    }
     const i = atRef.current;
     scrollTo(i, false);
     writeHash(i, null);
@@ -742,9 +797,31 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const id = e.pointerId;
+    // Read off the event now rather than inside the timer: the press's own x
+    // is what the row has to open around, 400ms later.
+    const x = e.clientX;
     const timer = window.setTimeout(() => {
       armedRef.current = true;
+      origin.current = atRef.current;
       setArmed(true);
+      // The strip opens around the dot under the thumb, which is not always
+      // the slide being read: a reader can press anywhere on the row. So the
+      // held dot is adopted here the way a move would adopt it - otherwise
+      // the label names one slide and a release lands on another, and the
+      // row's shift is computed about the wrong dot.
+      const held = nearestDot(x);
+      if (held !== atRef.current) {
+        atRef.current = held;
+        if (reduced()) setAt(held); else scrollTo(held, false);
+      }
+      // The strip opens around whichever dot the thumb is on, so that dot has
+      // to stay under it: the row is shifted by as much as the widening moved
+      // it (DIA-399). Computed rather than measured, because at the moment it
+      // is needed the gap is mid-transition and a measurement would read the
+      // closed row or something in between.
+      spread(held);
+      setLabel(SLIDES[held]?.he ?? null);
+      place(held);
       dots.current?.setPointerCapture?.(id);
     }, 400);
     press.current = { timer, x: e.clientX, y: e.clientY, id };
@@ -759,8 +836,33 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     }
     if (!armedRef.current) return;
     e.preventDefault();
+
+    // Up is out. Far enough above the strip and the jump is abandoned: the
+    // deck goes back to where it was armed, the strip closes, and the label
+    // says what releasing will do. Coming back down resumes the scrub, so a
+    // reader can change their mind about changing their mind.
+    const row = dots.current?.getBoundingClientRect();
+    const out = !!row && row.top - e.clientY >= OUT;
+    if (out !== awayRef.current) {
+      awayRef.current = out;
+      setAway(out);
+      if (out) {
+        setLabel('שחררו לביטול');
+        const home = origin.current;
+        atRef.current = home;
+        if (reduced()) setAt(home); else scrollTo(home, false);
+      } else {
+        spread(atRef.current);
+        setLabel(SLIDES[atRef.current]?.he ?? null);
+      }
+    }
+    if (out) return;
+
     const i = nearestDot(e.clientX);
     if (i === atRef.current) return;
+    setLabel(SLIDES[i]?.he ?? null);
+    // The label follows the dot it names, clamped inside the frame.
+    place(i);
     // Reduced motion: no live scrub of the page, only the landing on release.
     // The dots still follow the finger - the dim and the moving dot are the
     // only feedback there is, since Safari has no haptics API.
@@ -818,6 +920,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       className="deck"
       data-at={at}
       data-armed={armed ? '' : undefined}
+      data-away={away ? '' : undefined}
       role="region"
       aria-roledescription="מצגת"
       aria-label="הכשל, שקופית אחר שקופית"
@@ -866,6 +969,11 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -
           the dots are the counter. The row is also jump mode's strip. */}
       <div className="deck-bottom" ref={bottom}>
+      {/* §3: while the strip is armed, a pill above it names where releasing
+          will land - the slide's name and nothing else, since the dots are
+          still the counter. It is above the strip because the thumb is on it
+          (DIA-399). */}
+      {label !== null && <div className="deck-jump" aria-hidden="true">{label}</div>}
       {/* Not six buttons: §3 says neither strip is tappable, because a dot is
           6px and the rungs are 5px - under any touch target worth offering -
           and a long press is what both of them take instead. So the row is a
