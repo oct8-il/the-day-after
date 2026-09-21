@@ -84,7 +84,13 @@ test.describe('the ground', () => {
     expect(at0.fade).toBe('0s');
     expect(at0.left).toBe(0);
 
-    await page.locator('.deck-dot').nth(2).click();
+    // The dots are not buttons (DIA-397), and the gate carries no next-slide
+    // link (§3's table gives its left slot to the photo credit), so the route
+    // off the gate here is the deck's own arrow keys.
+    await page.locator('.deck').focus();
+    await page.locator('.deck').press('ArrowLeft');
+    await page.waitForTimeout(450);
+    await page.locator('.deck').press('ArrowLeft');
     await page.waitForTimeout(600);
     const at2 = await page.evaluate(() => {
       const el = document.querySelector('.deck-ground')!;
