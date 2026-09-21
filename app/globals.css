@@ -973,18 +973,22 @@
   /* The gate is the one screen that paints the whole frame, and it is dark in
      both themes - so its inks are literally white here rather than mixed from
      --ink. Its ground is #0b0f0b, not the body's. */
-  /* The ground is the deck's, not the slide's: the chrome is docked outside the
-     track, so a ground inside the slide stops where the track stops and leaves
-     a seam under the dots. Shown only while the gate is the slide in view. */
+  /* The ground is slide 1's own, and leaves with it (DIA-385).
+     It was the deck's until 21 September, because the chrome used to be docked
+     outside the track and a ground inside the slide stopped where the track
+     stopped, leaving a seam under the dots. DIA-379 made the track inset:0 with
+     the chrome overlaying it, so the seam has nowhere to form: an absolute box
+     is laid against its containing block's PADDING box, so inset:0 here covers
+     the slide's clearance too - the whole frame, breadcrumb and footer
+     included. The photograph is part of the cover rather than a backdrop the
+     other slides travel across, so there is no fade and no timer. */
   /* The prototype names its display face with a bare .serif, but every rule
      carrying it is scoped to a desktop component, so the class arrives here
      meaning nothing and the gate's title rendered in the body sans. One rule,
      for the whole deck. */
   .deck .serif{font-family:"Frank Ruhl Libre",Georgia,"Times New Roman",serif}
 
-  .deck-ground{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;
-    background:#0b0f0b;transition:opacity .18s ease}
-  .deck[data-at="0"] .deck-ground{opacity:1}
+  .deck-ground{position:absolute;inset:0;z-index:0;pointer-events:none;background:#0b0f0b}
   /* An ordinary flex child, not an absolute one: an absolutely positioned box
      is laid against its containing block's padding BOX, which includes the
      padding - so inset:0 covered the clearance the slide keeps for the chrome
@@ -1073,8 +1077,10 @@
   .deck-gate-title p{margin:0;font-size:13px;color:rgba(255,255,255,.72)}
 
   /* The gate's slide has no side gutters of its own: the ground is full-bleed,
-     and the rail and the title carry their own. */
-  .deck-slide:first-child{padding-inline:0}
+     and the rail and the title carry their own. The 10px is §3's 26 against
+     16 above the dots, held here rather than by the dot row - see the dots. */
+  .deck-slide:first-child{padding-inline:0;
+    padding-bottom:calc(var(--deck-bottom,92px) + 10px)}
 
   /* --- slideshow dots, and jump mode's strip ----------------------------- */
   /* §3: six dots, 6px, gap 7px, centred above the footer, first slide
@@ -1101,12 +1107,14 @@
   /* The gate gives the dots more air above them than the slides do: its
      screen has 26/16 where every other screen has 16/14. */
   /* The gate is given more air above its dots than the other slides - §3's
-     screens read 26/16 against 16/14. The air above is free: it is empty space
-     between the slide and the dots, and nothing is anchored to it. The 2px
-     below is not, because the dots are measured up from the rule beneath them
-     and a reader swiping sees them drop. So the top differs and the bottom
-     does not. */
-  .deck[data-at="0"] .deck-dots{padding-top:26px}
+     screens read 26/16 against 16/14. That air used to be the dot row's, added
+     while `data-at` was 0; but the row is one piece of chrome shared by every
+     slide, and the slides take their clearance from its measured height - so
+     the flip at the swipe's midpoint moved the gate's title and slide 2's
+     carousel while both were on screen (DIA-385). The air is the gate's, so
+     the gate holds it: the chrome is now the same height on every slide, and
+     slide 1 asks for 10px more clearance than it needs. Nothing moves
+     vertically during a horizontal swipe. */
 
   /* Armed: the strip goes to full strength and the page behind drops to ~40%,
      both over 120ms, so arming reads as a change rather than as a glitch. The

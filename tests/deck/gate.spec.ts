@@ -63,12 +63,42 @@ test.describe('the ground', () => {
     expect(g.top).toBeLessThanOrEqual((await rect(page, '.deck-crumbs')).top);
   });
 
-  test('the ground belongs to the gate alone', async ({ page }) => {
+  test('the ground belongs to the gate and leaves with it', async ({ page }) => {
+    // It used to be the deck's, faded in and out on `data-at` - so slide 2
+    // travelled across the photograph until the swipe's midpoint and then the
+    // photograph dissolved under it. DIA-385: it is slide 1's own and moves
+    // with slide 1, which is one object with one edge rather than two layers.
     await open(page, 't01');
-    await expect(page.locator('.deck-ground')).toHaveCSS('opacity', '1');
+    const at0 = await page.evaluate(() => {
+      const g = document.querySelector('.deck-ground')!;
+      return {
+        inSlideOne: g.closest('.deck-slide') === document.querySelector('.deck-track > .deck-slide'),
+        opacity: getComputedStyle(g).opacity,
+        fade: getComputedStyle(g).transitionDuration,
+        left: Math.round(g.getBoundingClientRect().left),
+      };
+    });
+    expect(at0.inSlideOne).toBe(true);
+    expect(at0.opacity).toBe('1');
+    // No fade to time: the edge is the slide's own edge, wherever the finger is.
+    expect(at0.fade).toBe('0s');
+    expect(at0.left).toBe(0);
+
     await page.locator('.deck-dot').nth(2).click();
     await page.waitForTimeout(600);
-    await expect(page.locator('.deck-ground')).toHaveCSS('opacity', '0');
+    const at2 = await page.evaluate(() => {
+      const el = document.querySelector('.deck-ground')!;
+      const g = el.getBoundingClientRect();
+      const f = document.querySelector('.deck')!.getBoundingClientRect();
+      return {
+        opacity: getComputedStyle(el).opacity,
+        overlap: Math.min(g.right, f.right) - Math.max(g.left, f.left),
+      };
+    });
+    // Still painted, and carried off the frame by its slide rather than left
+    // lying under the deck at zero opacity.
+    expect(at2.opacity).toBe('1');
+    expect(at2.overlap).toBeLessThanOrEqual(1);
   });
 
   test('a photograph renders as a duotone; without one, the field and the ghost', async ({ page }) => {

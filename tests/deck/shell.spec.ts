@@ -209,6 +209,55 @@ test.describe('the frame and its edges', () => {
     }
   });
 
+  test('nothing moves vertically while a swipe is in flight', async ({ page }) => {
+    // DIA-385. The chrome's height was one measured value shared by every
+    // slide, and the gate's dot row is 10px taller - so at the swipe's
+    // midpoint, when `data-at` flips, the gate's title dropped 10px and slide
+    // 2's carousel rose by the same amount, both of them on screen. The air
+    // above the gate's dots is the gate's own clearance now, so the chrome is
+    // one height everywhere and a horizontal swipe moves nothing vertically.
+    await open(page);
+    const probe = () => page.evaluate(() => {
+      const q = (s: string) => document.querySelector(s)?.getBoundingClientRect().top ?? null;
+      return {
+        title: q('.deck-gate-title h1'),
+        rail: q('.deck-ov .deck-ov-sources'),
+        bottom: getComputedStyle(document.querySelector('.deck')!).getPropertyValue('--deck-bottom').trim(),
+      };
+    });
+
+    // Drive the track by hand rather than by finger: the flip is a scroll
+    // listener either way, and a fraction of a slide is exact here. The ends
+    // are read off the slides, so RTL's negative scrollLeft needs no special
+    // case and nothing here assumes a direction.
+    const ends = await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!;
+      const two = document.querySelectorAll('.deck-track > .deck-slide')[1]!;
+      const from = t.scrollLeft;
+      return { from, to: from + (two.getBoundingClientRect().left - t.getBoundingClientRect().left) };
+    });
+    const drive = (f: number) => page.evaluate(({ from, to, frac }) => {
+      const t = document.querySelector('.deck-track')!;
+      t.scrollLeft = from + (to - from) * frac;
+      t.dispatchEvent(new Event('scroll'));
+    }, { ...ends, frac: f });
+
+    const at0 = await probe();
+    await drive(0.49);
+    await page.waitForTimeout(120);
+    const at49 = await probe();
+    await drive(0.51);
+    await page.waitForTimeout(120);
+    const at51 = await probe();
+
+    expect(at49.title).toBe(at0.title);
+    expect(at51.title).toBe(at0.title);
+    // The carousel is slide 2's and is measured through the same swipe.
+    expect(at51.rail).toBe(at49.rail);
+    // And the mechanism, so the next person sees why: one height, not two.
+    expect(at51.bottom).toBe(at0.bottom);
+  });
+
   test('the chrome still clears the slides it sits over', async ({ page }) => {
     // The room the chrome needs comes out of each slide's padding now. If that
     // stopped tracking the chrome, content would slide under the footer - so

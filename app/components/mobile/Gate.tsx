@@ -38,14 +38,14 @@ export type GateProps = {
 };
 
 /**
- * The gate's ground, rendered by the deck rather than by this slide.
+ * The gate's ground, which belongs to the gate and leaves with it.
  *
  * In the spec's screen the field runs to all four edges and the breadcrumb,
- * dots and footer sit on it. The deck's chrome is docked - it is in the deck's
- * own column, outside the track - so a ground painted inside the slide stops
- * where the track stops and leaves a seam under the dots. It is painted at
- * deck level instead, behind everything, and shown only while the gate is the
- * slide in view.
+ * dots and footer sit on it. It does: the deck renders this inside slide 1 at
+ * inset:0, which covers the slide's clearance as well as its content box, and
+ * the chrome overlays the track rather than sitting beside it. So the
+ * photograph is the cover's own and slides away with it - no fade, no timer,
+ * and no slide travelling across a photograph that is not its (DIA-385).
  */
 export function GateGround({ rail, number, total, photo }: Pick<GateProps, 'rail' | 'number' | 'total' | 'photo'>) {
   const current = rail.find((r) => r.current);

@@ -118,10 +118,11 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   /** The gate's photo credit, which §3 gives the footer's left slot on slide 1. */
   credit?: string | null;
   /**
-   * The gate's ground, painted behind the whole frame rather than inside slide
-   * 1. The chrome is docked - it sits in the deck's own column, outside the
-   * track - so a ground painted inside the slide would stop where the track
-   * stops and leave a seam under the dots. It is shown only on the gate.
+   * The gate's ground. It is rendered inside slide 1 and travels with it, so
+   * the photograph leaves with the cover on one clean edge rather than lying
+   * behind the whole deck and fading out at the swipe's midpoint (DIA-385).
+   * It still covers the whole frame, breadcrumb and footer included, because
+   * the track is inset:0 and the chrome overlays it.
    */
   ground?: ReactNode;
 }) {
@@ -631,8 +632,6 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       tabIndex={-1}
       onKeyDown={onKey}
     >
-      {ground && <div className="deck-ground" aria-hidden="true">{ground}</div>}
-
       {/* §3: one path, top right, never split across two corners. */}
       <nav className="deck-crumbs" aria-label="מיקום" ref={crumbBar}>
         {crumbs.ancestors.map((a) => (
@@ -650,6 +649,9 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
             aria-label={`${s.n} מתוך ${SLIDES.length} · ${s.he}`}
             aria-current={i === at ? 'true' : undefined}
           >
+            {s.n === 1 && ground ? (
+              <div className="deck-ground" aria-hidden="true">{ground}</div>
+            ) : null}
             {slides?.[i] ?? (
               // Not built yet: the slide names itself, as every slide did in
               // Phase 2 while the frame was being judged on its own.
