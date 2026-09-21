@@ -212,6 +212,17 @@ for (const file of files) {
       if (!inc.photo.landscape) warn(where, 'no landscape crop - the share card falls back');
     }
     if (inc.photo?.portrait && inc.photo.landscape) bothCrops++;
+    // The gate's footer gives the credit two rows and no more (DIA-404). A
+    // licence credit cannot be truncated, so one that will not fit is a
+    // problem with the record rather than with the screen: it is said here,
+    // where it can still be shortened at the source.
+    const p = inc.photo?.portrait;
+    if (p) {
+      const credit = `צילום: ${p.photographer} · ${p.source} · ${p.licence}`;
+      if (credit.length > 90) {
+        warn(where, `photo credit is ${credit.length} characters - the gate's footer holds about 90 in two rows`);
+      }
+    }
   }
 }
 
