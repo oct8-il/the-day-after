@@ -429,6 +429,25 @@ test.describe('the footer', () => {
       document.querySelectorAll('.deck-mid .deck-stage-arrows').length)).toBe(0);
   });
 
+  test('the arrows sit at the middle of the frame, not at the middle of what is left', async ({ page }) => {
+    // DIA-411. The footer's columns were `auto auto 1fr` so that the gate's
+    // two-row photo credit had room (DIA-404), which put the middle slot
+    // wherever the right slot's text happened to end - about 30px right of
+    // centre on a slide with a long previous-slide label. The outer columns
+    // are equal again, and the credit reaches past its own column instead.
+    await open(page, 't01');
+    const m = await page.evaluate(() => {
+      const mid = document.querySelector('.deck-mid')!.getBoundingClientRect();
+      const frame = document.querySelector('.deck')!.getBoundingClientRect();
+      return {
+        off: Math.abs((mid.left + mid.width / 2) - (frame.left + frame.width / 2)),
+        wide: mid.width,
+      };
+    });
+    expect(m.wide).toBeGreaterThan(0);
+    expect(m.off).toBeLessThan(1);
+  });
+
   test('the slide chain still reads as §3 draws it', async ({ page }) => {
     await open(page, 't01');
     // The slot holds two layers since DIA-401; the one at full strength is
