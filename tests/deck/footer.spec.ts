@@ -101,7 +101,7 @@ test.describe('the finger sets the mix', () => {
     expect(m.prev.a).toBe(1);
     expect(m.prev.b).toBe(0);
     // The gate's own two slots: the hint, and the photo credit.
-    expect(m.prev.textA).toBe('החליקו לצדדים');
+    expect(m.prev.textA).toBe('החליקו להמשך');
     expect(m.next.textA).toContain('צילום');
     // ...and the slide it is about to become.
     expect(m.next.textB).toBe('מה נעשה מאז');

@@ -583,6 +583,102 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     };
   }, [indexNow, settle, scrollTo, frame]);
 
+  /* -------------------------------------------------------------- the nudge */
+  /**
+   * One nudge, five seconds in, if the reader has not moved (DIA-398).
+   *
+   * The gate is the front door for someone arriving cold from a post, and a
+   * still screen says nothing about which way it opens. So the track slides
+   * about 38px toward slide 2 and comes back - enough to show the edge of the
+   * next slide and which side it is on.
+   *
+   * This is the deck's only timer, and it is deliberately not a pacing device:
+   * it runs once per page view, never on a return to the gate, never on a deep
+   * link that opened elsewhere, and any touch before it fires cancels it for
+   * good. A touch while it runs stops it and puts the track back.
+   *
+   * It moves the track and nothing else. The dots and `data-at` are untouched
+   * - 38px is nowhere near the midpoint - and the footer's labels blend with
+   * it exactly as they do for any other movement, which is Roy's ruling of
+   * 21 September rather than an oversight.
+   *
+   * Scroll-snap is off while it runs, or the engine pulls against every frame.
+   */
+  const nudged = useRef(false);
+  useEffect(() => {
+    const el = track.current;
+    // Not on a deep link that opened elsewhere, and not under reduced motion,
+    // where the pointing hint carries the job alone.
+    if (!el || nudged.current || atRef.current !== 0 || reduced()) return;
+
+    let raf = 0;
+    let timer = 0;
+    // Whether the animation is actually in flight. Everything below that puts
+    // the track back has to ask first: a cancel that fires before the nudge
+    // ever ran would yank the track home from wherever the reader had got to
+    // by then, which is how the first version of this broke the arrow keys.
+    let running = false;
+    const snap = el.style.scrollSnapType;
+    const home = el.scrollLeft;
+    const done = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+      el.style.scrollSnapType = snap;
+      el.scrollLeft = home;
+    };
+    // The direction is read off the second slide rather than assumed: in RTL
+    // it sits to the left and scrollLeft runs negative, and the sign of that
+    // is the engine's business, not this component's.
+    const two = el.children[1] as HTMLElement | undefined;
+    const dir = two
+      ? Math.sign(two.getBoundingClientRect().left - el.getBoundingClientRect().left) || -1
+      : -1;
+
+    const run = () => {
+      nudged.current = true;
+      // "Has done nothing" means the screen has not moved, whoever moved it:
+      // a reader who left the gate by the keyboard, by a footer link or by
+      // jump mode has found the way on, and a hint after that would fire on
+      // whatever slide they are reading. Cancelling on touch alone missed
+      // every one of those.
+      if (atRef.current !== 0 || Math.abs(el.scrollLeft - home) > 1) return;
+      running = true;
+      el.style.scrollSnapType = 'none';
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / 900);
+        // A half-sine: nothing at both ends, 38px at the middle. No easing to
+        // tune and no chance of ending anywhere but where it started.
+        el.scrollLeft = home + dir * 38 * Math.sin(Math.PI * k);
+        if (k < 1) raf = requestAnimationFrame(step);
+        else done();
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    timer = window.setTimeout(run, 5000);
+
+    // Any touch anywhere on the deck, before or during: the reader has found
+    // the screen, and a hint after that is noise.
+    const stop = () => {
+      nudged.current = true;
+      clearTimeout(timer);
+      done();
+    };
+    const deck = el.parentElement;
+    deck?.addEventListener('pointerdown', stop, { passive: true, capture: true });
+    deck?.addEventListener('keydown', stop, { passive: true, capture: true });
+
+    return () => {
+      clearTimeout(timer);
+      done();
+      deck?.removeEventListener('pointerdown', stop, { capture: true } as EventListenerOptions);
+      deck?.removeEventListener('keydown', stop, { capture: true } as EventListenerOptions);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
   // RTL frame ArrowLeft goes forward - the next slide is the one to the left.
@@ -699,7 +795,10 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   // where the track is.
   const prevFor = (i: number) =>
     i === 0
-      ? <span className="deck-hint">החליקו לצדדים</span>
+      // §3: the hint points at where the next slide is, with the same chevron
+      // the next-slide links carry - drawn as a path, because a character
+      // would be mirrored by the bidi algorithm (DIA-398).
+      ? <span className="deck-hint">החליקו להמשך<Chevron d={CHEVRON.left} /></span>
       : i === 1
         ? null
         : <a className="deck-link" href={hashFor(i - 1, null)} onClick={(e) => { e.preventDefault(); go(i - 1); }}>

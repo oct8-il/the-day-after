@@ -131,7 +131,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v2.9 · 21 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
+  <p class="meta">v3.0 · 21 September 2026 · the design defines the data shape · slide 6 ships version A · live screens embedded · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -152,7 +152,7 @@
 
 <h2 id="stance">1 · Stance and shape</h2>
 <p>Most phone visitors arrive from a social post about one failure, so the item page is the front door and has to carry its own context. It keeps the control panel's stance — a finite, enumerated set of tracked problems, each with a computed state — without looking like a shrunken control room.</p>
-<p><strong>It is a slideshow post, not a story.</strong> That distinction decides the chrome: nothing runs on a timer, nothing counts down, the reader sets the pace, and slide 1 is a cover rather than the first frame of something in flight.</p>
+<p><strong>It is a slideshow post, not a story.</strong> That distinction decides the chrome: nothing runs on a timer, nothing counts down, the reader sets the pace, and slide 1 is a cover rather than the first frame of something in flight. <em>One exception, added 21 September:</em> the gate's five-second nudge (§3), which is a one-shot hint about which way the screen opens and not a pacing device.</p>
 <div class="note"><strong>This document defines the data shape — not the other way around.</strong> Every screen here is drawn for the ideal case, and §10 is what those screens <em>demand</em> of the data, not a reading of what the data happens to be today. Where implementation cannot meet a demand, that is a compromise: it belongs in §12 as a known shortfall, and the design stays where it is. A screen is never narrowed to fit a field that already exists.</div>
 <table>
   <tr><th>Slide</th><th>Name</th><th>What it is</th><th>State</th></tr>
@@ -226,6 +226,10 @@
 <h3>Slideshow dots</h3>
 <p>Six dots, 6px, gap 7px, centred above the footer. Active dot full ink, the rest at 30%. First slide is the rightmost dot. No numeric counter anywhere — the dots are the counter.</p>
 
+<h3>The nudge</h3>
+<p><strong>The deck's one timer, and the only thing on it.</strong> If the reader has done nothing for five seconds after the gate appears, the track slides about 38px toward slide 2 and returns, once, over about 900ms — enough to show the edge of the next slide and which side it is on. Once per page view; never on a return to the gate, never on a deep link that opened elsewhere, never under <code>prefers-reduced-motion</code>, where the pointing hint carries the job alone. Any touch cancels it for good, and a touch while it runs stops it and puts the track back. It moves the track and nothing else: no hash, no dots, no <code>data-at</code> — the footer's labels blend with it as they do with any movement. <span class="mono">DIA-398</span></p>
+<p class="meta">"Nothing runs on a timer" (§1) is about pacing content: no carousel, no auto-advance, nothing that moves while it is being read. This is a one-shot hint at a front door, and it is the exception.</p>
+
 <h3>Jump mode</h3>
 <p>The locator's rungs are 5px wide, far under any touch-target minimum, so they are <strong>not tappable</strong>. Both strips instead accept a long press: the stage rail on slides 3 and 4, and the dot row on every slide.</p>
 <ul>
@@ -244,7 +248,7 @@
   <tr><td>Right</td><td>Previous slide name, chevron pointing right</td><td>All slides <em>except</em> slide 2</td></tr>
   <tr><td>Centre</td><td><span class="he">↑↓ שלבים</span>, real arrows</td><td>Slides 3 and 4 — and only when that stack holds more than one page</td></tr>
   <tr><td>Left</td><td>Next slide name, chevron pointing left</td><td>All slides <em>except</em> the last</td></tr>
-  <tr><td>Right (gate)</td><td><span class="he">החליקו לצדדים</span></td><td>Gate only — replaces the previous-slide slot</td></tr>
+  <tr><td>Right (gate)</td><td><span class="he">החליקו להמשך</span> and a chevron pointing left, the same one the next-slide links carry <span class="mono">DIA-398</span></td><td>Gate only — replaces the previous-slide slot</td></tr>
   <tr><td>Left (gate)</td><td>Photo credit</td><td>Gate only</td></tr>
 </table>
 <p>The two ends are bare on one side each: slide 2 carries no previous-slide label, because the item page does not refer back to the gate, and the last slide carries no next-slide label, because there is nothing after it. The footer sits on a 1px rule at 16% ink, <code>11px 20px 26px</code> padding, 11.5px type at 70% ink.</p>
