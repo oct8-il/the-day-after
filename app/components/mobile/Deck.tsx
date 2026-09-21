@@ -93,7 +93,13 @@ const hashFor = (i: number, stage: number | null) =>
   i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
 export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
-  crumbs: { ancestors: string[]; leaf: string };
+  /**
+   * §3's path, as three parts rather than a list, because the three behave
+   * differently: the root is a link home, the parent is inert until a page
+   * exists for it to point at (DIA-400), and only the parent gives way when
+   * the path does not fit (DIA-407).
+   */
+  crumbs: { root: string; parent: string; leaf: string };
   /**
    * The slides that have been built, by index. A hole is a placeholder naming
    * itself, which is how the deck shipped in Phase 2 and how slides 2-6 still
@@ -674,11 +680,18 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       tabIndex={-1}
       onKeyDown={onKey}
     >
-      {/* §3: one path, top right, never split across two corners. */}
+      {/* §3: one path, top right, never split across two corners.
+          The chevrons are the nav's own rather than each crumb's, so the
+          parent can be truncated without taking its separator with it. */}
       <nav className="deck-crumbs" aria-label="מיקום" ref={crumbBar}>
-        {crumbs.ancestors.map((a) => (
-          <span key={a}>{a}<i aria-hidden="true">›</i></span>
-        ))}
+        <a className="deck-crumb-root" href="/">{crumbs.root}</a>
+        <i aria-hidden="true">›</i>
+        {/* Inert on purpose: there is no category page yet, and a crumb that
+            looks tappable and does nothing is worse than one that does not
+            (DIA-400). The full name is the element's text - the shortening is
+            CSS - so a screen reader reads it whole whatever the width. */}
+        <span className="deck-crumb-mid" title={crumbs.parent}>{crumbs.parent}</span>
+        <i aria-hidden="true">›</i>
         <b>{crumbs.leaf}</b>
       </nav>
 

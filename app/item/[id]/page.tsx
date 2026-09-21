@@ -145,7 +145,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           visible chrome that wants data - itemNumber() exists and is tested,
           and Phase 3 wires it. */}
       <Deck
-        crumbs={{ ancestors: ['7 באוקטובר', parent.he], leaf: gate.leaf }}
+        crumbs={{ root: '7 באוקטובר', parent: parent.he, leaf: gate.leaf }}
         slides={[
           <Gate key="gate" {...gate.props} />,
           <Overview key="overview" summary={inc.summary} claims={inc.claims} />,

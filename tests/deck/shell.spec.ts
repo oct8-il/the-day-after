@@ -138,8 +138,9 @@ test.describe('the frame and its edges', () => {
     await open(page);
     const f = await rect(page, '.deck');
     // The first crumb, not the container: the container spans the frame and it
-    // is the ink whose distance to the edge the design specifies.
-    const ink = await rect(page, '.deck-crumbs span');
+    // is the ink whose distance to the edge the design specifies. In RTL the
+    // first crumb is the root, which is a link since DIA-400.
+    const ink = await rect(page, '.deck-crumb-root');
     expect(Math.round(f.right - ink.right)).toBe(20);
     expect(Math.round(ink.top - f.top)).toBe(16);
     // ...and it is one path in one corner, never split across two.
