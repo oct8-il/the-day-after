@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { splitSource, sourceLine, itemNumber, siblings, sourceLineText,
-  stageDefinition, definitionIsDraft, stageAge, DEFINITION_PLACEHOLDER } from './deck.ts';
+  stageDefinition, definitionIsDraft, stageAge, DEFINITION_PLACEHOLDER,
+  stageAbsence, absenceIsDraft, checkingBody, sinceLabel, ABSENCE_PLACEHOLDER } from './deck.ts';
 
 const claim = (source_type: string, source: string, date: string) =>
   ({ source_type, source, date });
@@ -168,4 +169,26 @@ test('the age line reads as a date and a distance, and survives a month-only dat
   // daysAfter returns null for a month-only date; the day still shows.
   assert.equal(stageAge('03.2024', null), '03.2024');
   assert.equal(stageAge(null, null), null);
+});
+
+test('an unwritten absence statement says so, and only stage 5 names a checker', () => {
+  // §7's screens draw the statements for stages 2 and 5; 3 and 4 were never
+  // written - DIA-367, the same issue that holds definitions 3 and 6.
+  assert.ok(stageAbsence(5).startsWith('לא תועד'));
+  assert.equal(absenceIsDraft(2), false);
+  assert.equal(absenceIsDraft(3), true);
+  assert.equal(absenceIsDraft(4), true);
+  assert.equal(stageAbsence(4), ABSENCE_PLACEHOLDER);
+
+  // "Who checks" is the whole content of stage 5 and of no other stage, so
+  // this returns null rather than an empty line for 2 to 4.
+  assert.ok(checkingBody(5));
+  for (const n of [2, 3, 4]) assert.equal(checkingBody(n), null);
+});
+
+test('the days-since label names the event that put the item where it is', () => {
+  assert.equal(sinceLabel(1), 'ימים מאז שהכשל זוהה');
+  assert.equal(sinceLabel(4), 'ימים מאז שהיישום דווח');
+  // Every stage has one, so the numeral is never left unexplained.
+  for (const n of [1, 2, 3, 4, 5, 6]) assert.ok(sinceLabel(n).startsWith('ימים מאז'));
 });

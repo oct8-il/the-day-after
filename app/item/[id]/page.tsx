@@ -18,7 +18,7 @@ import { Overview } from '@/app/components/mobile/Overview';
 import { Stages } from '@/app/components/mobile/Stages';
 import { StageArrows } from '@/app/components/mobile/StagesShell';
 import { sourceLine } from '@/lib/deck';
-import { reached as reachedStages, stageDate } from '@/lib/stage';
+import { reached as reachedStages, unreached as unreachedStages, stageDate } from '@/lib/stage';
 import { daysAfter } from '@/lib/days';
 import { itemNumberOf, published, STAGES } from '@/lib/data';
 import { SourceLink } from '@/app/components/SourceLink';
@@ -77,6 +77,23 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
      Composed here rather than inside the component: everything on that screen
      is computed by a helper written and tested in Phase 1, and the component's
      job is to arrange what it is handed. */
+  /**
+   * What shape of deck this item gets.
+   *
+   * §7: an item at the last stage has no slide 4 - the slide is skipped
+   * entirely and the item is a five-slide post with five dots. There is no
+   * "nothing left" screen, because a slide with nothing to say is not shown.
+   */
+  const deck = (() => {
+    const gap = unreachedStages(inc);
+    return {
+      hasGap: gap.length > 0,
+      gapPages: gap.length,
+      reachedPages: reachedStages(inc).length,
+      omit: gap.length ? [] : [4],
+    };
+  })();
+
   const gate = (() => {
     const number = itemNumberOf(inc.id);
     const has = new Set<number>(reachedStages(inc));
@@ -132,9 +149,15 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
         slides={[
           <Gate key="gate" {...gate.props} />,
           <Overview key="overview" summary={inc.summary} claims={inc.claims} />,
-          <Stages key="stages" inc={inc} slide={2} />,
+          <Stages key="stages" inc={inc} slide={2} kind="reached" />,
+          deck.hasGap ? <Stages key="gap" inc={inc} slide={3} kind="unreached" /> : null,
         ]}
-        mid={[null, null, <StageArrows key="arrows" />]}
+        omit={deck.omit}
+        mid={[
+          null, null,
+          deck.reachedPages > 1 ? <StageArrows key="up" slide={2} /> : null,
+          deck.hasGap && deck.gapPages > 1 ? <StageArrows key="down" slide={3} /> : null,
+        ]}
         ground={<GateGround {...gate.props} />}
         credit={gate.credit}
       />

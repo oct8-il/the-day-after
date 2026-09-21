@@ -20,20 +20,28 @@ import { SourceRail, type SourceCard } from './SourceRail';
 export type StageHead = {
   n: number;
   he: string;
-  color: string;
+  /** Null on an unreached stage: §7's tag is an outline in muted ink. */
+  color: string | null;
   definition: string;
-  /** The date and its distance from 7.10, already composed. Null where the
-   *  earliest claim carries no date at all. */
+  /** The date and its distance from 7.10, already composed - or, on a stage
+   *  that has not happened, §7's "טרם תועד". */
   age: string | null;
   current: boolean;
 };
 
 export type StagePage = { head: StageHead; body: ReactNode; cards: SourceCard[] };
 
-/** A rung, drawn or held as an invisible spacer so nothing ever moves. */
-export type Rung = { n: number; color: string; drawn: boolean };
+/**
+ * Which half of the split this stack is. Slide 3 holds the stages an item
+ * reached, slide 4 the ones it has not: the same component with the opposite
+ * filter, which is why almost nothing below branches on it.
+ */
+export type StackKind = 'reached' | 'unreached';
 
-const CHEVRON = { down: 'M6 9l6 6 6-6', up: 'M18 15l-6-6-6 6' };
+/** A rung, drawn or held as an invisible spacer so nothing ever moves. */
+export type Rung = { n: number; color: string; drawn: boolean; reached: boolean };
+
+const CHEVRON = { down: 'M6 9l6 6 6-6', up: 'M18 15l-6-6-6 6', right: 'M9 5l7 7-7 7' };
 
 function Chevron({ d }: { d: string }) {
   return (
@@ -44,7 +52,7 @@ function Chevron({ d }: { d: string }) {
 }
 
 /** One page. Its own rail, because a stack has several on screen at once. */
-function Page({ page, index }: { page: StagePage; index: number }) {
+function Page({ page, index, kicker }: { page: StagePage; index: number; kicker: string }) {
   const { head } = page;
   return (
     <section
@@ -53,11 +61,17 @@ function Page({ page, index }: { page: StagePage; index: number }) {
       data-index={index}
       aria-label={`שלב ${head.n} · ${head.he}`}
     >
-      <div className="deck-stage-kicker">מה נעשה מאז</div>
+      <div className="deck-stage-kicker">{kicker}</div>
 
       <div className="deck-stage-head">
         <div className="deck-stage-tags">
-          <span className="deck-stage-tag" style={{ ['--c' as string]: head.color }}>
+          {/* Filled in the stage's colour where it happened, an outline in
+              muted ink where it has not - §7. */}
+          <span
+            className="deck-stage-tag"
+            data-un={head.color ? undefined : ''}
+            style={head.color ? { ['--c' as string]: head.color } : undefined}
+          >
             {head.n} · {head.he}
           </span>
           {head.current && <span className="deck-stage-now">סטטוס נוכחי</span>}
@@ -72,16 +86,20 @@ function Page({ page, index }: { page: StagePage; index: number }) {
   );
 }
 
-export function StagesShell({ slide, pages, rail, current }: {
+export function StagesShell({ slide, kind, pages, rail, current }: {
   /** This slide's index in the deck, so the stack can claim the URL's tail. */
   slide: number;
+  kind: StackKind;
   pages: StagePage[];
   rail: Rung[];
   /** The stage the item is actually at, which the pill walks back to. */
   current: number;
 }) {
   const stack = useRef<HTMLDivElement>(null);
-  const [at, setAt] = useState(() => Math.max(0, pages.findIndex((p) => p.head.current)));
+  // Slide 3 opens on the current stage; slide 4 on the next one, which is its
+  // first page because the filter is sorted.
+  const [at, setAt] = useState(() =>
+    kind === 'reached' ? Math.max(0, pages.findIndex((p) => p.head.current)) : 0);
   const atRef = useRef(at);
   /**
    * Where the reader left each stage, for as long as the page is open. It is
@@ -154,34 +172,41 @@ export function StagesShell({ slide, pages, rail, current }: {
       return false;
     };
     if (!read()) open(atRef.current, { top: true });
-    // The deck owns the URL; the stack owns which page it is showing. It
-    // publishes here rather than reaching into the deck to write a hash.
-    if (deck) deck.dataset.stageAt = String(slide);
     window.addEventListener('popstate', read);
     return () => {
       window.removeEventListener('popstate', read);
-      if (deck) { delete deck.dataset.stageAt; delete deck.dataset.stage; }
+      if (deck) delete deck.dataset[`stage${slide}`];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const deck = stack.current?.closest<HTMLElement>('.deck');
-    if (deck) deck.dataset.stage = String(pages[at]?.head.n ?? '');
+    // The deck owns the URL; the stack owns which page it is showing, and
+    // publishes it here under its own slide's key rather than reaching into
+    // the deck to write a hash. Two stacks share this root, so the key has to
+    // name the slide: a single `data-stage` had slide 4 answering for slide 3.
+    if (deck) deck.dataset[`stage${slide}`] = String(pages[at]?.head.n ?? '');
     // The deck writes the URL; it cannot know the tail moved unless told.
     window.dispatchEvent(new CustomEvent('deck:stagechange'));
-  }, [at, pages]);
+  }, [at, pages, slide]);
 
   /* --------------------------------------------------------- the two arrows */
   useEffect(() => {
     const onStep = (e: Event) => {
-      const dir = (e as CustomEvent<{ dir: number }>).detail?.dir ?? 0;
-      const next = Math.min(pages.length - 1, Math.max(0, atRef.current + dir));
+      const d = (e as CustomEvent<{ slide: number; dir?: number; to?: 'current' }>).detail;
+      if (!d || d.slide !== slide) return;
+      if (d.to === 'current') {
+        const i = pages.findIndex((p) => p.head.current);
+        if (i >= 0 && i !== atRef.current) open(i, { smooth: true });
+        return;
+      }
+      const next = Math.min(pages.length - 1, Math.max(0, atRef.current + (d.dir ?? 0)));
       if (next !== atRef.current) open(next, { smooth: true });
     };
     window.addEventListener('deck:stage', onStep);
     return () => window.removeEventListener('deck:stage', onStep);
-  }, [open, pages.length]);
+  }, [open, pages, slide]);
 
   /* ------------------------------------------------- following the scroll */
   /**
@@ -228,9 +253,17 @@ export function StagesShell({ slide, pages, rail, current }: {
     settle.current = setTimeout(rest, 140);
   }, [indexNow, rest]);
 
+  const kicker = kind === 'reached' ? 'מה נעשה מאז' : 'מה עוד לא נעשה';
   const here = pages[at]?.head.n ?? current;
-  const off = here !== current;
+  // On slide 4 the current stage is never on the page, so the pill is always
+  // there and always walks back a slide rather than a page (§7).
+  const off = kind === 'unreached' || here !== current;
   const back = pages.findIndex((p) => p.head.n === current);
+  const walk = () => {
+    if (kind === 'reached') { if (back >= 0) open(back, { smooth: true }); return; }
+    window.dispatchEvent(new CustomEvent('deck:slide', { detail: { to: 3 } }));
+    window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide: slide - 1, to: 'current' } }));
+  };
 
   return (
     <div className="deck-stages">
@@ -240,6 +273,7 @@ export function StagesShell({ slide, pages, rail, current }: {
             key={r.n}
             className="deck-loc-rung"
             data-drawn={r.drawn ? '' : undefined}
+            data-un={r.drawn && !r.reached ? '' : undefined}
             data-on={r.drawn && r.n === here ? '' : undefined}
             style={{ ['--c' as string]: r.color }}
           />
@@ -247,7 +281,9 @@ export function StagesShell({ slide, pages, rail, current }: {
       </ol>
 
       <div className="deck-stack" ref={stack} onScroll={onScroll}>
-        {pages.map((p, i) => <Page key={p.head.n} page={p} index={i} />)}
+        {pages.map((p, i) => (
+          <Page key={p.head.n} page={p} index={i} kicker={kicker} />
+        ))}
       </div>
 
       {/* The row keeps its height whether or not the pill is in it: a chrome
@@ -257,9 +293,9 @@ export function StagesShell({ slide, pages, rail, current }: {
           type="button"
           className="deck-stage-back"
           hidden={!off}
-          onClick={() => back >= 0 && open(back, { smooth: true })}
+          onClick={walk}
         >
-          <Chevron d={here < current ? CHEVRON.down : CHEVRON.up} />
+          <Chevron d={kind === 'unreached' ? CHEVRON.right : here < current ? CHEVRON.down : CHEVRON.up} />
           חזרה לשלב הנוכחי
         </button>
       </div>
@@ -275,9 +311,9 @@ export function StagesShell({ slide, pages, rail, current }: {
  * the stack through an event rather than a prop. Same control on slide 4 in
  * Phase 6, with no second implementation.
  */
-export function StageArrows() {
+export function StageArrows({ slide }: { slide: number }) {
   const step = (dir: number) =>
-    window.dispatchEvent(new CustomEvent('deck:stage', { detail: { dir } }));
+    window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide, dir } }));
   // Drawn as §6 draws it - the glyph pair, left of the word, isolated so the
   // latin arrows do not reorder the Hebrew around them - but each glyph is a
   // real button, because the label is also the route.

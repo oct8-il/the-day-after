@@ -25,3 +25,17 @@ export function daysAfter(date: string): number | null {
   const days = Math.round((at - START) / 864e5);
   return days < 0 ? null : days;
 }
+
+/**
+ * How long the item has been where it is: days from the date a stage was
+ * reached to today.
+ *
+ * Expressed as the difference of two counts from 7.10 rather than from a
+ * second Date.now(), so the numeral on slide 4 and the age line on slide 3 can
+ * never disagree about which day it is.
+ */
+export function daysWaiting(date: string | null): number | null {
+  if (!date) return null;
+  const after = daysAfter(date);
+  return after === null ? null : Math.max(0, daysSince() - after);
+}

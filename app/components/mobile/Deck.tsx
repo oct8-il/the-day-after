@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -29,8 +29,13 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
  *   how a reader gets out of Instagram's in-app browser.
  */
 
-/** §3's names, in order. The footer chain and the section labels read from this. */
-const SLIDES = [
+/**
+ * §3's names, in order - the canonical six. An item does not always have all
+ * of them: §7 skips slide 4 for an item at the last stage, which makes that
+ * item a five-slide post with five dots. So this is the vocabulary, and the
+ * deck's own list is a property of the item.
+ */
+const ALL = [
   { n: 1, he: 'השער' },
   { n: 2, he: 'סקירת הכשל' },
   { n: 3, he: 'מה נעשה מאז' },
@@ -38,8 +43,6 @@ const SLIDES = [
   { n: 5, he: 'דעת הציבור' },
   { n: 6, he: 'הלאה' },
 ] as const;
-
-const LAST = SLIDES.length - 1;
 
 /**
  * Chevrons as paths, never as characters.
@@ -70,6 +73,18 @@ export function parseHash(hash: string): { slide: number; stage: number | null }
 }
 
 /**
+ * The slides this item actually has.
+ *
+ * The hash counts off *this* list, not off the canonical six, so `#4` is
+ * "מה עוד לא נעשה" on most items and "דעת הציבור" on one that is at the last
+ * stage. Deep links are per item, so nothing breaks - but it is the kind of
+ * thing that is better written down than discovered.
+ */
+export type SlideName = { n: number; he: string };
+export const slidesOf = (omit: readonly number[] = []): SlideName[] =>
+  ALL.filter((s) => !omit.includes(s.n)).map((s) => ({ n: s.n, he: s.he }));
+
+/**
  * The gate is the bare item URL, never `#1`. §9 wants every shared link to be
  * the bare URL, and a reader who copies what is in the address bar is sharing
  * whatever the deck last wrote there.
@@ -77,7 +92,7 @@ export function parseHash(hash: string): { slide: number; stage: number | null }
 const hashFor = (i: number, stage: number | null) =>
   i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
-export function Deck({ crumbs, slides, mid, credit, ground }: {
+export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   crumbs: { ancestors: string[]; leaf: string };
   /**
    * The slides that have been built, by index. A hole is a placeholder naming
@@ -94,6 +109,12 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
    * docked chrome and is rendered once, not per slide.
    */
   mid?: (ReactNode | null)[];
+  /**
+   * Canonical slide numbers this item does not have. §7 omits slide 4 from an
+   * item at the last stage: there is no "nothing left" screen, because a slide
+   * with nothing to say is not shown.
+   */
+  omit?: number[];
   /** The gate's photo credit, which §3 gives the footer's left slot on slide 1. */
   credit?: string | null;
   /**
@@ -109,6 +130,9 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
   const crumbBar = useRef<HTMLElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
+  const SLIDES = useMemo(() => slidesOf(omit), [omit]);
+  const LAST = SLIDES.length - 1;
+
   const [armed, setArmed] = useState(false);
   /** The live index, for the handlers that a scrub re-enters faster than React
    *  re-subscribes them. Kept in step with `at` by every setter below. */
@@ -239,13 +263,15 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
    *
    * A stage stack writes its position there rather than reaching into this
    * component: the deck owns the URL, and the stack owns which page it is
-   * showing, and neither has to import the other to agree. The slide index is
-   * written beside it so a stale value from another slide cannot be read.
+   * showing, and neither has to import the other to agree. The key carries the
+   * slide's index - `data-stage2` is slide 3's page, `data-stage3` is slide 4's.
+   * One key for all of them read whichever stack mounted last, which since
+   * slide 4 arrived is never the slide the reader is on.
    */
   const stageNow = useCallback((i: number) => {
     const d = crumbBar.current?.parentElement as HTMLElement | undefined;
-    if (!d || d.dataset.stageAt !== String(i)) return null;
-    const n = Number(d.dataset.stage);
+    if (!d) return null;
+    const n = Number(d.dataset[`stage${i}`]);
     return Number.isFinite(n) && n > 0 ? n : null;
   }, []);
 
@@ -379,6 +405,21 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
       deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
     });
   }, [at]);
+
+  /**
+   * A slide asking to be left. Slide 4's back pill walks back a slide rather
+   * than a page (§7), and the slide it walks to is named by its canonical
+   * number, not by an index this deck happens to give it.
+   */
+  useEffect(() => {
+    const onSlide = (e: Event) => {
+      const n = (e as CustomEvent<{ to: number }>).detail?.to;
+      const i = SLIDES.findIndex((s) => s.n === n);
+      if (i >= 0) go(i);
+    };
+    window.addEventListener('deck:slide', onSlide);
+    return () => window.removeEventListener('deck:slide', onSlide);
+  }, [SLIDES, go]);
 
   /**
    * A slide that owns pages moved between them. The deck owns the URL, so it
@@ -569,13 +610,13 @@ export function Deck({ crumbs, slides, mid, credit, ground }: {
     : at === 1
       ? null
       : <a className="deck-link" href={hashFor(at - 1, null)} onClick={(e) => { e.preventDefault(); go(at - 1); }}>
-          <Chevron d={CHEVRON.right} />{SLIDES[at - 1].he}
+          <Chevron d={CHEVRON.right} />{SLIDES[at - 1]!.he}
         </a>;
   const next = onGate
     ? <span className="deck-credit">{credit ?? ''}</span>
     : at < LAST
       ? <a className="deck-link" href={hashFor(at + 1, null)} onClick={(e) => { e.preventDefault(); go(at + 1); }}>
-          {SLIDES[at + 1].he}<Chevron d={CHEVRON.left} />
+          {SLIDES[at + 1]!.he}<Chevron d={CHEVRON.left} />
         </a>
       : null;
 
