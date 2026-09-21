@@ -399,7 +399,7 @@ test.describe('the footer chain', () => {
   // empty slot: the gate's left slot belongs to the photo credit (§3), and it
   // carries one on any item that has a photograph.
   const chain: { slide: number; prev: string; next: string | null }[] = [
-    { slide: 0, prev: 'החליקו לצדדים', next: null },
+    { slide: 0, prev: 'החליקו להמשך', next: null },
     { slide: 1, prev: '', next: 'מה נעשה מאז' },
     { slide: 2, prev: 'סקירת הכשל', next: 'מה עוד לא נעשה' },
     { slide: 3, prev: 'מה נעשה מאז', next: 'דעת הציבור' },
