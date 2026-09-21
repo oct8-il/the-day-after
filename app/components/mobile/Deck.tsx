@@ -667,29 +667,25 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -
           the dots are the counter. The row is also jump mode's strip. */}
       <div className="deck-bottom" ref={bottom}>
+      {/* Not six buttons: §3 says neither strip is tappable, because a dot is
+          6px and the rungs are 5px - under any touch target worth offering -
+          and a long press is what both of them take instead. So the row is a
+          counter that jump mode happens to press on, and it is presentational:
+          tab roles whose activation does nothing are worse than no roles, and
+          the count it carries is already in each slide's own label. Every
+          route it briefly offered is still there - the footer's links, the
+          arrow keys, a swipe, a deep link (DIA-397). */}
       <div
         className="deck-dots"
         ref={dots}
-        role="tablist"
-        aria-label="שקופיות"
+        aria-hidden="true"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onContextMenu={(e) => { if (armedRef.current) e.preventDefault(); }}
       >
         {SLIDES.map((s, i) => (
-          <button
-            key={s.n}
-            type="button"
-            className="deck-dot"
-            role="tab"
-            aria-selected={i === at}
-            aria-controls={`slide-${s.n}`}
-            data-on={i === at ? '' : undefined}
-            onClick={() => go(i)}
-          >
-            <span className="deck-sr">{s.he}</span>
-          </button>
+          <span key={s.n} className="deck-dot" data-on={i === at ? '' : undefined} />
         ))}
       </div>
 

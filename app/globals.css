@@ -1098,10 +1098,12 @@
     touch-action:none;
     transition:opacity .12s ease;
   }
+  /* A span, not a button: the row is a counter and jump mode's strip, and
+     nothing here is a tap target (DIA-397). */
   .deck-dot{
+    display:block;flex:none;
     width:6px;height:6px;padding:0;border:0;border-radius:50%;
     background:color-mix(in srgb,var(--text) 30%,transparent);
-    cursor:pointer;
   }
   .deck-dot[data-on]{background:var(--text)}
   /* The gate gives the dots more air above them than the slides do: its

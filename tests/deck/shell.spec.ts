@@ -73,6 +73,22 @@ test.afterEach(async ({}, testInfo) => {
   expect(noise, 'the deck wrote to the console').toEqual([]);
 });
 
+/**
+ * Go to a slide the way a reader can, now that the dots are not buttons
+ * (DIA-397): the deck's own arrow keys, which is the route that exists on
+ * every slide including the gate. Home lands on the gate, and ArrowLeft is
+ * forwards in RTL.
+ */
+async function goTo(page: Page, i: number) {
+  await page.locator('.deck').focus();
+  await page.locator('.deck').press('Home');
+  await page.waitForTimeout(450);
+  for (let n = 0; n < i; n += 1) {
+    await page.locator('.deck').press('ArrowLeft');
+    await page.waitForTimeout(450);
+  }
+}
+
 async function open(page: Page, hash = '') {
   await page.goto(ITEM + hash);
   await page.waitForSelector('.deck-track');
@@ -154,10 +170,9 @@ test.describe('the frame and its edges', () => {
       return gap;
     });
     for (const i of [2, 5, 1, 3, 0]) {
-      await page.locator('.deck-dot').nth(i).click();
-      await page.waitForTimeout(700);
-      expect.soft(await slideNow(page), `dot ${i + 1} lands on its own slide`).toBe(i);
-      expect.soft(await offBy(), `dot ${i + 1} lands on the snap point`).toBeLessThan(0.5);
+      await goTo(page, i);
+      expect.soft(await slideNow(page), `slide ${i + 1} lands on itself`).toBe(i);
+      expect.soft(await offBy(), `slide ${i + 1} lands on the snap point`).toBeLessThan(0.5);
     }
   });
 
@@ -174,8 +189,7 @@ test.describe('the frame and its edges', () => {
     await open(page);
     const heights: number[] = [];
     for (let i = 0; i < 6; i++) {
-      await page.locator('.deck-dot').nth(i).click();
-      await page.waitForTimeout(450);
+      await goTo(page, i);
       heights.push(await page.evaluate(() =>
         Math.round(document.querySelector('.deck-track')!.getBoundingClientRect().height)));
     }
@@ -196,8 +210,7 @@ test.describe('the frame and its edges', () => {
     await open(page);
     const seen: { dot: number; rule: number; foot: number }[] = [];
     for (let i = 0; i < 6; i++) {
-      await page.locator('.deck-dot').nth(i).click();
-      await page.waitForTimeout(450);
+      await goTo(page, i);
       seen.push(await page.evaluate(() => {
         const d = document.querySelector('.deck-dot')!.getBoundingClientRect();
         const f = document.querySelector('.deck-foot')!.getBoundingClientRect();
@@ -323,6 +336,32 @@ test.describe('the frame and its edges', () => {
     }
   });
 
+  test('a tap on a dot does nothing at all', async ({ page }) => {
+    // §3: a dot is 6px and a rung is 5px, both far under any touch target
+    // worth offering, so neither strip is tappable and both take a long press
+    // instead. They were six `role="tab"` buttons that navigated on click,
+    // which nothing asked for (DIA-397). A tab that does nothing when
+    // activated is worse than no tab, so the row is presentational now - the
+    // count it carries is in each slide's own label, and the footer's links,
+    // the arrow keys and a swipe are all still there.
+    await open(page);
+    const row = await page.evaluate(() => ({
+      tags: [...new Set([...document.querySelectorAll('.deck-dot')].map((d) => d.tagName))],
+      role: document.querySelector('.deck-dots')!.getAttribute('role'),
+      hidden: document.querySelector('.deck-dots')!.getAttribute('aria-hidden'),
+      focusable: document.querySelectorAll('.deck-dots button, .deck-dots a, .deck-dots [tabindex]').length,
+    }));
+    expect(row.tags).toEqual(['SPAN']);
+    expect(row.role).toBeNull();
+    expect(row.hidden).toBe('true');
+    expect(row.focusable).toBe(0);
+
+    await page.locator('.deck-dot').nth(3).click();
+    await page.waitForTimeout(500);
+    expect(await slideNow(page)).toBe(0);
+    expect(await page.evaluate(() => location.hash)).toBe('');
+  });
+
   test('no numeric counter has crept in anywhere on the chrome', async ({ page }) => {
     await open(page);
     // §3: "No numeric counter anywhere — the dots are the counter." The slide
@@ -351,8 +390,7 @@ test.describe('the footer chain', () => {
   test('§3’s table, including the two bare ends', async ({ page }) => {
     await open(page);
     for (const row of chain) {
-      await page.locator('.deck-dot').nth(row.slide).click();
-      await page.waitForTimeout(450);
+      await goTo(page, row.slide);
       expect.soft(await page.locator('.deck-prev').innerText(), `slide ${row.slide + 1} prev`).toBe(row.prev);
       if (row.next === null) {
         expect.soft(await page.locator('.deck-next a').count(), `slide ${row.slide + 1} has no next link`).toBe(0);
@@ -428,20 +466,22 @@ test.describe('hash routing and history', () => {
   test('the gate is the bare URL, never #1', async ({ page }) => {
     await open(page);
     expect(await page.evaluate(() => location.hash)).toBe('');
-    await page.locator('.deck-dot').nth(2).click();
-    await page.waitForTimeout(450);
-    expect(await page.evaluate(() => location.hash)).toBe('#3');
-    await page.locator('.deck-dot').nth(0).click();
-    await page.waitForTimeout(450);
+    await goTo(page, 2);
+    // Slide 3 owns pages, so its URL carries the stage tail once the landing
+    // settles - `#3-s4` on t01. What is asserted here is the slide half.
+    expect(await page.evaluate(() => location.hash)).toMatch(/^#3(-s[1-6])?$/);
+    await goTo(page, 0);
     expect(await page.evaluate(() => location.hash)).toBe('');
   });
 
   test('the deck adds one history entry, so two Backs leave the page', async ({ page }) => {
     await open(page);
     const before = await page.evaluate(() => history.length);
+    await page.locator('.deck').focus();
     for (const n of [1, 2, 3, 4, 5]) {
-      await page.locator('.deck-dot').nth(n).click();
+      await page.locator('.deck').press('ArrowLeft');
       await page.waitForTimeout(400);
+      expect.soft(await slideNow(page), `arrow ${n}`).toBe(n);
     }
     // §2: the first move pushes, every move after it replaces.
     expect(await page.evaluate(() => history.length)).toBe(before + 1);
