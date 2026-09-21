@@ -432,6 +432,34 @@ add(`<div>
 <p><span class="id">DIA-383</span> moved with it. Reverting the axis lock turned it back from a defect into a matter of feel, and feel is not this session's call — the diagnosis is, the answer is not.</p>
 <p>The ordering agreed: gate #4 judged structure, Phase 6 goes next because slides 3 and 4 share a component and a UX change to it should land once rather than twice, and the backlog is then worked as its own block with four slides built rather than three.</p>`);
 
+add(`<div>
+  <span class="tag done">phase 6 · built</span>
+  <h2>Slide 4 — <span class="he">מה עוד לא נעשה</span></h2>
+  <p class="sub">The same stack as slide 3 with the opposite filter. The cheapest phase so far, and the one that found the worst bug.</p>
+  <div class="stack">
+    <div class="item"><div class="v">1</div><div class="k">component behind both slides — <span class="id">kind</span> is 'reached' or 'unreached', and the page builds two stacks from one list of slots</div></div>
+    <div class="item"><div class="v">214</div><div class="k">deck assertions, up from 90. Slide 4 brought 34 of its own</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">item in the test pool that does not get this slide at all — <span class="id">t05</span> has reached everything, so it is a five-slide post</div></div>
+  </div>
+</div>`,
+`<p>What differs between the two slides is the page body, not the frame. An unreached stage has no date and no overview, so §7 gives it three things instead: what would have to be true for the stage to be reached, who would say so where the stage names an authority, and the count of days the item has been waiting — under the only warning colour in the item page.</p>
+<p>A slide with nothing to say is not shown. That sounds like a detail and is the reason the deck now derives its slide list from an <span class="id">omit</span> rather than counting to six: the footer chain, the dots, the hash and the section labels all count off the item's own list. <span class="id">t05</span> is the fixture that proves it, and it existed before this phase needed it.</p>
+<p>The tag is the same tag as slide 3's, drawn as an outline in muted ink because an unreached stage has no colour to fill with. The locator marks the unreached slots rather than the reached ones. Nothing else about the frame moved.</p>`);
+
+add(`<div>
+  <span class="tag done">phase 6 · the side-quest</span>
+  <h2>Two stacks, one key</h2>
+  <p class="sub">A stack publishes the page it is showing on the deck's root. That worked exactly as long as there was one of them.</p>
+  <div class="stack">
+    <div class="item"><div class="v">1</div><div class="k">attribute that two components were both writing — <span class="id">data-stage</span>, with the slide index beside it to say whose it was</div></div>
+    <div class="item"><div class="v">6</div><div class="k">assertions in slide 3's own spec that had quietly started reading slide 4's stack</div></div>
+    <div class="item mute"><div class="v">2</div><div class="k">of the new spec's failures where the test was wrong and the screen was right</div></div>
+  </div>
+</div>`,
+`<p>Slide 4 mounts after slide 3 and won both keys, so the deck could never read slide 3's page again: walking back from slide 4 landed on the right slide with a stale tail naming slide 4's stage. The guard that was supposed to prevent exactly this — writing the slide index next to the value — could not, because the second writer overwrote the index too. The key now carries the slide's index in its name, and there is no index to go stale.</p>
+<p>Slide 3's spec was written when <span class="id">.deck-stage</span> could only mean slide 3. Six assertions started counting both stacks the moment the second one existed, which is a test reading the wrong thing rather than a screen doing the wrong thing — the selectors are now scoped to slide 3's subtree.</p>
+<p>And two of the new spec's own assertions were simply wrong. A 1.5px border snaps to the device pixel, so measuring it says nothing at dpr 1; and <span class="id">stroke</span> is inherited, so the hourglass reports the warning colour on its svg and all four of its paths. What is asserted now is that nothing <i>outside</i> the mark carries it, which is what the ruling actually said.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
@@ -463,7 +491,7 @@ add(`<div class="center">
   <p class="sub">Every phase so far has been finished twice: once against the design, and once against a phone.</p>
 </div>`,
 `<p>Close here. The plan's shape held — settle the design, settle the data, build in an order where each phase is judged before the next one inherits its mistakes — and it is the judging that has produced almost everything in this deck.</p>
-<p>Three gates left, and a UX backlog that will be worked as its own block once slide 4 is built. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
+<p>Slide 4 is built and waiting on gate #5. After it, the UX backlog is worked as its own block, with four slides built rather than three. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
