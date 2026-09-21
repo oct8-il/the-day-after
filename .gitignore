@@ -9,3 +9,4 @@ playwright-report/
 port-snapshot.tgz
 Claude outputs/
 .idea/
+.staging/

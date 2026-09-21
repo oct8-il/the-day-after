@@ -1268,71 +1268,186 @@
      the prose calls the list marker "the accent" and the screen paints it
      #d29a7c, which is --t-press. The screen wins, as it did for the rail. */
 
-  /* The slide gives up its own side padding and the three parts take it back,
-     so the scroller's content is exactly as wide as the scroller. Otherwise the
-     carousel's bleed overflows it horizontally - and overflow-y:auto computes
-     overflow-x to auto, so the body becomes a horizontal scroller and eats the
-     swipe between slides. A finger in the middle of the text has to reach the
-     deck, and it only does when there is nothing nearer to scroll. */
-  .deck-slide:has(.deck-ov){padding-inline:0}
-  .deck-ov{height:100%;display:flex;flex-direction:column;gap:14px;padding-top:26px;box-sizing:border-box}
-  .deck-ov-head,.deck-ov-body{padding-inline:20px}
+  /* ---------------------------------------------------------------- §5
+     The card, and the reading sheet above the deck (DIA-413).
 
-  /* The chip is docked; everything under it travels. The inner column is at
-     least as tall as the scroller, so the carousel's margin-top:auto still
-     drops it to the foot of the frame on a short item - §5's screen - while on
-     a long one it waits below the last sentence instead of sitting over it. */
-  .deck-ov-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
-  .deck-ov-scroll::-webkit-scrollbar{display:none}
-  .deck-ov-inner{min-height:100%;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+     A slide's content is a card that fits the frame and never scrolls. There
+     is no vertical scroller anywhere inside the track any more: every fault
+     these screens had came from one living inside a horizontal one. A reading
+     that overruns is cut with a fade and continues in the sheet. */
+  .deck-card-wrap{height:100%;position:relative}
+  .deck-card{
+    height:100%;display:flex;flex-direction:column;
+    padding-top:26px;box-sizing:border-box;
+  }
+  /* §2: the slide's own name, 13px/600 in the muted ink. Not a pill: the
+     fully-rounded chip survives in exactly one place, the sheet's bar. */
+  .deck-label{flex:none;font-size:13px;font-weight:600;margin-bottom:14px;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
 
-  /* The fully-rounded chip, unique to this slide; every other slide wears its
-     title bare. 999px means the radius is always half the height. */
-  .deck-ov-title{display:inline-flex;align-items:center;padding:3px 12px;border-radius:999px;
+  /* The reading. It is given the room that is left and is clipped to it - the
+     card cannot grow, so a long reading is cut rather than pushing the button
+     off the screen. */
+  .deck-read{flex:1;min-height:0;overflow:hidden;position:relative}
+
+  /* The cut. A mask over the last 110px, fading to nothing 8px from the
+     bottom, so it lands mid-line and reads as "there is more" rather than as
+     an ending. Written by the deck only when the reading does not fit. */
+  .deck-card[data-cut] .deck-read{
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
+  }
+
+  /* §5's button: full width, outlined, the label at the reading end and the
+     count at the other. What it says is the card's two states. */
+  .deck-more{flex:none;margin-top:14px;width:100%;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 16px;border-radius:999px;
+    border:1px solid color-mix(in srgb,var(--text) 26%,transparent);
+    background:none;font:inherit;font-size:15px;font-weight:600;cursor:pointer;
+    color:var(--text)}
+  .deck-more-say::before{content:attr(data-fits)}
+  .deck-card[data-cut] .deck-more-say::before{content:attr(data-cut)}
+  .deck-more-n{font-size:13px;font-weight:400;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+
+  /* The sheet. One plain vertical scroller, above the track and outside it,
+     which is why there is nothing left to referee between the two axes. It
+     lands aligned: the bar's height and the body's two gutters are measured
+     off the card and written here as `--bar`, `--gut-r` and `--gut-l`, so
+     every line sits where it sat - on slide 3 that includes the locator's
+     gutter, which is 36px on one side and 20 on the other. */
+  .deck-sheets{position:absolute;inset:0;z-index:5;pointer-events:none}
+  .deck[data-sheet] .deck-sheets{pointer-events:auto}
+  /* The cover's dim, behind the sheet. Only the cover uses it: a fade the
+     reader asked for has nothing to announce. It un-fades with a pull. */
+  .deck-dim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;
+    transition:opacity .34s cubic-bezier(.2,.62,.3,1)}
+  .deck[data-dim] .deck-dim{opacity:calc(1 - var(--pull-p,0))}
+  .deck[data-pull] .deck-dim{transition:none}
+
+  .deck-sheet{position:absolute;inset:0;display:flex;flex-direction:column;
+    background:var(--bg);overflow:hidden;
+    /* Pull down to dismiss follows the finger 1:1 (DIA-417); with no pull in
+       progress the same declaration is the spring back. */
+    transform:translateY(var(--pull,0px));
+    transition:transform .24s cubic-bezier(.2,.8,.3,1)}
+  .deck[data-pull] .deck-sheet{transition:none}
+  .deck-sheet[hidden]{display:none}
+
+  /* §5's two entrances, and the same two exits - it leaves the way it came.
+     From the button it appears in place; from a tap on a passage it covers
+     from the bottom up, with a shadowed leading edge and corners that square
+     off as it lands. Reduced motion makes both instant: `still` carries no
+     animation at all, and the deck writes it in place of the other two. */
+  /* Four keyframes rather than two played backwards: `animation-direction:
+     reverse` on the same name is not a new animation, so the engine keeps the
+     finished one and the sheet leaves without ever moving. The exit has to
+     change the animation's *name* to start at all - and an accelerating curve
+     is the honest reverse of a decelerating one anyway. */
+  @keyframes deck-sheet-fade{from{opacity:0}to{opacity:1}}
+  @keyframes deck-sheet-unfade{from{opacity:1}to{opacity:0}}
+  @keyframes deck-sheet-cover{
+    from{transform:translateY(100%);border-radius:18px 18px 0 0;
+      box-shadow:0 -14px 34px rgba(0,0,0,.5)}
+    to{transform:translateY(0);border-radius:0;
+      box-shadow:0 -14px 34px rgba(0,0,0,0)}
+  }
+  @keyframes deck-sheet-uncover{
+    from{transform:translateY(0);border-radius:0;
+      box-shadow:0 -14px 34px rgba(0,0,0,0)}
+    to{transform:translateY(100%);border-radius:18px 18px 0 0;
+      box-shadow:0 -14px 34px rgba(0,0,0,.5)}
+  }
+  .deck-sheet[data-in="fade"]{animation:deck-sheet-fade var(--sheet-fade,160ms) ease}
+  .deck-sheet[data-out="fade"]{animation:deck-sheet-unfade var(--sheet-fade,160ms) ease forwards}
+  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,340ms) cubic-bezier(.2,.62,.3,1)}
+  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,340ms) cubic-bezier(.7,.38,.8,1) forwards}
+
+  /* The bar: a × at the physical left (44px target) and a chip centred. Its
+     underside is where the card's content begins. */
+  .deck-sheet-bar{flex:none;height:var(--bar,110px);box-sizing:border-box;
+    padding-top:var(--deck-top,52px);position:relative;
+    display:flex;align-items:center;justify-content:center}
+  /* Physical left: the × is at the frame's left edge whatever the direction,
+     and inset-inline-end resolves the wrong way here (§2's RTL trap). */
+  .deck-sheet-x{position:absolute;left:8px;top:calc(var(--deck-top,52px) + 2px);
+    width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;
+    border:0;border-radius:50%;padding:0;background:none;cursor:pointer;
+    color:color-mix(in srgb,var(--text) 62%,transparent)}
+  .deck-sheet-x svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;
+    stroke-linecap:round}
+  .deck-sheet-chip{display:flex;align-items:center;justify-content:center}
+  /* §5's neutral pill: slide 2's own name, and the one place the fully-rounded
+     chip this slide used to wear on the page survives. */
+  .deck-ov-title{display:inline-flex;align-items:center;padding:4px 12px 5px;border-radius:999px;
     background:color-mix(in srgb,var(--text) 10%,transparent);
     border:1px solid color-mix(in srgb,var(--text) 16%,transparent);
-    font-size:11.5px;font-weight:700;letter-spacing:.08em;line-height:1.5;
-    color:color-mix(in srgb,var(--text) 72%,transparent)}
+    font-size:12px;font-weight:700;letter-spacing:.08em;line-height:1.4;
+    white-space:nowrap;color:var(--text)}
+  /* §5: the stage's own tag, one size down from the page it came from. */
+  .deck-sheet-chip .deck-stage-tag{font-size:16px;padding:6px 13px 7px}
 
-  /* overscroll-behavior:contain stops a flick at the end of the text from
-     becoming a swipe to the next slide. */
-  .deck-ov-body{flex:none;display:flex;flex-direction:column;gap:11px;
-    font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}
-  .deck-ov-body p{margin:0}
-  .deck-ov-body strong{font-weight:700}
+  .deck-sheet-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-width:none;padding-bottom:26px}
+  .deck-sheet-scroll::-webkit-scrollbar{display:none}
+  .deck-sheet-h{margin:26px 0 12px;font-size:19px;font-weight:700;line-height:1.4;color:var(--text)}
+  .deck-sheet-body{display:flex;flex-direction:column}
+  /* The one place the sheet's column is set, and it is a measurement. */
+  .deck-sheet-bar,.deck-sheet-body{padding-right:var(--gut-r,20px);padding-left:var(--gut-l,20px)}
+  /* The carousel bleeds to both edges, as it always did. */
+  .deck-sheet .deck-ov-sources{margin:0;padding-right:var(--gut-r,20px);padding-left:var(--gut-l,20px)}
+  /* §6: the locator stays visible, and stays an indicator, while the sheet is
+     open - a second copy, because the slide's own is inside the track and the
+     sheet is not. Its top is the slide's: the frame's top plus the chrome. */
+  .deck-sheet .deck-loc{top:calc(var(--deck-top,52px) + 77px);z-index:1}
 
-  /* The lead is the first paragraph, chosen here rather than in the parser:
-     lib/annotation.ts is shared with the desktop and the link preview and has
-     no reason to learn what a lead is. */
-  .deck-ov-body > p:first-child{font-size:18px;font-weight:400;line-height:1.45;color:var(--text)}
+  /* The card's own column. The frame's padding is the card's, not the
+     slide's, so the sheet has one element to measure against. */
+  .deck-card{padding-inline:20px}
+  .deck-slide:has(.deck-card-wrap){padding-inline:0}
 
-  /* A list of what the system could not do. An em-dash in place of the disc,
-     and the marker outside the citation — docs/annotations.html §3. */
-  .deck-ov-body ul,.deck-ov-body ol{margin:0;padding:0;padding-inline-start:2px;list-style:none;
-    display:flex;flex-direction:column;gap:7px}
-  .deck-ov-body li{display:flex;gap:9px}
-  .deck-ov-body li::before{content:"—";color:var(--t-press);line-height:1.62;flex:none}
-  /* One flex child for the words, or the chip and every run of text would each
-     become a column of their own. */
-  .deck-ov-body li > span{flex:1;min-width:0}
+  /* §2's three styles, one ink. The lead is the first paragraph, chosen here
+     rather than in the parser: lib/annotation.ts is shared with the desktop
+     and the link preview and has no reason to learn what a lead is. */
+  .deck-read{font-size:17px;line-height:1.65;color:var(--text)}
+  .deck-read p{margin:0 0 14px}
+  .deck-read > p:first-child,.deck-read > :first-child > p:first-child{
+    font-size:21px;line-height:1.5;font-weight:400}
+  .deck-read h3,.deck-read .deck-h{margin:26px 0 12px;font-size:19px;font-weight:700;line-height:1.4}
+  .deck-read strong{font-weight:700}
+  .deck-read mark{background:color-mix(in srgb,var(--accent) 24%,transparent);
+    border-radius:3px;padding:0 2px;color:inherit}
+  /* Plain discs in the muted ink; the coloured em-dash is gone (§2). */
+  .deck-read ul,.deck-read ol{margin:0 0 14px;padding:0;padding-inline-start:2px;list-style:none;
+    display:flex;flex-direction:column;gap:12px}
+  .deck-read li{display:flex;gap:9px}
+  .deck-read li::before{content:"";flex:none;width:5px;height:5px;margin-top:11px;border-radius:50%;
+    background:color-mix(in srgb,var(--text) 56%,transparent)}
+  /* One flex child for the words, or the citation and every run of text would
+     each become a column of their own. */
+  .deck-read li > span{flex:1;min-width:0}
+  /* In the sheet the reading is not clipped and not cut - it is the reading. */
+  .deck-sheet .deck-read{flex:none;overflow:visible;min-height:0}
 
-  /* §5's chip names its type as well as its colour, because there is no ledger
-     under the text to open — the carousel is what a tap lands on. */
-  .deck .chip{gap:5px;vertical-align:middle;margin-inline-start:4px;padding:1px 8px 1px 6px;
-    border:0;border-radius:12px;background:color-mix(in srgb,var(--text) 10%,transparent);
-    font-size:11px;font-weight:600;line-height:1.5;white-space:nowrap;
-    color:color-mix(in srgb,var(--text) 80%,transparent)}
-  .deck .chip .chip-dot{width:7px;height:7px;
-    box-shadow:0 0 0 1.5px color-mix(in srgb,var(--text) 27%,transparent)}
-  .deck .chip .chip-n{font-size:11px;color:inherit}
-  /* On the phone the chip is a disclosure, so it has an open state: filled in
-     its own type colour at low alpha, with a border in it. Which chip opened
-     the drawer is never a guess. */
-  .deck button.chip{appearance:none;font:inherit;cursor:pointer;
-    border:1px solid transparent;transition:background .13s,border-color .13s,color .13s}
+  /* §5's citation: a 20px round carrying a link glyph in the muted ink, at the
+     end of the passage it belongs to, with +N beside the mark when the passage
+     rests on more than one claim. No type name and no colour - that is said
+     where the source is shown, on the carousel card (DIA-412). */
+  .deck .chip-g{gap:3px;vertical-align:middle;margin-inline-start:5px;padding:0 5px;
+    min-width:20px;height:20px;border:0;border-radius:999px;
+    background:color-mix(in srgb,var(--text) 12%,transparent);
+    font-size:11px;font-weight:600;line-height:1;white-space:nowrap;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+  .deck .chip-g .chip-link{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;
+    stroke-width:1.9;stroke-linecap:round}
+  .deck .chip-g .chip-n{font-size:11px;color:inherit}
+  .deck button.chip{appearance:none;font:inherit;cursor:pointer;transition:background .13s,color .13s}
+  /* A passage's citation stays lit while its drawer is open, which is what
+     says where the drawer came from (§5). */
   .deck button.chip[aria-expanded="true"]{color:var(--text);
-    background:color-mix(in srgb,var(--c) 26%,transparent);
-    border-color:color-mix(in srgb,var(--c) 52%,transparent)}
+    background:color-mix(in srgb,var(--text) 22%,transparent)}
 
   /* ---------------------------------------------------------------- §5
      The source drawer (DIA-386). In flow, directly beneath the block the chip
@@ -1383,7 +1498,7 @@
   /* The carousel, docked to the foot of the column and bleeding the slide's
      own 20px so a card can sit against the edge. The card is the link; §5 is
      explicit that it carries no קישור label. */
-  .deck-ov-sources{flex:none;margin:auto 0 0;padding:0 20px;list-style:none;
+  .deck-ov-sources{flex:none;margin:0;padding:0 20px;list-style:none;
     display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
     overscroll-behavior-x:contain}
   .deck-ov-sources::-webkit-scrollbar{display:none}
@@ -1432,50 +1547,31 @@
     scroll-snap-type:y proximity;scrollbar-width:none}
   .deck-stack::-webkit-scrollbar{display:none}
 
-  /* The page carries no horizontal padding of its own and each part takes it
-     instead, so the carousel can reach the edges without a negative margin.
-     A negative margin here would overflow the stack sideways, and a vertical
-     scroller that also scrolls sideways is what DIA-383 came from. */
-  .deck-stage{min-height:100%;box-sizing:border-box;scroll-snap-align:start;scroll-snap-stop:always;
-    display:flex;flex-direction:column;gap:13px;padding:22px 0 0}
-  /* Margin rather than padding, so the head's hairline stops where the text
-     does instead of running under the locator and out to the frame's edge. */
-  .deck-stage-kicker,.deck-stage-head,.deck-stage-body,.deck-stage-map{margin-right:36px;margin-left:20px}
-  .deck-stage-kicker{font-size:11.5px;font-weight:700;letter-spacing:.08em;margin-bottom:-6px;
-    color:color-mix(in srgb,var(--text) 55%,transparent)}
+  /* §6: a stage page is a card exactly one frame tall, so the stack is
+     uniform and pages rather than scrolls. The content column is inset 36px
+     on the physical right to clear the locator and 20px on the left -
+     physical, because the locator is physically anchored and §2's RTL trap
+     turns a logical property into the other edge. */
+  .deck-stage{height:100%;box-sizing:border-box;scroll-snap-align:start;scroll-snap-stop:always;
+    flex:none}
+  .deck-stage .deck-card{padding-right:36px;padding-left:20px}
 
-  /* The head group, closed by a hairline before the body. */
-  .deck-stage-head{display:flex;flex-direction:column;gap:6px;padding-bottom:13px;margin-bottom:4px;
-    border-bottom:1px solid color-mix(in srgb,var(--text) 14%,transparent)}
-  .deck-stage-tags{display:flex;align-items:flex-end;gap:8px;margin-bottom:2px}
-  /* Square corners, stage-colour fill, dark ink — the page's title, not a chip. */
+  /* §6's head group: four quiet lines and then the reading. No filled tag, no
+     definition and no hairline rule - colour stays in the locator, and the
+     head's job is to say which stage this is, not to decorate it. It is part
+     of both columns, so the sheet's body opens with it too. */
+  .deck-shead{flex:none;display:flex;flex-direction:column;gap:5px;margin-bottom:17px}
+  .deck-shead-n{margin:0;font-size:24px;font-weight:700;line-height:1.2;color:var(--text)}
+  /* Small accent text beside the name, not a pill. The only place the current
+     stage is named on the page, now that the locator does not ring it. */
+  .deck-shead-n em{font-style:normal;margin-inline-start:8px;
+    font-size:12.5px;font-weight:600;color:var(--accent)}
+  .deck-shead-d{font-size:13px;color:color-mix(in srgb,var(--text) 50%,transparent)}
+
+  /* Square corners, stage-colour fill, dark ink. Off the page since DIA-412:
+     it survives in the reading sheet's bar and nowhere else. */
   .deck-stage-tag{display:inline-flex;align-items:center;padding:8px 16px 9px;border-radius:3px;
     background:var(--c);color:#1b1d16;font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap}
-  /* A stage that has not happened has no colour to fill with - §7 gives it the
-     same tag as an outline in muted ink. Solid, since 20 September. */
-  .deck-stage-tag[data-un]{background:none;padding:6.5px 14.5px 7.5px;
-    border:1.5px solid color-mix(in srgb,var(--text) 42%,transparent);
-    color:color-mix(in srgb,var(--text) 70%,transparent)}
-  /* Deliberately much smaller than the tag, and the only place the current
-     stage is named on the page now that the locator does not ring it. */
-  .deck-stage-now{display:inline-flex;align-items:center;padding:1px 8px;border-radius:999px;
-    background:var(--accent);color:var(--accent-ink);
-    font-size:10px;font-weight:700;line-height:1.6;white-space:nowrap}
-  .deck-stage-def{font-size:13.5px;line-height:1.4;color:color-mix(in srgb,var(--text) 74%,transparent)}
-  .deck-stage-age{font-size:12px;color:color-mix(in srgb,var(--text) 50%,transparent)}
-
-  /* The body is slide 2's, at §6's scale: the lead is 17px here and 18px
-     there, which is the screens' own difference and not a slip. */
-  .deck-stage-body{flex:none;display:flex;flex-direction:column;gap:11px;
-    font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}
-  .deck-stage-body p{margin:0}
-  .deck-stage-body strong{font-weight:700}
-  .deck-stage-body > p:first-child{font-size:17px;line-height:1.45;color:var(--text)}
-  .deck-stage-body ul,.deck-stage-body ol{margin:0;padding:0;padding-inline-start:2px;list-style:none;
-    display:flex;flex-direction:column;gap:7px}
-  .deck-stage-body li{display:flex;gap:9px}
-  .deck-stage-body li::before{content:"—";color:var(--t-press);line-height:1.62;flex:none}
-  .deck-stage-body li > span{flex:1;min-width:0}
 
   /* The claims fallback. The body gives the words; the card at the foot gives
      the link, which is why the same source appears in both. */
@@ -1488,8 +1584,6 @@
   .deck-stage-map{margin:2px 0 0;border:1px solid var(--line-soft);border-radius:8px;overflow:hidden}
   .deck-stage-map svg{display:block;width:100%;height:auto}
 
-  /* The carousel bleeds both insets so a card can still reach either edge. */
-  .deck-stage .deck-ov-sources{margin:auto 0 0;padding:0 36px 0 20px}
   .deck-stage-map{box-sizing:border-box}
 
   /* §6's locator: the gate's ladder minus the labels, because the title tag
@@ -1534,16 +1628,19 @@
 
   @media (prefers-reduced-motion:reduce){
     .deck-stack{scroll-behavior:auto}
+    /* Belt and braces: the deck writes `still` in place of either entrance,
+       and nothing here has an animation to cancel. */
+    .deck-sheet,.deck-dim{transition:none}
   }
 
   /* ---------------------------------------------------------------- §7
      Slide 4 — מה עוד לא נעשה. The head group stays where it is; everything
      under the rule is centred horizontally and vertically as one column.
      Absence is the content, and nothing here apologises for it. */
-  /* The body wrapper is flex:none for a reached stage, whose content sets its
-     own height. Here the page has to fill the frame so the column can centre
-     in it, so the wrapper grows and the gap fills it. */
-  .deck-stage-body:has(.deck-gap){flex:1;min-height:0;display:flex}
+  /* The reading is already the room the card has left over, so the column
+     only has to centre in it. §7's card is composed rather than authored: it
+     fits the frame by construction, has no button and has no sheet. */
+  .deck-read:has(.deck-gap){display:flex}
   .deck-gap{flex:1;min-height:0;display:flex;flex-direction:column;
     align-items:center;justify-content:center;text-align:center;gap:15px;
     font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}

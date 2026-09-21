@@ -246,7 +246,7 @@ test.describe('the frame and its edges', () => {
     // DIA-385. The chrome's height was one measured value shared by every
     // slide, and the gate's dot row is 10px taller - so at the swipe's
     // midpoint, when `data-at` flips, the gate's title dropped 10px and slide
-    // 2's carousel rose by the same amount, both of them on screen. The air
+    // 2's label rose by the same amount, both of them on screen. The air
     // above the gate's dots is the gate's own clearance now, so the chrome is
     // one height everywhere and a horizontal swipe moves nothing vertically.
     await open(page);
@@ -254,7 +254,7 @@ test.describe('the frame and its edges', () => {
       const q = (s: string) => document.querySelector(s)?.getBoundingClientRect().top ?? null;
       return {
         title: q('.deck-gate-title h1'),
-        rail: q('.deck-ov .deck-ov-sources'),
+        card: q('.deck-card[data-card="ov"] .deck-label'),
         bottom: getComputedStyle(document.querySelector('.deck')!).getPropertyValue('--deck-bottom').trim(),
       };
     });
@@ -285,8 +285,8 @@ test.describe('the frame and its edges', () => {
 
     expect(at49.title).toBe(at0.title);
     expect(at51.title).toBe(at0.title);
-    // The carousel is slide 2's and is measured through the same swipe.
-    expect(at51.rail).toBe(at49.rail);
+    // Slide 2's card is measured through the same swipe.
+    expect(at51.card).toBe(at49.card);
     // And the mechanism, so the next person sees why: one height, not two.
     expect(at51.bottom).toBe(at0.bottom);
   });

@@ -104,7 +104,19 @@ const hashFor = (i: number, stage: number | null) =>
  */
 const ONE_ROW = 48;
 
-export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
+/**
+ * §5's two entrances, in milliseconds, and the same two exits.
+ *
+ * The fade is short because the reader asked for it and nothing travels; the
+ * cover is long enough to be seen, because the reader did not ask to change
+ * mode and the cover is what says the mode changed. They are here rather than
+ * only in the stylesheet because the exit has to be timed before the sheet is
+ * hidden, and two numbers that must agree are better written once.
+ */
+const FADE = 160;
+const COVER = 340;
+
+export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /**
    * §3's path, as three parts rather than a list, because the three behave
    * differently: the root is a link home, the parent is inert until a page
@@ -120,6 +132,17 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
    * not wait for hydration, and this component is a client one.
    */
   slides?: (ReactNode | null)[];
+  /**
+   * The reading sheets, by slide index (DIA-413).
+   *
+   * They are rendered beside the track rather than in it, and that is the
+   * whole point of the sheet: a plain vertical scroller with no horizontal
+   * ancestor. `inert` decides it on its own - it is inherited and cannot be
+   * lifted off a subtree, so a sheet inside the track could never be the one
+   * surface a screen reader is allowed to see while the deck behind is not.
+   * A slide may hand back several: slide 3 has one sheet per stage.
+   */
+  sheets?: (ReactNode | null)[];
   /**
    * What a slide puts in the middle of the footer, by index. Slides 3 and 4
    * use it for the vertical arrows - §6's route for a reader who does not
@@ -149,6 +172,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   const dots = useRef<HTMLDivElement>(null);
   const crumbBar = useRef<HTMLElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
+  const sheetHost = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
   /**
    * Which pair of slides the footer's labels are showing.
@@ -194,6 +218,9 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
 
   const slideEls = () =>
     [...(track.current?.querySelectorAll<HTMLElement>('.deck-slide') ?? [])];
+
+  /** The frame. Everything the sheet measures is measured against it. */
+  const deckEl = () => (crumbBar.current?.parentElement ?? null) as HTMLElement | null;
 
   /**
    * Which slide the track is showing, measured rather than calculated.
@@ -397,7 +424,9 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
         if (d) { shut(d); e.preventDefault(); }
         return;
       }
-      const chip = t.closest<HTMLElement>('button.chip[aria-controls]');
+      // Not the card's copy: that chip carries `data-open` and its
+      // aria-controls names a sheet, not a drawer (§5, DIA-413).
+      const chip = t.closest<HTMLElement>('button.chip[aria-controls]:not([data-open])');
       if (!chip) return;
       e.preventDefault();
 
@@ -412,7 +441,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
 
       // §5: if it would open below the fold the column scrolls the minimum
       // needed to show it, never more, so the passage above stays on screen.
-      const box = d.closest<HTMLElement>('.deck-ov-scroll,.deck-stack');
+      const box = d.closest<HTMLElement>('.deck-sheet-scroll,.deck-stack');
       if (!box) return;
       const r = d.getBoundingClientRect();
       const b = box.getBoundingClientRect();
@@ -679,10 +708,249 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* ------------------------------------------------- the card and the sheet */
+  /**
+   * Does the reading fit? (§5, DIA-413.)
+   *
+   * A card never scrolls, so a reading that overruns is cut with a fade and
+   * the button says `יותר מידע` instead of `המקורות`. Which of the two it is
+   * is a measurement, not a guess about the text: it is re-taken when the
+   * frame changes size and again once the fonts have loaded, because a
+   * fallback face and the real one do not wrap in the same place.
+   */
+  const measure = useCallback(() => {
+    deckEl()?.querySelectorAll<HTMLElement>('.deck-card').forEach((card) => {
+      const read = card.querySelector<HTMLElement>('.deck-read');
+      // A card with no way on is never cut. §7's slide is composed rather than
+      // authored and has no sheet, and a fade over a reading that cannot be
+      // continued is a promise the page has no way to keep.
+      if (!read || !card.querySelector('.deck-more')) { card.removeAttribute('data-cut'); return; }
+      if (read.scrollHeight - read.clientHeight > 1) card.setAttribute('data-cut', '');
+      else card.removeAttribute('data-cut');
+    });
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const deck = deckEl();
+    const ro = new ResizeObserver(measure);
+    if (deck) ro.observe(deck);
+    // A fallback face and the real one do not wrap in the same place, so a
+    // reading that fits at first paint may not fit once the font lands.
+    document.fonts?.ready.then(measure).catch(() => {});
+    return () => ro.disconnect();
+  }, [measure]);
+
+  /**
+   * The reading sheet (DIA-413).
+   *
+   * It is the deck's rather than the slide's because everything it has to get
+   * right is the deck's already: one history entry at a time, what the arrow
+   * keys do, and which surface a screen reader is allowed to see. The slides
+   * only render it (Card.tsx), beside the track rather than inside it.
+   *
+   * Alignment is measured, not calculated: the bar's height and the body's two
+   * gutters are read off the card the sheet belongs to, so every line lands
+   * where it was. Arithmetic here would be alignment until someone changes the
+   * label - and on slide 3 the column is inset 36px on one side and 20 on the
+   * other, so there is no single number to hard-code anyway.
+   */
+  type Entrance = 'fade' | 'cover' | 'still';
+  const sheet = useRef<{ el: HTMLElement; mode: Entrance; opener: HTMLElement | null } | null>(null);
+  /** The exit's timer: an entrance that interrupts one must cancel it. */
+  const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeSheet = useCallback((opts?: { history?: boolean }) => {
+    const open = sheet.current;
+    if (!open) return;
+    sheet.current = null;
+    const deck = deckEl();
+    const el = open.el;
+
+    // Closing the sheet closes its drawer: an open drawer is a question the
+    // reader has already answered (§5).
+    el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => {
+      d.setAttribute('hidden', '');
+      el.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
+    });
+    deck?.removeAttribute('data-sheet');
+    deck?.removeAttribute('data-dim');
+    deck?.removeAttribute('data-pull');
+    deck?.style.removeProperty('--pull');
+    deck?.style.removeProperty('--pull-p');
+    track.current?.removeAttribute('inert');
+    el.removeAttribute('data-in');
+
+    // It leaves the way it came. Under reduced motion both ways are instant.
+    if (leaving.current) clearTimeout(leaving.current);
+    if (open.mode === 'still') {
+      el.setAttribute('hidden', '');
+    } else {
+      el.setAttribute('data-out', open.mode);
+      leaving.current = setTimeout(() => {
+        el.removeAttribute('data-out');
+        el.setAttribute('hidden', '');
+        leaving.current = null;
+      }, open.mode === 'cover' ? COVER : FADE);
+    }
+
+    open.opener?.focus?.();
+    // Give the entry back, so §2's push-once rule is whole again afterwards.
+    if ((opts?.history ?? true) && window.history.state?.deckSheet) window.history.back();
+  }, []);
+
+  const openSheet = useCallback((id: string, mode: 'fade' | 'cover', opener: HTMLElement | null) => {
+    const deck = deckEl();
+    const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
+    const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`);
+    if (!deck || !el || !card) return;
+    if (leaving.current) { clearTimeout(leaving.current); leaving.current = null; }
+    el.removeAttribute('data-out');
+
+    // Where the card's content begins is where the bar has to end, and the
+    // card's column is the sheet's column - the locator's gutter included.
+    const frame = deck.getBoundingClientRect();
+    const first = card.querySelector<HTMLElement>(':scope > :not(.deck-label)') ?? card;
+    const box = first.getBoundingClientRect();
+    el.style.setProperty('--bar', `${Math.round(box.top - frame.top)}px`);
+    el.style.setProperty('--gut-r', `${Math.round(frame.right - box.right)}px`);
+    el.style.setProperty('--gut-l', `${Math.round(box.left - frame.left)}px`);
+
+    const how: Entrance = reduced() ? 'still' : mode;
+    el.removeAttribute('hidden');
+    el.setAttribute('data-in', how);
+    const scroll = el.querySelector<HTMLElement>('.deck-sheet-scroll');
+    if (scroll) scroll.scrollTop = 0;
+
+    deck.setAttribute('data-sheet', id);
+    // Only the cover dims: a fade the reader asked for has nothing to announce.
+    if (how === 'cover') deck.setAttribute('data-dim', '');
+    // The deck behind is not a second reading for a screen reader to find.
+    track.current?.setAttribute('inert', '');
+
+    sheet.current = { el, mode: how, opener };
+    el.querySelector<HTMLElement>('.deck-sheet-x')?.focus();
+    window.history.pushState({ ...window.history.state, deckSheet: true }, '');
+  }, []);
+
+  /** Back closes the sheet and nothing else. */
+  useEffect(() => {
+    const onPop = () => { if (sheet.current) closeSheet({ history: false }); };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [closeSheet]);
+
+  useEffect(() => {
+    const deck = deckEl();
+    if (!deck) return;
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const btn = t.closest<HTMLElement>('[data-open]');
+      if (btn) {
+        e.preventDefault();
+        // §5's two entrances. The button is a deliberate act and the sheet
+        // appears in place; a tap on a passage is not, so the sheet covers
+        // from the bottom up - the cover is what says the mode changed.
+        openSheet(btn.getAttribute('data-open')!, btn.classList.contains('deck-more') ? 'fade' : 'cover', btn);
+        return;
+      }
+      if (t.closest('.deck-sheet-x')) { e.preventDefault(); closeSheet(); }
+    };
+    deck.addEventListener('click', onClick);
+    return () => deck.removeEventListener('click', onClick);
+  }, [openSheet, closeSheet]);
+
+  /**
+   * Pull down to dismiss (DIA-417).
+   *
+   * A panel that came up from the bottom invites being pulled back down, and
+   * it is what a reader who has just discovered they cannot swipe sideways
+   * will try. It is an accelerator and nothing more: the × and Back remain.
+   *
+   * Only from the top of the reading - anywhere else a downward drag is an
+   * ordinary scroll up - and only once the drag has proved it is vertical, so
+   * the carousel keeps its own axis. Touch events rather than pointer ones
+   * because cancelling the scroll needs a non-passive `touchmove`, which is
+   * the one listener that can take the gesture back from the scroller.
+   */
+  useEffect(() => {
+    const host = sheetHost.current;
+    if (!host) return;
+    let y0 = 0, x0 = 0, t0 = 0, dy = 0, id = -1;
+    let live = false, taken = false;
+
+    const scroller = () => sheet.current?.el.querySelector<HTMLElement>('.deck-sheet-scroll') ?? null;
+
+    const start = (e: TouchEvent) => {
+      live = false; taken = false;
+      const sc = scroller();
+      if (!sc || e.touches.length !== 1 || sc.scrollTop > 0) return;
+      const t = e.touches[0];
+      id = t.identifier; y0 = t.clientY; x0 = t.clientX; t0 = performance.now(); dy = 0;
+      live = true;
+    };
+
+    const move = (e: TouchEvent) => {
+      if (!live) return;
+      const deck = deckEl();
+      const t = [...e.touches].find((x) => x.identifier === id);
+      if (!deck || !t) return;
+      const d = t.clientY - y0;
+      const across = Math.abs(t.clientX - x0);
+      if (!taken) {
+        if (Math.abs(d) < 8 && across < 8) return;
+        // Down, from the top, and more down than across. Anything else
+        // belongs to the scroller or to the carousel.
+        if (!(d > 0 && d > across)) { live = false; return; }
+        taken = true;
+        deck.setAttribute('data-pull', '');
+      }
+      dy = Math.max(0, d);
+      // Reduced motion: no follow. The gesture still counts, it just does not
+      // animate under the finger.
+      if (!reduced()) {
+        deck.style.setProperty('--pull', `${dy}px`);
+        deck.style.setProperty('--pull-p', String(Math.min(1, dy / (deck.clientHeight || 1) * 2)));
+      }
+      if (e.cancelable) e.preventDefault();
+    };
+
+    const end = () => {
+      if (!live) return;
+      live = false;
+      const deck = deckEl();
+      if (!deck || !taken) return;
+      taken = false;
+      deck.removeAttribute('data-pull');
+      deck.style.removeProperty('--pull');
+      deck.style.removeProperty('--pull-p');
+      // A quarter of the frame, or a flick.
+      const far = dy > deck.clientHeight / 4;
+      const flick = dy > 40 && performance.now() - t0 < 260;
+      if (far || flick) closeSheet();
+    };
+
+    host.addEventListener('touchstart', start, { passive: true });
+    host.addEventListener('touchmove', move, { passive: false });
+    host.addEventListener('touchend', end);
+    host.addEventListener('touchcancel', end);
+    return () => {
+      host.removeEventListener('touchstart', start);
+      host.removeEventListener('touchmove', move);
+      host.removeEventListener('touchend', end);
+      host.removeEventListener('touchcancel', end);
+    };
+  }, [closeSheet]);
+
   /* ---------------------------------------------------------- arrow keys */
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
   // RTL frame ArrowLeft goes forward - the next slide is the one to the left.
   const onKey = (e: React.KeyboardEvent) => {
+    // While the sheet is open the deck is not what the keyboard is talking to.
+    if (sheet.current) {
+      if (e.key === 'Escape') { e.preventDefault(); closeSheet(); }
+      return;
+    }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(at + 1); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); go(at - 1); }
     else if (e.key === 'Home') { e.preventDefault(); go(0); }
@@ -964,6 +1232,17 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
             )}
           </section>
         ))}
+      </div>
+
+      {/* The reading sheets, above the track and outside it (§5, DIA-413).
+          A sheet inside the horizontal scroller is the crossing every fault
+          of these screens came from, and `inert` is inherited: the track
+          cannot be made invisible to a screen reader while something inside
+          it stays visible. The dim is the cover entrance's, and it un-fades
+          with a pull. */}
+      <div className="deck-sheets" ref={sheetHost}>
+        <div className="deck-dim" aria-hidden="true" />
+        {sheets}
       </div>
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -

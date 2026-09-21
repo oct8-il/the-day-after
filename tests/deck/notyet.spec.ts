@@ -113,11 +113,12 @@ test.describe('the stack', () => {
         .map((s) => s.getAttribute('data-stage')),
       four: [...document.querySelectorAll('.deck-slide')[3]!.querySelectorAll('.deck-stage')]
         .map((s) => s.getAttribute('data-stage')),
-      pillOnThree: document.querySelectorAll('.deck-slide')[2]!.querySelectorAll('.deck-stage-now').length,
-      pillOnFour: document.querySelectorAll('.deck-slide')[3]!.querySelectorAll('.deck-stage-now').length,
+      pillOnThree: document.querySelectorAll('.deck-slide')[2]!.querySelectorAll('.deck-shead-n em').length,
+      pillOnFour: document.querySelectorAll('.deck-slide')[3]!.querySelectorAll('.deck-shead-n em').length,
     }));
     expect(m.three).toEqual(['1', '3', '4', '6']);
     expect(m.four).toEqual(['2', '5']);
+    // §6: הסטטוס הנוכחי is small accent text beside the name, not a pill.
     expect(m.pillOnThree).toBe(1);
     expect(m.pillOnFour).toBe(0);
   });
@@ -178,35 +179,36 @@ test.describe('the locator', () => {
 });
 
 test.describe('the page', () => {
-  test('the tag is an outline in muted ink, and the date says it has not happened', async ({ page }) => {
+  test('the head names the stage, says it has not happened, and wears no tag', async ({ page }) => {
+    // §6 took the filled tag, the definition and the hairline off the page
+    // and left the name at 24px with the date under it; §7 inherits all of
+    // that and puts טרם תועד where the date would be (DIA-412).
     await open(page, 't01');
     const m = await page.evaluate((s) => {
       const p = document.querySelector(s)!;
-      const tag = p.querySelector('.deck-stage-tag')!;
+      const head = p.querySelector('.deck-shead')!;
+      const name = head.querySelector('.deck-shead-n')!;
+      const cs = getComputedStyle(name);
       return {
-        text: (tag.textContent ?? '').trim(),
-        fill: getComputedStyle(tag).backgroundColor,
-        border: parseFloat(getComputedStyle(tag).borderTopWidth),
-        style: getComputedStyle(tag).borderTopStyle,
-        age: (p.querySelector('.deck-stage-age')?.textContent ?? '').trim(),
-        def: (p.querySelector('.deck-stage-def')?.textContent ?? '').trim().length,
-        ink: getComputedStyle(tag).color,
-        filledInk: getComputedStyle(
-          document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage-tag')!,
-        ).color,
+        name: (name.textContent ?? '').trim(),
+        size: cs.fontSize,
+        weight: cs.fontWeight,
+        date: (head.querySelector('.deck-shead-d')?.textContent ?? '').trim(),
+        current: head.querySelectorAll('.deck-shead-n em').length,
+        tags: p.querySelectorAll('.deck-stage-tag').length,
+        rule: parseFloat(getComputedStyle(head).borderBottomWidth),
       };
     }, four);
-    expect(m.text).toBe('5 · אומת עצמאית');
-    expect(m.fill).toBe('rgba(0, 0, 0, 0)');
-    // A 1.5px border snaps to the device pixel, so the number says nothing at
-    // dpr 1 - that it is drawn at all, and in muted ink rather than the dark
-    // ink a filled tag carries, is the thing §7 asks for.
-    expect(m.border).toBeGreaterThan(0);
-    expect(m.ink).not.toBe(m.filledInk);
-    // Solid, not dashed - the whole rail came off the dashes on 20 September.
-    expect(m.style).toBe('solid');
-    expect(m.age).toBe('טרם תועד');
-    expect(m.def).toBeGreaterThan(0);
+    expect(m.name).toBe('אומת עצמאית');
+    expect(m.size).toBe('24px');
+    expect(m.weight).toBe('700');
+    expect(m.date).toBe('טרם תועד');
+    // The current stage is never on this slide.
+    expect(m.current).toBe(0);
+    // The tag with its coloured fill reappears only in a sheet's bar, and
+    // this slide has no sheet at all.
+    expect(m.tags).toBe(0);
+    expect(m.rule).toBe(0);
   });
 
   test('everything under the rule is one column, centred both ways', async ({ page }) => {
@@ -317,20 +319,26 @@ test.describe('the page', () => {
 });
 
 test.describe('the four things it does not grow', () => {
-  test('no pill, no chips, no carousel, no drawer', async ({ page }) => {
+  test('no accent, no chips, no carousel, no drawer - and no sheet', async ({ page }) => {
     await open(page, 't02');
     const m = await page.evaluate((s) => {
       const p = document.querySelector(s)!;
+      const ids = [...p.querySelectorAll('.deck-card')].map((c) => c.getAttribute('data-card'));
       return {
-        now: p.querySelectorAll('.deck-stage-now').length,
+        now: p.querySelectorAll('.deck-shead-n em').length,
         chips: p.querySelectorAll('.chip').length,
         rails: p.querySelectorAll('.deck-ov-sources').length,
         drawers: p.querySelectorAll('.deck-drawer').length,
+        buttons: p.querySelectorAll('.deck-more').length,
+        // §7: this slide's card is composed rather than authored. It fits the
+        // frame by construction, so nothing is cut and there is no sheet.
+        sheets: ids.filter((id) => document.getElementById(`sheet-${id}`)).length,
+        cut: p.querySelectorAll('.deck-card[data-cut]').length,
       };
     }, four);
     // There is nothing to cite for something that has not happened, and the
     // statement is computed rather than authored.
-    expect(m).toEqual({ now: 0, chips: 0, rails: 0, drawers: 0 });
+    expect(m).toEqual({ now: 0, chips: 0, rails: 0, drawers: 0, buttons: 0, sheets: 0, cut: 0 });
   });
 
   test('the back pill walks back a slide, and points at it', async ({ page }) => {

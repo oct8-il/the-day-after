@@ -2,34 +2,32 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { SourceRail, type SourceCard } from './SourceRail';
 
 /**
  * Slide 3's stack - docs/mobile-item.html §6.
  *
- * One page per stage, chronological downward, opening on the current one. A
- * stage page is not required to fit the frame: it scrolls, and the same
- * gesture carries the reader between stages. One axis, one gesture, no
- * separate control to find.
+ * One page per stage, chronological downward, opening on the current one.
+ * Since DIA-413 a stage page is a card exactly one frame tall - a reading
+ * that overruns is cut on the card and continues in the sheet - so the stack
+ * pages rather than scrolls. One axis, one gesture, no control to find.
  *
  * The boundary is a property of the stack rather than of a listener - nested
  * scroll-snap, the way §11 calls it - so whatever DIA-383 eventually does to
  * the deck's axis decision does not have to be done here as well.
  */
 
-export type StageHead = {
+/**
+ * One page of the stack. Since DIA-413 the page's content is a card built by
+ * Card.tsx - the head group, the reading, the button - and the stack owns only
+ * where a page sits and which one is showing.
+ */
+export type StagePage = {
   n: number;
   he: string;
-  /** Null on an unreached stage: §7's tag is an outline in muted ink. */
-  color: string | null;
-  definition: string;
-  /** The date and its distance from 7.10, already composed - or, on a stage
-   *  that has not happened, §7's "טרם תועד". */
-  age: string | null;
   current: boolean;
+  /** The card, already built: this file does not know what is on it. */
+  card: ReactNode;
 };
-
-export type StagePage = { head: StageHead; body: ReactNode; cards: SourceCard[] };
 
 /**
  * Which half of the split this stack is. Slide 3 holds the stages an item
@@ -51,37 +49,42 @@ function Chevron({ d }: { d: string }) {
   );
 }
 
-/** One page. Its own rail, because a stack has several on screen at once. */
-function Page({ page, index, kicker }: { page: StagePage; index: number; kicker: string }) {
-  const { head } = page;
+/**
+ * §6's locator. Drawn twice: once on the slide, and once inside the stage's
+ * reading sheet, which covers the frame - "it stays visible, and stays an
+ * indicator, while the reading sheet is open". A copy rather than a lift,
+ * because the sheet is outside the track and the slide's own locator is
+ * inside it: two stacking contexts that cannot be reconciled.
+ *
+ * Nothing on it is a control, on either copy.
+ */
+export function Locator({ rail, on }: { rail: Rung[]; on: number }) {
+  return (
+    <ol className="deck-loc" aria-hidden="true">
+      {rail.map((r) => (
+        <li
+          key={r.n}
+          className="deck-loc-rung"
+          data-drawn={r.drawn ? '' : undefined}
+          data-un={r.drawn && !r.reached ? '' : undefined}
+          data-on={r.drawn && r.n === on ? '' : undefined}
+          style={{ ['--c' as string]: r.color }}
+        />
+      ))}
+    </ol>
+  );
+}
+
+/** One page: a card, and where it sits in the stack. */
+function Page({ page, index }: { page: StagePage; index: number }) {
   return (
     <section
       className="deck-stage"
-      data-stage={head.n}
+      data-stage={page.n}
       data-index={index}
-      aria-label={`שלב ${head.n} · ${head.he}`}
+      aria-label={`שלב ${page.n} · ${page.he}`}
     >
-      <div className="deck-stage-kicker">{kicker}</div>
-
-      <div className="deck-stage-head">
-        <div className="deck-stage-tags">
-          {/* Filled in the stage's colour where it happened, an outline in
-              muted ink where it has not - §7. */}
-          <span
-            className="deck-stage-tag"
-            data-un={head.color ? undefined : ''}
-            style={head.color ? { ['--c' as string]: head.color } : undefined}
-          >
-            {head.n} · {head.he}
-          </span>
-          {head.current && <span className="deck-stage-now">סטטוס נוכחי</span>}
-        </div>
-        <div className="deck-stage-def">{head.definition}</div>
-        {head.age && <div className="deck-stage-age">{head.age}</div>}
-      </div>
-
-      <div className="deck-stage-body">{page.body}</div>
-      <SourceRail cards={page.cards} />
+      {page.card}
     </section>
   );
 }
@@ -99,7 +102,7 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
   // Slide 3 opens on the current stage; slide 4 on the next one, which is its
   // first page because the filter is sorted.
   const [at, setAt] = useState(() =>
-    kind === 'reached' ? Math.max(0, pages.findIndex((p) => p.head.current)) : 0);
+    kind === 'reached' ? Math.max(0, pages.findIndex((p) => p.current)) : 0);
   const atRef = useRef(at);
   /**
    * Where the reader left each stage, for as long as the page is open. It is
@@ -166,7 +169,7 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     const read = () => {
       const m = /^#([1-6])(?:-s([1-6]))?$/.exec(location.hash);
       if (!m || Number(m[1]) - 1 !== slide || !m[2]) return false;
-      const i = pages.findIndex((p) => p.head.n === Number(m[2]));
+      const i = pages.findIndex((p) => p.n === Number(m[2]));
       // A deep link is a first visit: the top of that stage, no memory.
       if (i >= 0) { open(i, { top: true }); return true; }
       return false;
@@ -186,7 +189,7 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     // publishes it here under its own slide's key rather than reaching into
     // the deck to write a hash. Two stacks share this root, so the key has to
     // name the slide: a single `data-stage` had slide 4 answering for slide 3.
-    if (deck) deck.dataset[`stage${slide}`] = String(pages[at]?.head.n ?? '');
+    if (deck) deck.dataset[`stage${slide}`] = String(pages[at]?.n ?? '');
     // The deck writes the URL; it cannot know the tail moved unless told.
     window.dispatchEvent(new CustomEvent('deck:stagechange'));
   }, [at, pages, slide]);
@@ -197,7 +200,7 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
       const d = (e as CustomEvent<{ slide: number; dir?: number; to?: 'current' }>).detail;
       if (!d || d.slide !== slide) return;
       if (d.to === 'current') {
-        const i = pages.findIndex((p) => p.head.current);
+        const i = pages.findIndex((p) => p.current);
         if (i >= 0 && i !== atRef.current) open(i, { smooth: true });
         return;
       }
@@ -253,12 +256,11 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     settle.current = setTimeout(rest, 140);
   }, [indexNow, rest]);
 
-  const kicker = kind === 'reached' ? 'מה נעשה מאז' : 'מה עוד לא נעשה';
-  const here = pages[at]?.head.n ?? current;
+  const here = pages[at]?.n ?? current;
   // On slide 4 the current stage is never on the page, so the pill is always
   // there and always walks back a slide rather than a page (§7).
   const off = kind === 'unreached' || here !== current;
-  const back = pages.findIndex((p) => p.head.n === current);
+  const back = pages.findIndex((p) => p.n === current);
   const walk = () => {
     if (kind === 'reached') { if (back >= 0) open(back, { smooth: true }); return; }
     window.dispatchEvent(new CustomEvent('deck:slide', { detail: { to: 3 } }));
@@ -267,22 +269,11 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
 
   return (
     <div className="deck-stages">
-      <ol className="deck-loc" aria-hidden="true">
-        {rail.map((r) => (
-          <li
-            key={r.n}
-            className="deck-loc-rung"
-            data-drawn={r.drawn ? '' : undefined}
-            data-un={r.drawn && !r.reached ? '' : undefined}
-            data-on={r.drawn && r.n === here ? '' : undefined}
-            style={{ ['--c' as string]: r.color }}
-          />
-        ))}
-      </ol>
+      <Locator rail={rail} on={here} />
 
       <div className="deck-stack" ref={stack} onScroll={onScroll}>
         {pages.map((p, i) => (
-          <Page key={p.head.n} page={p} index={i} kicker={kicker} />
+          <Page key={p.n} page={p} index={i} />
         ))}
       </div>
 

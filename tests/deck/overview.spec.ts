@@ -1,15 +1,16 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * Slide 2 — סקירת הכשל (DIA-381, spec §5).
+ * Slide 2 — סקירת הכשל, the card (DIA-381, DIA-413, spec §5).
  *
  * The first body slide, and the pattern slides 3 and 4 reuse. Most of what is
- * asserted here is therefore not about this screen: it is about the rules that
- * are being set for three screens at once.
+ * asserted here is therefore not about this screen: it is about the rules
+ * being set for three screens at once - the card, the cut, the type scale and
+ * the citation glyph. The sheet those rules continue into is sheet.spec.ts.
  *
- * t01 is authored past the column on purpose, so the scroll is a measurement
- * and not a hope; t03 fits, carries a two-item list and an inline hyperlink;
- * t05 carries no list at all. t02 is the floor — one claim, one span.
+ * t01 is authored past the frame on purpose, so the cut is a measurement and
+ * not a hope; t03 fits, carries a two-item list and an inline hyperlink; t05
+ * carries no list at all. t02 is the floor — one claim, one span.
  */
 
 const PHONE = { width: 390, height: 844 };
@@ -38,103 +39,197 @@ const rect = (page: Page, sel: string) =>
     return { top: r.top, right: r.right, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
   }, sel);
 
-/**
- * Open an item at the gate and walk to slide 2, the way a reader arrives.
- *
- * For the gesture tests only. A cold deep link to #2 makes slide 2 the entry
- * slide, and §11's push-once rule then turns a swipe back onto it into
- * history.back() - which, in a fixture with nothing behind the page, leaves it
- * for about:blank and the assertion reads a torn-down document rather than a
- * bug. Arriving with something behind you is the honest case anyway.
- */
-async function walkTo2(page: Page, id: string) {
-  await page.goto(`/item/${id}/`);
-  await page.waitForSelector('.deck-gate-rail');
-  await page.evaluate(() => { location.hash = '#2'; });
-  await page.waitForSelector('.deck-ov-scroll');
-  await page.waitForTimeout(500);
-}
-
 /** Open an item on slide 2 and let the deck settle on the snap point. */
 async function open(page: Page, id: string) {
   await page.goto(`/item/${id}/#2`);
-  await page.waitForSelector('.deck-ov-scroll');
+  await page.waitForSelector('.deck-card[data-card="ov"]');
+  // The cut is a measurement, and it is re-taken once the fonts have landed.
+  await page.evaluate(() => document.fonts?.ready);
   await page.waitForTimeout(300);
 }
 
-test.describe('the column', () => {
-  test('three parts, in order, filling the frame between the chrome', async ({ page }) => {
+const CARD = '.deck-card[data-card="ov"]';
+
+test.describe('the card', () => {
+  test('three parts, in order, and the card never scrolls', async ({ page }) => {
     // The cheapest assertion that notices a collision: .chip, .lead and .prose
     // all have bare rules in this stylesheet, and a gate screen once rendered
     // as nothing while every data assertion passed.
     await open(page, 't03');
-    const ov = await rect(page, '.deck-ov');
-    const title = await rect(page, '.deck-ov-title');
-    const scroll = await rect(page, '.deck-ov-scroll');
-    const body = await rect(page, '.deck-ov-body');
-    const rail = await rect(page, '.deck-ov .deck-ov-sources');
+    const card = await rect(page, CARD);
+    const label = await rect(page, `${CARD} .deck-label`);
+    const read = await rect(page, `${CARD} .deck-read`);
+    const button = await rect(page, `${CARD} .deck-more`);
 
-    expect(ov.height).toBeGreaterThan(400);
-    expect(title.height).toBeGreaterThan(18);
-    expect(body.height).toBeGreaterThan(200);
-    expect(rail.height).toBeGreaterThan(60);
+    expect(card.height).toBeGreaterThan(400);
+    expect(label.height).toBeGreaterThan(14);
+    expect(read.height).toBeGreaterThan(200);
 
-    // In order, and nothing overlapping its neighbour.
-    expect(title.bottom).toBeLessThanOrEqual(scroll.top + 0.5);
-    expect(body.bottom).toBeLessThanOrEqual(rail.top + 0.5);
-    // §5: 14px between the parts. The gap under the body is a floor rather
-    // than a figure, because the carousel falls to the foot of a short item.
-    expect(Math.round(scroll.top - title.bottom)).toBe(14);
-    expect(Math.round(body.top - scroll.top)).toBe(0);
-    expect(rail.top - body.bottom).toBeGreaterThanOrEqual(13.5);
+    // In order, nothing overlapping its neighbour, and §5's 14px between.
+    expect(Math.round(read.top - label.bottom)).toBe(14);
+    expect(Math.round(button.top - read.bottom)).toBe(14);
+    // The card fills the frame between the chrome and stops there.
+    expect(Math.round(button.bottom)).toBeLessThanOrEqual(Math.round(card.bottom) + 1);
   });
 
-  test('the title is a chip, and its radius is always half its height', async ({ page }) => {
+  test('nothing in the track is a reading scroller, on any fixture', async ({ page }) => {
+    // The whole point of DIA-413: a vertical scroller inside a horizontal one
+    // is where every fault of these screens came from. Asserted on the
+    // computed overflow rather than on scrollHeight, because a clipped card
+    // still has content past its box - it is cut, which is the design.
+    //
+    // The stage stack is the one exception and is not a reading scroller: it
+    // is a pager of one-frame pages, which is what §6 turned it into.
+    for (const id of ['t01', 't03', 't05'] as const) {
+      await open(page, id);
+      const scrollers = await page.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>('.deck-track *')]
+          .filter((e) => ['auto', 'scroll'].includes(getComputedStyle(e).overflowY))
+          .map((e) => e.className));
+      expect(scrollers.filter((c) => !c.includes('deck-stack')),
+        `${id}: nothing in the track may scroll down`).toEqual([]);
+      // And the card's own reading is clipped, not scrollable.
+      expect(await page.evaluate((sel) =>
+        getComputedStyle(document.querySelector(`${sel} .deck-read`)!).overflowY, CARD)).toBe('hidden');
+    }
+  });
+
+  test('the label is the slide name in muted ink, and no longer a pill', async ({ page }) => {
     await open(page, 't03');
-    const r = await rect(page, '.deck-ov-title');
-    const css = await page.evaluate(() => {
-      const s = getComputedStyle(document.querySelector('.deck-ov-title')!);
-      return { radius: s.borderTopLeftRadius, weight: s.fontWeight, size: s.fontSize, spacing: s.letterSpacing };
+    const css = await page.evaluate((sel) => {
+      const el = document.querySelector(`${sel} .deck-label`)!;
+      const s = getComputedStyle(el);
+      return {
+        text: (el.textContent ?? '').trim(),
+        size: s.fontSize, weight: s.fontWeight,
+        radius: parseFloat(s.borderTopLeftRadius),
+        ground: s.backgroundColor,
+      };
+    }, CARD);
+    expect(css.text).toBe('סקירת הכשל');
+    expect(css.size).toBe('13px');
+    expect(css.weight).toBe('600');
+    // §5: the fully-rounded chip survives in exactly one place, the sheet's bar.
+    expect(css.radius).toBe(0);
+    expect(css.ground).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('the label starts where the reading does', async ({ page }) => {
+    // The slide gives up its side padding so the sheet's carousel can reach
+    // the edge; the card carries it instead. In RTL "starts" is the physical
+    // right, so it is asserted on the box and not on a property name.
+    await open(page, 't03');
+    const label = await rect(page, `${CARD} .deck-label`);
+    const ink = await rect(page, `${CARD} .deck-read > p:first-child`);
+    expect(Math.round(label.right)).toBe(Math.round(ink.right));
+  });
+});
+
+test.describe('the two states of the card', () => {
+  test('t01 overruns and is cut; t03 and t05 fit and are not', async ({ page }) => {
+    for (const [id, over] of [['t01', true], ['t03', true], ['t05', false], ['t04', false]] as const) {
+      await open(page, id);
+      const m = await page.evaluate((sel) => {
+        const card = document.querySelector(sel)!;
+        const read = card.querySelector('.deck-read')!;
+        return {
+          cut: card.hasAttribute('data-cut'),
+          room: read.scrollHeight - read.clientHeight,
+          mask: getComputedStyle(read).webkitMaskImage,
+        };
+      }, CARD);
+      expect(m.cut, `${id} should ${over ? '' : 'not '}be cut`).toBe(over);
+      expect(m.room > 1, `${id}: the measurement and the attribute must agree`).toBe(over);
+      // The fade is the cut. Nothing is masked on a card that fits.
+      expect(m.mask === 'none').toBe(!over);
+    }
+  });
+
+  test('the button says which state it is in, and how many sources', async ({ page }) => {
+    const say = (page: Page) => page.evaluate((sel) => {
+      const b = document.querySelector(`${sel} .deck-more`)!;
+      return {
+        label: getComputedStyle(b.querySelector('.deck-more-say')!, '::before').content,
+        n: (b.querySelector('.deck-more-n')?.textContent ?? '').trim(),
+      };
+    }, CARD);
+
+    await open(page, 't01');
+    expect((await say(page)).label).toContain('יותר מידע');
+    expect((await say(page)).n).toMatch(/^\d+ מקורות$/);
+
+    await open(page, 't05');
+    expect((await say(page)).label).toContain('המקורות');
+    expect((await say(page)).n).toMatch(/^\d+ מקורות$/);
+  });
+
+  test('the cut decision is re-taken at 844, 664 and 600 tall', async ({ page }) => {
+    // §5's fit problem, measured rather than argued: the same design at the
+    // same size on every phone from the 600 guard up, with more or less of the
+    // reading on the first screen. t05 fits a tall frame and not a short one.
+    await open(page, 't05');
+    const seen: { h: number; cut: boolean; room: number }[] = [];
+    for (const h of [844, 664, 600]) {
+      await page.setViewportSize({ width: 390, height: h });
+      await page.waitForTimeout(250);
+      seen.push(await page.evaluate((sel) => {
+        const card = document.querySelector(sel)!;
+        const read = card.querySelector('.deck-read')!;
+        return { h: window.innerHeight, cut: card.hasAttribute('data-cut'), room: read.scrollHeight - read.clientHeight };
+      }, CARD));
+    }
+    for (const s of seen) expect(s.cut, `${s.h}: the attribute must follow the measurement`).toBe(s.room > 1);
+    // And the card itself never grows past the frame at any of them.
+    expect(seen.map((s) => s.h)).toEqual([844, 664, 600]);
+    expect(seen[0]!.cut).toBe(false);
+    expect(seen[2]!.cut).toBe(true);
+  });
+
+  test('a card with nothing to continue is never cut', async ({ page }) => {
+    // §7's slide is composed rather than authored: no button, no sheet, and a
+    // fade over a reading that cannot be continued is a promise it cannot keep.
+    await page.goto('/item/t02/#4');
+    await page.waitForSelector('.deck-stack');
+    await page.waitForTimeout(400);
+    const m = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(4) .deck-card')];
+      return {
+        cards: cards.length,
+        buttons: cards.filter((c) => c.querySelector('.deck-more')).length,
+        cut: cards.filter((c) => c.hasAttribute('data-cut')).length,
+      };
     });
-    // 999px is a radius no box here can reach, which is what makes the corner
-    // always half the height. getComputedStyle reports the specified length,
-    // not the used one, so the assertion is "far past half" rather than "half".
-    expect(parseFloat(css.radius)).toBeGreaterThanOrEqual(r.height / 2);
-    expect(parseFloat(css.radius)).toBeGreaterThan(100);
-    expect(css.weight).toBe('700');
-    expect(css.size).toBe('11.5px');
-    expect(parseFloat(css.spacing)).toBeCloseTo(11.5 * 0.08, 1);
-  });
-
-  test('the chip hugs its words rather than filling the row', async ({ page }) => {
-    // align-self:flex-start in the spec's screen. In RTL a stretched chip is
-    // the kind of thing that reads as "about right" until it is measured.
-    await open(page, 't03');
-    const slide = await rect(page, '.deck-ov');
-    const chip = await rect(page, '.deck-ov-title');
-    const ink = await rect(page, '.deck-ov-body > p:first-child');
-    expect(chip.width).toBeLessThan(slide.width * 0.75);
-    // And it starts where the text does. The slide gives up its side padding
-    // so the carousel can reach the edge, so the reference is the ink and not
-    // the box - and in RTL "starts" is the physical right.
-    expect(Math.round(chip.right)).toBe(Math.round(ink.right));
+    expect(m.cards).toBeGreaterThan(0);
+    expect(m.buttons).toBe(0);
+    expect(m.cut).toBe(0);
   });
 });
 
 test.describe('the type scale', () => {
   test('the lead is the first paragraph, and only the first', async ({ page }) => {
     await open(page, 't03');
-    const sizes = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-ov-body > p')].map((p) => getComputedStyle(p).fontSize));
-    expect(sizes[0]).toBe('18px');
-    expect(sizes.slice(1).every((s) => s === '15px')).toBe(true);
+    const sizes = await page.evaluate((sel) =>
+      [...document.querySelectorAll(`${sel} .deck-read > p`)].map((p) => getComputedStyle(p).fontSize), CARD);
+    // §2: the lead is distinguished by size, not by weight — 21 against 17.
+    expect(sizes[0]).toBe('21px');
+    expect(sizes.slice(1).every((s) => s === '17px')).toBe(true);
     expect(sizes.length).toBeGreaterThan(1);
   });
 
-  test('a list draws an em-dash, not a disc', async ({ page }) => {
+  test('the lead is not bold', async ({ page }) => {
+    // Supersedes DIA-365's "the opening sentence is bold" and the ruling that
+    // replaced it: size carries the lead, and bold is the lead-in of a list
+    // item and nothing else.
     await open(page, 't03');
-    const list = await page.evaluate(() => {
-      const ul = document.querySelector('.deck-ov-body ul');
+    const weight = await page.evaluate((sel) =>
+      getComputedStyle(document.querySelector(`${sel} .deck-read > p:first-child`)!).fontWeight, CARD);
+    expect(weight).toBe('400');
+  });
+
+  test('a list draws a plain disc in the muted ink, not an em-dash', async ({ page }) => {
+    await open(page, 't03');
+    const list = await page.evaluate((sel) => {
+      const ul = document.querySelector(`${sel} .deck-read ul`);
       if (!ul) return null;
       const li = ul.querySelector('li')!;
       const before = getComputedStyle(li, '::before');
@@ -142,389 +237,145 @@ test.describe('the type scale', () => {
         items: ul.querySelectorAll('li').length,
         listStyle: getComputedStyle(ul).listStyleType,
         marker: before.content,
-        colour: before.color,
-        accent: getComputedStyle(document.documentElement).getPropertyValue('--t-press').trim(),
+        radius: before.borderTopLeftRadius,
+        width: before.width,
       };
-    });
+    }, CARD);
     expect(list).not.toBeNull();
     expect(list!.items).toBe(2);
     expect(list!.listStyle).toBe('none');
-    expect(list!.marker).toContain('—');
+    // The coloured em-dash is gone (§2, DIA-412).
+    expect(list!.marker).not.toContain('—');
+    expect(parseFloat(list!.width)).toBeCloseTo(5, 0);
+    expect(parseFloat(list!.radius)).toBeGreaterThan(0);
   });
 
   test('consecutive items are one list, not a run of one-item lists', async ({ page }) => {
     // The renderer half of this is DIA-382; here it is what the reader sees.
     await open(page, 't01');
-    const shape = await page.evaluate(() => ({
-      lists: document.querySelectorAll('.deck-ov-body ul').length,
-      items: document.querySelectorAll('.deck-ov-body ul li').length,
-    }));
+    const shape = await page.evaluate((sel) => ({
+      lists: document.querySelectorAll(`${sel} .deck-read ul`).length,
+      items: document.querySelectorAll(`${sel} .deck-read ul li`).length,
+    }), CARD);
     expect(shape).toEqual({ lists: 1, items: 3 });
+  });
+
+  test('one highlight at most, and it is the accent tint', async ({ page }) => {
+    // §5's whole emphasis budget: one ==mark== and bold only as a list item's
+    // lead-in. Where the mark sits is a writing rule and the content issue's
+    // to enforce; that there is at most one, and that it is the soft accent
+    // tint rather than a colour of its own, is this screen's.
+    await open(page, 't01');
+    const m = await page.evaluate((sel) => {
+      const marks = [...document.querySelectorAll(`${sel} .deck-read mark`)];
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      return {
+        n: marks.length,
+        ground: marks[0] ? getComputedStyle(marks[0]).backgroundColor : null,
+        radius: marks[0] ? getComputedStyle(marks[0]).borderTopLeftRadius : null,
+        accent,
+      };
+    }, CARD);
+    expect(m.n).toBe(1);
+    expect(m.ground).not.toBe('rgba(0, 0, 0, 0)');
+    expect(parseFloat(m.radius!)).toBe(3);
   });
 });
 
-test.describe('the source chips', () => {
-  test('a chip names its type on the phone, where the desktop draws a dot alone', async ({ page }) => {
+test.describe('the citation glyph', () => {
+  test('a 20px round carrying a link mark, with no type name and no colour', async ({ page }) => {
+    // This reverses the earlier ruling that a chip names its type: the name
+    // made the mark ~90px wide, so it wrapped below its own sentence instead
+    // of ending it (§5, DIA-412).
     await open(page, 't03');
-    const chips = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-ov-body button.chip')].map((a) => ({
-        text: (a.textContent ?? '').trim(),
-        dot: !!a.querySelector('.chip-dot'),
-        n: a.querySelector('.chip-n')?.textContent ?? null,
-      })));
-    expect(chips.length).toBeGreaterThan(3);
-    expect(chips.every((c) => c.dot)).toBe(true);
-    expect(chips.every((c) => c.text.length > 0)).toBe(true);
+    const chips = await page.evaluate((sel) => {
+      const all = [...document.querySelectorAll<HTMLElement>(`${sel} .deck-read .chip`)];
+      const one = all[0]!;
+      const s = getComputedStyle(one);
+      return {
+        n: all.length,
+        glyph: all.every((c) => !!c.querySelector('svg.chip-link')),
+        named: all.some((c) => !!c.querySelector('.chip-type')),
+        dots: all.some((c) => !!c.querySelector('.chip-dot')),
+        height: one.getBoundingClientRect().height,
+        radius: parseFloat(s.borderTopLeftRadius),
+        ground: s.backgroundColor,
+      };
+    }, CARD);
+    expect(chips.n).toBeGreaterThan(2);
+    expect(chips.glyph).toBe(true);
+    expect(chips.named).toBe(false);
+    expect(chips.dots).toBe(false);
+    expect(chips.height).toBeCloseTo(20, 0);
+    expect(chips.radius).toBeGreaterThan(chips.height / 2);
+    expect(chips.ground).not.toBe('rgba(0, 0, 0, 0)');
   });
 
   test('a span resting on two claims says +1', async ({ page }) => {
     await open(page, 't01');
-    const ns = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-ov-body button.chip .chip-n')].map((e) => e.textContent));
+    const ns = await page.evaluate((sel) =>
+      [...document.querySelectorAll(`${sel} .deck-read .chip .chip-n`)].map((e) => e.textContent), CARD);
     expect(ns).toEqual(['+1']);
   });
 
-  test('the chip carries its type colour, and every type is distinguishable', async ({ page }) => {
+  test('on the card the glyph opens the sheet rather than linking to nothing', async ({ page }) => {
+    // The deck has no ledger under it, so `href="#c01"` would be a link to
+    // nowhere. The evidence is in the sheet, and the mark goes there (§5).
     await open(page, 't01');
-    const colours = await page.evaluate(() =>
-      [...document.querySelectorAll('.deck-ov-body button.chip .chip-dot')]
-        .map((e) => getComputedStyle(e).backgroundColor));
-    expect(new Set(colours).size).toBeGreaterThan(1);
-    expect(colours.every((c) => c !== 'rgba(0, 0, 0, 0)')).toBe(true);
+    const m = await page.evaluate((sel) => {
+      const all = [...document.querySelectorAll(`${sel} .deck-read .chip`)];
+      return {
+        anchors: all.filter((c) => c.tagName === 'A').length,
+        buttons: all.filter((c) => c.tagName === 'BUTTON').length,
+        opens: all.every((c) => c.getAttribute('data-open') === 'ov'),
+        popup: all.every((c) => c.getAttribute('aria-haspopup') === 'dialog'),
+        labelled: all.every((c) => (c.getAttribute('aria-label') ?? '').startsWith('המקורות למשפט')),
+      };
+    }, CARD);
+    expect(m.anchors).toBe(0);
+    expect(m.buttons).toBeGreaterThan(0);
+    expect(m.opens).toBe(true);
+    expect(m.popup).toBe(true);
+    expect(m.labelled).toBe(true);
   });
 });
 
-test.describe('the sources carousel', () => {
-  test('212px cards, outlet, a two-line quote and a date', async ({ page }) => {
-    await open(page, 't03');
-    const card = await page.evaluate(() => {
-      const li = document.querySelector('.deck-ov .deck-ov-card')!;
-      const q = li.querySelector('.deck-ov-card-quote')!;
-      return {
-        width: li.getBoundingClientRect().width,
-        head: (li.querySelector('.deck-ov-card-head')?.textContent ?? '').trim(),
-        clamp: getComputedStyle(q).webkitLineClamp,
-        quoteSize: getComputedStyle(q).fontSize,
-        date: (li.querySelector('.deck-ov-card-date')?.textContent ?? '').trim(),
-        label: li.querySelector('a,span[aria-label]')?.getAttribute('aria-label') ?? '',
-      };
-    });
-    expect(card.width).toBeCloseTo(212, 0);
-    expect(card.head.length).toBeGreaterThan(0);
-    expect(card.clamp).toBe('2');
-    expect(card.quoteSize).toBe('12.5px');
-    expect(card.date).toMatch(/\d{2}\.\d{2}\.\d{4}|\d{2}\.\d{4}|\d{4}/);
-    // §5: the card is the link. No קישור label anywhere on it.
-    expect(card.label).not.toContain('קישור');
-  });
-
-  test('one card per cited claim, in the order the chips are met', async ({ page }) => {
-    // The rail is deduplicated by first appearance. The drawers disagree with
-    // it on purpose - they answer what one sentence rests on, in the order it
-    // was argued - so the order is read off the body rather than off a chip.
+test.describe('what is no longer on the slide', () => {
+  test('no carousel, no pill and no drawer on the card', async ({ page }) => {
     await open(page, 't01');
-    const order = await page.evaluate(() => {
-      const cited: string[] = [];
-      for (const d of document.querySelectorAll('.deck-ov .deck-drawer')) {
-        for (const s of d.querySelectorAll('.deck-drawer-name')) {
-          const q = s.parentElement?.parentElement;
-          void q;
-        }
-      }
-      return {
-        cards: [...document.querySelectorAll('.deck-ov .deck-ov-card')].map((c) => c.getAttribute('data-claim')),
-        drawers: [...document.querySelectorAll('.deck-ov .deck-drawer')].map((d) => d.id),
-        chips: [...document.querySelectorAll('.deck-ov-body button.chip')].map((c) => c.getAttribute('aria-controls')),
-        cited,
-      };
-    });
-    // A chip per span, a drawer per chip, in the same order.
-    expect(order.chips).toEqual(order.drawers);
-    expect(order.cards.length).toBeGreaterThan(0);
-    expect(new Set(order.cards).size).toBe(order.cards.length);
+    const gone = await page.evaluate((sel) => ({
+      carousel: document.querySelectorAll(`${sel} .deck-ov-sources`).length,
+      cards: document.querySelectorAll(`${sel} .deck-ov-card`).length,
+      drawers: document.querySelectorAll(`${sel} .deck-drawer`).length,
+    }), CARD);
+    expect(gone).toEqual({ carousel: 0, cards: 0, drawers: 0 });
   });
 
-  test('the first card sits against the physical right edge', async ({ page }) => {
-    // §2's RTL trap: the rail is RTL, so "first" is right. Asserted on the box
-    // rather than on a property name that resolves differently per direction.
-    await open(page, 't03');
-    const rail = await rect(page, '.deck-ov .deck-ov-sources');
-    const first = await rect(page, '.deck-ov .deck-ov-card');
-    // The rail runs the full width and pads 20px, so the card's right edge
-    // lands where the text's does while a card can still reach the edge.
-    const ink = await rect(page, '.deck-ov-body > p:first-child');
-    expect(Math.round(first.right)).toBe(Math.round(ink.right));
-    expect(first.right).toBeLessThanOrEqual(rail.right + 0.5);
-  });
-});
-
-/**
- * DIA-386, 21 September. A chip stopped moving the carousel and started
- * opening a drawer under its own passage - an answer slide 5 can give too,
- * having chips and no carousel. The carousel keeps its place and its cards
- * and loses only its job as a target.
- */
-test.describe('a chip opens the evidence under its own passage', () => {
-  test('the chip is a disclosure, and the drawer is in flow under its block', async ({ page }) => {
+  test('the page itself never scrolls', async ({ page }) => {
     await open(page, 't01');
-    const before = await page.evaluate(() => ({
-      anchors: document.querySelectorAll('.deck-ov a.chip').length,
-      buttons: document.querySelectorAll('.deck-ov button.chip').length,
-      open: document.querySelectorAll('.deck-ov .deck-drawer:not([hidden])').length,
-    }));
-    expect(before.anchors).toBe(0);
-    expect(before.buttons).toBeGreaterThan(0);
-    expect(before.open).toBe(0);
-
-    const m = await page.evaluate(() => {
-      const chip = document.querySelectorAll<HTMLElement>('.deck-ov button.chip')[1]!;
-      chip.click();
-      const d = document.getElementById(chip.getAttribute('aria-controls')!)!;
-      const block = chip.closest('p, li')!;
-      return {
-        expanded: chip.getAttribute('aria-expanded'),
-        shown: !d.hasAttribute('hidden'),
-        // In flow directly beneath the block, so the text below moves down
-        // rather than being covered.
-        follows: block.parentElement === d.parentElement
-          ? [...d.parentElement!.children].indexOf(d) - [...d.parentElement!.children].indexOf(block) === 1
-          : d.getBoundingClientRect().top >= block.getBoundingClientRect().bottom - 1,
-        role: d.getAttribute('role'),
-        label: d.getAttribute('aria-label'),
-      };
-    });
-    expect(m.expanded).toBe('true');
-    expect(m.shown).toBe(true);
-    expect(m.follows).toBe(true);
-    expect(m.role).toBe('region');
-    expect(m.label).toBeTruthy();
-  });
-
-  test('one at a time; the chip toggles it; the × closes it', async ({ page }) => {
-    await open(page, 't01');
-    const openNth = (n: number) => page.evaluate((i) => {
-      document.querySelectorAll<HTMLElement>('.deck-ov button.chip')[i]!.click();
-    }, n);
-    const shown = () => page.evaluate(() =>
-      document.querySelectorAll('.deck-ov .deck-drawer:not([hidden])').length);
-    const expanded = () => page.evaluate(() =>
-      document.querySelectorAll('.deck-ov button.chip[aria-expanded="true"]').length);
-
-    await openNth(1); await page.waitForTimeout(250);
-    expect(await shown()).toBe(1);
-    // A second chip closes the first: two open drawers push the body twice.
-    await openNth(2); await page.waitForTimeout(250);
-    expect(await shown()).toBe(1);
-    expect(await expanded()).toBe(1);
-    // The same chip again closes it.
-    await openNth(2); await page.waitForTimeout(250);
-    expect(await shown()).toBe(0);
-    expect(await expanded()).toBe(0);
-
-    await openNth(1); await page.waitForTimeout(250);
-    await page.click('.deck-ov .deck-drawer:not([hidden]) .deck-drawer-x');
-    await page.waitForTimeout(250);
-    expect(await shown()).toBe(0);
-  });
-
-  test('a scroll does not close it, and leaving the slide does', async ({ page }) => {
-    await open(page, 't01');
-    await page.evaluate(() => document.querySelectorAll<HTMLElement>('.deck-ov button.chip')[1]!.click());
-    await page.waitForTimeout(250);
-
-    // On a scrolling column, tapping elsewhere is a scroll - a reader would
-    // lose the drawer by moving.
-    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop += 90; });
-    await page.waitForTimeout(250);
-    expect(await page.evaluate(() =>
-      document.querySelectorAll('.deck-ov .deck-drawer:not([hidden])').length)).toBe(1);
-
-    await page.goto('/item/t01/#3');
-    await page.waitForSelector('.deck-stack');
-    await page.waitForTimeout(400);
-    await page.goto('/item/t01/#2');
-    await page.waitForSelector('.deck-ov-scroll');
-    await page.waitForTimeout(400);
-    expect(await page.evaluate(() =>
-      document.querySelectorAll('.deck-drawer:not([hidden])').length)).toBe(0);
-  });
-
-  test('a +N chip stacks its claims in cite order, not the carousel order', async ({ page }) => {
-    await open(page, 't01');
-    const m = await page.evaluate(() => {
-      const chip = [...document.querySelectorAll<HTMLElement>('.deck-ov button.chip')]
-        .find((c) => c.querySelector('.chip-n'))!;
-      chip.click();
-      const d = document.getElementById(chip.getAttribute('aria-controls')!)!;
-      return {
-        srcs: d.querySelectorAll('.deck-drawer-src').length,
-        quotes: [...d.querySelectorAll('.deck-drawer-quote')].map((q) => (q.textContent ?? '').trim()),
-        ways: d.querySelectorAll('.deck-drawer-go').length,
-        rule: getComputedStyle(d.querySelectorAll('.deck-drawer-src')[1]!).borderTopWidth,
-      };
-    });
-    expect(m.srcs).toBe(2);
-    expect(m.ways).toBe(2);
-    expect(m.quotes.every((q) => q.startsWith('„') && q.endsWith('“'))).toBe(true);
-    expect(parseFloat(m.rule)).toBeGreaterThan(0);
-  });
-
-  test('the close control is placed physically, clear of the date', async ({ page }) => {
-    // The trap the mock found: inset-inline-end and the date's
-    // margin-inline-start:auto resolve to the same side on this page, so a
-    // logical property would put the × on top of the date.
-    await open(page, 't01');
-    const m = await page.evaluate(() => {
-      document.querySelectorAll<HTMLElement>('.deck-ov button.chip')[1]!.click();
-      const d = document.querySelector('.deck-drawer:not([hidden])')!;
-      const r = d.getBoundingClientRect();
-      const x = d.querySelector('.deck-drawer-x')!.getBoundingClientRect();
-      const date = d.querySelector('.deck-drawer-date')!.getBoundingClientRect();
-      return { fromLeft: Math.round(x.left - r.left), overlaps: x.right > date.left + 0.5 };
-    });
-    expect(m.fromLeft).toBeLessThan(12);
-    expect(m.overlaps).toBe(false);
-  });
-
-  test('opening below the fold scrolls the minimum needed', async ({ page }) => {
-    await open(page, 't01');
-    const m = await page.evaluate(() => {
-      const box = document.querySelector('.deck-ov-scroll')!;
-      // A chip near the foot of the column, so its drawer would open off-screen.
-      const chips = [...document.querySelectorAll<HTMLElement>('.deck-ov button.chip')];
-      const chip = chips.reverse().find((c) => {
-        const r = c.getBoundingClientRect();
-        return r.bottom < box.getBoundingClientRect().bottom && r.bottom > box.getBoundingClientRect().bottom - 220;
-      }) ?? chips[0]!;
-      const passage = chip.closest('p, li')!.getBoundingClientRect().top;
-      const before = box.scrollTop;
-      chip.click();
-      return { id: chip.getAttribute('aria-controls')!, before, passage };
-    });
-    await page.waitForTimeout(600);
-    const after = await page.evaluate((id) => {
-      const box = document.querySelector('.deck-ov-scroll')!;
-      const d = document.getElementById(id)!;
-      const b = box.getBoundingClientRect();
-      const r = d.getBoundingClientRect();
-      return { top: box.scrollTop, visible: r.bottom <= b.bottom + 1, drawerTop: r.top - b.top };
-    }, m.id);
-    expect(after.visible).toBe(true);
-    // Never more than the minimum: the drawer's own top may not be pushed
-    // above the column, because the passage above it has to stay on screen.
-    expect(after.drawerTop).toBeGreaterThanOrEqual(-1);
-  });
-});
-
-test.describe('the body scrolls and the rest does not', () => {
-  test('t01 overruns the column; t03 and t05 do not', async ({ page }) => {
-    for (const [id, over] of [['t01', true], ['t03', false], ['t05', false]] as const) {
-      await open(page, id);
-      const room = await page.evaluate(() => {
-        const b = document.querySelector('.deck-ov-scroll')!;
-        return b.scrollHeight - b.clientHeight;
-      });
-      expect(over ? room > 0 : room === 0, `${id} should ${over ? '' : 'not '}overrun`).toBe(true);
-    }
-  });
-
-  test('the carousel travels with the text, and waits below it on a long item', async ({ page }) => {
-    // The reading ends at the sources. On an item that overruns the column they
-    // are past the last sentence rather than sitting over it, so a reader meets
-    // them by finishing rather than by looking down.
-    await open(page, 't01');
-    const hidden = await page.evaluate(() => {
-      const sc = document.querySelector('.deck-ov-scroll')!.getBoundingClientRect();
-      return document.querySelector('.deck-ov .deck-ov-sources')!.getBoundingClientRect().top >= sc.bottom;
-    });
-    expect(hidden, 'the carousel is below the fold before the text is read').toBe(true);
-
-    const start = Math.round((await rect(page, '.deck-ov .deck-ov-sources')).top);
-    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 99999; });
-    await page.waitForTimeout(200);
-    const end = await page.evaluate(() => {
-      const sc = document.querySelector('.deck-ov-scroll')!.getBoundingClientRect();
-      const r = document.querySelector('.deck-ov .deck-ov-sources')!.getBoundingClientRect();
-      return { top: Math.round(r.top), bottom: Math.round(r.bottom), scBottom: Math.round(sc.bottom) };
-    });
-    expect(end.top).toBeLessThan(start);
-    expect(end.bottom).toBeLessThanOrEqual(end.scBottom + 1);
-  });
-
-  test('on a short item it still falls to the foot of the column', async ({ page }) => {
-    // §5's screen. margin-top:auto against a min-height:100% inner column, so
-    // a thin record does not leave the sources floating under two sentences.
-    await open(page, 't05');
-    const scroll = await rect(page, '.deck-ov-scroll');
-    const rail = await rect(page, '.deck-ov .deck-ov-sources');
-    const body = await rect(page, '.deck-ov-body');
-    expect(Math.round(rail.bottom)).toBe(Math.round(scroll.bottom));
-    expect(rail.top - body.bottom).toBeGreaterThan(14);
-  });
-
-  test('scrolling leaves the chip and the chrome where they are', async ({ page }) => {
-    await open(page, 't01');
-    const where = async () => ({
-      title: Math.round((await rect(page, '.deck-ov-title')).top),
-      dots: Math.round((await rect(page, '.deck-dots')).top),
-      foot: Math.round((await rect(page, '.deck-foot')).top),
-    });
-    const before = await where();
-
-    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 1000; });
-    await page.waitForTimeout(200);
-
-    const moved = await page.evaluate(() => document.querySelector('.deck-ov-scroll')!.scrollTop);
-    expect(moved).toBeGreaterThan(0);
-    expect(await where()).toEqual(before);
-  });
-
-  test('the body scrolls down and never sideways', async ({ page }) => {
-    // overflow-y:auto computes overflow-x to auto, so anything wider than the
-    // scroller turns the body into a horizontal scroller - and then a swipe
-    // started in the middle of the text scrolls nothing instead of changing
-    // slide, because the browser hands the gesture to the nearest scroller.
-    // The carousel keeps its own horizontal axis; it is a carousel.
-    for (const id of ['t01', 't03', 't05'] as const) {
-      await open(page, id);
-      const axes = await page.evaluate(() => {
-        const sc = document.querySelector('.deck-ov-scroll')!;
-        const rail = document.querySelector('.deck-ov .deck-ov-sources')!;
-        return {
-          bodyX: sc.scrollWidth - sc.clientWidth,
-          railX: rail.scrollWidth - rail.clientWidth,
-        };
-      });
-      expect(axes.bodyX, `${id}: the body must not scroll sideways`).toBe(0);
-      expect(axes.railX, `${id}: the carousel still does`).toBeGreaterThan(0);
-    }
-  });
-
-  test('the page itself never scrolls, whatever the body does', async ({ page }) => {
-    await open(page, 't01');
-    await page.evaluate(() => { document.querySelector('.deck-ov-scroll')!.scrollTop = 1000; });
-    await page.waitForTimeout(200);
-    const page_ = await page.evaluate(() => ({
+    const m = await page.evaluate(() => ({
       y: window.scrollY,
       doc: document.documentElement.scrollHeight - document.documentElement.clientHeight,
       at: document.querySelector('.deck')!.getAttribute('data-at'),
     }));
-    expect(page_.y).toBe(0);
-    expect(page_.doc).toBeLessThanOrEqual(0);
-    expect(page_.at).toBe('1');
+    expect(m.y).toBe(0);
+    expect(m.doc).toBeLessThanOrEqual(0);
+    expect(m.at).toBe('1');
   });
 });
 
 test.describe('the floor', () => {
   test('one claim and one span still make a screen', async ({ page }) => {
     await open(page, 't02');
-    const m = await page.evaluate(() => ({
-      chips: document.querySelectorAll('.deck-ov-body button.chip').length,
-      cards: document.querySelectorAll('.deck-ov .deck-ov-card').length,
-      body: document.querySelector('.deck-ov-body')!.textContent!.trim().length,
-    }));
+    const m = await page.evaluate((sel) => ({
+      chips: document.querySelectorAll(`${sel} .deck-read .chip`).length,
+      cards: document.querySelectorAll('#sheet-ov .deck-ov-card').length,
+      read: document.querySelector(`${sel} .deck-read`)!.textContent!.trim().length,
+      n: (document.querySelector(`${sel} .deck-more-n`)?.textContent ?? '').trim(),
+    }), CARD);
     expect(m.chips).toBe(1);
     expect(m.cards).toBe(1);
-    expect(m.body).toBeGreaterThan(40);
+    expect(m.read).toBeGreaterThan(40);
+    expect(m.n).toBe('מקור אחד');
   });
 });

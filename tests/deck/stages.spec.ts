@@ -181,51 +181,84 @@ test.describe('where a stage opens', () => {
 });
 
 test.describe('the head group', () => {
-  test('the tag is the page title, and only the current stage wears the pill', async ({ page }) => {
+  test('the stage name is the page heading, and the current one says so beside it', async ({ page }) => {
+    // §6 took the filled tag, the definition and the hairline off the page:
+    // colour stays in the locator, and the head's job is to say which stage
+    // this is, not to decorate it (DIA-412).
     await open(page, 't01');
     const m = await page.evaluate(() => {
       const pages = [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')];
-      const tag = pages[0]!.querySelector('.deck-stage-tag')!;
-      const s = getComputedStyle(tag);
+      const name = pages[0]!.querySelector('.deck-shead-n')!;
+      const s = getComputedStyle(name);
       return {
-        text: (tag.textContent ?? '').trim(),
+        text: (name.firstChild?.textContent ?? '').trim(),
         size: s.fontSize,
         weight: s.fontWeight,
-        radius: s.borderTopLeftRadius,
-        pills: pages.map((p) => !!p.querySelector('.deck-stage-now')),
-        defs: pages.map((p) => (p.querySelector('.deck-stage-def')?.textContent ?? '').trim()),
-        ages: pages.map((p) => (p.querySelector('.deck-stage-age')?.textContent ?? '').trim()),
+        current: pages.map((p) => !!p.querySelector('.deck-shead-n em')),
+        dates: pages.map((p) => (p.querySelector('.deck-shead-d')?.textContent ?? '').trim()),
+        tags: pages.filter((p) => p.querySelector('.deck-stage-tag')).length,
+        rules: pages.filter((p) => parseFloat(getComputedStyle(p.querySelector('.deck-shead')!).borderBottomWidth) > 0).length,
       };
     });
-    expect(m.text).toBe('1 · זוהה');
-    expect(m.size).toBe('19px');
+    expect(m.text).toBe('זוהה');
+    expect(m.size).toBe('24px');
     expect(m.weight).toBe('700');
-    expect(m.radius).toBe('3px');
-    // Only the last, because on this slide the current stage is always the last
-    // one reached - which is also why the locator no longer rings it.
-    expect(m.pills).toEqual([false, false, false, true]);
-    expect(m.defs.every((d) => d.length > 0)).toBe(true);
-    // A definition may not use its own term.
-    expect(m.defs[3]).not.toContain('יושם');
-    expect(m.ages.every((a) => /\d/.test(a))).toBe(true);
+    // Only the last, because on this slide the current stage is always the
+    // last one reached - which is also why the locator no longer rings it.
+    expect(m.current).toEqual([false, false, false, true]);
+    expect(m.dates.every((d) => /\d/.test(d))).toBe(true);
+    // The tag reappears in the sheet's bar and nowhere else.
+    expect(m.tags).toBe(0);
+    expect(m.rules).toBe(0);
   });
 
-  test('stages 3 and 6 still say their definition is unwritten', async ({ page }) => {
-    // DIA-367. Rendered rather than left blank, so a review of the page can
-    // see the hole instead of reading the gap as intentional.
-    await open(page, 't01', '#3-s3');
-    const def = await page.evaluate(() =>
-      (document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="3"] .deck-stage-def')?.textContent ?? '').trim());
-    expect(def).toBe('הגדרת השלב טרם נכתבה');
-  });
-
-  test('the hairline stops where the text does, not at the frame', async ({ page }) => {
+  test('הסטטוס הנוכחי is small accent text beside the name, not a pill', async ({ page }) => {
     await open(page, 't01');
-    const head = await rect(page, '.deck-stage-head');
-    const body = await rect(page, '.deck-stage-body');
+    const m = await page.evaluate(() => {
+      const em = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-shead-n em')!;
+      const s = getComputedStyle(em);
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      return {
+        text: (em.textContent ?? '').trim(),
+        size: s.fontSize,
+        weight: s.fontWeight,
+        radius: parseFloat(s.borderTopLeftRadius),
+        ground: s.backgroundColor,
+        style: s.fontStyle,
+        accent,
+        ink: s.color,
+      };
+    });
+    expect(m.text).toBe('הסטטוס הנוכחי');
+    expect(m.size).toBe('12.5px');
+    expect(m.weight).toBe('600');
+    expect(m.style).toBe('normal');
+    // Not a pill: no ground and no corner.
+    expect(m.radius).toBe(0);
+    expect(m.ground).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('the stage definition is not on the item page at all', async ({ page }) => {
+    // Ruled 21 September: the place to explain what a stage means is אודות,
+    // once, not under every stage of every item. This is also what takes
+    // DIA-367's unwritten definitions off this page's critical path.
+    await open(page, 't01', '#3-s3');
+    const m = await page.evaluate(() => ({
+      defs: document.querySelectorAll('.deck-stage-def').length,
+      text: document.querySelector('.deck-track > .deck-slide:nth-child(3)')!.textContent ?? '',
+    }));
+    expect(m.defs).toBe(0);
+    expect(m.text).not.toContain('הגדרת השלב טרם נכתבה');
+  });
+
+  test('the head is in the card\'s column, clear of the locator', async ({ page }) => {
+    await open(page, 't01');
+    const head = await rect(page, '.deck-track > .deck-slide:nth-child(3) .deck-shead');
+    const read = await rect(page, '.deck-track > .deck-slide:nth-child(3) .deck-stage .deck-read');
     const frame = await rect(page, '.deck');
-    expect(Math.round(head.right)).toBe(Math.round(body.right));
-    expect(head.right).toBeLessThan(frame.right - 20);
+    expect(Math.round(head.right)).toBe(Math.round(read.right));
+    // §6's column: 36px on the physical right, to clear the rungs.
+    expect(Math.round(frame.right - head.right)).toBe(36);
   });
 });
 
@@ -318,20 +351,24 @@ test.describe('the page body', () => {
     await open(page, 't01', '#3-s2');
     const m = await page.evaluate(() => {
       const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"]')!;
-      const lead = p.querySelector('.deck-stage-body > p:first-child');
+      const id = p.querySelector('.deck-card')!.getAttribute('data-card')!;
+      const lead = p.querySelector('.deck-read > p:first-child');
       return {
         lead: lead ? getComputedStyle(lead).fontSize : null,
-        chips: p.querySelectorAll('button.chip').length,
-        named: [...p.querySelectorAll('button.chip')].every((a) => (a.textContent ?? '').trim().length > 0),
-        cards: p.querySelectorAll('.deck-ov-card').length,
+        chips: p.querySelectorAll('.deck-read .chip').length,
+        glyphs: [...p.querySelectorAll('.deck-read .chip')].every((c) => !!c.querySelector('svg.chip-link')),
+        // The sources are in the sheet now, not on the slide.
+        onSlide: p.querySelectorAll('.deck-ov-card').length,
+        inSheet: document.querySelectorAll(`#sheet-${id} .deck-ov-card`).length,
       };
     });
-    // §6 draws the lead at 17px here and §5 draws it at 18px on slide 2. That
-    // is the screens' own difference, and it is deliberate.
-    expect(m.lead).toBe('17px');
+    // §5's scale, unchanged in kind: the lead at 21px against 17 for the body.
+    // The 15/17 pair §6 used to draw is gone with the rest of the old page.
+    expect(m.lead).toBe('21px');
     expect(m.chips).toBeGreaterThan(0);
-    expect(m.named).toBe(true);
-    expect(m.cards).toBeGreaterThan(0);
+    expect(m.glyphs).toBe(true);
+    expect(m.onSlide).toBe(0);
+    expect(m.inSheet).toBeGreaterThan(0);
   });
 
   test('a reached stage with no overview falls back to its claims', async ({ page }) => {
@@ -340,73 +377,73 @@ test.describe('the page body', () => {
     await open(page, 't03', '#3-s1');
     const m = await page.evaluate(() => {
       const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"]')!;
+      const id = p.querySelector('.deck-card')!.getAttribute('data-card')!;
       return {
         fallback: p.querySelectorAll('.deck-stage-claim').length,
         quotes: [...p.querySelectorAll('.deck-stage-quote')].map((q) => (q.textContent ?? '').trim()),
-        chips: p.querySelectorAll('button.chip').length,
-        cards: p.querySelectorAll('.deck-ov-card').length,
+        chips: p.querySelectorAll('.deck-read .chip').length,
+        cards: document.querySelectorAll(`#sheet-${id} .deck-ov-card`).length,
       };
     });
     expect(m.fallback).toBeGreaterThan(0);
     expect(m.quotes.every((q) => q.startsWith('„') && q.endsWith('“'))).toBe(true);
-    // No overview means no cite spans, so no chips - the card is the link.
+    // No overview means no cite spans, so no glyphs - the card is the link.
     expect(m.chips).toBe(0);
     expect(m.cards).toBe(m.fallback);
   });
 
-  test('a chip on a stage page opens its drawer, and the stack scrolls to it', async ({ page }) => {
-    // The same interaction as slide 2 - DIA-386 gives it to every slide that
-    // has chips, and the deck owns it rather than any one screen.
+  test('a stage page\'s glyph opens that stage\'s own sheet', async ({ page }) => {
+    // The drawer is the same interaction slide 2 has - DIA-386 gave it to
+    // every slide that cites - but since DIA-413 it lives in the sheet, and
+    // each stage has a sheet of its own.
     await open(page, 't01', '#3-s2');
     const m = await page.evaluate(() => {
       const p = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"]')!;
-      const chip = p.querySelector<HTMLElement>('button.chip')!;
-      chip.click();
-      const d = document.getElementById(chip.getAttribute('aria-controls')!)!;
-      return {
-        shown: !d.hasAttribute('hidden'),
-        expanded: chip.getAttribute('aria-expanded'),
-        inStage: d.closest('.deck-stage') === p,
-        quote: (d.querySelector('.deck-drawer-quote')?.textContent ?? '').trim().length,
-      };
+      const id = p.querySelector('.deck-card')!.getAttribute('data-card')!;
+      const chip = p.querySelector<HTMLElement>('.deck-read .chip')!;
+      return { id, opens: chip.getAttribute('data-open'), controls: chip.getAttribute('aria-controls') };
     });
-    expect(m.shown).toBe(true);
-    expect(m.expanded).toBe('true');
-    expect(m.inStage).toBe(true);
-    expect(m.quote).toBeGreaterThan(0);
+    expect(m.opens).toBe(m.id);
+    expect(m.controls).toBe(`sheet-${m.id}`);
 
-    await page.waitForTimeout(500);
-    expect(await page.evaluate(() => {
-      const d = document.querySelector('.deck-drawer:not([hidden])')!;
-      const b = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.getBoundingClientRect();
-      return d.getBoundingClientRect().bottom <= b.bottom + 1;
-    })).toBe(true);
-  });
-
-  test('the carousel is no longer a target, on any slide', async ({ page }) => {
-    await open(page, 't01', '#3-s2');
     await page.evaluate(() =>
-      document.querySelector<HTMLElement>('.deck-stage[data-stage="2"] button.chip')!.click());
-    await page.waitForTimeout(400);
-    // Nothing in the body points at it any more: no card is marked.
-    expect(await page.evaluate(() =>
-      document.querySelectorAll('.deck-ov-card[data-on]').length)).toBe(0);
+      document.querySelector<HTMLElement>('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="2"] .deck-read .chip')!.click());
+    await page.waitForTimeout(600);
+    const after = await page.evaluate((id) => {
+      const sheet = document.getElementById(`sheet-${id}`)!;
+      return {
+        open: !sheet.hasAttribute('hidden'),
+        drawers: sheet.querySelectorAll('.deck-drawer').length,
+        tag: (sheet.querySelector('.deck-sheet-chip')?.textContent ?? '').trim(),
+      };
+    }, m.id);
+    expect(after.open).toBe(true);
+    expect(after.drawers).toBeGreaterThan(0);
+    expect(after.tag).toBe('2 · הוכר');
   });
 
-  test('the evidence map is on stage 1, and before the carousel', async ({ page }) => {
+  test('the evidence map is on stage 1, in its sheet, and before the carousel', async ({ page }) => {
+    // §6: the map comes before the carousel - which since DIA-413 puts it in
+    // the sheet, below the reading, under מקורות.
     await open(page, 't01', '#3-s1');
-    const m = await page.evaluate(() => {
-      const one = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"]')!;
-      const map = one.querySelector('.deck-stage-map');
-      const rail = one.querySelector('.deck-ov-sources');
+    const id = await page.evaluate(() =>
+      document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"] .deck-card')!
+        .getAttribute('data-card')!);
+    await page.evaluate((s) => document.querySelector<HTMLElement>(`.deck-card[data-card="${s}"] .deck-more`)!.click(), id);
+    await page.waitForTimeout(600);
+    const m = await page.evaluate((s) => {
+      const sheet = document.getElementById(`sheet-${s}`)!;
+      const map = sheet.querySelector('.deck-stage-map');
+      const rail = sheet.querySelector('.deck-ov-sources');
       return {
         onOne: !!map?.querySelector('svg'),
         before: !!map && !!rail &&
           map.getBoundingClientRect().top < rail.getBoundingClientRect().top,
-        elsewhere: document.querySelectorAll('.deck-stage:not([data-stage="1"]) .deck-stage-map').length,
+        elsewhere: [...document.querySelectorAll('.deck-stage-map')]
+          .filter((x) => !x.closest(`#sheet-${s}`)).length,
         width: map ? Math.round(map.getBoundingClientRect().width) : 0,
       };
-    });
+    }, id);
     expect(m.onOne).toBe(true);
     expect(m.before).toBe(true);
     expect(m.elsewhere).toBe(0);
@@ -423,7 +460,7 @@ test.describe('the footer', () => {
       document.querySelectorAll('.deck-mid .deck-stage-arrows button').length)).toBe(2);
 
     await page.goto('/item/t01/#2');
-    await page.waitForSelector('.deck-ov-scroll');
+    await page.waitForSelector('.deck-card[data-card="ov"]');
     await page.waitForTimeout(400);
     expect(await page.evaluate(() =>
       document.querySelectorAll('.deck-mid .deck-stage-arrows').length)).toBe(0);

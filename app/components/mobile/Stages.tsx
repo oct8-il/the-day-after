@@ -1,16 +1,15 @@
+import { Fragment } from 'react';
 import { Annotated } from '@/app/components/Annotated';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { citedIds } from '@/lib/annotation';
 import { STAGES, TYPES, type Claim, type Incident } from '@/lib/data';
-import {
-  stageDefinition, stageAge, stageAbsence, checkingBody, sinceLabel, NOT_YET_DOCUMENTED,
-} from '@/lib/deck';
+import { stageAge, stageAbsence, checkingBody, sinceLabel, NOT_YET_DOCUMENTED } from '@/lib/deck';
 import { daysAfter, daysWaiting } from '@/lib/days';
 import {
   reached as reachedStages, unreached as unreachedStages, stageDate, stageOf, type Stage,
 } from '@/lib/stage';
-import { StagesShell, type Rung, type StackKind, type StagePage } from './StagesShell';
-import type { SourceCard } from './SourceRail';
+import { cardAndSheet, type Parts, type SourceCard } from './Card';
+import { Locator, StagesShell, type Rung, type StackKind, type StagePage } from './StagesShell';
 
 /**
  * Slides 3 and 4 - docs/mobile-item.html §6 and §7.
@@ -19,6 +18,10 @@ import type { SourceCard } from './SourceRail';
  * item reached and מה עוד לא נעשה the ones it has not. §7 is written as a list
  * of what differs, and almost all of it turns out to be what a page *holds*
  * rather than how the stack behaves.
+ *
+ * Since DIA-413 a stage page is §5's card, and its reading continues in the
+ * same sheet slide 2 uses - so this file builds pairs and hands the sheets
+ * back separately, because a sheet may not live inside the track (Card.tsx).
  *
  * This half runs on the server because the body reads the taxonomy and the
  * places off disk. The stack, the locator and the pill are StagesShell's.
@@ -33,6 +36,29 @@ const cardOf = (c: Claim): SourceCard => ({
   date: c.date,
   url: c.url,
 });
+
+/**
+ * §6's head group. Four quiet lines and then the reading: no filled tag, no
+ * definition and no hairline rule - colour stays in the locator, and the
+ * head's job is to say which stage this is, not to decorate it (DIA-412).
+ *
+ * It is part of both columns. The sheet's body opens with the same group in
+ * the place it has on the card, or the reading below would start 70px higher
+ * than it did on the slide.
+ */
+function Head({ he, current, age }: { he: string; current: boolean; age: string | null }) {
+  return (
+    <div className="deck-shead">
+      <h2 className="deck-shead-n">
+        {he}
+        {/* The only place the current stage is named on the page, now that
+            the locator does not ring it. Small accent text, not a pill. */}
+        {current && <em>הסטטוס הנוכחי</em>}
+      </h2>
+      {age && <div className="deck-shead-d">{age}</div>}
+    </div>
+  );
+}
 
 /**
  * A reached stage with no written overview falls back to its claims. An
@@ -95,7 +121,12 @@ function Absence({ stage, current, days }: { stage: number; current: number; day
   );
 }
 
-export function Stages({ inc, slide, kind }: { inc: Incident; slide: number; kind: StackKind }) {
+export function stagesParts({ inc, slide, kind }: {
+  inc: Incident;
+  /** This slide's index in the deck, so the stack can claim the URL's tail. */
+  slide: number;
+  kind: StackKind;
+}): Parts {
   const has = new Set<number>(reachedStages(inc));
   const current = stageOf(inc);
   const mine = kind === 'reached' ? reachedStages(inc) : unreachedStages(inc);
@@ -112,58 +143,78 @@ export function Stages({ inc, slide, kind }: { inc: Incident; slide: number; kin
   // the wait belongs to the item, not to the stage that has not happened.
   const waited = daysWaiting(stageDate(inc, current));
 
-  const pages: StagePage[] = STAGES
+  const label = kind === 'reached' ? 'מה נעשה מאז' : 'מה עוד לא נעשה';
+
+  const built = STAGES
     .filter((x) => shown.has(x.n))
     .map((x) => {
+      const id = `st${slide}-${x.n}`;
+      const on = kind === 'reached' ? stageDate(inc, x.n as Stage) : null;
+      const head = (
+        <Head
+          he={x.he}
+          current={kind === 'reached' && x.n === current}
+          age={kind === 'reached' ? stageAge(on, on ? daysAfter(on) : null) : NOT_YET_DOCUMENTED}
+        />
+      );
+
+      // §7: no citations, no carousel and therefore no button and no sheet.
+      // This slide's card is composed rather than authored - it fits the frame
+      // by construction, so there is nothing to cut and nothing to continue.
       if (kind === 'unreached') {
         return {
-          head: {
-            n: x.n, he: x.he, color: null,
-            definition: stageDefinition(x.n),
-            age: NOT_YET_DOCUMENTED,
-            current: false,
-          },
-          cards: [],
-          body: <Absence stage={x.n} current={current} days={waited} />,
+          n: x.n, he: x.he, current: false,
+          ...cardAndSheet({
+            id, label, head,
+            card: <Absence stage={x.n} current={current} days={waited} />,
+            aside: <Locator rail={rail} on={x.n} />,
+          }),
         };
       }
 
       const claims = inc.claims.filter((c) => c.asserts_stage === x.n);
       const summary = inc.summaries?.find((s) => s.stage === x.n)?.text ?? null;
 
-      // With an overview, the rail carries the sources it cites, in the order
-      // the chips are met. Without one, it carries the stage's own - the body
-      // gives the words and the card gives the link.
+      // With an overview, the carousel carries the sources it cites, in the
+      // order the glyphs are met. Without one, it carries the stage's own -
+      // the body gives the words and the card gives the link.
       const ids = summary ? citedIds(summary) : claims.map((c) => c.id);
       const cards = ids
-        .map((id) => inc.claims.find((c) => c.id === id))
+        .map((cid) => inc.claims.find((c) => c.id === cid))
         .filter((c): c is Claim => !!c && !!c.quote)
         .map(cardOf);
 
-      const on = stageDate(inc, x.n as Stage);
       const pins = x.n === 1 ? pinsOf(claims) : [];
 
       return {
-        head: {
-          n: x.n, he: x.he, color: x.color,
-          definition: stageDefinition(x.n),
-          age: stageAge(on, on ? daysAfter(on) : null),
-          current: x.n === current,
-        },
-        cards,
-        body: (
-          <>
-            {summary
-              ? <Annotated text={summary} claims={inc.claims} chip="named" drawers={`st${x.n}`} />
-              : <Claims claims={claims} />}
-            {pins.length > 0 && (
-              <div className="deck-stage-map"><EvidenceMap pins={pins} /></div>
-            )}
-          </>
-        ),
+        n: x.n, he: x.he, current: x.n === current,
+        ...cardAndSheet({
+          id, label, head, cards, count: cards.length,
+          chip: (
+            <span className="deck-stage-tag" style={{ ['--c' as string]: x.color }}>
+              {x.n} · {x.he}
+            </span>
+          ),
+          card: summary
+            ? <Annotated text={summary} claims={inc.claims} chip="glyph" opens={id} />
+            : <Claims claims={claims} />,
+          sheet: summary
+            ? <Annotated text={summary} claims={inc.claims} chip="glyph" drawers={`st${x.n}`} />
+            : <Claims claims={claims} />,
+          aside: <Locator rail={rail} on={x.n} />,
+          // §6: stage 1 hosts the evidence map, and the map comes before the
+          // carousel - which puts it in the sheet, under מקורות.
+          tail: pins.length > 0 ? <div className="deck-stage-map"><EvidenceMap pins={pins} /></div> : null,
+        }),
       };
     });
 
-  if (!pages.length) return null;
-  return <StagesShell slide={slide} kind={kind} pages={pages} rail={rail} current={current} />;
+  if (!built.length) return { card: null, sheet: null };
+
+  const pages: StagePage[] = built.map((b) => ({ n: b.n, he: b.he, current: b.current, card: b.card }));
+
+  return {
+    card: <StagesShell slide={slide} kind={kind} pages={pages} rail={rail} current={current} />,
+    sheet: <>{built.map((b) => <Fragment key={b.n}>{b.sheet}</Fragment>)}</>,
+  };
 }

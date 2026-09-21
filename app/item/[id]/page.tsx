@@ -14,8 +14,8 @@ import { CitationLinks } from '@/app/components/CitationLinks';
 import { Header } from '@/app/components/Header';
 import { Deck } from '@/app/components/mobile/Deck';
 import { Gate, GateGround, type GateRung } from '@/app/components/mobile/Gate';
-import { Overview } from '@/app/components/mobile/Overview';
-import { Stages } from '@/app/components/mobile/Stages';
+import { overviewParts } from '@/app/components/mobile/Overview';
+import { stagesParts } from '@/app/components/mobile/Stages';
 import { StageArrows } from '@/app/components/mobile/StagesShell';
 import { sourceLine } from '@/lib/deck';
 import { reached as reachedStages, unreached as unreachedStages, stageDate } from '@/lib/stage';
@@ -127,6 +127,13 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     };
   })();
 
+  /** The phone deck's slides 2-4: each hands back a card and its sheet. */
+  const phone = {
+    ov: overviewParts({ summary: inc.summary, claims: inc.claims }),
+    st: stagesParts({ inc, slide: 2, kind: 'reached' }),
+    gap: deck.hasGap ? stagesParts({ inc, slide: 3, kind: 'unreached' }) : null,
+  };
+
   const chapters = [
     { n: 1, t: 'הבעיה', color: 'var(--s2)', d: 'מה נכשל' },
     { n: 2, t: 'ההתקדמות', color: S.color, d: 'מה נעשה מאז' },
@@ -144,14 +151,17 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           its slides name themselves. The breadcrumb's leaf is the one piece of
           visible chrome that wants data - itemNumber() exists and is tested,
           and Phase 3 wires it. */}
+      {/* The reading sheets are rendered beside the track, never in it: a
+          sheet inside the horizontal scroller is the crossing every fault of
+          these screens came from, and `inert` cannot be lifted off a subtree
+          of an inert tree (DIA-413). */}
       <Deck
         crumbs={{ root: '7 באוקטובר', parent: parent.he, leaf: gate.leaf }}
         slides={[
           <Gate key="gate" {...gate.props} />,
-          <Overview key="overview" summary={inc.summary} claims={inc.claims} />,
-          <Stages key="stages" inc={inc} slide={2} kind="reached" />,
-          deck.hasGap ? <Stages key="gap" inc={inc} slide={3} kind="unreached" /> : null,
+          phone.ov.card, phone.st.card, phone.gap?.card ?? null,
         ]}
+        sheets={[null, phone.ov.sheet, phone.st.sheet, phone.gap?.sheet ?? null]}
         omit={deck.omit}
         mid={[
           null, null,

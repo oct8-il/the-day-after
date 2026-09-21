@@ -488,6 +488,61 @@ add(`<div>
 <p>Removing the click by itself would have left tabs that do nothing when activated, which is worse than no tabs, so the row is presentational: spans, <span class="id">aria-hidden</span>, no roles. Nothing is lost by that. The count it carried is in each slide's own label, and every route it offered is still there — which is exactly why §3 calls jump mode safe to leave undiscovered.</p>
 <p>The lesson is about the tests rather than the dots. Five of them used the dot click as their way between slides, so an invented interaction had quietly become load-bearing in the suite. They use the arrow keys now — the one route that works from every slide, the gate included.</p>`);
 
+add(`<div>
+  <span class="tag done">ux backlog · 3–9</span>
+  <h2>The backlog, worked as a block</h2>
+  <p class="sub">Seven issues from the design session in one sprint, on the chrome rather than on any slide. Six landed as specified; one was rejected and rebuilt in the other direction.</p>
+  <div class="stack">
+    <div class="item"><div class="v">1</div><div class="k">custom property carries the whole gate blend — <span class="id">--ck</span>, written once per scroll frame, read by every chrome rule</div></div>
+    <div class="item"><div class="v">2</div><div class="k">layers per footer slot, so the label being left and the one arriving trade places without the row moving</div></div>
+    <div class="item"><div class="v">1</div><div class="k">issue rejected after it was built — the gate's hint, rebuilt as a nudge that moves the track instead of a line that appears under it</div></div>
+  </div>
+</div>`,
+`<p>None of these is a slide. They are the parts a reader never looks at directly and notices only when they are wrong: the breadcrumb over the gate's photograph, the crumb that has no page to point at, the photo credit that needs two rows on three of the fixtures, the footer's labels under a finger, the gate's one hint, jump mode's pill.</p>
+<p>The rejection is the useful entry. The hint was built exactly as filed — a line under the gate that appears after five seconds — approved by its own tests, and rejected on sight: it read as chrome arriving rather than as an invitation. The issue was rewritten and the branch deleted unmerged. What shipped moves the track 38px and lets it fall back, which says "this slides" without saying anything.</p>
+<p>The one regression in the sprint was self-inflicted and caught by a later issue in it: the footer's columns were loosened to <span class="id">auto auto 1fr</span> so the two-row credit would fit, which quietly stopped centring the middle slot. The columns are equal again and the credit overflows into the empty centre instead.</p>`);
+
+add(`<div>
+  <span class="tag bug">the build</span>
+  <h2>CI was failing on a browser that cannot swipe</h2>
+  <p class="sub">Two pushes red, and nothing wrong with the code. Playwright's headless shell delivers a vertical touch pan and does not deliver a horizontal one to a scroll-snap track.</p>
+  <div class="stack">
+    <div class="item"><div class="v">2</div><div class="k">gesture tests failing in CI and passing on a phone, on a laptop, and under 8× CPU throttle</div></div>
+    <div class="item"><div class="v">1</div><div class="k">line of config in the answer — <span class="id">channel: 'chromium'</span>, which may only be set per file or per project</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">file created for it, because setting it in a describe group fails the whole file rather than the group</div></div>
+  </div>
+</div>`,
+`<p>The shell is a different binary, not a flag. It is what Playwright picks for a headless run, and for a horizontal pan on a snap track it simply reports that nothing moved — which a test reads as a swipe that did not work.</p>
+<p>The fix is cheap and the diagnosis was not: the same two tests pass everywhere a person could reasonably look, so the instinct is to distrust the test. The instinct was wrong in an instructive way. The two gesture tests now live in <span class="id">swipe.spec.ts</span> with the full browser named at the top of the file, and the fidelity baselines' binary stays the config's question rather than this one's (<span class="id">DIA-408</span>).</p>`);
+
+add(`<div>
+  <span class="tag done">ux · the big one</span>
+  <h2>A slide never scrolls</h2>
+  <p class="sub">The reading moves off the slide entirely. The card takes what the frame gives it and the rest continues in a sheet above the deck — which is what finally closes three issues at once.</p>
+  <div class="stack">
+    <div class="item"><div class="v">3</div><div class="k">answers to the fit problem, in order: shrink the type, let the column scroll, and this one — the first two are retired</div></div>
+    <div class="item"><div class="v">0</div><div class="k">vertical scrollers left inside the horizontal track, which is the sentence the whole change exists for</div></div>
+    <div class="item"><div class="v">575</div><div class="k">deck assertions, up from 488. Slide 2's spec was rewritten whole and the sheet brought a file of its own</div></div>
+  </div>
+</div>`,
+`<p>Every fault these screens had came from one crossing: a vertical scroller living inside a horizontal one. A casual diagonal scroll read as a swipe; the stack snapped away from a reader at a stage boundary; the stack named the wrong stage 700px into a tall page. An axis lock was built for it and reverted — owning an axis means owning its inertia. There is nothing left to referee now, because there is no second scroller.</p>
+<p>The sheet is <b>not</b> rendered inside the track, and that is the load-bearing decision rather than a tidiness one. <span class="id">inert</span> is inherited and cannot be lifted off a subtree, so a sheet inside the track could never be the one surface a screen reader is allowed to see while the deck behind it is not. The slides therefore hand back a card <i>and</i> a sheet, and the deck renders the sheets beside the track.</p>
+<p>Alignment is measured rather than calculated. The bar's height and the body's two gutters are read off the card the sheet belongs to when it opens, so every line lands where it was — including on slide 3, where the column is inset 36px on one side to clear the locator and 20 on the other. Arithmetic would have been alignment until someone changed the label. The locator is drawn a second time inside the sheet: the slide's own is inside the track and the sheet is not, and two stacking contexts cannot be reconciled.</p>`);
+
+add(`<div>
+  <span class="tag bug">the gotcha</span>
+  <h2>The sheet left without ever moving</h2>
+  <p class="sub">Two entrances, two exits, and one of the exits was a no-op for a reason no screenshot would ever show.</p>
+  <div class="stack">
+    <div class="item"><div class="v">2</div><div class="k">keyframe names where there should have been four — the exits reused the entrances' with <span class="id">direction: reverse</span></div></div>
+    <div class="item"><div class="v">0</div><div class="k">animations the browser started for those exits, because the animation's <i>name</i> never changed</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">assertion that caught it, written against the animation's identity rather than against a pixel after a timeout</div></div>
+  </div>
+</div>`,
+`<p>A CSS animation restarts when its name changes. Removing <span class="id">data-in="fade"</span> and adding <span class="id">data-out="fade"</span> in the same task left <span class="id">animation-name</span> on the same keyframes, so the engine kept the finished animation rather than starting a new one — and a finished animation with no fill renders nothing. The exits have their own keyframes now, and an accelerating curve, which is the honest reverse of a decelerating one anyway.</p>
+<p>It was caught because the entrance tests stopped sampling a pixel after a wait. An ease-out does most of its travel in the first fifth of its duration, so "60ms in" is a race with the harness; the animation's name, duration and keyframes are facts, and asking for them is what made the missing one obvious.</p>
+<p>Pulling the sheet down came with it, a phase earlier than filed, because it is the same object: from the top of the reading a downward drag moves the sheet 1:1, the slide behind un-dims with it, and past a quarter of the frame or on a flick it closes like any other close — giving the history entry back and returning focus. It needs a non-passive <span class="id">touchmove</span>, which is the one listener that can take a gesture back from a scroller.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
@@ -497,21 +552,22 @@ add(`<div class="center">
 
 add(`<div>
   <div class="kicker gold">the board</div>
-  <h2>Nine open, none of them blocking</h2>
+  <h2>Ten open, none of them blocking</h2>
   <table class="board">
-    <tr><td class="w">DIA-383</td><td class="s">ux session</td><td>The gesture layer on a slide that scrolls. Reverting the axis lock turned it back from a defect into a matter of feel, so it moved to the design session — the diagnosis was this one\u2019s, the answer is not</td></tr>
-    <tr><td class="w">DIA-385</td><td class="s">ux session</td><td>The photograph leaves with the cover: the first swipe off the gate is currently an accident of where the ground was painted. The first retroactive UX item, on Phase 2</td></tr>
+    <tr><td class="w">DIA-416</td><td class="s">ux · next</td><td>The stage stack pages: every stage one frame, mandatory snap, and the per-stage scroll memory retired. The cards are already one frame tall, so what is left is the snap and the deletion</td></tr>
+    <tr><td class="w">DIA-414</td><td class="s">ux · next</td><td>The whole cited passage is the tap target, not the glyph, and it opens the sheet at itself with the drawer already open. The glyph opens the sheet today; the passage does not</td></tr>
+    <tr><td class="w">DIA-415</td><td class="s">Roy's ruling</td><td>Whether overviews are <i>written</i> as a lead, headings and lists. It binds the content pass and needs a heading in the annotation contract, so it is a ruling before it is a build</td></tr>
     <tr><td class="w">DIA-367</td><td class="s">from the plan</td><td>Four stage strings never written — definitions for 3 and 6, absence statements for 3 and 4. Renders as placeholders; nothing waits on it</td></tr>
     <tr><td class="w">DIA-366</td><td class="s">from the plan</td><td>Photographs for the live ledger. Until it lands, the live pool shows the number ghost and nothing else</td></tr>
     <tr><td class="w">DIA-368</td><td class="s">from the plan</td><td>A fidelity gate for the deck, baselined against the spec's screens rather than against the app</td></tr>
     <tr><td class="w">DIA-376</td><td class="s">post-mvp</td><td>Slide 6's star strip, and the first endpoint this project would ever own. Version A ships; the strip is not built inert</td></tr>
     <tr><td class="w">card credit</td><td class="s">phase 8</td><td>The 111px card has no credit slot and cannot grow, and most of these images are CC BY-SA. Three candidate answers are ready</td></tr>
-    <tr><td class="w">the cut</td><td class="s">watching</td><td>Slide 2's text runs past the bottom of the frame with no fade. §5 asks for none, so none was invented — but "there is more" and "this is broken" are one thumb apart</td></tr>
-    <tr><td class="w">the chip</td><td class="s">watching</td><td>Naming the source type in Hebrew makes the chip about 90px wide, so it usually wraps below its sentence rather than sitting at the end of it</td></tr>
+    <tr><td class="w">DIA-408</td><td class="s">the build</td><td>The gesture tests need the full browser and the fidelity baselines are pinned to whatever CI installs. Named per file for now; which binary the config should use is Phase 9's question</td></tr>
+    <tr><td class="w">DIA-410</td><td class="s">pre-existing</td><td>A hydration mismatch on the home page and a redirect from <span class="id">/</span> to <span class="id">/about/</span>. Neither is the deck's, both are older than it</td></tr>
   </table>
 </div>`,
-`<p>The two marked <i>watching</i> are not issues. They are things seen at a gate and left alone deliberately, recorded so that the next person to notice them knows it was a decision rather than an oversight.</p>
-<p>The evidence map used to sit on this board. It came off on 20 September with a ruling rather than a fix: it ships as the desktop component at 390.</p>`);
+`<p>Two rows left this board on 21 September without being fixed, which is the best way for a row to leave. <i>The cut</i> — slide 2's text running past the frame with no fade — is now the card's cut, specified rather than tolerated. <i>The chip</i> — the ~90px named source pill that wrapped below its own sentence — is a 20px glyph, and the source types got their colour back on the carousel card where telling authorities apart actually helps.</p>
+<p>The evidence map used to sit here too. It came off on 20 September with a ruling rather than a fix: it ships as the desktop component at 390.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">why this deck exists</div>
@@ -519,7 +575,7 @@ add(`<div class="center">
   <p class="sub">Every phase so far has been finished twice: once against the design, and once against a phone.</p>
 </div>`,
 `<p>Close here. The plan's shape held — settle the design, settle the data, build in an order where each phase is judged before the next one inherits its mistakes — and it is the judging that has produced almost everything in this deck.</p>
-<p>Slide 4 is built and waiting on gate #5. After it, the UX backlog is worked as its own block, with four slides built rather than three. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
+<p>Four slides are built and merged, and the UX backlog is being worked as its own block — nine issues closed across two sprints, the chrome first and then the reading itself. The largest of them threw away the way these screens had read since Phase 3, which the gates had been circling for a week. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');

@@ -23,7 +23,17 @@ import { TYPES, type Claim } from '@/lib/data';
  * media query on purpose: the difference between the surfaces is content, and a
  * mark may not quietly mean one thing here and another there.
  */
-export type ChipVariant = 'dot' | 'named';
+export type ChipVariant = 'dot' | 'named' | 'glyph';
+
+/**
+ * §5's citation mark on the phone: a link glyph in a 20px round, and `+N`
+ * beside it when the passage rests on more than one claim. No type name and no
+ * colour - naming the type in Hebrew made the mark ~90px wide, so it wrapped
+ * below its own sentence instead of ending it, and a coloured named pill after
+ * every sentence turned the page into a legend. The type is said where the
+ * source is shown: the drawer and the carousel card (DIA-412).
+ */
+const LINK = 'M10.6 13.4a3.4 3.4 0 0 0 5.1.4l2-2a3.4 3.4 0 0 0-4.8-4.8l-1.1 1.1M13.4 10.6a3.4 3.4 0 0 0-5.1-.4l-2 2a3.4 3.4 0 0 0 4.8 4.8l1.1-1.1';
 
 function Nodes({ nodes }: { nodes: Inline[] }) {
   return (
@@ -54,14 +64,21 @@ function Nodes({ nodes }: { nodes: Inline[] }) {
 const cite = (ids: string[], claims: Claim[]) =>
   ids.map((id) => claims.find((c) => c.id === id)).filter((c): c is Claim => !!c);
 
-function Chip({ ids, claims, variant, drawer }: {
+function Chip({ ids, claims, variant, drawer, opens }: {
   ids: string[]; claims: Claim[]; variant: ChipVariant; drawer: string | null;
+  /** The sheet this chip opens, where there is no drawer beside it (§5). */
+  opens?: string;
 }) {
   const cited = cite(ids, claims);
   if (!cited.length) return null;
   const label = cited.map((c) => `${TYPES[c.source_type].he} · ${c.source}`).join(' · ');
   const skin = { ['--c' as string]: TYPES[cited[0]!.source_type].color };
-  const inner = (
+  const inner = variant === 'glyph' ? (
+    <>
+      <svg className="chip-link" viewBox="0 0 24 24" aria-hidden="true"><path d={LINK} /></svg>
+      {cited.length > 1 && <span className="chip-n" dir="ltr">+{cited.length - 1}</span>}
+    </>
+  ) : (
     <>
       <span className="chip-dot" aria-hidden="true" />
       {variant === 'named' && <span className="chip-type">{TYPES[cited[0]!.source_type].he}</span>}
@@ -73,17 +90,38 @@ function Chip({ ids, claims, variant, drawer }: {
   // answer (§5, DIA-386). The desktop has a ledger under the text to jump to;
   // the phone has neither a ledger nor - since 21 September - a carousel to
   // point at, so the chip is a disclosure and the evidence comes to the reader.
-  return drawer ? (
-    <button
-      type="button"
-      className="chip"
-      aria-expanded="false"
-      aria-controls={drawer}
-      aria-label={`המקורות למשפט: ${label}`}
-      style={skin}
-    >{inner}</button>
-  ) : (
-    <a className="chip" href={`#${cited[0]!.id}`} aria-label={`המקורות למשפט: ${label}`} style={skin}>
+  if (drawer) {
+    return (
+      <button
+        type="button"
+        className={variant === 'glyph' ? 'chip chip-g' : 'chip'}
+        aria-expanded="false"
+        aria-controls={drawer}
+        aria-label={`המקורות למשפט: ${label}`}
+        style={skin}
+      >{inner}</button>
+    );
+  }
+
+  // On a card the evidence is not on the slide at all: the same mark opens the
+  // reading sheet, where the drawer is. A link to a claim id would be a link
+  // to nothing - the deck has no ledger under it (§5, DIA-413).
+  if (opens) {
+    return (
+      <button
+        type="button"
+        className={variant === 'glyph' ? 'chip chip-g' : 'chip'}
+        data-open={opens}
+        aria-haspopup="dialog"
+        aria-controls={`sheet-${opens}`}
+        aria-label={`המקורות למשפט: ${label}`}
+        style={skin}
+      >{inner}</button>
+    );
+  }
+
+  return (
+    <a className={variant === 'glyph' ? 'chip chip-g' : 'chip'} href={`#${cited[0]!.id}`} aria-label={`המקורות למשפט: ${label}`} style={skin}>
       {inner}
     </a>
   );
@@ -181,10 +219,11 @@ function Span({ blocks, chip, after, k }: {
  * sentence rather than a paragraph inside a bullet. A span carrying more than
  * that keeps its blocks; the chip still ends the item either way.
  */
-function Item({ span, claims, k, variant, drawer }: {
+function Item({ span, claims, k, variant, drawer, opens }: {
   span: RenderSpan; claims: Claim[]; k: number; variant: ChipVariant; drawer: string | null;
+  opens?: string;
 }) {
-  const chip = <Chip ids={span.ids} claims={claims} variant={variant} drawer={drawer} />;
+  const chip = <Chip ids={span.ids} claims={claims} variant={variant} drawer={drawer} opens={opens} />;
   const only = span.blocks.length === 1 && span.blocks[0]?.kind === 'p' ? span.blocks[0] : null;
   return (
     <li>
@@ -203,7 +242,7 @@ function Item({ span, claims, k, variant, drawer }: {
  * per-item form. Each item keeps its own chip, because each rests on its own
  * claim; that is the whole reason the form exists.
  */
-export function Annotated({ text, claims, chip = 'dot', drawers }: {
+export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
   text: string;
   claims: Claim[];
   chip?: ChipVariant;
@@ -213,6 +252,11 @@ export function Annotated({ text, claims, chip = 'dot', drawers }: {
    * prefix is the caller's to keep unique.
    */
   drawers?: string;
+  /**
+   * The reading sheet this copy's chips open, for the copy on the card, which
+   * has no drawers of its own. Ignored where `drawers` is set (§5, DIA-413).
+   */
+  opens?: string;
 }) {
   const spans = renderAnnotation(text);
   if (!spans.length) return null;
@@ -227,7 +271,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers }: {
         <Span
           key={i}
           blocks={span.blocks}
-          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} />}
+          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} />}
           after={id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
           k={i}
         />,
@@ -245,7 +289,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers }: {
       <Fragment key={i}>
         <List>
           {run.map((r, j) => (
-            <Item key={j} span={r.span} claims={claims} k={j} variant={chip} drawer={idOf(r.n)} />
+            <Item key={j} span={r.span} claims={claims} k={j} variant={chip} drawer={idOf(r.n)} opens={opens} />
           ))}
         </List>
         {run.map((r) => {

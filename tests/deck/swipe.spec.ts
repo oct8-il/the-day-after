@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type CDPSession, type Page } from '@playwright/test';
 
 /**
  * The swipe (spec §3), in a file of its own.
@@ -13,8 +13,8 @@ import { test, expect, type Page } from '@playwright/test';
  * vertical scroller and does not deliver one to the deck's horizontal
  * scroll-snap track, which simply never moves - so the build failed here on
  * every push while the swipe was fine on a phone and in a full browser at 8x
- * CPU throttle. These two tests need the full browser; `channel` may only be
- * set at the top level of a file or in the config; and the config is where the
+ * CPU throttle. These tests need the full browser; `channel` may only be set
+ * at the top level of a file or in the config; and the config is where the
  * fidelity baselines' binary is decided, which is a Phase 9 question and not
  * this one's. Hence a file (DIA-408).
  */
@@ -55,69 +55,106 @@ async function walkTo2(page: Page, id: string) {
   await page.goto(`/item/${id}/`);
   await page.waitForSelector('.deck-gate-rail');
   await page.evaluate(() => { location.hash = '#2'; });
-  await page.waitForSelector('.deck-ov-scroll');
+  await page.waitForSelector('.deck-card[data-card="ov"]');
   await page.waitForTimeout(500);
 }
+
+/** One finger, dispatched through CDP: Playwright has taps, not pans. */
+async function drag(
+  page: Page, cdp: CDPSession,
+  from: { x: number; y: number }, to: { x: number; y: number }, steps = 10,
+) {
+  const touch = (type: string, x?: number, y?: number) =>
+    cdp.send('Input.dispatchTouchEvent', {
+      type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
+    } as never);
+  await touch('touchStart', from.x, from.y);
+  for (let i = 1; i <= steps; i += 1) {
+    await touch('touchMove', from.x + ((to.x - from.x) * i) / steps, from.y + ((to.y - from.y) * i) / steps);
+    await page.waitForTimeout(16);
+  }
+  await touch('touchEnd');
+}
+
+/** The middle of the reading - the bezel is not a control. */
+const middle = (page: Page) => page.evaluate(() => {
+  const r = document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect();
+  return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+});
+
+const at = (page: Page) => page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
+
+/**
+ * Anything on the slide the reader is on that has been scrolled down.
+ *
+ * Scoped to that slide on purpose: slide 3's stack rests wherever its current
+ * stage is, which is a scroll position and not a fault.
+ */
+const scrolledHere = (page: Page) => page.evaluate(() =>
+  [...document.querySelectorAll('.deck-slide[aria-current="true"] *')]
+    .filter((e) => e.scrollTop > 0).map((e) => e.className));
 
 test.describe('a swipe starts anywhere', () => {
   test('a horizontal drag from the middle of the text changes slide', async ({ page, context, browserName }) => {
     test.skip(browserName !== 'chromium', 'CDP touch dispatch');
     await walkTo2(page, 't01');
-    const at = () => page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
-    expect(await at()).toBe('1');
+    expect(await at(page)).toBe('1');
 
-    const mid = await page.evaluate(() => {
-      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
-      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
-    });
-
+    const mid = await middle(page);
     const cdp = await context.newCDPSession(page);
-    const touch = (type: string, x?: number, y?: number) =>
-      cdp.send('Input.dispatchTouchEvent', {
-        type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
-      } as never);
-
-    // Towards the physical right is backwards in RTL, so this lands on the
-    // gate. Started in the middle of the text on purpose: the bezel is not a
-    // control, and a body that scrolls sideways would swallow this.
-    await touch('touchStart', mid.x - 120, mid.y);
-    for (let i = 1; i <= 10; i += 1) {
-      await touch('touchMove', mid.x - 120 + i * 24, mid.y);
-      await page.waitForTimeout(16);
-    }
-    await touch('touchEnd');
+    // Dragging the content leftwards uncovers what is to its right, and in
+    // RTL what is to the right is the slide before - so this lands on the
+    // gate. Started in the middle of the text on purpose: nothing under the
+    // finger may take the gesture.
+    await drag(page, cdp, { x: mid.x + 120, y: mid.y }, { x: mid.x - 120, y: mid.y });
     await page.waitForTimeout(900);
 
-    expect(await at()).toBe('0');
+    expect(await at(page)).toBe('0');
   });
 
-  test('a vertical drag in the same place scrolls the text and stays on the slide', async ({ page, context, browserName }) => {
+  test('a vertical drag in the same place moves nothing at all', async ({ page, context, browserName }) => {
+    // Since DIA-413 a slide never scrolls, so a reading drag has nothing to
+    // take and nothing to give. Before, it scrolled the column - which is
+    // what put a vertical scroller inside a horizontal one in the first place.
     test.skip(browserName !== 'chromium', 'CDP touch dispatch');
     await walkTo2(page, 't01');
-    const mid = await page.evaluate(() => {
-      const r = document.querySelector('.deck-ov-body')!.getBoundingClientRect();
-      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
-    });
+    const mid = await middle(page);
+    const before = await page.evaluate(() =>
+      Math.round(document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect().top));
 
     const cdp = await context.newCDPSession(page);
-    const touch = (type: string, x?: number, y?: number) =>
-      cdp.send('Input.dispatchTouchEvent', {
-        type, touchPoints: x === undefined ? [] : [{ x, y: y! }],
-      } as never);
-
-    await touch('touchStart', mid.x, mid.y + 150);
-    for (let i = 1; i <= 10; i += 1) {
-      await touch('touchMove', mid.x, mid.y + 150 - i * 15);
-      await page.waitForTimeout(16);
-    }
-    await touch('touchEnd');
+    await drag(page, cdp, { x: mid.x, y: mid.y + 150 }, { x: mid.x, y: mid.y });
     await page.waitForTimeout(600);
 
-    const after = await page.evaluate(() => ({
-      top: document.querySelector('.deck-ov-scroll')!.scrollTop,
-      at: document.querySelector('.deck')!.getAttribute('data-at'),
-    }));
-    expect(after.top).toBeGreaterThan(0);
-    expect(after.at).toBe('1');
+    expect(await at(page)).toBe('1');
+    expect(await page.evaluate(() =>
+      Math.round(document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect().top)))
+      .toBe(before);
+    expect(await scrolledHere(page)).toEqual([]);
+  });
+
+  test('a sloppy diagonal drag changes slide or does nothing, never half of each', async ({ page, context, browserName }) => {
+    // DIA-383, closed by structure rather than by an axis lock: there is no
+    // second scroller left to take half of the gesture.
+    test.skip(browserName !== 'chromium', 'CDP touch dispatch');
+    await walkTo2(page, 't01');
+    const mid = await middle(page);
+    const cdp = await context.newCDPSession(page);
+    await drag(page, cdp, { x: mid.x + 110, y: mid.y + 70 }, { x: mid.x - 110, y: mid.y - 70 });
+    await page.waitForTimeout(900);
+
+    const after = await page.evaluate(() => {
+      const t = document.querySelector('.deck-track')!.getBoundingClientRect();
+      const one = document.querySelectorAll('.deck-track > .deck-slide')[0]!.getBoundingClientRect();
+      const off = Math.abs(one.left - t.left);
+      return {
+        at: document.querySelector('.deck')!.getAttribute('data-at'),
+        // At rest on a snap point, whichever of the two it chose.
+        resting: off < 1.5 || Math.abs(off - t.width) < 1.5,
+      };
+    });
+    expect(['0', '1']).toContain(after.at);
+    expect(after.resting).toBe(true);
+    expect(await scrolledHere(page)).toEqual([]);
   });
 });
