@@ -105,15 +105,16 @@ const hashFor = (i: number, stage: number | null) =>
 const ONE_ROW = 48;
 
 /**
- * §5's two entrances, in milliseconds, and the same two exits.
+ * The sheet's entrance, in milliseconds, and its exit.
  *
- * The fade is short because the reader asked for it and nothing travels; the
- * cover is long enough to be seen, because the reader did not ask to change
- * mode and the cover is what says the mode changed. They are here rather than
+ * §5 ruled two entrances - a fade from the button, a cover from a passage tap
+ * - and the fade was built and then dropped: the sheet's ground is the slide's
+ * ground and it opens with the same lines in the same places, so 160ms of
+ * opacity between two near-identical screens is invisible by construction.
+ * Roy, 21 September: the cover opens it either way. It is here rather than
  * only in the stylesheet because the exit has to be timed before the sheet is
  * hidden, and two numbers that must agree are better written once.
  */
-const FADE = 160;
 const COVER = 340;
 
 export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
@@ -755,7 +756,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
    * label - and on slide 3 the column is inset 36px on one side and 20 on the
    * other, so there is no single number to hard-code anyway.
    */
-  type Entrance = 'fade' | 'cover' | 'still';
+  type Entrance = 'cover' | 'still';
   const sheet = useRef<{ el: HTMLElement; mode: Entrance; opener: HTMLElement | null } | null>(null);
   /** The exit's timer: an entrance that interrupts one must cancel it. */
   const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -791,7 +792,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         el.removeAttribute('data-out');
         el.setAttribute('hidden', '');
         leaving.current = null;
-      }, open.mode === 'cover' ? COVER : FADE);
+      }, COVER);
     }
 
     open.opener?.focus?.();
@@ -799,7 +800,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if ((opts?.history ?? true) && window.history.state?.deckSheet) window.history.back();
   }, []);
 
-  const openSheet = useCallback((id: string, mode: 'fade' | 'cover', opener: HTMLElement | null) => {
+  const openSheet = useCallback((id: string, opener: HTMLElement | null) => {
     const deck = deckEl();
     const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
     const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`);
@@ -816,14 +817,13 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     el.style.setProperty('--gut-r', `${Math.round(frame.right - box.right)}px`);
     el.style.setProperty('--gut-l', `${Math.round(box.left - frame.left)}px`);
 
-    const how: Entrance = reduced() ? 'still' : mode;
+    const how: Entrance = reduced() ? 'still' : 'cover';
     el.removeAttribute('hidden');
     el.setAttribute('data-in', how);
     const scroll = el.querySelector<HTMLElement>('.deck-sheet-scroll');
     if (scroll) scroll.scrollTop = 0;
 
     deck.setAttribute('data-sheet', id);
-    // Only the cover dims: a fade the reader asked for has nothing to announce.
     if (how === 'cover') deck.setAttribute('data-dim', '');
     // The deck behind is not a second reading for a screen reader to find.
     track.current?.setAttribute('inert', '');
@@ -846,14 +846,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       const btn = t.closest<HTMLElement>('[data-open]');
-      if (btn) {
-        e.preventDefault();
-        // §5's two entrances. The button is a deliberate act and the sheet
-        // appears in place; a tap on a passage is not, so the sheet covers
-        // from the bottom up - the cover is what says the mode changed.
-        openSheet(btn.getAttribute('data-open')!, btn.classList.contains('deck-more') ? 'fade' : 'cover', btn);
-        return;
-      }
+      // One entrance, whichever control opened it: the sheet covers from the
+      // bottom up, which is what says the mode changed (Roy, 21 September).
+      if (btn) { e.preventDefault(); openSheet(btn.getAttribute('data-open')!, btn); return; }
       if (t.closest('.deck-sheet-x')) { e.preventDefault(); closeSheet(); }
     };
     deck.addEventListener('click', onClick);
@@ -1238,8 +1233,8 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
           A sheet inside the horizontal scroller is the crossing every fault
           of these screens came from, and `inert` is inherited: the track
           cannot be made invisible to a screen reader while something inside
-          it stays visible. The dim is the cover entrance's, and it un-fades
-          with a pull. */}
+          it stays visible. The dim comes up with the cover and un-fades with
+          a pull. */}
       <div className="deck-sheets" ref={sheetHost}>
         <div className="deck-dim" aria-hidden="true" />
         {sheets}

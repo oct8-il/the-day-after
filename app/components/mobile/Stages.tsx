@@ -213,8 +213,15 @@ export function stagesParts({ inc, slide, kind }: {
 
   const pages: StagePage[] = built.map((b) => ({ n: b.n, he: b.he, current: b.current, card: b.card }));
 
+  // Both halves land in an array on the deck, so both need a key of their own -
+  // and a shorthand fragment cannot carry one.
+  const key = `st${slide}`;
   return {
-    card: <StagesShell slide={slide} kind={kind} pages={pages} rail={rail} current={current} />,
-    sheet: <>{built.map((b) => <Fragment key={b.n}>{b.sheet}</Fragment>)}</>,
+    card: <StagesShell key={key} slide={slide} kind={kind} pages={pages} rail={rail} current={current} />,
+    sheet: (
+      <Fragment key={key}>
+        {built.map((b) => <Fragment key={b.n}>{b.sheet}</Fragment>)}
+      </Fragment>
+    ),
   };
 }

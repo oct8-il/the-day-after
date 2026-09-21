@@ -41,7 +41,7 @@ async function open2(page: Page, id = 't01') {
   await page.evaluate(() => { location.hash = '#2'; });
   await page.waitForSelector('.deck-card[data-card="ov"]');
   await page.evaluate(() => document.fonts?.ready);
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(600);
 }
 
 /** Slide 3, on whichever stage it opens. Returns that page's card id. */
@@ -98,7 +98,7 @@ test.describe('it is not inside the track', () => {
   test('its scroller has no horizontal ancestor, and does not scroll sideways', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => {
       const sc = document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-scroll')!;
       let e: HTMLElement | null = sc.parentElement;
@@ -128,7 +128,7 @@ test.describe('it opens in place, aligned', () => {
     await open2(page);
     const before = await blocks(page, '.deck-card[data-card="ov"] .deck-read');
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const after = await blocks(page, '#sheet-ov .deck-sheet-body .deck-read');
     expect(before).toHaveLength(3);
     expect(after).toEqual(before);
@@ -138,7 +138,7 @@ test.describe('it opens in place, aligned', () => {
     const id = await open3(page);
     const before = await blocks(page, `.deck-card[data-card="${id}"]`);
     await openFrom(page, `.deck-card[data-card="${id}"] .deck-more`);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const after = await blocks(page, `#sheet-${id} .deck-sheet-body`);
     // The card's first child is the label, which becomes the bar's chip; the
     // blocks that must agree are the ones after it.
@@ -152,7 +152,7 @@ test.describe('it opens in place, aligned', () => {
     const first = await page.evaluate(() =>
       Math.round(document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect().top));
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => {
       const bar = document.querySelector('#sheet-ov .deck-sheet-bar')!.getBoundingClientRect();
       const sc = document.querySelector('#sheet-ov .deck-sheet-scroll')!;
@@ -170,7 +170,7 @@ test.describe('it opens in place, aligned', () => {
       return { top: Math.round(r.top), right: Math.round(r.right) };
     });
     await openFrom(page, `.deck-card[data-card="${id}"] .deck-more`);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const m = await page.evaluate((s) => {
       const loc = document.querySelector(`${s} .deck-loc`)!;
       const r = loc.getBoundingClientRect();
@@ -192,7 +192,7 @@ test.describe('the bar', () => {
   test('slide 2 keeps its pill; a stage wears its own tag in its own colour', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const pill = await page.evaluate(() => {
       const c = document.querySelector('#sheet-ov .deck-sheet-chip > *')!;
       const s = getComputedStyle(c);
@@ -203,7 +203,7 @@ test.describe('the bar', () => {
 
     const id = await open3(page);
     await openFrom(page, `.deck-card[data-card="${id}"] .deck-more`);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const tag = await page.evaluate((s) => {
       const c = document.querySelector(`${s} .deck-sheet-chip > *`)!;
       const st = getComputedStyle(c);
@@ -227,7 +227,7 @@ test.describe('the bar', () => {
     // placement is asserted on the measured box and not on a property name.
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => {
       const x = document.querySelector('#sheet-ov .deck-sheet-x')!.getBoundingClientRect();
       const chip = document.querySelector('#sheet-ov .deck-sheet-chip')!.getBoundingClientRect();
@@ -246,12 +246,11 @@ test.describe('the bar', () => {
   });
 });
 
-test.describe('the two entrances', () => {
+test.describe('the entrance', () => {
   /**
    * The entrance is read off the animation rather than sampled after a wait.
-   * An ease-out does most of its travel in the first fifth of its duration,
-   * so "60ms in" is a race with the harness; the animation's own name,
-   * duration and keyframes are facts.
+   * An ease-out does most of its travel early, so "60ms in" is a race with
+   * the harness; the animation's own name, duration and keyframes are facts.
    */
   const entrance = (page: Page, sel: string) => page.evaluate((s) => {
     document.querySelector<HTMLElement>(s)!.click();
@@ -268,46 +267,71 @@ test.describe('the two entrances', () => {
     };
   }, sel);
 
-  test('from the button it appears in place, and nothing travels', async ({ page }) => {
-    await open2(page);
-    const m = await entrance(page, '.deck-card[data-card="ov"] .deck-more');
-    expect(m.how).toBe('fade');
-    expect(m.name).toBe('deck-sheet-fade');
-    expect(m.ms).toBe(160);
-    expect(m.from?.opacity).toBe('0');
-    expect(m.to?.opacity).toBe('1');
-    // Nothing moves and the slide behind is not dimmed: the reader asked.
-    expect(m.from?.transform).toBeUndefined();
-    expect(m.dim).toBe(false);
-  });
+  /**
+   * One entrance, whichever control opened it (Roy, 21 September). §5 ruled a
+   * second, quieter one from the button; it was built and dropped, because the
+   * sheet's ground is the slide's ground and its first lines are in the same
+   * places, so a short opacity fade between two near-identical screens is
+   * invisible by construction.
+   */
+  for (const [what, sel] of [
+    ['the button', '.deck-card[data-card="ov"] .deck-more'],
+    ['a passage', '.deck-card[data-card="ov"] .deck-read .chip'],
+  ] as const) {
+    test(`from ${what} it covers from the bottom up, shadowed, and dims the slide`, async ({ page }) => {
+      await open2(page);
+      const m = await entrance(page, sel);
+      expect(m.how).toBe('cover');
+      expect(m.name).toBe('deck-sheet-cover');
+      expect(m.ms).toBe(340);
+      // Up from the bottom, with a shadow on the leading edge and rounded top
+      // corners that square off as it lands.
+      expect(m.from?.transform).toBe('translateY(100%)');
+      expect(m.to?.transform).toBe('translateY(0px)');
+      expect(m.from?.boxShadow).toContain('-14px');
+      expect(m.from?.boxShadow).not.toBe(m.to?.boxShadow);
+      expect(m.dim).toBe(true);
 
-  test('from a passage it covers from the bottom up, shadowed, and dims the slide', async ({ page }) => {
-    await open2(page);
-    const m = await entrance(page, '.deck-card[data-card="ov"] .deck-read .chip');
-    expect(m.how).toBe('cover');
-    expect(m.name).toBe('deck-sheet-cover');
-    expect(m.ms).toBe(340);
-    // Up from the bottom, with a shadow on the leading edge and rounded top
-    // corners that square off as it lands.
-    expect(m.from?.transform).toBe('translateY(100%)');
-    expect(m.to?.transform).toBe('translateY(0px)');
-    expect(m.from?.boxShadow).toContain('-14px');
-    expect(m.from?.boxShadow).not.toBe(m.to?.boxShadow);
-    expect(m.dim).toBe(true);
+      await page.waitForTimeout(600);
+      expect(await page.evaluate(() =>
+        Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top))).toBe(0);
+    });
+  }
 
-    await page.waitForTimeout(600);
-    expect(await page.evaluate(() =>
-      Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top))).toBe(0);
+  test('the curve is an ease-out over the whole duration, not a jump', async ({ page }) => {
+    // The first curve put both control points' y near 1 by x = .3, so the
+    // sheet travelled the whole frame in the first fifth of its 340ms and sat
+    // still for the rest. At real speed that reads as a cut, not a cover.
+    await open2(page);
+    const by = await page.evaluate(() => {
+      document.querySelector<HTMLElement>('.deck-card[data-card="ov"] .deck-read .chip')!.click();
+      const el = document.querySelector('#sheet-ov')!;
+      const a = el.getAnimations()[0]!;
+      a.pause();
+      const frame = el.getBoundingClientRect().height;
+      return [0.25, 0.5, 0.75].map((f) => {
+        a.currentTime = 340 * f;
+        const m = new DOMMatrix(getComputedStyle(el).transform);
+        return Math.round(((frame - m.m42) / frame) * 100);
+      });
+    });
+    // Decelerating: past halfway by a quarter of the time, and never done
+    // before the duration is.
+    expect(by[0]!).toBeGreaterThan(30);
+    expect(by[0]!).toBeLessThan(65);
+    expect(by[1]!).toBeGreaterThan(by[0]!);
+    expect(by[1]!).toBeLessThan(90);
+    expect(by[2]!).toBeLessThan(99);
   });
 
   test('it leaves the way it came', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const out = await page.evaluate(async () => {
       document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click();
       // One frame, so the exit's animation has been created - and well short
-      // of the 160ms it runs for, so nothing here is a race with the clock.
+      // of the 340ms it runs for, so nothing here is a race with the clock.
       await new Promise((r) => requestAnimationFrame(r));
       const el = document.querySelector('#sheet-ov')!;
       const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
@@ -316,24 +340,24 @@ test.describe('the two entrances', () => {
         out: el.getAttribute('data-out'),
         name: a?.animationName ?? null,
         ms: (a?.effect?.getTiming().duration ?? null) as number | null,
-        from: (kf[0] as Record<string, string> | undefined)?.opacity ?? null,
-        to: (kf[kf.length - 1] as Record<string, string> | undefined)?.opacity ?? null,
+        from: (kf[0] as Record<string, string> | undefined)?.transform ?? null,
+        to: (kf[kf.length - 1] as Record<string, string> | undefined)?.transform ?? null,
       };
     });
     // A reversed *direction* on the same keyframes is not a new animation, so
     // the exit is its own: the sheet has to leave, not sit at the end of an
     // animation that already finished.
-    expect(out.out).toBe('fade');
-    expect(out.name).toBe('deck-sheet-unfade');
-    expect(out.ms).toBe(160);
-    expect(out.from).toBe('1');
-    expect(out.to).toBe('0');
+    expect(out.out).toBe('cover');
+    expect(out.name).toBe('deck-sheet-uncover');
+    expect(out.ms).toBe(340);
+    expect(out.from).toBe('translateY(0px)');
+    expect(out.to).toBe('translateY(100%)');
 
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(700);
     expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
   });
 
-  test('reduced motion makes both instant', async ({ browser }) => {
+  test('reduced motion makes it instant', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: PHONE, reducedMotion: 'reduce', hasTouch: true });
     const page = await ctx.newPage();
     await open2(page);
@@ -361,34 +385,34 @@ test.describe('the ways out', () => {
     await open2(page);
     const url = page.url();
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
 
     await page.goBack();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
     expect(page.url()).toBe(url);
     expect(await page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'))).toBe('1');
 
     // And §2's own rule is whole again: the next Back is the deck's.
     await page.goBack();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'))).toBe('0');
   });
 
   test('the × and Escape close it, and focus returns to the opener', async ({ page }) => {
     await open2(page);
     await page.click('.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.activeElement?.className)).toContain('deck-sheet-x');
 
     await page.click('#sheet-ov .deck-sheet-x');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.activeElement?.className)).toContain('deck-more');
 
     await page.click('.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     await page.keyboard.press('Escape');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => ({
       hidden: document.querySelector('#sheet-ov')!.hasAttribute('hidden'),
       focus: document.activeElement?.className,
@@ -402,7 +426,7 @@ test.describe('the ways out', () => {
   test('while it is open the deck behind is inert, and the arrows do nothing', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => ({
       inert: document.querySelector('.deck-track')!.hasAttribute('inert'),
       modal: document.querySelector('#sheet-ov')!.getAttribute('aria-modal'),
@@ -416,7 +440,7 @@ test.describe('the ways out', () => {
     expect(m.labelled).toBe('סקירת הכשל');
 
     await page.keyboard.press('ArrowLeft');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'))).toBe('1');
   });
 });
@@ -425,7 +449,7 @@ test.describe('what the sheet holds', () => {
   test('the whole reading, then מקורות, then the carousel', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => {
       const body = document.querySelector('#sheet-ov .deck-sheet-body')!;
       const read = body.querySelector('.deck-read')!;
@@ -453,7 +477,7 @@ test.describe('what the sheet holds', () => {
     expect(await page.evaluate(() =>
       document.querySelectorAll('.deck-track .deck-drawer').length)).toBe(0);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate(() => {
       const chip = document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip')[1]!;
       chip.click();
@@ -474,14 +498,14 @@ test.describe('what the sheet holds', () => {
   test('closing the sheet closes the drawer', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     await page.evaluate(() =>
       document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip')[1]!.click());
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     await page.click('#sheet-ov .deck-sheet-x');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() =>
       document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length)).toBe(0);
   });
@@ -489,7 +513,7 @@ test.describe('what the sheet holds', () => {
   test('a stage sheet opens with the head group, so the reading does not jump', async ({ page }) => {
     const id = await open3(page);
     await openFrom(page, `.deck-card[data-card="${id}"] .deck-more`);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     const m = await page.evaluate((s) => {
       const body = document.querySelector(`${s} .deck-sheet-body`)!;
       const head = body.querySelector('.deck-shead');
@@ -530,11 +554,11 @@ test.describe('pull down to dismiss', () => {
   test('a long pull from the top dismisses it, and a short one springs back', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
 
     // Short of the threshold — a quarter of the frame is 211px here.
     await pull(page, { x: 195, y: 300 }, 80);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => ({
       hidden: document.querySelector('#sheet-ov')!.hasAttribute('hidden'),
       top: Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top),
@@ -578,12 +602,12 @@ test.describe('pull down to dismiss', () => {
   test('below the top of the reading a downward drag is an ordinary scroll', async ({ page }) => {
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(600);
     await page.evaluate(() => { document.querySelector('#sheet-ov .deck-sheet-scroll')!.scrollTop = 200; });
     await page.waitForTimeout(200);
 
     await pull(page, { x: 195, y: 300 }, 320);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(false);
   });
 });

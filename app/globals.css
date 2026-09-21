@@ -1319,10 +1319,10 @@
      gutter, which is 36px on one side and 20 on the other. */
   .deck-sheets{position:absolute;inset:0;z-index:5;pointer-events:none}
   .deck[data-sheet] .deck-sheets{pointer-events:auto}
-  /* The cover's dim, behind the sheet. Only the cover uses it: a fade the
-     reader asked for has nothing to announce. It un-fades with a pull. */
+  /* The dim, behind the sheet, so the slide is visibly being covered rather
+     than replaced. It un-fades with a pull. */
   .deck-dim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;
-    transition:opacity .34s cubic-bezier(.2,.62,.3,1)}
+    transition:opacity .34s cubic-bezier(.25,.46,.45,.94)}
   .deck[data-dim] .deck-dim{opacity:calc(1 - var(--pull-p,0))}
   .deck[data-pull] .deck-dim{transition:none}
 
@@ -1335,18 +1335,20 @@
   .deck[data-pull] .deck-sheet{transition:none}
   .deck-sheet[hidden]{display:none}
 
-  /* §5's two entrances, and the same two exits - it leaves the way it came.
-     From the button it appears in place; from a tap on a passage it covers
-     from the bottom up, with a shadowed leading edge and corners that square
-     off as it lands. Reduced motion makes both instant: `still` carries no
-     animation at all, and the deck writes it in place of the other two. */
-  /* Four keyframes rather than two played backwards: `animation-direction:
+  /* The entrance, and the same exit - it leaves the way it came. The sheet
+     covers from the bottom up, with a shadowed leading edge and rounded top
+     corners that square off as it lands, the slide dimming behind it.
+     §5 ruled a second, quieter entrance from the button. It was built and
+     dropped on 21 September: the sheet's ground is the slide's ground and its
+     first lines are in the same places, so a 160ms opacity fade between two
+     near-identical screens is invisible by construction. Reduced motion makes
+     it instant - `still` carries no animation at all, and the deck writes it
+     in place of the cover. */
+  /* Two keyframes rather than one played backwards: `animation-direction:
      reverse` on the same name is not a new animation, so the engine keeps the
      finished one and the sheet leaves without ever moving. The exit has to
      change the animation's *name* to start at all - and an accelerating curve
      is the honest reverse of a decelerating one anyway. */
-  @keyframes deck-sheet-fade{from{opacity:0}to{opacity:1}}
-  @keyframes deck-sheet-unfade{from{opacity:1}to{opacity:0}}
   @keyframes deck-sheet-cover{
     from{transform:translateY(100%);border-radius:18px 18px 0 0;
       box-shadow:0 -14px 34px rgba(0,0,0,.5)}
@@ -1359,9 +1361,11 @@
     to{transform:translateY(100%);border-radius:18px 18px 0 0;
       box-shadow:0 -14px 34px rgba(0,0,0,.5)}
   }
-  .deck-sheet[data-in="fade"]{animation:deck-sheet-fade var(--sheet-fade,160ms) ease}
-  .deck-sheet[data-out="fade"]{animation:deck-sheet-unfade var(--sheet-fade,160ms) ease forwards}
-  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,340ms) cubic-bezier(.2,.62,.3,1)}
+  /* The cover's curve is an ordinary ease-out and the exit's its mirror. The
+     first pair were drawn with both control points' y near 1 by x = .3, which
+     put the whole travel into the first fifth of the duration: at 340ms that
+     is a jump followed by nothing, and the duration stopped meaning anything. */
+  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,340ms) cubic-bezier(.25,.46,.45,.94)}
   .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,340ms) cubic-bezier(.7,.38,.8,1) forwards}
 
   /* The bar: a × at the physical left (44px target) and a chip centred. Its
