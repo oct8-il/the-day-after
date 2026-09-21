@@ -535,7 +535,22 @@ test.describe('the floor', () => {
  * container, so the gesture has to be real touch, dispatched over CDP.
  */
 test.describe('a swipe starts anywhere', () => {
-  test.use({ hasTouch: true });
+  /**
+   * The real browser, not the headless shell.
+   *
+   * CI installs both and Playwright picks the shell for a headless run. The
+   * shell delivers a synthetic touch pan to an ordinary vertical scroller -
+   * the test below this one passes there - and does not deliver one to the
+   * deck's horizontal scroll-snap track, which simply never moves. So this
+   * test failed on every push from the day it landed while the swipe itself
+   * was fine on a phone and in a full browser at 8x CPU throttle.
+   *
+   * Overriding the channel here rather than in playwright.config.ts on
+   * purpose: the fidelity baselines were captured by the shell, and changing
+   * the binary under them is a decision for Phase 9, when the gate that
+   * compares them is switched on.
+   */
+  test.use({ hasTouch: true, channel: 'chromium' });
 
   test('a horizontal drag from the middle of the text changes slide', async ({ page, context, browserName }) => {
     test.skip(browserName !== 'chromium', 'CDP touch dispatch');
