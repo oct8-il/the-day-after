@@ -92,6 +92,18 @@ export const slidesOf = (omit: readonly number[] = []): SlideName[] =>
 const hashFor = (i: number, stage: number | null) =>
   i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
+/**
+ * How long a photo credit can be before the gate's footer gives it two rows.
+ *
+ * A measurement rather than a taste: at 10.5px in the footer's left slot about
+ * 48 characters fit on one row at 390, and the fixtures sit either side of it -
+ * t01's credit is 43 and fits, the three PikiWiki ones are 71 to 78 and do not.
+ * Counting characters is the crude version of asking whether it fits, which is
+ * what §3 asked for: the alternative is measuring on the client and moving the
+ * footer after it has been drawn (DIA-404).
+ */
+const ONE_ROW = 48;
+
 export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
   /**
    * §3's path, as three parts rather than a list, because the three behave
@@ -662,7 +674,7 @@ export function Deck({ crumbs, slides, mid, omit, credit, ground }: {
           <Chevron d={CHEVRON.right} />{SLIDES[at - 1]!.he}
         </a>;
   const next = onGate
-    ? <span className="deck-credit">{credit ?? ''}</span>
+    ? <span className="deck-credit" data-rows={credit && credit.length > ONE_ROW ? '2' : undefined}>{credit ?? ''}</span>
     : at < LAST
       ? <a className="deck-link" href={hashFor(at + 1, null)} onClick={(e) => { e.preventDefault(); go(at + 1); }}>
           {SLIDES[at + 1]!.he}<Chevron d={CHEVRON.left} />
