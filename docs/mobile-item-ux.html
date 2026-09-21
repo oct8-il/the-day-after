@@ -84,7 +84,7 @@
   <div class="kicker">היום שאחרי · DIA-360</div>
   <h1>Mobile item — interactions</h1>
   <p class="lede">What the item page does under a finger: every gesture, every control, and the rule behind each one. The design is <a href="mobile-item.html">docs/mobile-item.html</a> and the order of work is <a href="mobile-item-plan.html">docs/mobile-item-plan.html</a>; this is the third of the three, and it records behaviour rather than appearance.</p>
-  <p class="meta">v1.4 · 21 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
+  <p class="meta">v1.9 · 21 September 2026 · sections follow the plan's build phases · only phases that are done or in progress appear</p>
 </header>
 
 <nav class="toc">
@@ -124,6 +124,12 @@
   <p class="why">A mouse does not pan a scroll container. A mouse-driven test passed against a build where the body had quietly become a horizontal scroller and the swipe did not work at all.</p>
 </div>
 
+<div class="rule">
+  <h4>On a light phone the gate keeps its own ink <span class="status st-todo">designed · DIA-403 · not built</span></h4>
+  <p>The deck follows the phone's colour scheme; the gate does not — it is dark in both. While the gate is in view the chrome wears the gate's light ink, whatever the theme, and as the cover leaves the ink travels to the theme's in step with the finger: <em>p</em> of the way across, <em>p</em> theme ink. It holds if the finger stops, runs backwards on the way back, and under reduced motion swaps at the midpoint with the labels. On a dark phone the two inks are the same and nothing is visible.</p>
+  <p class="why">On a light-mode phone the chrome took the light theme's dark ink and sat on the gate's dark photograph: the dots, the swipe hint and the credit were gone, on the one screen whose job is to say "go on". Two fixes were mocked. The other — the deck dark on every phone — was ruled first, built, and reversed the same day in favour of this one. Its known cost is accepted: half way through the first swipe the chrome is a mid grey, weak over the photograph and over the paper alike, for the middle of one gesture. It also leaves the light deck as it is, which nobody has designed or reviewed. Ruled 21 September (Roy).</p>
+</div>
+
 <h2 id="p2">Phase 2 · The deck, the chrome, the gestures <span class="status st-done">done</span></h2>
 <p>DIA-377. The frame, the chrome that rides on it, and every way between slides. Nothing here renders incident data, which is why it could be judged on its own.</p>
 
@@ -149,6 +155,12 @@
   <p class="why">Without it, tapping the footer showed the destination, flashed the slide it came from as the animation crossed the midpoint, then settled. The reader reads that as a bug, because it is one.</p>
 </div>
 
+<div class="rule">
+  <h4>The footer's labels crossfade under the finger <span class="status st-todo">designed · DIA-401 · not built</span></h4>
+  <p>The labels of the two slides a swipe is between are both present, stacked in the same slot, and the track's position sets the mix: 30% of the way across, the outgoing labels are at 70% and the incoming at 30%. The two always sum to 1. Stop mid-swipe and the blend holds. The layer above half takes the taps. Reduced motion keeps today's swap at the midpoint. The dots are not part of it.</p>
+  <p class="why">The labels used to be replaced in a single frame, mid-gesture. A fade-out followed by a fade-in was tried first and rejected on the phone: for a moment the slot is empty, and the eye catches it. A timed true crossfade was the second candidate; the finger-driven one won because it has no timer at all, the same reason the cover leaves whole. This amends the rule above for the footer's labels only — that rule exists to stop a flicker during driven scrolls, and a blend that follows position cannot flicker. It still governs the dots. Chosen 21 September (Roy).</p>
+</div>
+
 <h3>Leaving the gate</h3>
 
 <div class="rule">
@@ -156,6 +168,12 @@
   <p>The gate's ground belongs to slide 1 and travels with it — full frame, under the breadcrumb, the dots and the footer — as one object with one clean edge. No fade, no timer, nothing linked to scroll progress. Coming back to the gate is the same motion reversed. The no-photo ground behaves identically.</p>
   <p>With it: a slide's clearance for the chrome is its own and does not change mid-swipe. Nothing visible moves vertically during a horizontal swipe.</p>
   <p class="why">It is the one transition every reader makes. As built, the ground sits behind the whole frame and the slides have none of their own, so slide 2's text crosses the photograph until the midpoint, where the photo fades on a 180ms timer and the gate's title drops about 10px because every slide shares one measured clearance. A dissolve tied to the finger was prototyped beside this and rejected: the text still crosses the image for the first third of the gesture. A cover that leaves whole never puts text over the photograph, and it is what a post's first image does — which is what this screen is. Chosen on a phone, 21 September (Roy).</p>
+</div>
+
+<div class="rule">
+  <h4>The gate says which way to go <span class="status st-todo">designed · DIA-398 · not built</span></h4>
+  <p>The gate's hint reads <span class="he">החליקו להמשך</span> with a left-pointing chevron — the same chevron as the next-slide links on every other slide — in place of <span class="he">החליקו לצדדים</span>. And if the reader has done nothing for 5 seconds, the track slides about 38px toward slide 2 and returns, once. Any touch before it fires cancels it for good; it never runs on a return to the gate, on a deep link that opened elsewhere, or under reduced motion. It moves the track only: no hash, no chrome, and the scroll handler does not read it as the reader moving.</p>
+  <p class="why">The gate is the front door for a reader arriving cold from a post, and the old hint named both sides when only one works. The chevron points at where the next slide is, which is also how a Hebrew book turns, so the footer says one thing about direction on all six slides. The nudge is the deck's single use of a timer: "nothing runs on a timer" is about pacing content, and this paces nothing — it shows an edge to someone who has not moved. Both halves chosen on a phone, 21 September (Roy).</p>
 </div>
 
 <h3>Jump mode — the dot row</h3>
@@ -176,6 +194,25 @@
   <p class="why">A long press on iOS otherwise raises the selection callout and the magnifier, on top of the mode the press just armed. There is no haptics API in Safari, so the feedback is visual or it does not exist.</p>
 </div>
 
+<div class="rule">
+  <h4>The strip opens under the thumb, names the landing, and can be abandoned <span class="status st-todo">designed · DIA-399 · not built</span></h4>
+  <p>On arming, the dots spread from a 13px pitch to about 30px, and the row shifts so the dot under the thumb does not move — the others open out around it. A pill floats above the strip, clear of the thumb, carrying the name of the slide a release would land on; no number, the dots are still the counter. Dragging about 70px above the strip abandons the jump: the deck returns to where it was armed, the label reads <span class="he">שחררו לביטול</span>, and a release writes nothing. Coming back down resumes the scrub.</p>
+  <p class="why">Six dots at 13px is 71px for the whole deck, under the thumb doing the scrubbing, and the only landing feedback was a ring on a dot the finger covered. A mode that always lands is also a mode a reader cannot back out of once they see where it is taking them. This is the dot row only; the stage rail is looked at with slide 3. Approved on a phone, 21 September (Roy).</p>
+</div>
+
+<h3>The breadcrumb</h3>
+<div class="rule">
+  <h4>The root is a link home; the parent waits for a page to exist <span class="status st-todo">designed · DIA-400 · not built</span></h4>
+  <p><span class="he">7 באוקטובר</span> is a real link to the home page, with a 44px touch target that moves nothing. The parent crumb does nothing and must not look tappable-and-broken: no pressed state, not focusable. The leaf is never a link. The look does not change.</p>
+  <p class="why">A breadcrumb that does not navigate is a broken affordance, and until slide 6 it was the deck's only possible way out sideways. The parent has nowhere to go: only home and the item page exist, and the outer layers are designed after the item on purpose, because each outer layer is there to wrap its children. When a parent page exists, the crumb links to it. Ruled 21 September (Roy).</p>
+</div>
+
+<div class="rule">
+  <h4>The breadcrumb never loses its leaf <span class="status st-todo">designed · DIA-407 · not built</span></h4>
+  <p>When the path does not fit its one line, the parent shortens with an ellipsis. The root, the chevrons and the leaf keep their full width, the gutters hold, and the chrome's height does not change. The full parent name stays available to a screen reader.</p>
+  <p class="why">The line overflowed to the left, so what got cut was <span class="he">כשל מס׳ N</span> — the one thing the breadcrumb is there to say. It never showed on the dev build because the test pool's parents are short; the live ledger's longest, at 37 characters, puts the leaf 21px off the screen at 390 wide and 51px off at 360. Approved 21 September (Roy).</p>
+</div>
+
 <h3>The URL and the Back button</h3>
 <div class="rule">
   <h4>One entry on the history stack, however far the reader travels</h4>
@@ -193,7 +230,13 @@
 <div class="rule">
   <h4>Nothing on the gate is a control</h4>
   <p>The stage rail is a picture of where the item stands, not a way to go anywhere. The photo credit is text. The only interactive things on the screen are the deck's own chrome.</p>
-  <p class="why">It is the screen a reader lands on from a post, and the one place where the item has to say what it is before it asks for anything. Its whole job is to be read.</p>
+  <p class="why">It is the screen a reader lands on from a post, and the one place where the item has to say what it is before it asks for anything. Its whole job is to be read. Making the rail's labels ways into their stages was proposed and mocked on 21 September and refused: the reader is taken through the slides in the order they were written, not handed a way to jump ahead of the overview (Roy).</p>
+</div>
+
+<div class="rule">
+  <h4>A long credit takes two rows inside the footer it already has <span class="status st-todo">designed · DIA-404 · not built</span></h4>
+  <p>A credit that does not fit on one row takes two — 9.5px on an 11px line, left-aligned, capped at about 225px so the hint keeps its room — and both rows fit the footer slot's existing 22px. The footer's height, its rule and the dots do not move. Never an ellipsis, never a third row; a credit that fits on one row is unchanged.</p>
+  <p class="why">A PikiWiki credit runs to about 75 characters, ran off the left edge and under the hint, and a licence credit cannot be truncated. Letting the footer grow was mocked first and refused: a footer taller on the gate than on slide 2 makes the chrome jump on the first swipe, which is worse than small type. Quick and dirty, on purpose (Roy, 21 September).</p>
 </div>
 <div class="rule">
   <h4>Edge-anchored things are anchored physically</h4>
@@ -228,6 +271,27 @@
   <h4>The carousel keeps its own horizontal axis</h4>
   <p>A drag started on the carousel scrolls the carousel, not the deck, and does not chain to the deck at either end.</p>
   <p class="why">It is a carousel; owning sideways drags on itself is the whole point. Chaining at the end would fling the reader to the next slide while they were browsing sources.</p>
+</div>
+
+<h3>The reading model — replaces the scrolling body</h3>
+<div class="note"><strong>Ruled 21 September, after four mock rounds.</strong> Roy's direction for slides 2 and 3: take what Google Search's AI Overview does well — clean, readable, focused — and fix the vertical scroll. The look (two sizes, one ink, glyph citations, the card and the sheet as drawn objects) goes through the UI designer and the spec first, as <span class="mono">DIA-412</span>; what follows is the behaviour. When it lands, the entries above about the scrolling body, the sources riding with the text and the in-flow drawer's place on the slide are superseded, and <span class="mono">DIA-383</span> closes.</div>
+
+<div class="rule">
+  <h4>A slide never scrolls <span class="status st-todo">designed · DIA-413 · not built</span></h4>
+  <p>A slide's content is a card that fits the frame. What overruns is cut with a fade and a button — <span class="he">יותר מידע</span> with the source count; content that fits shows no fade and the button reads <span class="he">המקורות</span>. The full text, and the sources carousel after it, open in a reading sheet above the deck: one plain vertical scroller, no snap, no horizontal scroller around it. The × and Back close it; Back closes the sheet and nothing else, and the deck's one-entry history rule is whole again afterwards.</p>
+  <p class="why">Reading inside the slide put a vertical scroller inside a horizontal track, and every fault of these slides came from that: the casual scroll read as a swipe (DIA-383), the snap fighting the reader at a stage boundary, the stack naming the wrong stage mid-read. An axis lock was tried and reverted because owning the axis means owning its inertia. This removes the crossing instead of refereeing it — a sheet above the track has no horizontal ancestor, so there is nothing for a diagonal thumb to trigger. It is also what the AI Overview does on a phone: a lead, a fade, "more", and the rest in a full-screen view with a ×.</p>
+</div>
+
+<div class="rule">
+  <h4>The sheet opens where the slide was, and says so when it must <span class="status st-todo">designed · DIA-413 · not built</span></h4>
+  <p>The sheet takes the card's geometry — its bar ends where the card's content begins, its column is the card's column — and opens unscrolled, so every line is exactly where it was on the slide. Two entrances. From the button, a deliberate act, it appears in place: a short fade, nothing moves. From a tap on a passage it is a cover from the bottom up — an opaque panel with a shadowed leading edge, the slide dimming behind it — landing with the text where it was. It leaves the way it came. Reduced motion makes both instant.</p>
+  <p class="why">Alignment was Roy's correction to a first version that scrolled the sheet to the tapped passage: keeping the text still "helps with orientation much more than scrolling". Aligned and faded, the change of mode became invisible — "too smooth", a reader might not realise they had entered a different mode until they could not swipe sideways. The cover is the signal, kept for the entrance that was not announced by a button. A panel with an edge and a shadow reads as a sheet rising; identical text sliding over itself without one reads as a glitch, which is why the first slide-up was dropped.</p>
+</div>
+
+<div class="rule">
+  <h4>The whole cited passage is the target <span class="status st-todo">designed · DIA-414 · not built</span></h4>
+  <p>The citation is a small glyph; the tap target is the whole passage it ends — the span the annotation already wraps. The passage tints while pressed and stays tinted while its drawer is open. On the slide, a tap opens the sheet at that passage with its drawer open, once the cover has landed; if the drawer would fall below the fold, the sheet lands aligned first and only then makes the minimum scroll. In the sheet, a tap toggles the drawer. A long-press still selects text. For a screen reader the glyph is the one control.</p>
+  <p class="why">A 20px glyph is the right size to look at and the wrong size to hit (Roy: "apply the hit slop to the entire sentence"). Taps on running text were otherwise unused, and the reader who taps a sentence is asking what it rests on — which the drawer answers and a jump to the sources at the foot of the sheet did not.</p>
 </div>
 
 <h2 id="p5">Phase 5 · Slide 3 — <span class="he">מה נעשה מאז</span> <span class="status st-open">in progress</span></h2>
@@ -269,6 +333,12 @@
   <p class="why">The deck owns the URL and the stack owns which page it is showing. The stack publishes its page on the deck's own root and the deck reads it from there, so neither has to import the other to agree.</p>
 </div>
 
+<div class="rule">
+  <h4>Every stage is one frame, and the stack pages <span class="status st-todo">designed · DIA-416 · not built</span></h4>
+  <p>With every stage page a card one frame tall, the stack is uniform: mandatory snap, one stage per gesture, never at rest between two. The locator, the hash's tail, the arrows and the back-to-current pill behave as before and stop being wrong. The per-stage scroll memory is retired — a page has no inside to remember. Slide 4 inherits all of it.</p>
+  <p class="why">Measured on the build: a 500px stack holding a 1261px page. Near its end the engine took the scroll and snapped to the next stage, and snapped away again on the way back; and because the current page was "the one whose top is nearest", 700px into that page the ring, the URL and the pill all named the next stage. "A stage reopens where it was left" existed to make that bearable. Two paged axes still cross here, but what made DIA-383 bite was reading scrolls — long and sloppy — not paging flicks; if a diagonal flick still misfires on a phone, that is a new and smaller issue.</p>
+</div>
+
 <h2 id="watch">What to watch</h2>
 <table>
   <tr><th class="g">Thing</th><th>Where it bites</th></tr>
@@ -276,6 +346,9 @@
   <tr><td class="g">No affordance at the cut</td><td>Slide 2's text runs past the bottom of the frame with no fade and no shadow. §5 asks for none, so none was invented — but "there is more" and "this is broken" are one thumb apart.</td></tr>
   <tr><td class="g">The chip costs a line</td><td>Naming the source type in Hebrew makes the chip about 90px wide, so it usually wraps below its sentence rather than sitting at the end of it the way §5 draws.</td></tr>
   <tr><td class="g">Gestures cannot be judged from here</td><td>Synthetic touch in Chromium measures an axis decision correctly and says nothing about how a gesture feels. The reverted lock passed every assertion written for it. Anything in this document about a gesture's <em>feel</em> was decided with a thumb, and the next one will be too.</td></tr>
+  <tr><td class="g">A cold deep link may flash the gate</td><td><span class="mono">DIA-402</span>, unconfirmed and Post-MVP. The hash is acted on after hydration, so a refresh on slide 3 plausibly shows the gate first. Nobody has seen it on a phone yet; shared links are always bare, so it can only bite on a refresh or a restored tab.</td></tr>
+  <tr><td class="g">The gate's first second</td><td><span class="mono">DIA-405</span> and <span class="mono">DIA-406</span>, both Post-MVP. The photograph pops in from black on a slow load, where the stage-colour field could be under it; and the no-photo ghost numeral is pinned to the top of the frame, so at in-app-browser heights it sits behind the title.</td></tr>
+  <tr><td class="g">The way out of the sheet</td><td><span class="mono">DIA-417</span>, Post-MVP. A panel that comes up from the bottom invites a pull back down, and it is what a reader will try. Not built: a hand-driven gesture inside a scroller needs a thumb and a round of its own.</td></tr>
 </table>
 
 </div>
