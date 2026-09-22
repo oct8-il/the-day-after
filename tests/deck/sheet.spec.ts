@@ -1187,3 +1187,241 @@ test.describe('the whole cited passage is the target', () => {
     expect(m.pointer).toBe(true);
   });
 });
+
+/**
+ * The source drawer as an excerpt (DIA-426, §5 v3.4).
+ *
+ * The grey box is gone. What is left is set into the reading rather than laid
+ * on top of it: a 2px rule in the source type's colour, a head line, the quote
+ * as a newspaper clipping, and the way out. What ties it to its passage is
+ * that passage staying tinted above it, which is why there is no container
+ * around the two and no close button in the corner.
+ *
+ * t06's first passage carries two claims, one of them with no quote, so the
+ * stacking and the missing quote are the same fixture; t02's one claim has no
+ * URL, which is the other absence a drawer has to state rather than hide.
+ */
+const drawerOf = async (page: Page, id: string, pick = 0) => {
+  await open2(page, id);
+  await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+  await page.waitForTimeout(600);
+  await page.evaluate((i) => {
+    document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip')[i]!.click();
+  }, pick);
+  await page.waitForTimeout(600);
+};
+
+test.describe('the drawer is an excerpt', () => {
+  test('no box: a typed rule down the start edge, and nothing drawn around it', async ({ page }) => {
+    await drawerOf(page, 't01', 1);
+    const m = await page.evaluate(() => {
+      const d = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden])')!;
+      const s = getComputedStyle(d);
+      const src = d.querySelector<HTMLElement>('.deck-drawer-src')!;
+      const t = getComputedStyle(src);
+      return {
+        ground: s.backgroundColor,
+        border: [s.borderTopWidth, s.borderRightWidth, s.borderBottomWidth, s.borderLeftWidth],
+        radius: s.borderTopLeftRadius,
+        rule: t.borderRightWidth,
+        ruleColour: t.borderRightColor,
+        // The rule is the type's colour, and the head is drawn in the same one.
+        headColour: getComputedStyle(d.querySelector('.deck-drawer-head')!).color,
+        otherRules: [t.borderTopWidth, t.borderBottomWidth, t.borderLeftWidth],
+        padRight: t.paddingRight,
+        padLeft: t.paddingLeft,
+      };
+    });
+    expect(m.ground).toBe('rgba(0, 0, 0, 0)');
+    expect(m.border).toEqual(['0px', '0px', '0px', '0px']);
+    expect(m.radius).toBe('0px');
+    expect(m.rule).toBe('2px');
+    expect(m.otherRules).toEqual(['0px', '0px', '0px']);
+    expect(m.ruleColour).toBe(m.headColour);
+    expect(m.ruleColour).not.toBe('rgba(0, 0, 0, 0)');
+    expect(m.padRight).toBe('14px');
+    expect(m.padLeft).toBe('0px');
+  });
+
+  test('it sits 12px under its passage, and two claims stack 14px apart', async ({ page }) => {
+    await drawerOf(page, 't06', 0);
+    const m = await page.evaluate(() => {
+      const d = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden])')!;
+      const src = [...d.querySelectorAll<HTMLElement>('.deck-drawer-src')];
+      const passage = d.previousElementSibling!.getBoundingClientRect();
+      return {
+        n: src.length,
+        under: Math.round(d.getBoundingClientRect().top - passage.bottom),
+        between: Math.round(src[1]!.getBoundingClientRect().top - src[0]!.getBoundingClientRect().bottom),
+      };
+    });
+    expect(m.n).toBe(2);
+    expect(m.under).toBe(12);
+    expect(m.between).toBe(14);
+  });
+
+  test('the head is the outlet, the type and the date, in that order', async ({ page }) => {
+    await drawerOf(page, 't01', 1);
+    const m = await page.evaluate(() => {
+      const head = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-head')!;
+      const kid = (sel: string) => {
+        const e = head.querySelector<HTMLElement>(sel)!;
+        const s = getComputedStyle(e);
+        return { size: s.fontSize, weight: s.fontWeight, colour: s.color, text: e.textContent!.trim() };
+      };
+      return {
+        order: [...head.children].map((e) => e.className || 'sep'),
+        gap: getComputedStyle(head).columnGap,
+        name: kid('.deck-drawer-name'),
+        type: kid('.deck-drawer-type'),
+        date: kid('.deck-drawer-date'),
+        ltr: head.querySelector('.deck-drawer-date')!.getAttribute('dir'),
+        // The middle dot is the design's, not a word for a screen reader.
+        sep: head.querySelector('[aria-hidden="true"]')!.textContent,
+      };
+    });
+    expect(m.order).toEqual(['deck-drawer-name', 'sep', 'deck-drawer-type', 'deck-drawer-date']);
+    expect(m.gap).toBe('6px');
+    expect(m.name.size).toBe('14px');
+    // `<b>` inside a 700 head computes to `bolder`, which is 900 - and 900
+    // has no face, so it is drawn with the 700 one. The spec's own screen says
+    // the same thing, so the assertion is "at least bold" rather than a number.
+    expect(Number(m.name.weight)).toBeGreaterThanOrEqual(700);
+    expect(m.type.size).toBe('12.5px');
+    expect(m.type.colour).toBe(m.type.colour);
+    expect(m.date.size).toBe('12.5px');
+    expect(m.date.weight).toBe('400');
+    expect(m.ltr).toBe('ltr');
+    expect(m.sep).toBe('·');
+    // The outlet is the reading's ink; the type is the type's colour.
+    expect(m.name.colour).not.toBe(m.type.colour);
+  });
+
+  test('the quote is a newspaper clipping: paper, black ink, italic serif', async ({ page }) => {
+    await drawerOf(page, 't01', 1);
+    const m = await page.evaluate(() => {
+      const q = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-quote')!;
+      const s = getComputedStyle(q);
+      return {
+        paper: s.backgroundColor,
+        ink: s.color,
+        family: s.fontFamily,
+        style: s.fontStyle,
+        size: s.fontSize,
+        leading: s.lineHeight,
+        pad: [s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft],
+        margin: [s.marginTop, s.marginRight, s.marginBottom, s.marginLeft],
+        torn: s.clipPath.startsWith('polygon('),
+        // Unclamped: the schema caps a quote at 280 characters already.
+        clamp: s.webkitLineClamp,
+        marks: q.textContent!.trim(),
+      };
+    });
+    expect(m.paper).toBe('rgb(232, 225, 211)');
+    expect(m.ink).toBe('rgb(31, 28, 23)');
+    expect(m.family).toContain('Frank Ruhl Libre');
+    expect(m.style).toBe('italic');
+    expect(m.size).toBe('16.5px');
+    expect(m.leading).toBe('24.75px');
+    expect(m.pad).toEqual(['13px', '12px', '13px', '12px']);
+    expect(m.margin).toEqual(['0px', '0px', '0px', '0px']);
+    expect(m.torn).toBe(true);
+    expect(m.clamp === 'none' || m.clamp === '' || m.clamp === 'auto').toBe(true);
+    expect(m.marks.startsWith('„')).toBe(true);
+    expect(m.marks.endsWith('“')).toBe(true);
+  });
+
+  test('the tear is one fixed polygon, the same on every excerpt and every open', async ({ page }) => {
+    // A tear that changed between two renders of the same quote would be an
+    // animation nobody asked for.
+    await drawerOf(page, 't06', 0);
+    const first = await page.evaluate(() =>
+      [...document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-quote')]
+        .map((q) => getComputedStyle(q).clipPath));
+    await page.evaluate(() => {
+      const c = document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip');
+      c[0]!.click(); c[0]!.click();
+    });
+    await page.waitForTimeout(600);
+    const again = await page.evaluate(() =>
+      getComputedStyle(document.querySelector('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-quote')!).clipPath);
+    expect(first).toHaveLength(1);
+    expect(first[0]).toContain('polygon(');
+    expect(again).toBe(first[0]);
+  });
+
+  test('the way out is its own line, and the quote stays selectable', async ({ page }) => {
+    await drawerOf(page, 't01', 1);
+    const m = await page.evaluate(() => {
+      const d = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden])')!;
+      const go = d.querySelector<HTMLAnchorElement>('a.deck-drawer-go')!;
+      const q = d.querySelector<HTMLElement>('.deck-drawer-quote')!;
+      const s = getComputedStyle(go);
+      return {
+        text: go.textContent!.trim(),
+        target: go.target,
+        rel: go.rel,
+        href: go.getAttribute('href')!.startsWith('http'),
+        size: s.fontSize,
+        weight: s.fontWeight,
+        // A link wrapping the clipping would make the quote unselectable.
+        wrapped: !!q.closest('a'),
+        select: getComputedStyle(q).userSelect,
+      };
+    });
+    expect(m.text.startsWith('לפתיחת המקור')).toBe(true);
+    expect(m.target).toBe('_blank');
+    expect(m.rel).toContain('noopener');
+    expect(m.href).toBe(true);
+    expect(m.size).toBe('12.5px');
+    expect(m.weight).toBe('600');
+    expect(m.wrapped).toBe(false);
+    expect(m.select).not.toBe('none');
+  });
+
+  test('a claim with no quote still opens, and says the quote is missing', async ({ page }) => {
+    await drawerOf(page, 't06', 0);
+    const m = await page.evaluate(() => {
+      const src = [...document.querySelectorAll<HTMLElement>('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-src')];
+      const bare = src.find((s) => !s.querySelector('.deck-drawer-quote'))!;
+      return {
+        found: !!bare,
+        said: bare.querySelector('.deck-drawer-noq')!.textContent!.trim(),
+        rule: getComputedStyle(bare).borderRightWidth,
+        head: !!bare.querySelector('.deck-drawer-name')!.textContent!.trim(),
+        out: !!bare.querySelector('.deck-drawer-go'),
+      };
+    });
+    expect(m.found).toBe(true);
+    expect(m.said.length).toBeGreaterThan(4);
+    expect(m.rule).toBe('2px');
+    expect(m.head).toBe(true);
+    expect(m.out).toBe(true);
+  });
+
+  test('a claim with no link says so rather than pointing nowhere', async ({ page }) => {
+    await drawerOf(page, 't02', 0);
+    const m = await page.evaluate(() => {
+      const d = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden])')!;
+      const go = d.querySelector<HTMLElement>('.deck-drawer-go')!;
+      return { tag: go.tagName, dead: go.hasAttribute('data-dead'), text: go.textContent!.trim(), anchors: d.querySelectorAll('a').length };
+    });
+    expect(m.tag).toBe('SPAN');
+    expect(m.dead).toBe(true);
+    expect(m.text.length).toBeGreaterThan(4);
+    expect(m.anchors).toBe(0);
+  });
+
+  test('there is no close button: the passage that opened it closes it', async ({ page }) => {
+    await drawerOf(page, 't01', 1);
+    expect(await page.evaluate(() =>
+      document.querySelectorAll('#sheet-ov .deck-drawer-x').length)).toBe(0);
+    await page.evaluate(() =>
+      document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip')[1]!.click());
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => ({
+      open: document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length,
+      hot: document.querySelectorAll('#sheet-ov .deck-read [data-hot]').length,
+    }))).toEqual({ open: 0, hot: 0 });
+  });
+});

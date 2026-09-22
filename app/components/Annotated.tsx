@@ -137,8 +137,14 @@ function Chip({ ids, claims, variant, drawer, opens, cites }: {
 }
 
 /**
- * What the chip opens: the quote and the way out, in flow beneath the block
- * the chip ends, so the text below moves down rather than being covered.
+ * What the chip opens: the evidence, in flow beneath the block the chip ends,
+ * so the text below moves down rather than being covered.
+ *
+ * Since v3.4 it is an excerpt rather than a box (DIA-426). Nothing is drawn
+ * around it: a 2px rule in the source type's colour stands down its start
+ * edge, and what ties it to the passage above is that passage staying tinted
+ * while it is open (DIA-414), not a container holding the two together. There
+ * is no close button either - the passage that opened it closes it.
  *
  * Several claims stack in one drawer **in the order the author wrote them in
  * the cite**, not the carousel's order. The carousel is deduplicated by first
@@ -149,33 +155,28 @@ function Drawer({ id, ids, claims }: { id: string; ids: string[]; claims: Claim[
   const cited = cite(ids, claims);
   if (!cited.length) return null;
   return (
-    <div
-      className="deck-drawer"
-      id={id}
-      hidden
-      role="region"
-      aria-label="המקור"
-      style={{ ['--c' as string]: TYPES[cited[0]!.source_type].color }}
-    >
-      <button type="button" className="deck-drawer-x" aria-label="סגירה">×</button>
+    <div className="deck-drawer" id={id} hidden role="region" aria-label="המקור">
       {cited.map((c) => (
         <div key={c.id} className="deck-drawer-src" style={{ ['--c' as string]: TYPES[c.source_type].color }}>
           <div className="deck-drawer-head">
+            <b className="deck-drawer-name">{c.source}</b>
+            {/* The separator is the design's, not a word: a screen reader
+                reading "middle dot" between an outlet and its type is noise. */}
+            <span aria-hidden="true">·</span>
             <span className="deck-drawer-type">{TYPES[c.source_type].he}</span>
-            <span className="deck-drawer-name">{c.source}</span>
-            <span className="deck-drawer-date" dir="ltr">{c.date}</span>
+            <i className="deck-drawer-date" dir="ltr">{c.date}</i>
           </div>
           {c.quote
             ? <p className="deck-drawer-quote">{`„${c.quote}“`}</p>
             : <p className="deck-drawer-noq">לא צוטט קטע מהמקור.</p>}
-          {/* The outlet name and an arrow, not the whole block: a wrapping
-              link makes the quote unselectable, and a quote is what a reader
-              copies. */}
+          {/* The way out is its own line, not a wrapper: a link around the
+              clipping would make the quote unselectable, and a quote is what
+              a reader copies. */}
           {c.url
             ? <a className="deck-drawer-go" href={c.url} target="_blank" rel="noopener noreferrer">
-                {c.source} <span className="deck-drawer-arr" aria-hidden="true">↗</span>
+                לפתיחת המקור <span dir="ltr" aria-hidden="true">↗</span>
               </a>
-            : <span className="deck-drawer-go" data-dead="">{c.source}</span>}
+            : <span className="deck-drawer-go" data-dead="">טרם קושר מקור</span>}
         </div>
       ))}
     </div>
