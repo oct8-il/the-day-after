@@ -5,6 +5,39 @@ import { POOL } from '@/lib/pool';
 import { SITE_NAME, SITE_URL } from './site';
 import './globals.css';
 
+/* ------------------------------------------------------------------ type
+ * The two faces, served from this origin (DIA-433).
+ *
+ * They used to come from fonts.googleapis.com, which made the site's own
+ * typography a third-party request: whether it answered decided how the
+ * Hebrew was measured, and three tests spent weeks asserting the layout of
+ * the fallback face because the machine they were verified on could not
+ * reach it. A page about what the state failed to do should not depend on
+ * Google answering, either - and self-hosting takes the render-blocking
+ * request and the swap out with it.
+ *
+ * Imported one subset and weight at a time rather than by package: this is
+ * the whole of what the design uses (§2's type table), and the package's own
+ * entry point would ship every weight from 200 to 800 in five alphabets.
+ *
+ * Both faces are SIL OFL, which is what makes serving them from here legal
+ * as well as sensible.
+ */
+import '@fontsource/assistant/hebrew-300.css';
+import '@fontsource/assistant/hebrew-400.css';
+import '@fontsource/assistant/hebrew-600.css';
+import '@fontsource/assistant/hebrew-700.css';
+import '@fontsource/assistant/latin-300.css';
+import '@fontsource/assistant/latin-400.css';
+import '@fontsource/assistant/latin-600.css';
+import '@fontsource/assistant/latin-700.css';
+import '@fontsource/frank-ruhl-libre/hebrew-400.css';
+import '@fontsource/frank-ruhl-libre/hebrew-500.css';
+import '@fontsource/frank-ruhl-libre/hebrew-700.css';
+import '@fontsource/frank-ruhl-libre/latin-400.css';
+import '@fontsource/frank-ruhl-libre/latin-500.css';
+import '@fontsource/frank-ruhl-libre/latin-700.css';
+
 const DESCRIPTION =
   'מעקב אחר הכשלים של השבעה באוקטובר ואחר תיקונם — מקורות מתועדים, שלב אחר שלב.';
 
@@ -60,12 +93,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="first-visit-gate" strategy="beforeInteractive">
           {`try{if(location.pathname==='/'&&localStorage.getItem('hy_seen')!=='1'){window.__hyRedirecting=true;location.replace('/about/');}}catch(e){}`}
         </Script>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&display=swap"
-        />
       </head>
       <body>
         {!IS_PROD && <div className="env-ribbon">{`${ENV} · ${POOL}`}</div>}

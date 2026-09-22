@@ -140,10 +140,18 @@ test.describe('when the path does not fit, the parent gives way', () => {
       expect.soft(Math.round(m.nav.right - m.rootRight), `${width}: right gutter`).toBe(20);
       expect.soft(m.leafCut, `${width}: the leaf is cut`).toBe(false);
       // The parent is the part that gives way - where giving way is needed.
-      // 430 is the one width this path fits at, which is the issue's own
-      // measurement (the leaf sat 19px from the left edge there, and -21px at
-      // 390), so it is asserted rather than assumed both ways.
-      expect.soft(m.midCut, `${width}: the parent shortened`).toBe(width <= 390);
+      //
+      // Which width that starts at is a property of one Hebrew string and one
+      // typeface, not of the design, and pinning it made a coin toss of the
+      // test: with the real Assistant this path wants 186px and gets exactly
+      // 186 at 390, so a single extra character in a parent's name would flip
+      // it (DIA-433). What §3 actually rules is asserted instead - the widest
+      // width holds the whole path, the narrowest cannot and gives way - and
+      // the middle two are free to fall either side of a boundary nobody
+      // designed. The leaf being whole is asserted at every width above, which
+      // is the half that matters.
+      if (width === 430) expect.soft(m.midCut, '430: the path fits whole').toBe(false);
+      if (width === 320) expect.soft(m.midCut, '320: the parent gives way').toBe(true);
       // Whole or shortened, the name in the DOM is the whole name.
       expect(m.full).toBe('פינוי התושבים, קליטתם ושיקום היישובים');
       expect(m.title).toBe(m.full);

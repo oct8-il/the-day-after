@@ -129,7 +129,11 @@ test.describe('the card', () => {
 
 test.describe('the two states of the card', () => {
   test('t01 overruns and is cut; t03 and t05 fit and are not', async ({ page }) => {
-    for (const [id, over] of [['t01', true], ['t03', true], ['t05', false], ['t04', false]] as const) {
+    // t03 fits, which is what this test's name has said all along. The table
+    // read `true` because it was calibrated in a sandbox that could not reach
+    // fonts.googleapis.com and rendered a wider fallback face; with the real
+    // Assistant, now served from this origin, t03 has 121px to spare (DIA-433).
+    for (const [id, over] of [['t01', true], ['t03', false], ['t05', false], ['t04', false]] as const) {
       await open(page, id);
       const m = await page.evaluate((sel) => {
         const card = document.querySelector(sel)!;
