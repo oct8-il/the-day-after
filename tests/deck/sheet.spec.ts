@@ -919,6 +919,36 @@ const words = (page: Page, sel: string, n = 0) => page.evaluate(({ s, i }) => {
   };
 }, { s: sel, i: n });
 
+/**
+ * The passages a finger can actually reach right now, in order: the words of
+ * each, and the drawer each one answers to. A passage is a paragraph or a list
+ * item, and since DIA-419 an overview is mostly list items - so a test that
+ * picked the nth paragraph would be picking whatever the fixture's shape
+ * happened to put there, and clicking at a point off the bottom of the frame.
+ */
+const reachable = (page: Page, root: string) => page.evaluate((r) => {
+  const blocks = [...document.querySelectorAll<HTMLElement>(
+    `${r} .deck-read p:has(.chip), ${r} .deck-read li:has(.chip)`)];
+  return blocks.map((b) => {
+    const words = b.matches('li') ? b.querySelector('span')! : b;
+    const box = words.getBoundingClientRect();
+    const chip = b.querySelector('.chip')!;
+    const x = Math.round(box.right - 30);
+    const y = Math.round(box.top + 10);
+    // Asking the page rather than the geometry: a block clipped by the card's
+    // cut still reports a rectangle, and the point inside it may belong to the
+    // button standing over it. A finger would hit the button, so a test that
+    // "clicks the passage" there is testing nothing.
+    const hit = document.elementFromPoint(x, y);
+    return {
+      x,
+      y,
+      on: box.width > 40 && !!hit && b.contains(hit),
+      cite: (chip.getAttribute('data-cite') ?? chip.getAttribute('aria-controls'))!,
+    };
+  }).filter((p) => p.on);
+}, root);
+
 /** One citation's state in the sheet: its drawer, its chip and its passage. */
 const cited = (page: Page, id: string) => page.evaluate((cite) => {
   const sheet = document.getElementById('sheet-ov')!;
@@ -1013,18 +1043,9 @@ test.describe('the whole cited passage is the target', () => {
     // The one exception to "do not scroll on open". Without it a tap near the
     // floor of the card appears to have done nothing at all.
     await open2(page);
-    const w = await page.evaluate((s) => {
-      const box = document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect();
-      const ps = [...document.querySelectorAll<HTMLElement>(s)]
-        .filter((p) => p.getBoundingClientRect().bottom < box.bottom - 4);
-      const p = ps[ps.length - 1]!;
-      const r = p.getBoundingClientRect();
-      return {
-        x: Math.round(r.right - 30), y: Math.round(r.top + 10), n: ps.length,
-        cite: p.querySelector('.chip')!.getAttribute('data-cite')!,
-      };
-    }, CARD_P);
-    expect(w.n).toBeGreaterThan(1);
+    const all = await reachable(page, '.deck-card[data-card="ov"]');
+    const w = all[all.length - 1]!;
+    expect(all.length).toBeGreaterThan(2);
 
     await page.mouse.click(w.x, w.y);
     await page.waitForTimeout(1000);
@@ -1068,10 +1089,13 @@ test.describe('the whole cited passage is the target', () => {
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
     await page.waitForTimeout(600);
 
-    const a = await words(page, SHEET_P, 0);
+    const first = await reachable(page, '#sheet-ov');
+    const a = first[0]!;
     await page.mouse.click(a.x, a.y);
     await page.waitForTimeout(500);
-    const b = await words(page, SHEET_P, 2);
+    // Re-measured: the first drawer has pushed everything under it down.
+    const then = await reachable(page, '#sheet-ov');
+    const b = then.find((p) => p.cite !== a.cite)!;
     await page.mouse.click(b.x, b.y);
     await page.waitForTimeout(500);
 

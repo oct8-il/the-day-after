@@ -18,7 +18,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stageOf } from '../lib/stage.ts';
-import { parseAnnotation } from '../lib/annotation.ts';
+import { parseAnnotation, renderAnnotation } from '../lib/annotation.ts';
 import type { Incident, Parent } from '../data/schema/index.ts';
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'data', 'test');
@@ -85,6 +85,10 @@ const required: [string, boolean][] = [
     spans.some((s) => /==[^=\n]+==/.test(s.text))],
   ['a cite span carrying more than one claim',
     spans.some((s) => s.ids.length > 1)],
+  ['a section heading standing between two cited passages',
+    some((i) => renderAnnotation(i.summary).some((p) => p.kind === 'heading'))],
+  ['a cited claim with no quote, so a drawer has to say so',
+    claims.some((c) => !c.quote)],
   ['a poll whose question and caveat carry annotation but no chip',
     some((i) => i.poll != null
       && parseAnnotation(i.poll.question).spans.length === 0

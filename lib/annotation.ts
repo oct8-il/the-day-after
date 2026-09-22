@@ -1,7 +1,7 @@
 /**
  * The annotation, as code reads it.
  *
- * The contract is docs/annotations.html - six features, one chip syntax, one
+ * The contract is docs/annotations.html - seven features, one chip syntax, one
  * coverage rule. This file is the only parser for it. The validator uses it to
  * refuse a record; the renderer (DIA-372) builds its output on the same spans,
  * so an author can never be told one thing by CI and shown another on screen.
@@ -32,6 +32,8 @@ export type AnnotationIssue = {
     | 'cite-no-ids'
     | 'cite-duplicate-id'
     | 'span-crossing'
+    | 'heading-empty'
+    | 'heading-cited'
     | 'uncovered';
   message: string;
 };
@@ -45,6 +47,21 @@ export type Parsed = {
 
 const OPEN = '[[';
 const CLOSE = ']](';
+
+/**
+ * A section heading (DIA-419). It lives in the gaps between cite spans,
+ * because it asserts nothing and therefore cites nothing - the same reasoning
+ * that exempts poll.question from coverage, said once rather than twice.
+ *
+ * One level. The reading system has exactly one heading style, so `#` through
+ * `######` all mean the same heading; refusing five of them would be pedantry
+ * about a difference the page cannot show.
+ */
+const HEADING = /^[ \t]*#{1,6}(?:[ \t]+(.*?))?[ \t]*$/;
+const headingText = (line: string) => {
+  const m = HEADING.exec(line);
+  return m ? (m[1] ?? '').trim() : null;
+};
 
 /**
  * Cut the text into cite spans and the gaps between them.
@@ -106,6 +123,20 @@ export function parseAnnotation(src: string): Parsed {
   for (const s of spans) issues.push(...crossing(s.text, `the cite covering "${snip(s.text)}"`));
   for (const g of gaps) issues.push(...crossing(g, 'text outside any cite'));
 
+  // A heading with no words of its own. Usually that is a cite written into
+  // the heading line: the pre-pass cut the span out before this ran, so what
+  // is left of the line is the hashes and nothing else.
+  for (const [n, gap] of gaps.entries()) {
+    const lines = gap.split('\n');
+    for (const [k, line] of lines.entries()) {
+      if (headingText(line) !== '') continue;
+      const cited = k === lines.length - 1 && n < spans.length;
+      issues.push(cited
+        ? { code: 'heading-cited', message: `a heading carries the cite for "${snip(spans[n]!.text)}" - a heading asserts nothing, so it may not cite` }
+        : { code: 'heading-empty', message: 'a heading has no words' });
+    }
+  }
+
   return { spans, gaps, issues };
 }
 
@@ -134,7 +165,7 @@ function crossing(text: string, where: string): AnnotationIssue[] {
   return out;
 }
 
-/** Outside a cite span, only whitespace and list markers may appear. */
+/** Outside a cite span, only whitespace, list markers and headings may appear. */
 const LIST_MARKER_ONLY = /^\s*(?:[-*+]|\d+[.)])\s*$/;
 
 /**
@@ -147,6 +178,9 @@ export function uncoveredText(gaps: string[]): string[] {
     for (const line of gap.split('\n')) {
       if (!line.trim()) continue;
       if (LIST_MARKER_ONLY.test(line)) continue;
+      // A heading states nothing, so there is nothing for it to rest on. The
+      // exemption is the field-level one of poll.question, applied to a line.
+      if (headingText(line) !== null) continue;
       out.push(line.trim());
     }
   }
@@ -192,6 +226,7 @@ export function plainText(src: string): string {
     .replace(/\*\*/g, '')
     .replace(/==/g, '')
     .replace(/^[ \t]*(?:[-*+]|\d+[.)])[ \t]+/gm, '')
+    .replace(/^[ \t]*#{1,6}[ \t]*/gm, '')
     .replace(/[ \t]+/g, ' ')
     .trim();
 }
@@ -231,10 +266,25 @@ export type Block =
  * rather than a run of one-item lists. The marker itself is not in `blocks`,
  * because a citation covers a claim and not the glyph in front of it.
  */
-export type RenderSpan = { blocks: Block[]; ids: string[]; marker?: 'ul' | 'ol' };
+export type RenderSpan = { kind: 'span'; blocks: Block[]; ids: string[]; marker?: 'ul' | 'ol' };
+
+/**
+ * A section heading between passages (DIA-419). It carries no ids, because it
+ * asserts nothing; it is a part of the field rather than a part of a span, and
+ * that is the whole of why the render output is a flat list of parts.
+ */
+export type RenderHeading = { kind: 'heading'; children: Inline[] };
+
+/** The field in order: its passages, and the headings standing between them. */
+export type RenderPart = RenderSpan | RenderHeading;
 
 const LIST_ITEM = /^\s*(?:[-*+]|(\d+)[.)])\s+(.*)$/;
-/** Marks that wrap prose: the mark goes, the words stay. */
+/**
+ * Marks that wrap prose: the mark goes, the words stay. Hashes are still here
+ * because inside a cite span they are not a heading - a heading asserts
+ * nothing and a cite span asserts everything, so a hash written in one is a
+ * mistake whose words are worth keeping (docs/annotations.html §2, §5).
+ */
 const STRIP_PREFIX = /^\s*(?:#{1,6}\s+|>\s?)/;
 /** Marks with nothing to keep. */
 const DROP_INLINE = /!\[[^\]\n]*\]\([^)\n]*\)/g;
@@ -319,10 +369,29 @@ function gapMarker(gap: string): 'ul' | 'ol' | null {
  * pushes exactly one gap before each span it records, so gaps[i] is the text
  * immediately before spans[i] however the parse ends.
  */
-export function renderAnnotation(src: string): RenderSpan[] {
+export function renderAnnotation(src: string): RenderPart[] {
   const { spans, gaps } = parseAnnotation(src);
-  return spans.map((s, i) => {
+  const out: RenderPart[] = [];
+
+  /** Every heading a gap holds, in the order it holds them. */
+  const headings = (gap: string) => {
+    for (const line of gap.split('\n')) {
+      const text = headingText(line);
+      if (!text) continue;
+      const children = inlines(text);
+      if (children.length) out.push({ kind: 'heading', children });
+    }
+  };
+
+  spans.forEach((s, i) => {
+    headings(gaps[i] ?? '');
     const marker = gapMarker(gaps[i] ?? '');
-    return { blocks: blocks(s.text), ids: s.ids, ...(marker ? { marker } : {}) };
+    out.push({ kind: 'span', blocks: blocks(s.text), ids: s.ids, ...(marker ? { marker } : {}) });
   });
+  // A heading after the last passage is still the author's words, so it is
+  // drawn. The validator is where that shape is called out (DIA-419); the
+  // renderer does not answer a writing problem by deleting the writing.
+  headings(gaps[spans.length] ?? '');
+
+  return out;
 }

@@ -274,8 +274,8 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
    */
   opens?: string;
 }) {
-  const spans = renderAnnotation(text);
-  if (!spans.length) return null;
+  const parts = renderAnnotation(text);
+  if (!parts.length) return null;
   // One name for a passage's drawer, on both copies. The card has no drawers
   // under its text, but its chips still carry the name (DIA-414) - so the
   // prefix is whichever of the two this copy was given, and the two copies of
@@ -285,8 +285,18 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
   const idOf = (n: number) => (drawers ? citeOf(n) : null);
 
   const out: ReactNode[] = [];
-  for (let i = 0; i < spans.length; i += 1) {
-    const span = spans[i]!;
+  for (let i = 0; i < parts.length; i += 1) {
+    const part = parts[i]!;
+
+    // A section heading (DIA-419, §5). It cites nothing, so it draws no chip
+    // and opens no drawer; `ann-h` is the hook both trees style it by, and on
+    // the phone it is also what the card's cut looks for.
+    if (part.kind === 'heading') {
+      out.push(<h3 key={i} className="ann-h"><Nodes nodes={part.children} /></h3>);
+      continue;
+    }
+
+    const span = part;
     if (!span.marker) {
       const id = idOf(i);
       out.push(
@@ -294,7 +304,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
           key={i}
           blocks={span.blocks}
           chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} cites={citeOf(i)} />}
-          after={id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
+          after={drawers && id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
           k={i}
         />,
       );
@@ -302,7 +312,12 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
     }
     const kind = span.marker;
     const run: { span: RenderSpan; n: number }[] = [];
-    while (i < spans.length && spans[i]!.marker === kind) { run.push({ span: spans[i]!, n: i }); i += 1; }
+    while (i < parts.length) {
+      const next = parts[i]!;
+      if (next.kind !== 'span' || next.marker !== kind) break;
+      run.push({ span: next, n: i });
+      i += 1;
+    }
     i -= 1;
     const List = kind === 'ol' ? 'ol' : 'ul';
     // The list stays one list; each item's drawer follows the whole list, in
@@ -316,7 +331,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
         </List>
         {run.map((r) => {
           const id = idOf(r.n);
-          return id ? <Drawer key={r.n} id={id} ids={r.span.ids} claims={claims} /> : null;
+          return drawers && id ? <Drawer key={r.n} id={id} ids={r.span.ids} claims={claims} /> : null;
         })}
       </Fragment>,
     );
