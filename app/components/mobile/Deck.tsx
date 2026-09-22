@@ -471,6 +471,20 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
 
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
+      // The drawer's own way out (DIA-432).
+      const close = t.closest('.deck-drawer-x');
+      if (close) {
+        const d = close.closest('.deck-drawer');
+        if (!d) return;
+        shut(d);
+        // The button the reader just dismissed no longer exists on the screen,
+        // so the focus goes back to the chip that opened it rather than being
+        // dropped at the top of the sheet.
+        deck.querySelector<HTMLElement>(`[aria-controls="${CSS.escape(d.id)}"]`)?.focus();
+        e.preventDefault();
+        return;
+      }
+
       // The glyph or the words around it - one target, one meaning (DIA-414).
       // Not the card's copy: that chip carries `data-open` and its
       // aria-controls names a sheet, not a drawer (§5, DIA-413).

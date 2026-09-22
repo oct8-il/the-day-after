@@ -143,8 +143,13 @@ function Chip({ ids, claims, variant, drawer, opens, cites }: {
  * Since v3.4 it is an excerpt rather than a box (DIA-426). Nothing is drawn
  * around it: a 2px rule in the source type's colour stands down its start
  * edge, and what ties it to the passage above is that passage staying tinted
- * while it is open (DIA-414), not a container holding the two together. There
- * is no close button either - the passage that opened it closes it.
+ * while it is open (DIA-414), not a container holding the two together.
+ *
+ * The × is back (DIA-432). With no box there is no corner to put it in, so it
+ * stands at the drawer's own top on the physical left - the side a right-to-
+ * left reading never reaches - and the first excerpt's head keeps clear of it.
+ * The passage still closes the drawer too; this is the second way, not the
+ * only one, which is why it is a button and not the region's only control.
  *
  * Several claims stack in one drawer **in the order the author wrote them in
  * the cite**, not the carousel's order. The carousel is deduplicated by first
@@ -156,6 +161,7 @@ function Drawer({ id, ids, claims }: { id: string; ids: string[]; claims: Claim[
   if (!cited.length) return null;
   return (
     <div className="deck-drawer" id={id} hidden role="region" aria-label="המקור">
+      <button type="button" className="deck-drawer-x" aria-label="סגירת המקור">×</button>
       {cited.map((c) => (
         <div key={c.id} className="deck-drawer-src" style={{ ['--c' as string]: TYPES[c.source_type].color }}>
           <div className="deck-drawer-head">

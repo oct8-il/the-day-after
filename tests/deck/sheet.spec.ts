@@ -1412,10 +1412,8 @@ test.describe('the drawer is an excerpt', () => {
     expect(m.anchors).toBe(0);
   });
 
-  test('there is no close button: the passage that opened it closes it', async ({ page }) => {
+  test('the passage that opened it closes it', async ({ page }) => {
     await drawerOf(page, 't01', 1);
-    expect(await page.evaluate(() =>
-      document.querySelectorAll('#sheet-ov .deck-drawer-x').length)).toBe(0);
     await page.evaluate(() =>
       document.querySelectorAll<HTMLElement>('#sheet-ov .deck-read button.chip')[1]!.click());
     await page.waitForTimeout(400);
@@ -1423,5 +1421,44 @@ test.describe('the drawer is an excerpt', () => {
       open: document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length,
       hot: document.querySelectorAll('#sheet-ov .deck-read [data-hot]').length,
     }))).toEqual({ open: 0, hot: 0 });
+  });
+
+  test('the × is the second way out, and it hands the focus back', async ({ page }) => {
+    // DIA-432. One × per drawer and not one per excerpt: the reader is
+    // dismissing the answer, not one of the sources in it.
+    await drawerOf(page, 't06', 0);
+    const before = await page.evaluate(() => {
+      const d = document.querySelector<HTMLElement>('#sheet-ov .deck-drawer:not([hidden])')!;
+      const x = d.querySelector<HTMLElement>('.deck-drawer-x')!;
+      const head = d.querySelector<HTMLElement>('.deck-drawer-head')!;
+      return {
+        n: d.querySelectorAll('.deck-drawer-x').length,
+        tag: x.tagName,
+        label: (x.getAttribute('aria-label') ?? '').length > 2,
+        // It stands on the physical left, clear of a head that reads rightwards.
+        left: Math.round(x.getBoundingClientRect().left - d.getBoundingClientRect().left),
+        clear: x.getBoundingClientRect().right <= head.getBoundingClientRect().left
+          + parseFloat(getComputedStyle(head).paddingLeft) + 1,
+        // Out of flow: the column of excerpts does not know it is there.
+        srcTop: Math.round(d.querySelector('.deck-drawer-src')!.getBoundingClientRect().top
+          - d.getBoundingClientRect().top),
+      };
+    });
+    expect(before.n).toBe(1);
+    expect(before.tag).toBe('BUTTON');
+    expect(before.label).toBe(true);
+    expect(before.left).toBe(0);
+    expect(before.clear).toBe(true);
+    expect(before.srcTop).toBe(0);
+
+    await page.click('#sheet-ov .deck-drawer:not([hidden]) .deck-drawer-x');
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => ({
+      open: document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length,
+      hot: document.querySelectorAll('#sheet-ov .deck-read [data-hot]').length,
+      expanded: document.querySelectorAll('#sheet-ov .deck-read .chip[aria-expanded="true"]').length,
+      // The button the reader just dismissed is gone; the chip gets the focus.
+      onChip: document.activeElement?.classList.contains('chip') ?? false,
+    }))).toEqual({ open: 0, hot: 0, expanded: 0, onChip: true });
   });
 });

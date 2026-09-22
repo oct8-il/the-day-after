@@ -1546,7 +1546,7 @@
      `border-inline-start`: both resolve to the same edge here, and every
      edge-anchored rule in this file is physical because the ones that were
      not have all been bugs. */
-  .deck-drawer{margin:12px 0 4px;display:flex;flex-direction:column;
+  .deck-drawer{position:relative;margin:12px 0 4px;display:flex;flex-direction:column;
     animation:deck-drawer-open .16s ease}
   .deck-drawer[hidden]{display:none}
   @keyframes deck-drawer-open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
@@ -1565,6 +1565,10 @@
     display:flex;flex-direction:column;gap:6px}
   /* A +N passage stacks one excerpt per claim, in the cite's order. */
   .deck-drawer-src + .deck-drawer-src{margin-top:14px}
+  /* :first-of-type and not :first-child - the × is the drawer's first child,
+     and it is a button rather than a div, so the first excerpt is still the
+     first of its own type. */
+  .deck-drawer-src:first-of-type .deck-drawer-head{padding-left:26px}
   .deck-drawer-head{display:flex;align-items:center;gap:6px;
     font-size:12.5px;font-weight:700;color:var(--c)}
   .deck-drawer-name{font-size:14px;color:var(--text)}
@@ -1594,6 +1598,16 @@
     font-size:12.5px;font-weight:600;text-decoration:none;
     color:color-mix(in srgb,var(--text) 56%,transparent)}
   .deck-drawer-go[data-dead]{color:color-mix(in srgb,var(--text) 45%,transparent)}
+
+  /* The way out, back by DIA-432. The excerpt has no box, so the × stands at
+     the drawer's own top on the physical left - `inset-inline-end` would
+     resolve there too, and physical is this file's rule for anything anchored
+     to an edge. It is out of flow, so the column of excerpts is unaware of it. */
+  .deck-drawer-x{position:absolute;left:0;top:-2px;width:22px;height:22px;
+    border:0;border-radius:50%;padding:0;font:inherit;font-size:13px;line-height:1;
+    cursor:pointer;
+    background:color-mix(in srgb,var(--text) 9%,transparent);
+    color:color-mix(in srgb,var(--text) 60%,transparent)}
 
   /* The carousel, docked to the foot of the column and bleeding the slide's
      own 20px so a card can sit against the edge. The card is the link; §5 is
