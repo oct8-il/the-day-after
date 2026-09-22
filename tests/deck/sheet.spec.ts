@@ -251,21 +251,35 @@ test.describe('the entrance', () => {
    * The entrance is read off the animation rather than sampled after a wait.
    * An ease-out does most of its travel early, so "60ms in" is a race with
    * the harness; the animation's own name, duration and keyframes are facts.
+   *
+   * The cover starts two frames after the tap, not on it: the sheet is
+   * unhidden parked below the frame (`data-in="pre"`) and set moving once it
+   * has been laid out and painted, so the first frames of the animation are
+   * not lost to the layout of a screen of reading. The read waits for that.
    */
-  const entrance = (page: Page, sel: string) => page.evaluate((s) => {
-    document.querySelector<HTMLElement>(s)!.click();
-    const el = document.querySelector('#sheet-ov')!;
-    const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
-    const kf = (a?.effect as KeyframeEffect | undefined)?.getKeyframes() ?? [];
-    return {
-      how: el.getAttribute('data-in'),
-      name: a?.animationName ?? null,
-      ms: (a?.effect?.getTiming().duration ?? null) as number | null,
-      from: kf[0] as Record<string, string> | undefined,
-      to: kf[kf.length - 1] as Record<string, string> | undefined,
-      dim: document.querySelector('.deck')!.hasAttribute('data-dim'),
-    };
-  }, sel);
+  const entrance = async (page: Page, sel: string) => {
+    await page.evaluate((s) => document.querySelector<HTMLElement>(s)!.click(), sel);
+    await page.waitForFunction(() => document.querySelector('#sheet-ov')?.getAttribute('data-in') === 'cover');
+    return page.evaluate(() => {
+      const el = document.querySelector('#sheet-ov')!;
+      const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
+      const kf = (a?.effect as KeyframeEffect | undefined)?.getKeyframes() ?? [];
+      const lip = getComputedStyle(el, '::before');
+      return {
+        how: el.getAttribute('data-in'),
+        name: a?.animationName ?? null,
+        ms: (a?.effect?.getTiming().duration ?? null) as number | null,
+        from: kf[0] as Record<string, string> | undefined,
+        to: kf[kf.length - 1] as Record<string, string> | undefined,
+        // Only `transform` is in the keyframes: the edge and its shadow are a
+        // lip above the box that never animates, so the compositor moves the
+        // sheet and nothing is repainted per frame.
+        props: Object.keys(kf[0] ?? {}).filter((k) => !['offset', 'computedOffset', 'easing', 'composite'].includes(k)),
+        lip: { shadow: lip.boxShadow, radius: lip.borderTopLeftRadius, bottom: lip.bottom, height: el.getBoundingClientRect().height },
+        dim: document.querySelector('.deck')!.hasAttribute('data-dim'),
+      };
+    });
+  };
 
   /**
    * One entrance, whichever control opened it (Roy, 21 September). §5 ruled a
@@ -283,13 +297,17 @@ test.describe('the entrance', () => {
       const m = await entrance(page, sel);
       expect(m.how).toBe('cover');
       expect(m.name).toBe('deck-sheet-cover');
-      expect(m.ms).toBe(340);
-      // Up from the bottom, with a shadow on the leading edge and rounded top
-      // corners that square off as it lands.
+      expect(m.ms).toBe(400);
+      // Up from the bottom, moving nothing but transform.
       expect(m.from?.transform).toBe('translateY(100%)');
       expect(m.to?.transform).toBe('translateY(0px)');
-      expect(m.from?.boxShadow).toContain('-14px');
-      expect(m.from?.boxShadow).not.toBe(m.to?.boxShadow);
+      expect(m.props).toEqual(['transform']);
+      // The shadowed, rounded leading edge is the lip above the sheet's box;
+      // it squares off by leaving the frame, not by animating.
+      expect(m.lip.shadow).toContain('-14px');
+      expect(m.lip.radius).toBe('18px');
+      // bottom:100% - the whole lip sits above the sheet's box.
+      expect(m.lip.bottom).toBe(`${m.lip.height}px`);
       expect(m.dim).toBe(true);
 
       await page.waitForTimeout(600);
@@ -303,14 +321,15 @@ test.describe('the entrance', () => {
     // sheet travelled the whole frame in the first fifth of its 340ms and sat
     // still for the rest. At real speed that reads as a cut, not a cover.
     await open2(page);
+    await page.evaluate(() => document.querySelector<HTMLElement>('.deck-card[data-card="ov"] .deck-read .chip')!.click());
+    await page.waitForFunction(() => document.querySelector('#sheet-ov')?.getAttribute('data-in') === 'cover');
     const by = await page.evaluate(() => {
-      document.querySelector<HTMLElement>('.deck-card[data-card="ov"] .deck-read .chip')!.click();
       const el = document.querySelector('#sheet-ov')!;
       const a = el.getAnimations()[0]!;
       a.pause();
       const frame = el.getBoundingClientRect().height;
       return [0.25, 0.5, 0.75].map((f) => {
-        a.currentTime = 340 * f;
+        a.currentTime = 400 * f;
         const m = new DOMMatrix(getComputedStyle(el).transform);
         return Math.round(((frame - m.m42) / frame) * 100);
       });
@@ -331,7 +350,7 @@ test.describe('the entrance', () => {
     const out = await page.evaluate(async () => {
       document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click();
       // One frame, so the exit's animation has been created - and well short
-      // of the 340ms it runs for, so nothing here is a race with the clock.
+      // of the 400ms it runs for, so nothing here is a race with the clock.
       await new Promise((r) => requestAnimationFrame(r));
       const el = document.querySelector('#sheet-ov')!;
       const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
@@ -349,7 +368,7 @@ test.describe('the entrance', () => {
     // animation that already finished.
     expect(out.out).toBe('cover');
     expect(out.name).toBe('deck-sheet-uncover');
-    expect(out.ms).toBe(340);
+    expect(out.ms).toBe(400);
     expect(out.from).toBe('translateY(0px)');
     expect(out.to).toBe('translateY(100%)');
 

@@ -114,8 +114,14 @@ const ONE_ROW = 48;
  * Roy, 21 September: the cover opens it either way. It is here rather than
  * only in the stylesheet because the exit has to be timed before the sheet is
  * hidden, and two numbers that must agree are better written once.
+ *
+ * 400 rather than 340: the first two versions stuttered, and a stutter makes
+ * any duration read as a jump. With the entrance moving only `transform` on a
+ * sheet that is already laid out (see openSheet), the travel is visible for
+ * the whole of it, and a full-screen cover at 340 is brisk to the point of a
+ * flick. Nothing else here changed.
  */
-const COVER = 340;
+const COVER = 400;
 
 export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /**
@@ -780,11 +786,14 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     deck?.style.removeProperty('--pull');
     deck?.style.removeProperty('--pull-p');
     track.current?.removeAttribute('inert');
+    // Parked but not yet moving (openSheet's two frames): there is no cover
+    // to reverse, so it is hidden as `still` is.
+    const wasPre = el.getAttribute('data-in') === 'pre';
     el.removeAttribute('data-in');
 
     // It leaves the way it came. Under reduced motion both ways are instant.
     if (leaving.current) clearTimeout(leaving.current);
-    if (open.mode === 'still') {
+    if (open.mode === 'still' || wasPre) {
       el.setAttribute('hidden', '');
     } else {
       el.setAttribute('data-out', open.mode);
@@ -818,19 +827,41 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     el.style.setProperty('--gut-l', `${Math.round(box.left - frame.left)}px`);
 
     const how: Entrance = reduced() ? 'still' : 'cover';
+    // The cover does not start on the frame the sheet is unhidden. Unhiding a
+    // display:none sheet lays out and paints a screen of reading, and when
+    // the animation was applied in that same frame its clock started before
+    // the first frame could be drawn - so the first frames were lost to the
+    // layout and the sheet appeared already part way up, then stuttered as
+    // the paint caught up. Instead: park it laid out below the frame (`pre`,
+    // no transition), force the layout now, and start the cover two frames
+    // later, once there is a painted sheet for the compositor to move.
     el.removeAttribute('hidden');
-    el.setAttribute('data-in', how);
+    el.setAttribute('data-in', how === 'cover' ? 'pre' : 'still');
     const scroll = el.querySelector<HTMLElement>('.deck-sheet-scroll');
     if (scroll) scroll.scrollTop = 0;
 
     deck.setAttribute('data-sheet', id);
-    if (how === 'cover') deck.setAttribute('data-dim', '');
     // The deck behind is not a second reading for a screen reader to find.
     track.current?.setAttribute('inert', '');
 
     sheet.current = { el, mode: how, opener };
-    el.querySelector<HTMLElement>('.deck-sheet-x')?.focus();
+    // preventScroll: the × is inside a frame that clips, and a focus that
+    // tried to reveal it would scroll the frame itself.
+    const x = el.querySelector<HTMLElement>('.deck-sheet-x');
     window.history.pushState({ ...window.history.state, deckSheet: true }, '');
+
+    if (how === 'still') {
+      x?.focus({ preventScroll: true });
+      return;
+    }
+    void el.offsetHeight;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Closed again before it started: nothing to animate.
+      if (sheet.current?.el !== el || el.getAttribute('data-in') !== 'pre') return;
+      el.setAttribute('data-in', 'cover');
+      deck.setAttribute('data-dim', '');
+      x?.focus({ preventScroll: true });
+    }));
   }, []);
 
   /** Back closes the sheet and nothing else. */

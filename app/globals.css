@@ -1322,22 +1322,42 @@
   /* The dim, behind the sheet, so the slide is visibly being covered rather
      than replaced. It un-fades with a pull. */
   .deck-dim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;
-    transition:opacity .34s cubic-bezier(.25,.46,.45,.94)}
+    transition:opacity .4s cubic-bezier(.25,.46,.45,.94)}
   .deck[data-dim] .deck-dim{opacity:calc(1 - var(--pull-p,0))}
   .deck[data-pull] .deck-dim{transition:none}
 
   .deck-sheet{position:absolute;inset:0;display:flex;flex-direction:column;
-    background:var(--bg);overflow:hidden;
+    background:var(--bg);
     /* Pull down to dismiss follows the finger 1:1 (DIA-417); with no pull in
        progress the same declaration is the spring back. */
     transform:translateY(var(--pull,0px));
-    transition:transform .24s cubic-bezier(.2,.8,.3,1)}
+    transition:transform .24s cubic-bezier(.2,.8,.3,1);
+    /* The sheet is its own layer: its entrance and its pull move only
+       `transform`, so the compositor moves it and the main thread never
+       repaints a screen of reading per frame. No overflow:hidden - the frame
+       clips, and the lip below has to be drawn outside the box. */
+    will-change:transform}
   .deck[data-pull] .deck-sheet{transition:none}
   .deck-sheet[hidden]{display:none}
+  /* The leading edge: a rounded, shadowed lip that sits ABOVE the sheet's box.
+     While the sheet is below the frame the lip is what rises first; once the
+     sheet has landed the lip is above the frame and clipped, which is how the
+     corners "square off" without animating a radius, and how the shadow goes
+     without animating a shadow - both were painted per frame before, on a
+     full-screen box with overflow:hidden, and that repaint is what stuttered.
+     A pull (DIA-417) brings the same lip back into view for free. */
+  .deck-sheet::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:18px;
+    background:var(--bg);border-radius:18px 18px 0 0;
+    box-shadow:0 -14px 34px rgba(0,0,0,.5);pointer-events:none}
+  /* The frame before the entrance: laid out, painted, and parked below the
+     frame with no transition, so the cover's first frame is a move and not
+     the layout of a screen of reading (see openSheet). */
+  .deck-sheet[data-in="pre"]{transform:translateY(100%);transition:none}
 
   /* The entrance, and the same exit - it leaves the way it came. The sheet
      covers from the bottom up, with a shadowed leading edge and rounded top
-     corners that square off as it lands, the slide dimming behind it.
+     corners that square off as it lands (the lip, above), the slide dimming
+     behind it.
      §5 ruled a second, quieter entrance from the button. It was built and
      dropped on 21 September: the sheet's ground is the slide's ground and its
      first lines are in the same places, so a 160ms opacity fade between two
@@ -1349,28 +1369,20 @@
      finished one and the sheet leaves without ever moving. The exit has to
      change the animation's *name* to start at all - and an accelerating curve
      is the honest reverse of a decelerating one anyway. */
-  @keyframes deck-sheet-cover{
-    from{transform:translateY(100%);border-radius:18px 18px 0 0;
-      box-shadow:0 -14px 34px rgba(0,0,0,.5)}
-    to{transform:translateY(0);border-radius:0;
-      box-shadow:0 -14px 34px rgba(0,0,0,0)}
-  }
-  @keyframes deck-sheet-uncover{
-    from{transform:translateY(0);border-radius:0;
-      box-shadow:0 -14px 34px rgba(0,0,0,0)}
-    to{transform:translateY(100%);border-radius:18px 18px 0 0;
-      box-shadow:0 -14px 34px rgba(0,0,0,.5)}
-  }
+  /* Transform only. The edge and the shadow are the lip (::before above),
+     which does not animate at all. */
+  @keyframes deck-sheet-cover{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes deck-sheet-uncover{from{transform:translateY(0)}to{transform:translateY(100%)}}
   /* The cover's curve is an ordinary ease-out and the exit's its mirror. The
      first pair were drawn with both control points' y near 1 by x = .3, which
      put the whole travel into the first fifth of the duration: at 340ms that
      is a jump followed by nothing, and the duration stopped meaning anything. */
-  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,340ms) cubic-bezier(.25,.46,.45,.94)}
-  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,340ms) cubic-bezier(.7,.38,.8,1) forwards}
+  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,400ms) cubic-bezier(.25,.46,.45,.94)}
+  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,400ms) cubic-bezier(.7,.38,.8,1) forwards}
 
   /* The bar: a × at the physical left (44px target) and a chip centred. Its
      underside is where the card's content begins. */
-  .deck-sheet-bar{flex:none;height:var(--bar,110px);box-sizing:border-box;
+  .deck-sheet-bar{flex:none;height:var(--bar,110px);box-sizing:border-box;overflow:hidden;
     padding-top:var(--deck-top,52px);position:relative;
     display:flex;align-items:center;justify-content:center}
   /* Physical left: the × is at the frame's left edge whatever the direction,
