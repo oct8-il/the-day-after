@@ -891,3 +891,299 @@ test.describe('under a finger', () => {
     await ctx.close();
   });
 });
+
+/**
+ * The whole cited passage is the target (DIA-414).
+ *
+ * The glyph is 20px: the right size to look at and the wrong size to hit. So
+ * the words it ends take the tap, and the glyph stays the one control - which
+ * is why every assertion here is made twice over, once about what a finger
+ * reaches and once about what the accessibility tree contains.
+ *
+ * The clicks are the mouse's rather than the touchscreen's on purpose: this is
+ * about hit-testing and not about a gesture, and a real click carries the
+ * element the point actually landed on, which is the whole claim being tested.
+ */
+const CARD_P = '.deck-card[data-card="ov"] .deck-read p:has(.chip)';
+const SHEET_P = '#sheet-ov .deck-read p:has(.chip)';
+
+/** A point in the words of a passage, well clear of the glyph that ends it. */
+const words = (page: Page, sel: string, n = 0) => page.evaluate(({ s, i }) => {
+  const p = [...document.querySelectorAll<HTMLElement>(s)][i]!;
+  const r = p.getBoundingClientRect();
+  const chip = p.querySelector('.chip')!;
+  return {
+    x: Math.round(r.right - 30),
+    y: Math.round(r.top + 10),
+    cite: (chip.getAttribute('data-cite') ?? chip.getAttribute('aria-controls'))!,
+  };
+}, { s: sel, i: n });
+
+/** One citation's state in the sheet: its drawer, its chip and its passage. */
+const cited = (page: Page, id: string) => page.evaluate((cite) => {
+  const sheet = document.getElementById('sheet-ov')!;
+  const d = document.getElementById(cite)!;
+  const chip = sheet.querySelector(`[aria-controls="${CSS.escape(cite)}"]`)!;
+  return {
+    drawer: !d.hasAttribute('hidden'),
+    expanded: chip.getAttribute('aria-expanded'),
+    hot: !!chip.closest('.deck-read p,.deck-read li')?.hasAttribute('data-hot'),
+    open: sheet.querySelectorAll('.deck-drawer:not([hidden])').length,
+    hots: sheet.querySelectorAll('.deck-read [data-hot]').length,
+  };
+}, id);
+
+test.describe('the whole cited passage is the target', () => {
+  test('the card names, on every chip, the drawer the sheet will open', async ({ page }) => {
+    // The card has no drawers under its text, but it is the same text as the
+    // sheet's, so each chip can say which drawer its passage answers to.
+    await open2(page);
+    const m = await page.evaluate(() => {
+      const cites = [...document.querySelectorAll('.deck-card[data-card="ov"] .deck-read .chip')]
+        .map((c) => c.getAttribute('data-cite'));
+      return {
+        n: cites.length,
+        found: cites.filter((c) => !!c && !!document.querySelector(`#sheet-ov #${CSS.escape(c)}`)).length,
+      };
+    });
+    expect(m.n).toBeGreaterThan(2);
+    expect(m.found).toBe(m.n);
+  });
+
+  test('a stage card names its own sheet’s drawers, not another stage’s', async ({ page }) => {
+    // Every stage on the stack, not only the one it rests on: the two copies
+    // of a stage's summary used to be given different prefixes, which no
+    // single stage could show.
+    await open3(page);
+    const m = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll<HTMLElement>('.deck-stage .deck-card[data-card]')]
+        .filter((c) => c.querySelector('.deck-read .chip'));
+      let n = 0; let found = 0;
+      for (const card of cards) {
+        const id = card.getAttribute('data-card')!;
+        for (const chip of card.querySelectorAll('.deck-read .chip')) {
+          const cite = chip.getAttribute('data-cite');
+          n += 1;
+          if (cite && document.querySelector(`#sheet-${CSS.escape(id)} #${CSS.escape(cite)}`)) found += 1;
+        }
+      }
+      return { cards: cards.length, n, found };
+    });
+    expect(m.cards).toBeGreaterThan(0);
+    expect(m.n).toBeGreaterThan(0);
+    expect(m.found).toBe(m.n);
+  });
+
+  test('slide 2: a tap in the middle of a sentence opens the sheet at it', async ({ page }) => {
+    await open2(page);
+    const w = await words(page, CARD_P);
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(800);
+
+    expect(await page.evaluate(() =>
+      !document.getElementById('sheet-ov')!.hasAttribute('hidden'))).toBe(true);
+    expect(await cited(page, w.cite)).toEqual({
+      drawer: true, expanded: 'true', hot: true, open: 1, hots: 1,
+    });
+    // Aligned and unscrolled: the sentence is where it was on the slide.
+    expect(await page.evaluate(() =>
+      document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-scroll')!.scrollTop)).toBe(0);
+  });
+
+  test('the sheet lands first and the drawer arrives after it', async ({ page }) => {
+    // Two events in sequence, not at once: opening both together would move
+    // the reading twice inside 300ms.
+    await open2(page);
+    const w = await words(page, CARD_P);
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(140);
+    const during = await page.evaluate(() => ({
+      mode: document.getElementById('sheet-ov')!.getAttribute('data-in'),
+      open: document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length,
+    }));
+    await page.waitForTimeout(700);
+    const after = await page.evaluate(() =>
+      document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length);
+    expect(during.mode).toBe('cover');
+    expect(during.open).toBe(0);
+    expect(after).toBe(1);
+  });
+
+  test('a passage low on the card: it lands aligned, then scrolls the minimum', async ({ page }) => {
+    // The one exception to "do not scroll on open". Without it a tap near the
+    // floor of the card appears to have done nothing at all.
+    await open2(page);
+    const w = await page.evaluate((s) => {
+      const box = document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect();
+      const ps = [...document.querySelectorAll<HTMLElement>(s)]
+        .filter((p) => p.getBoundingClientRect().bottom < box.bottom - 4);
+      const p = ps[ps.length - 1]!;
+      const r = p.getBoundingClientRect();
+      return {
+        x: Math.round(r.right - 30), y: Math.round(r.top + 10), n: ps.length,
+        cite: p.querySelector('.chip')!.getAttribute('data-cite')!,
+      };
+    }, CARD_P);
+    expect(w.n).toBeGreaterThan(1);
+
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(1000);
+    const m = await page.evaluate((cite) => {
+      const sc = document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-scroll')!;
+      const b = sc.getBoundingClientRect();
+      const p = document.querySelector(`#sheet-ov [aria-controls="${CSS.escape(cite)}"]`)!
+        .closest('.deck-read p,.deck-read li')!;
+      return {
+        below: document.getElementById(cite)!.getBoundingClientRect().bottom - b.bottom,
+        passage: p.getBoundingClientRect().top - b.top,
+      };
+    }, w.cite);
+    // The drawer is on the screen, and the sentence it belongs to still is too.
+    expect(m.below).toBeLessThanOrEqual(1);
+    expect(m.passage).toBeGreaterThanOrEqual(-1);
+    expect((await cited(page, w.cite)).hot).toBe(true);
+  });
+
+  test('in the sheet a tap on the words toggles the drawer', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+
+    const w = await words(page, SHEET_P, 1);
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(500);
+    const on = await cited(page, w.cite);
+
+    const again = await words(page, SHEET_P, 1);
+    await page.mouse.click(again.x, again.y);
+    await page.waitForTimeout(500);
+    const off = await cited(page, w.cite);
+
+    expect(on).toEqual({ drawer: true, expanded: 'true', hot: true, open: 1, hots: 1 });
+    expect(off).toEqual({ drawer: false, expanded: 'false', hot: false, open: 0, hots: 0 });
+  });
+
+  test('the tint moves with the drawer: one passage marked, never two', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+
+    const a = await words(page, SHEET_P, 0);
+    await page.mouse.click(a.x, a.y);
+    await page.waitForTimeout(500);
+    const b = await words(page, SHEET_P, 2);
+    await page.mouse.click(b.x, b.y);
+    await page.waitForTimeout(500);
+
+    expect(await cited(page, a.cite)).toEqual({
+      drawer: false, expanded: 'false', hot: false, open: 1, hots: 1,
+    });
+    expect(await cited(page, b.cite)).toEqual({
+      drawer: true, expanded: 'true', hot: true, open: 1, hots: 1,
+    });
+  });
+
+  test('a bullet is a passage too, and its words carry the mark', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+
+    const w = await page.evaluate(() => {
+      const li = document.querySelector<HTMLElement>('#sheet-ov .deck-read li:has(.chip)')!;
+      const r = li.querySelector('span')!.getBoundingClientRect();
+      return {
+        x: Math.round(r.right - 30), y: Math.round(r.top + 8),
+        cite: li.querySelector('.chip')!.getAttribute('aria-controls')!,
+      };
+    });
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(500);
+    const m = await page.evaluate((cite) => {
+      const li = document.querySelector(`#sheet-ov [aria-controls="${CSS.escape(cite)}"]`)!.closest('li')!;
+      return {
+        tag: li.tagName,
+        hot: li.hasAttribute('data-hot'),
+        tint: getComputedStyle(li.querySelector('span')!).backgroundColor,
+        drawer: !document.getElementById(cite)!.hasAttribute('hidden'),
+      };
+    }, w.cite);
+    expect(m.tag).toBe('LI');
+    expect(m.hot).toBe(true);
+    expect(m.drawer).toBe(true);
+    // The tint is the words', not the row's: the bullet stands in its own gutter.
+    expect(m.tint).not.toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('it tints while it is held, before anything has opened', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+
+    const w = await words(page, SHEET_P, 1);
+    const flat = await page.evaluate((s) =>
+      getComputedStyle(document.querySelectorAll(s)[1]!).backgroundColor, SHEET_P);
+    await page.mouse.move(w.x, w.y);
+    await page.mouse.down();
+    const held = await page.evaluate((s) =>
+      getComputedStyle(document.querySelectorAll(s)[1]!).backgroundColor, SHEET_P);
+    await page.mouse.up();
+    expect(flat).toBe('rgba(0, 0, 0, 0)');
+    expect(held).not.toBe(flat);
+  });
+
+  test('a tap inside an open drawer is not a passage tap', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+    const w = await words(page, SHEET_P, 1);
+    await page.mouse.click(w.x, w.y);
+    await page.waitForTimeout(500);
+
+    await page.evaluate((cite) => {
+      document.querySelector<HTMLElement>(`#${CSS.escape(cite)} .deck-drawer-quote`)!.click();
+    }, w.cite);
+    await page.waitForTimeout(400);
+    // The quote is a paragraph in the same column, and it is evidence, not a claim.
+    expect(await cited(page, w.cite)).toEqual({
+      drawer: true, expanded: 'true', hot: true, open: 1, hots: 1,
+    });
+  });
+
+  test('a link inside a passage keeps its own behaviour', async ({ page }) => {
+    await open2(page, 't03');
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+    const n = await page.evaluate(() => {
+      const a = document.querySelector<HTMLElement>('#sheet-ov .deck-read p a')!;
+      a.addEventListener('click', (e) => e.preventDefault(), { once: true });
+      a.click();
+      return document.querySelectorAll('#sheet-ov .deck-drawer:not([hidden])').length;
+    });
+    expect(n).toBe(0);
+  });
+
+  test('the passage is a pointer convenience, not a second control', async ({ page }) => {
+    await open2(page);
+    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+    await page.waitForTimeout(600);
+    const m = await page.evaluate(() => {
+      const ps = [...document.querySelectorAll(
+        '#sheet-ov .deck-read p:has(.chip),#sheet-ov .deck-read li:has(.chip)')];
+      return {
+        n: ps.length,
+        roles: ps.filter((p) => p.hasAttribute('role')).length,
+        tabbed: ps.filter((p) => p.hasAttribute('tabindex')).length,
+        labelled: ps.filter((p) => p.hasAttribute('aria-label')).length,
+        controls: document.querySelectorAll('#sheet-ov .deck-read [aria-controls]').length,
+        chips: document.querySelectorAll('#sheet-ov .deck-read .chip').length,
+        pointer: ps.every((p) => getComputedStyle(p.matches('li') ? p.querySelector('span')! : p).cursor === 'pointer'),
+      };
+    });
+    expect(m.n).toBeGreaterThan(2);
+    expect(m.roles).toBe(0);
+    expect(m.tabbed).toBe(0);
+    expect(m.labelled).toBe(0);
+    expect(m.controls).toBe(m.chips);
+    expect(m.pointer).toBe(true);
+  });
+});

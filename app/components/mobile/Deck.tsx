@@ -136,6 +136,42 @@ const COVER = 300;
  */
 const FLIGHT = 220;
 
+/**
+ * A cited passage, and the blocks that only look like one (DIA-414).
+ *
+ * The citation is a 20px glyph: the right size to look at and the wrong size
+ * to hit, so the target is the whole passage the glyph ends and the glyph is
+ * only its visible cue. The annotation already wraps every cited passage, so
+ * this maps onto what the author wrote - nothing is inferred from layout.
+ *
+ * What is not a passage: a link keeps its own behaviour, a button is already a
+ * control, and the quote inside an open drawer is a `p` in the same column but
+ * is evidence rather than a claim. The carousel is outside `.deck-read` and so
+ * never reaches here at all.
+ */
+const PASSAGE = '.deck-read p,.deck-read li';
+
+/** The chip a tap means: the one that was hit, or the one that ends its passage. */
+const chipOf = (t: HTMLElement): HTMLElement | null => {
+  const hit = t.closest<HTMLElement>('button.chip');
+  if (hit) return hit;
+  if (t.closest('a,button,.deck-drawer')) return null;
+  return t.closest<HTMLElement>(PASSAGE)?.querySelector<HTMLElement>('.chip') ?? null;
+};
+
+/**
+ * Close one drawer: hidden, its chip collapsed, and its passage no longer
+ * marked. Three places close drawers - a second chip, leaving the slide, and
+ * closing the sheet - and a passage left tinted with nothing under it would be
+ * pointing at an answer that is no longer on the screen.
+ */
+const shutDrawer = (root: ParentNode, d: Element) => {
+  d.setAttribute('hidden', '');
+  const chip = root.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`);
+  chip?.setAttribute('aria-expanded', 'false');
+  chip?.closest(PASSAGE)?.removeAttribute('data-hot');
+};
+
 export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /**
    * §3's path, as three parts rather than a list, because the three behave
@@ -430,10 +466,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
     if (!deck) return;
 
-    const shut = (d: Element) => {
-      d.setAttribute('hidden', '');
-      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
-    };
+    const shut = (d: Element) => shutDrawer(deck, d);
     const shutAll = () => deck.querySelectorAll('.deck-drawer:not([hidden])').forEach(shut);
 
     const onClick = (e: MouseEvent) => {
@@ -444,10 +477,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         if (d) { shut(d); e.preventDefault(); }
         return;
       }
+      // The glyph or the words around it - one target, one meaning (DIA-414).
       // Not the card's copy: that chip carries `data-open` and its
       // aria-controls names a sheet, not a drawer (§5, DIA-413).
-      const chip = t.closest<HTMLElement>('button.chip[aria-controls]:not([data-open])');
-      if (!chip) return;
+      const chip = chipOf(t);
+      if (!chip || chip.hasAttribute('data-open') || !chip.hasAttribute('aria-controls')) return;
       e.preventDefault();
 
       const d = deck.querySelector<HTMLElement>(`#${CSS.escape(chip.getAttribute('aria-controls')!)}`);
@@ -458,6 +492,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
 
       d.removeAttribute('hidden');
       chip.setAttribute('aria-expanded', 'true');
+      // The sentence stays tinted while its drawer is open, so a reader who
+      // has scrolled can still see which one the evidence belongs to.
+      chip.closest(PASSAGE)?.setAttribute('data-hot', '');
 
       // §5: if it would open below the fold the column scrolls the minimum
       // needed to show it, never more, so the passage above stays on screen.
@@ -478,10 +515,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /** Leaving the slide closes it: an open drawer is a question already answered. */
   useEffect(() => {
     const deck = crumbBar.current?.parentElement as HTMLElement | undefined;
-    deck?.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => {
-      d.setAttribute('hidden', '');
-      deck.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
-    });
+    deck?.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(deck, d));
   }, [at]);
 
   /**
@@ -795,10 +829,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
 
     // Closing the sheet closes its drawer: an open drawer is a question the
     // reader has already answered (§5).
-    el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => {
-      d.setAttribute('hidden', '');
-      el.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`)?.setAttribute('aria-expanded', 'false');
-    });
+    el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(el, d));
     deck?.removeAttribute('data-sheet');
     deck?.removeAttribute('data-dim');
     track.current?.removeAttribute('inert');
@@ -838,6 +869,14 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
      * wrong when the focus is script-driven after a touch (DIA-429).
      */
     quiet?: boolean,
+    /**
+     * A drawer to open once the sheet has landed - a passage tap on the card
+     * (DIA-414). Two events in sequence and not at once: the sheet covers from
+     * the bottom aligned and unscrolled, so the reader sees the sentence they
+     * touched exactly where it was, and only then does the evidence arrive
+     * under it. Opening both together would move the text twice in 300ms.
+     */
+    drawer?: string | null,
   ) => {
     const deck = deckEl();
     const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
@@ -885,8 +924,20 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     const x = el.querySelector<HTMLElement>('.deck-sheet-x');
     window.history.pushState({ ...window.history.state, deckSheet: true }, '');
 
+    // It arrives by clicking the sheet's own chip, so a passage tap inherits
+    // DIA-386 whole: one drawer at a time, and the minimum scroll if it would
+    // open below the fold - the one thing that may move the reading, because
+    // without it the tap appears to have done nothing.
+    const land = () => {
+      if (sheet.current?.el !== el) return;
+      // The reader got there first, in the 300ms this took.
+      if (el.querySelector('.deck-drawer:not([hidden])')) return;
+      el.querySelector<HTMLElement>(`[aria-controls="${CSS.escape(drawer!)}"]`)?.click();
+    };
+
     if (how === 'still') {
       x?.focus({ preventScroll: true });
+      if (drawer) land();
       return;
     }
     void el.offsetHeight;
@@ -897,6 +948,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       // Only the cover dims: a fade the reader asked for announces nothing.
       if (how === 'cover') deck.setAttribute('data-dim', '');
       x?.focus({ preventScroll: true });
+      if (drawer) setTimeout(land, how === 'cover' ? COVER : FADE);
     }));
   }, []);
 
@@ -912,7 +964,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if (!deck) return;
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      const btn = t.closest<HTMLElement>('[data-open]');
+      // The whole cited passage opens the sheet, not only the glyph that ends
+      // it (DIA-414); `.deck-more` is a button of its own and is hit directly.
+      const chip = chipOf(t);
+      const btn = t.closest<HTMLElement>('[data-open]')
+        ?? (chip?.hasAttribute('data-open') ? chip : null);
       if (btn) {
         e.preventDefault();
         // §5's two entrances. The button is a deliberate act and the sheet
@@ -920,7 +976,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         // from the bottom up - the cover is what says the mode changed.
         // `detail` is 0 when a button was activated from the keyboard, and
         // the count of clicks when it was pressed.
-        openSheet(btn.getAttribute('data-open')!, btn, btn.classList.contains('deck-more') ? 'fade' : 'cover', e.detail > 0);
+        openSheet(
+          btn.getAttribute('data-open')!, btn,
+          btn.classList.contains('deck-more') ? 'fade' : 'cover',
+          e.detail > 0,
+          btn.getAttribute('data-cite'),
+        );
         return;
       }
       if (t.closest('.deck-sheet-x')) { e.preventDefault(); closeSheet(); }

@@ -64,10 +64,18 @@ function Nodes({ nodes }: { nodes: Inline[] }) {
 const cite = (ids: string[], claims: Claim[]) =>
   ids.map((id) => claims.find((c) => c.id === id)).filter((c): c is Claim => !!c);
 
-function Chip({ ids, claims, variant, drawer, opens }: {
+function Chip({ ids, claims, variant, drawer, opens, cites }: {
   ids: string[]; claims: Claim[]; variant: ChipVariant; drawer: string | null;
   /** The sheet this chip opens, where there is no drawer beside it (§5). */
   opens?: string;
+  /**
+   * The drawer this chip answers to, named even on the card where there is no
+   * drawer to name yet (DIA-414). The card and the sheet are the same text, so
+   * a passage on the card knows which drawer its tap will open once the sheet
+   * has landed; without it the deck would have to count glyphs, and a span
+   * that cites nothing draws no glyph, so the count would be wrong.
+   */
+  cites?: string | null;
 }) {
   const cited = cite(ids, claims);
   if (!cited.length) return null;
@@ -112,6 +120,7 @@ function Chip({ ids, claims, variant, drawer, opens }: {
         type="button"
         className={variant === 'glyph' ? 'chip chip-g' : 'chip'}
         data-open={opens}
+        data-cite={cites ?? undefined}
         aria-haspopup="dialog"
         aria-controls={`sheet-${opens}`}
         aria-label={`המקורות למשפט: ${label}`}
@@ -219,11 +228,11 @@ function Span({ blocks, chip, after, k }: {
  * sentence rather than a paragraph inside a bullet. A span carrying more than
  * that keeps its blocks; the chip still ends the item either way.
  */
-function Item({ span, claims, k, variant, drawer, opens }: {
+function Item({ span, claims, k, variant, drawer, opens, cites }: {
   span: RenderSpan; claims: Claim[]; k: number; variant: ChipVariant; drawer: string | null;
-  opens?: string;
+  opens?: string; cites?: string | null;
 }) {
-  const chip = <Chip ids={span.ids} claims={claims} variant={variant} drawer={drawer} opens={opens} />;
+  const chip = <Chip ids={span.ids} claims={claims} variant={variant} drawer={drawer} opens={opens} cites={cites} />;
   const only = span.blocks.length === 1 && span.blocks[0]?.kind === 'p' ? span.blocks[0] : null;
   return (
     <li>
@@ -260,7 +269,13 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
 }) {
   const spans = renderAnnotation(text);
   if (!spans.length) return null;
-  const idOf = (n: number) => (drawers ? `${drawers}-d${n}` : null);
+  // One name for a passage's drawer, on both copies. The card has no drawers
+  // under its text, but its chips still carry the name (DIA-414) - so the
+  // prefix is whichever of the two this copy was given, and the two copies of
+  // one field must be given the same one.
+  const key = drawers ?? opens;
+  const citeOf = (n: number) => (key ? `${key}-d${n}` : null);
+  const idOf = (n: number) => (drawers ? citeOf(n) : null);
 
   const out: ReactNode[] = [];
   for (let i = 0; i < spans.length; i += 1) {
@@ -271,7 +286,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
         <Span
           key={i}
           blocks={span.blocks}
-          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} />}
+          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} cites={citeOf(i)} />}
           after={id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
           k={i}
         />,
@@ -289,7 +304,7 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
       <Fragment key={i}>
         <List>
           {run.map((r, j) => (
-            <Item key={j} span={r.span} claims={claims} k={j} variant={chip} drawer={idOf(r.n)} opens={opens} />
+            <Item key={j} span={r.span} claims={claims} k={j} variant={chip} drawer={idOf(r.n)} opens={opens} cites={citeOf(r.n)} />
           ))}
         </List>
         {run.map((r) => {

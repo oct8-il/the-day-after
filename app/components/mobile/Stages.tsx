@@ -199,7 +199,7 @@ export function stagesParts({ inc, slide, kind }: {
             ? <Annotated text={summary} claims={inc.claims} chip="glyph" opens={id} />
             : <Claims claims={claims} />,
           sheet: summary
-            ? <Annotated text={summary} claims={inc.claims} chip="glyph" drawers={`st${x.n}`} />
+            ? <Annotated text={summary} claims={inc.claims} chip="glyph" drawers={id} />
             : <Claims claims={claims} />,
           aside: <Locator rail={rail} on={x.n} />,
           // §6: stage 1 hosts the evidence map, and the map comes before the

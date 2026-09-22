@@ -1512,6 +1512,29 @@
     background:color-mix(in srgb,var(--text) 22%,transparent)}
 
   /* ---------------------------------------------------------------- §5
+     The whole cited passage is the target (DIA-414). The glyph is 20px - the
+     right size to look at and the wrong size to hit - so the words it ends
+     take the tap, and the glyph stays the one control a keyboard and a screen
+     reader find. It is `:has` and not a wrapper element on purpose: the
+     annotation already blocks every cited passage, and a wrapper would be a
+     second control in the tree for the same citation.
+
+     A paragraph is tinted with a 6px ring, so the mark reads as a surface
+     being held rather than as a highlight in the text. A list item is not: the
+     ring would cross the bullet standing in its own gutter, and the item's
+     words are a flex child of their own, so the tint is theirs. */
+  .deck-read p:has(.chip),.deck-read li:has(.chip) > span{
+    cursor:pointer;border-radius:6px;-webkit-tap-highlight-color:transparent;
+    transition:background .12s ease}
+  .deck-read p:has(.chip):active,.deck-read li:has(.chip):active > span{
+    background:color-mix(in srgb,var(--text) 7%,transparent)}
+  /* Tinted for exactly as long as its drawer is open: a reader who has
+     scrolled can still see which sentence the evidence below answers. */
+  .deck-read p[data-hot]{background:color-mix(in srgb,var(--text) 6%,transparent);
+    box-shadow:0 0 0 6px color-mix(in srgb,var(--text) 6%,transparent)}
+  .deck-read li[data-hot] > span{background:color-mix(in srgb,var(--text) 6%,transparent)}
+
+  /* ---------------------------------------------------------------- §5
      The source drawer (DIA-386). In flow, directly beneath the block the chip
      ends, so the text below moves down rather than being covered. The 2px edge
      is the source type's colour on the physical right - the same colour as the
