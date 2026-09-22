@@ -473,6 +473,13 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   useEffect(() => {
     const entry = parseHash(location.hash);
     if (entry) { entrySlide.current = entry.slide; scrollTo(entry.slide, false); }
+    // The deck is alive. It is the one thing on this element the server cannot
+    // render, and that is the whole of its job: `data-at` ships in the HTML,
+    // so anything waiting for *that* is waiting for a painted deck rather than
+    // a working one - and a painted deck ignores a hash nobody is listening
+    // for yet. Two of the swipe tests spent a week failing in CI on exactly
+    // that difference (DIA-409).
+    deckEl()?.setAttribute('data-live', '');
 
     // A Back that lands anywhere re-reads the hash and moves without writing.
     // Our entry is gone once it is popped, so the next move pushes again.

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The gate says which way to go (DIA-398, spec §3).
@@ -32,6 +33,7 @@ test.afterEach(async ({}, testInfo) => {
 
 async function open(page: Page, hash = '') {
   await page.goto(`/item/t01/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-track');
   await page.waitForTimeout(300);
 }

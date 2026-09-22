@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * Slide 2 — סקירת הכשל, the card (DIA-381, DIA-413, spec §5).
@@ -42,6 +43,7 @@ const rect = (page: Page, sel: string) =>
 /** Open an item on slide 2 and let the deck settle on the snap point. */
 async function open(page: Page, id: string) {
   await page.goto(`/item/${id}/#2`);
+  await arrived(page);
   await page.waitForSelector('.deck-card[data-card="ov"]');
   // The cut is a measurement, and it is re-taken once the fonts have landed.
   await page.evaluate(() => document.fonts?.ready);
@@ -189,6 +191,7 @@ test.describe('the two states of the card', () => {
     // §7's slide is composed rather than authored: no button, no sheet, and a
     // fade over a reading that cannot be continued is a promise it cannot keep.
     await page.goto('/item/t02/#4');
+    await arrived(page);
     await page.waitForSelector('.deck-stack');
     await page.waitForTimeout(400);
     const m = await page.evaluate(() => {
@@ -427,6 +430,7 @@ test.describe('a section heading', () => {
 
   test('it asserts nothing, so it carries no chip and opens no drawer', async ({ page }) => {
     await page.goto('/item/t01/#2');
+    await arrived(page);
     await page.waitForSelector('.deck-card[data-card="ov"]');
     await page.evaluate(() => document.fonts?.ready);
     await page.waitForTimeout(300);

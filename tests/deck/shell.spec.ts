@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The deck's shell, chrome and gestures (DIA-377, spec §2, §3 and §11).
@@ -110,6 +111,7 @@ const shown = (page: Page, slot: string) =>
 
 async function open(page: Page, hash = '') {
   await page.goto(ITEM + hash);
+  await arrived(page);
   await page.waitForSelector('.deck-track');
   await page.waitForTimeout(250);
 }

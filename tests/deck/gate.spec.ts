@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * Slide 1 — the gate (DIA-378, spec §4).
@@ -40,6 +41,7 @@ const rect = (page: Page, sel: string) =>
 
 async function open(page: Page, id: string) {
   await page.goto(`/item/${id}/`);
+  await arrived(page);
   await page.waitForSelector('.deck-gate-rail');
   await page.waitForTimeout(250);
 }

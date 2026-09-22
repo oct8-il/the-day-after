@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * Slide 3 — מה נעשה מאז (DIA-384, spec §6).
@@ -40,6 +41,7 @@ const rect = (page: Page, sel: string) =>
 
 async function open(page: Page, id: string, hash = '#3') {
   await page.goto(`/item/${id}/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-stack');
   await page.waitForTimeout(400);
 }
@@ -523,6 +525,7 @@ test.describe('the footer', () => {
       document.querySelectorAll('.deck-mid .deck-stage-arrows button').length)).toBe(2);
 
     await page.goto('/item/t01/#2');
+    await arrived(page);
     await page.waitForSelector('.deck-card[data-card="ov"]');
     await page.waitForTimeout(400);
     expect(await page.evaluate(() =>

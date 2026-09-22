@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The reading sheet (DIA-413, spec §5) and its four gestures (DIA-427).
@@ -37,8 +38,9 @@ test.afterEach(async ({}, testInfo) => {
 /** Slide 2, arrived at the way a reader arrives: with something behind them. */
 async function open2(page: Page, id = 't01') {
   await page.goto(`/item/${id}/`);
-  await page.waitForSelector('.deck-gate-rail');
+  await arrived(page);
   await page.evaluate(() => { location.hash = '#2'; });
+  await arrived(page);
   await page.waitForSelector('.deck-card[data-card="ov"]');
   await page.evaluate(() => document.fonts?.ready);
   await page.waitForTimeout(600);
@@ -47,8 +49,9 @@ async function open2(page: Page, id = 't01') {
 /** Slide 3, on whichever stage it opens. Returns that page's card id. */
 async function open3(page: Page, id = 't01') {
   await page.goto(`/item/${id}/`);
-  await page.waitForSelector('.deck-gate-rail');
+  await arrived(page);
   await page.evaluate(() => { location.hash = '#3'; });
+  await arrived(page);
   await page.waitForSelector('.deck-stack');
   await page.evaluate(() => document.fonts?.ready);
   await page.waitForTimeout(600);

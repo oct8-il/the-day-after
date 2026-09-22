@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * Slide 4 — מה עוד לא נעשה (DIA-387, spec §7).
@@ -31,6 +32,7 @@ test.afterEach(async ({}, testInfo) => {
 
 async function open(page: Page, id: string, hash = '#4') {
   await page.goto(`/item/${id}/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-slide');
   await page.waitForTimeout(450);
 }

@@ -1,4 +1,5 @@
 import { test, expect, type CDPSession, type Page } from '@playwright/test';
+import { arrived, at } from './alive';
 
 /**
  * The swipe (spec §3), in a file of its own.
@@ -53,10 +54,13 @@ test.afterEach(async ({}, testInfo) => {
  */
 async function walkTo2(page: Page, id: string) {
   await page.goto(`/item/${id}/`);
-  await page.waitForSelector('.deck-gate-rail');
+  // Alive before the hash is touched, and arrived before anything is measured.
+  // The 500ms sleep this replaces was the whole of DIA-409: long enough for a
+  // static export to hydrate in, and not for `next dev`.
+  await arrived(page);
   await page.evaluate(() => { location.hash = '#2'; });
+  await arrived(page);
   await page.waitForSelector('.deck-card[data-card="ov"]');
-  await page.waitForTimeout(500);
 }
 
 /** One finger, dispatched through CDP: Playwright has taps, not pans. */
@@ -81,8 +85,6 @@ const middle = (page: Page) => page.evaluate(() => {
   const r = document.querySelector('.deck-card[data-card="ov"] .deck-read')!.getBoundingClientRect();
   return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
 });
-
-const at = (page: Page) => page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'));
 
 /**
  * Anything on the slide the reader is on that has been scrolled down.

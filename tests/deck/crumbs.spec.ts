@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The breadcrumb (DIA-400 and DIA-407, spec §3).
@@ -42,6 +43,7 @@ const rect = (page: Page, sel: string) =>
 
 async function open(page: Page, id = 't01', hash = '') {
   await page.goto(`/item/${id}/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-crumbs');
   await page.waitForTimeout(300);
 }

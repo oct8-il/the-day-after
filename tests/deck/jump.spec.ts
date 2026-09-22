@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * Jump mode's strip (DIA-399, spec §3).
@@ -65,6 +66,7 @@ const strip = (page: Page) =>
 
 async function open(page: Page, id = 't01', hash = '') {
   await page.goto(`/item/${id}/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-dots');
   await page.waitForTimeout(400);
 }

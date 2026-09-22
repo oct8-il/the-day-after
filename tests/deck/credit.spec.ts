@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The gate's photo credit (DIA-404, spec §3).
@@ -31,6 +32,7 @@ test.afterEach(async ({}, testInfo) => {
 
 async function open(page: Page, id: string, hash = '') {
   await page.goto(`/item/${id}/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-track');
   await page.waitForTimeout(300);
 }

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The chrome's ink over two grounds (DIA-403, spec §3).
@@ -59,6 +60,7 @@ const near = (got: number[], want: number[], tol = 6) => {
 
 async function open(page: Page, hash = '') {
   await page.goto(`/item/t01/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-track');
   await page.waitForTimeout(350);
 }

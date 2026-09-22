@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { arrived } from './alive';
 
 /**
  * The footer's labels cross-fade under the finger (DIA-401, spec §3).
@@ -87,6 +88,7 @@ const at = (page: Page, f: number) =>
 
 async function open(page: Page, hash = '') {
   await page.goto(`/item/t01/${hash}`);
+  await arrived(page);
   await page.waitForSelector('.deck-foot');
   await page.waitForTimeout(350);
 }
