@@ -246,20 +246,21 @@ test.describe('the bar', () => {
   });
 });
 
-test.describe('the entrance', () => {
+test.describe('the entrances', () => {
   /**
-   * The entrance is read off the animation rather than sampled after a wait.
+   * An entrance is read off the animation rather than sampled after a wait.
    * An ease-out does most of its travel early, so "60ms in" is a race with
    * the harness; the animation's own name, duration and keyframes are facts.
    *
-   * The cover starts two frames after the tap, not on it: the sheet is
-   * unhidden parked below the frame (`data-in="pre"`) and set moving once it
-   * has been laid out and painted, so the first frames of the animation are
-   * not lost to the layout of a screen of reading. The read waits for that.
+   * Neither entrance starts on the frame of the tap: the sheet is unhidden
+   * parked (`data-in="pre"` or `"pre-fade"`) and set going once it has been
+   * laid out and painted, so the first frames are not lost to the layout of a
+   * screen of reading. The read waits for that.
    */
-  const entrance = async (page: Page, sel: string) => {
+  const entrance = async (page: Page, sel: string, how: 'fade' | 'cover') => {
     await page.evaluate((s) => document.querySelector<HTMLElement>(s)!.click(), sel);
-    await page.waitForFunction(() => document.querySelector('#sheet-ov')?.getAttribute('data-in') === 'cover');
+    await page.waitForFunction(
+      (h) => document.querySelector('#sheet-ov')?.getAttribute('data-in') === h, how);
     return page.evaluate(() => {
       const el = document.querySelector('#sheet-ov')!;
       const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
@@ -271,55 +272,55 @@ test.describe('the entrance', () => {
         ms: (a?.effect?.getTiming().duration ?? null) as number | null,
         from: kf[0] as Record<string, string> | undefined,
         to: kf[kf.length - 1] as Record<string, string> | undefined,
-        // Only `transform` is in the keyframes: the edge and its shadow are a
-        // lip above the box that never animates, so the compositor moves the
-        // sheet and nothing is repainted per frame.
         props: Object.keys(kf[0] ?? {}).filter((k) => !['offset', 'computedOffset', 'easing', 'composite'].includes(k)),
         lip: { shadow: lip.boxShadow, radius: lip.borderTopLeftRadius, bottom: lip.bottom, height: el.getBoundingClientRect().height },
+        top: Math.round(el.getBoundingClientRect().top),
         dim: document.querySelector('.deck')!.hasAttribute('data-dim'),
       };
     });
   };
 
-  /**
-   * One entrance, whichever control opened it (Roy, 21 September). §5 ruled a
-   * second, quieter one from the button; it was built and dropped, because the
-   * sheet's ground is the slide's ground and its first lines are in the same
-   * places, so a short opacity fade between two near-identical screens is
-   * invisible by construction.
-   */
-  for (const [what, sel] of [
-    ['the button', '.deck-card[data-card="ov"] .deck-more'],
-    ['a passage', '.deck-card[data-card="ov"] .deck-read .chip'],
-  ] as const) {
-    test(`from ${what} it covers from the bottom up, shadowed, and dims the slide`, async ({ page }) => {
-      await open2(page);
-      const m = await entrance(page, sel);
-      expect(m.how).toBe('cover');
-      expect(m.name).toBe('deck-sheet-cover');
-      expect(m.ms).toBe(400);
-      // Up from the bottom, moving nothing but transform.
-      expect(m.from?.transform).toBe('translateY(100%)');
-      expect(m.to?.transform).toBe('translateY(0px)');
-      expect(m.props).toEqual(['transform']);
-      // The shadowed, rounded leading edge is the lip above the sheet's box;
-      // it squares off by leaving the frame, not by animating.
-      expect(m.lip.shadow).toContain('-14px');
-      expect(m.lip.radius).toBe('18px');
-      // bottom:100% - the whole lip sits above the sheet's box.
-      expect(m.lip.bottom).toBe(`${m.lip.height}px`);
-      expect(m.dim).toBe(true);
+  test('from the button it appears in place: a short fade, nothing travelling', async ({ page }) => {
+    // §5. The reader pressed a button, so the sheet has nothing to announce -
+    // and the slide behind is not dimmed, because nothing is covering it.
+    await open2(page);
+    const m = await entrance(page, '.deck-card[data-card="ov"] .deck-more', 'fade');
+    expect(m.name).toBe('deck-sheet-fade');
+    expect(m.ms).toBe(160);
+    expect(m.props).toEqual(['opacity']);
+    expect(m.from?.opacity).toBe('0');
+    expect(m.to?.opacity).toBe('1');
+    // Nothing travels: it is where it will be from the first frame.
+    expect(m.top).toBe(0);
+    expect(m.dim).toBe(false);
+  });
 
-      await page.waitForTimeout(600);
-      expect(await page.evaluate(() =>
-        Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top))).toBe(0);
-    });
-  }
+  test('from a citation it covers from the bottom up, shadowed, and dims the slide', async ({ page }) => {
+    await open2(page);
+    const m = await entrance(page, '.deck-card[data-card="ov"] .deck-read .chip', 'cover');
+    expect(m.name).toBe('deck-sheet-cover');
+    expect(m.ms).toBe(300);
+    // Up from the bottom, moving nothing but transform.
+    expect(m.from?.transform).toBe('translateY(100%)');
+    expect(m.to?.transform).toBe('translateY(0px)');
+    expect(m.props).toEqual(['transform']);
+    // The shadowed, rounded leading edge is the lip above the sheet's box;
+    // it squares off by leaving the frame, not by animating.
+    expect(m.lip.shadow).toContain('-14px');
+    expect(m.lip.radius).toBe('18px');
+    // bottom:100% - the whole lip sits above the sheet's box.
+    expect(m.lip.bottom).toBe(`${m.lip.height}px`);
+    expect(m.dim).toBe(true);
 
-  test('the curve is an ease-out over the whole duration, not a jump', async ({ page }) => {
+    await page.waitForTimeout(600);
+    expect(await page.evaluate(() =>
+      Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top))).toBe(0);
+  });
+
+  test('the cover is an ease-out over the whole duration, not a jump', async ({ page }) => {
     // The first curve put both control points' y near 1 by x = .3, so the
-    // sheet travelled the whole frame in the first fifth of its 340ms and sat
-    // still for the rest. At real speed that reads as a cut, not a cover.
+    // sheet travelled the whole frame in the first fifth of its duration and
+    // sat still for the rest. At real speed that reads as a cut, not a cover.
     await open2(page);
     await page.evaluate(() => document.querySelector<HTMLElement>('.deck-card[data-card="ov"] .deck-read .chip')!.click());
     await page.waitForFunction(() => document.querySelector('#sheet-ov')?.getAttribute('data-in') === 'cover');
@@ -328,8 +329,9 @@ test.describe('the entrance', () => {
       const a = el.getAnimations()[0]!;
       a.pause();
       const frame = el.getBoundingClientRect().height;
+      const ms = a.effect!.getTiming().duration as number;
       return [0.25, 0.5, 0.75].map((f) => {
-        a.currentTime = 400 * f;
+        a.currentTime = ms * f;
         const m = new DOMMatrix(getComputedStyle(el).transform);
         return Math.round(((frame - m.m42) / frame) * 100);
       });
@@ -343,58 +345,75 @@ test.describe('the entrance', () => {
     expect(by[2]!).toBeLessThan(99);
   });
 
-  test('it leaves the way it came', async ({ page }) => {
-    await open2(page);
-    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(600);
-    const out = await page.evaluate(async () => {
-      document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click();
-      // One frame, so the exit's animation has been created - and well short
-      // of the 400ms it runs for, so nothing here is a race with the clock.
-      await new Promise((r) => requestAnimationFrame(r));
-      const el = document.querySelector('#sheet-ov')!;
-      const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
-      const kf = (a?.effect as KeyframeEffect | undefined)?.getKeyframes() ?? [];
-      return {
-        out: el.getAttribute('data-out'),
-        name: a?.animationName ?? null,
-        ms: (a?.effect?.getTiming().duration ?? null) as number | null,
-        from: (kf[0] as Record<string, string> | undefined)?.transform ?? null,
-        to: (kf[kf.length - 1] as Record<string, string> | undefined)?.transform ?? null,
-      };
+  /**
+   * It leaves the way it came. A reversed *direction* on the same keyframes is
+   * not a new animation, so each exit is its own: the sheet has to leave, not
+   * sit at the end of an animation that already finished.
+   */
+  for (const [what, sel, how, name, ms] of [
+    ['the button', '.deck-card[data-card="ov"] .deck-more', 'fade', 'deck-sheet-unfade', 160],
+    ['a citation', '.deck-card[data-card="ov"] .deck-read .chip', 'cover', 'deck-sheet-uncover', 300],
+  ] as const) {
+    test(`opened from ${what}, it leaves the way it came`, async ({ page }) => {
+      await open2(page);
+      await openFrom(page, sel);
+      await page.waitForFunction((h) =>
+        document.querySelector('#sheet-ov')?.getAttribute('data-in') === h, how);
+      await page.waitForTimeout(500);
+
+      const out = await page.evaluate(async () => {
+        document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click();
+        // One frame, so the exit's animation has been created - and well
+        // short of the time it runs for, so nothing here races the clock.
+        await new Promise((r) => requestAnimationFrame(r));
+        const el = document.querySelector('#sheet-ov')!;
+        const a = el.getAnimations()[0] as (Animation & { animationName?: string }) | undefined;
+        const kf = (a?.effect as KeyframeEffect | undefined)?.getKeyframes() ?? [];
+        return {
+          out: el.getAttribute('data-out'),
+          name: a?.animationName ?? null,
+          ms: (a?.effect?.getTiming().duration ?? null) as number | null,
+          first: kf[0] as Record<string, string> | undefined,
+          last: kf[kf.length - 1] as Record<string, string> | undefined,
+        };
+      });
+      expect(out.out).toBe(how);
+      expect(out.name).toBe(name);
+      expect(out.ms).toBe(ms);
+      if (how === 'cover') {
+        expect(out.first?.transform).toBe('translateY(0px)');
+        expect(out.last?.transform).toBe('translateY(100%)');
+      } else {
+        expect(out.first?.opacity).toBe('1');
+        expect(out.last?.opacity).toBe('0');
+      }
+
+      await page.waitForTimeout(600);
+      expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
     });
-    // A reversed *direction* on the same keyframes is not a new animation, so
-    // the exit is its own: the sheet has to leave, not sit at the end of an
-    // animation that already finished.
-    expect(out.out).toBe('cover');
-    expect(out.name).toBe('deck-sheet-uncover');
-    expect(out.ms).toBe(400);
-    expect(out.from).toBe('translateY(0px)');
-    expect(out.to).toBe('translateY(100%)');
+  }
 
-    await page.waitForTimeout(700);
-    expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
-  });
-
-  test('reduced motion makes it instant', async ({ browser }) => {
+  test('reduced motion makes both instant', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: PHONE, reducedMotion: 'reduce', hasTouch: true });
     const page = await ctx.newPage();
-    await open2(page);
-    await openFrom(page, '.deck-card[data-card="ov"] .deck-read .chip');
-    // No wait at all: under reduced motion the sheet is simply there.
-    const m = await page.evaluate(() => {
-      const el = document.querySelector('#sheet-ov')!;
-      return {
-        how: el.getAttribute('data-in'),
-        top: Math.round(el.getBoundingClientRect().top),
-        animations: el.getAnimations().length,
-        dim: document.querySelector('.deck')!.hasAttribute('data-dim'),
-      };
-    });
-    expect(m).toEqual({ how: 'still', top: 0, animations: 0, dim: false });
+    for (const sel of ['.deck-card[data-card="ov"] .deck-read .chip', '.deck-card[data-card="ov"] .deck-more']) {
+      await open2(page);
+      await openFrom(page, sel);
+      // No wait at all: under reduced motion the sheet is simply there.
+      const m = await page.evaluate(() => {
+        const el = document.querySelector('#sheet-ov')!;
+        return {
+          how: el.getAttribute('data-in'),
+          top: Math.round(el.getBoundingClientRect().top),
+          animations: el.getAnimations().length,
+          dim: document.querySelector('.deck')!.hasAttribute('data-dim'),
+        };
+      });
+      expect(m, sel).toEqual({ how: 'still', top: 0, animations: 0, dim: false });
 
-    await page.evaluate(() => document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click());
-    expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
+      await page.evaluate(() => document.querySelector<HTMLElement>('#sheet-ov .deck-sheet-x')!.click());
+      expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
+    }
     await ctx.close();
   });
 });

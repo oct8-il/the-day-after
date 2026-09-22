@@ -105,23 +105,30 @@ const hashFor = (i: number, stage: number | null) =>
 const ONE_ROW = 48;
 
 /**
- * The sheet's entrance, in milliseconds, and its exit.
+ * §5's two entrances, in milliseconds, and the same two exits.
  *
- * §5 ruled two entrances - a fade from the button, a cover from a passage tap
- * - and the fade was built and then dropped: the sheet's ground is the slide's
- * ground and it opens with the same lines in the same places, so 160ms of
- * opacity between two near-identical screens is invisible by construction.
- * Roy, 21 September: the cover opens it either way. It is here rather than
- * only in the stylesheet because the exit has to be timed before the sheet is
- * hidden, and two numbers that must agree are better written once.
+ * The fade is short because the reader pressed a button and nothing travels;
+ * the cover is long enough to be seen, because a tap on a citation is not a
+ * request to change mode and the cover is what says the mode changed.
  *
- * 400 rather than 340: the first two versions stuttered, and a stutter makes
- * any duration read as a jump. With the entrance moving only `transform` on a
- * sheet that is already laid out (see openSheet), the travel is visible for
- * the whole of it, and a full-screen cover at 340 is brisk to the point of a
- * flick. Nothing else here changed.
+ * The fade was dropped on 21 September, on the reasoning that it is invisible
+ * by construction - the sheet's ground is the slide's ground and it opens with
+ * the same lines in the same places. It is back on the 22nd (Roy). Almost
+ * nothing is what a deliberate act should cost, and what makes it legible is
+ * having the cover to be unlike.
+ *
+ * The cover is 300 rather than 400: 400 was chosen while the travel still
+ * stuttered, because a stutter makes any duration read as a jump. It does not
+ * stutter any more - the entrance moves only `transform`, on a sheet that is
+ * already laid out and painted (see openSheet) - and at that point 400 was
+ * simply long enough to wait through.
+ *
+ * They are here rather than only in the stylesheet because the exit has to be
+ * timed before the sheet is hidden, and two numbers that must agree are
+ * better written once.
  */
-const COVER = 400;
+const FADE = 160;
+const COVER = 300;
 
 export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /**
@@ -762,7 +769,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
    * label - and on slide 3 the column is inset 36px on one side and 20 on the
    * other, so there is no single number to hard-code anyway.
    */
-  type Entrance = 'cover' | 'still';
+  type Entrance = 'fade' | 'cover' | 'still';
   const sheet = useRef<{ el: HTMLElement; mode: Entrance; opener: HTMLElement | null } | null>(null);
   /** The exit's timer: an entrance that interrupts one must cancel it. */
   const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -801,9 +808,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       deck?.style.removeProperty('--pull-p');
     };
     track.current?.removeAttribute('inert');
-    // Parked but not yet moving (openSheet's two frames): there is no cover
-    // to reverse, so it is hidden as `still` is.
-    const wasPre = el.getAttribute('data-in') === 'pre';
+    // Parked but not yet moving (openSheet's two frames): there is no
+    // entrance to reverse, so it is hidden as `still` is.
+    const wasPre = (el.getAttribute('data-in') ?? '').startsWith('pre');
     el.removeAttribute('data-in');
 
     // It leaves the way it came. Under reduced motion both ways are instant.
@@ -812,15 +819,22 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       el.setAttribute('hidden', '');
       clearPull();
     } else {
-      // From a pull: start where the finger left it, take the time the
-      // remaining distance deserves, and ease out - the sheet is already
-      // moving, so an exit that accelerates from rest is the wrong shape.
-      const h = el.clientHeight || 1;
-      const ms = from > 0 ? Math.max(140, Math.round(COVER * (1 - from / h))) : COVER;
-      el.style.setProperty('--from', `${from}px`);
-      el.style.setProperty('--sheet-cover', `${ms}ms`);
-      if (from > 0) el.style.setProperty('--sheet-ease', 'cubic-bezier(.25,.46,.45,.94)');
-      el.setAttribute('data-out', open.mode);
+      // A released pull always slides out, whichever way it came in: the
+      // finger has already made it a travelling panel, and fading one out
+      // from under the thumb is not what the gesture promised.
+      const way = from > 0 ? 'cover' : open.mode;
+      let ms = way === 'cover' ? COVER : FADE;
+      if (way === 'cover') {
+        // From a pull: start where the finger left it, take the time the
+        // remaining distance deserves, and ease out - the sheet is already
+        // moving, so an exit that accelerates from rest is the wrong shape.
+        const h = el.clientHeight || 1;
+        if (from > 0) ms = Math.max(140, Math.round(COVER * (1 - from / h)));
+        el.style.setProperty('--from', `${from}px`);
+        el.style.setProperty('--sheet-cover', `${ms}ms`);
+        if (from > 0) el.style.setProperty('--sheet-ease', 'cubic-bezier(.25,.46,.45,.94)');
+      }
+      el.setAttribute('data-out', way);
       leaving.current = setTimeout(() => {
         el.removeAttribute('data-out');
         el.setAttribute('hidden', '');
@@ -837,7 +851,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if ((opts?.history ?? true) && window.history.state?.deckSheet) window.history.back();
   }, []);
 
-  const openSheet = useCallback((id: string, opener: HTMLElement | null) => {
+  const openSheet = useCallback((id: string, opener: HTMLElement | null, mode: 'fade' | 'cover') => {
     const deck = deckEl();
     const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
     const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`);
@@ -854,7 +868,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     el.style.setProperty('--gut-r', `${Math.round(frame.right - box.right)}px`);
     el.style.setProperty('--gut-l', `${Math.round(box.left - frame.left)}px`);
 
-    const how: Entrance = reduced() ? 'still' : 'cover';
+    const how: Entrance = reduced() ? 'still' : mode;
     // The cover does not start on the frame the sheet is unhidden. Unhiding a
     // display:none sheet lays out and paints a screen of reading, and when
     // the animation was applied in that same frame its clock started before
@@ -867,7 +881,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // transform here instead would start the pull-back transition under the
     // cover, and the two on one property hitched near the end.
     el.removeAttribute('hidden');
-    el.setAttribute('data-in', how === 'cover' ? 'pre' : 'still');
+    // Both entrances park first: an opacity ramp whose first frames are eaten
+    // by the layout of a screen of reading is as lost as a travel's.
+    el.setAttribute('data-in', how === 'still' ? 'still' : how === 'cover' ? 'pre' : 'pre-fade');
     const scroll = el.querySelector<HTMLElement>('.deck-sheet-scroll');
     if (scroll) scroll.scrollTop = 0;
 
@@ -888,9 +904,10 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     void el.offsetHeight;
     requestAnimationFrame(() => requestAnimationFrame(() => {
       // Closed again before it started: nothing to animate.
-      if (sheet.current?.el !== el || el.getAttribute('data-in') !== 'pre') return;
-      el.setAttribute('data-in', 'cover');
-      deck.setAttribute('data-dim', '');
+      if (sheet.current?.el !== el || !(el.getAttribute('data-in') ?? '').startsWith('pre')) return;
+      el.setAttribute('data-in', how);
+      // Only the cover dims: a fade the reader asked for announces nothing.
+      if (how === 'cover') deck.setAttribute('data-dim', '');
       x?.focus({ preventScroll: true });
     }));
   }, []);
@@ -908,9 +925,14 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       const btn = t.closest<HTMLElement>('[data-open]');
-      // One entrance, whichever control opened it: the sheet covers from the
-      // bottom up, which is what says the mode changed (Roy, 21 September).
-      if (btn) { e.preventDefault(); openSheet(btn.getAttribute('data-open')!, btn); return; }
+      if (btn) {
+        e.preventDefault();
+        // §5's two entrances. The button is a deliberate act and the sheet
+        // appears in place; a tap on a citation is not, so the sheet covers
+        // from the bottom up - the cover is what says the mode changed.
+        openSheet(btn.getAttribute('data-open')!, btn, btn.classList.contains('deck-more') ? 'fade' : 'cover');
+        return;
+      }
       if (t.closest('.deck-sheet-x')) { e.preventDefault(); closeSheet(); }
     };
     deck.addEventListener('click', onClick);

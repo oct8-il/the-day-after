@@ -1322,7 +1322,7 @@
   /* The dim, behind the sheet, so the slide is visibly being covered rather
      than replaced. It un-fades with a pull. */
   .deck-dim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;
-    transition:opacity .4s cubic-bezier(.25,.46,.45,.94)}
+    transition:opacity var(--sheet-cover,300ms) cubic-bezier(.25,.46,.45,.94)}
   .deck[data-dim] .deck-dim{opacity:calc(1 - var(--pull-p,0))}
   .deck[data-pull] .deck-dim{transition:none}
 
@@ -1349,6 +1349,8 @@
   .deck-sheet::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:18px;
     background:var(--bg);border-radius:18px 18px 0 0;
     box-shadow:0 -14px 34px rgba(0,0,0,.5);pointer-events:none}
+  /* Whichever entrance it is, the sheet is parked for two frames before it
+     starts - see openSheet, and the note under `pre` below. */
   /* The frame before the entrance: laid out, painted, and parked below the
      frame, so the cover's first frame is a move and not the layout of a
      screen of reading (see openSheet). Parked by the cover's own animation,
@@ -1358,18 +1360,27 @@
      property, on the same layer, is what hitched at about 60% of the travel
      (the transition ending under the animation). `cover` only unpauses;
      same name, same animation, nothing restarts and the base never moves. */
-  .deck-sheet[data-in="pre"]{animation:deck-sheet-cover var(--sheet-cover,400ms) cubic-bezier(.25,.46,.45,.94) paused}
+  .deck-sheet[data-in="pre"]{animation:deck-sheet-cover var(--sheet-cover,300ms) cubic-bezier(.25,.46,.45,.94) paused}
+  .deck-sheet[data-in="pre-fade"]{animation:deck-sheet-fade var(--sheet-fade,160ms) ease paused}
 
-  /* The entrance, and the same exit - it leaves the way it came. The sheet
-     covers from the bottom up, with a shadowed leading edge and rounded top
-     corners that square off as it lands (the lip, above), the slide dimming
-     behind it.
-     §5 ruled a second, quieter entrance from the button. It was built and
-     dropped on 21 September: the sheet's ground is the slide's ground and its
-     first lines are in the same places, so a 160ms opacity fade between two
-     near-identical screens is invisible by construction. Reduced motion makes
-     it instant - `still` carries no animation at all, and the deck writes it
-     in place of the cover. */
+  /* §5's two entrances, and the same two exits - it leaves the way it came.
+     From the button the sheet appears in place, a short fade, nothing
+     travelling: the reader asked for it and it does not need announcing. From
+     a tap on a citation it covers from the bottom up, with a shadowed leading
+     edge and rounded top corners that square off as it lands (the lip, above)
+     and the slide dimming behind it - that reader did not ask to change mode.
+
+     The fade was dropped on 21 September and is back on the 22nd, with the
+     cover shortened to match (Roy). It reads as almost nothing on its own,
+     which is the point of it: what makes it legible is having the cover to be
+     unlike.
+
+     Reduced motion makes both instant - `still` carries no animation at all,
+     and the deck writes it in place of either. */
+  @keyframes deck-sheet-fade{from{opacity:0}to{opacity:1}}
+  @keyframes deck-sheet-unfade{from{opacity:1}to{opacity:0}}
+  .deck-sheet[data-in="fade"]{animation:deck-sheet-fade var(--sheet-fade,160ms) ease}
+  .deck-sheet[data-out="fade"]{animation:deck-sheet-unfade var(--sheet-fade,160ms) ease forwards}
   /* Two keyframes rather than one played backwards: `animation-direction:
      reverse` on the same name is not a new animation, so the engine keeps the
      finished one and the sheet leaves without ever moving. The exit has to
@@ -1385,9 +1396,11 @@
   /* The cover's curve is an ordinary ease-out and the exit's its mirror. The
      first pair were drawn with both control points' y near 1 by x = .3, which
      put the whole travel into the first fifth of the duration: at 340ms that
-     is a jump followed by nothing, and the duration stopped meaning anything. */
-  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,400ms) cubic-bezier(.25,.46,.45,.94)}
-  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,400ms) var(--sheet-ease,cubic-bezier(.7,.38,.8,1)) forwards}
+     is a jump followed by nothing, and the duration stopped meaning anything.
+     The duration itself is 300: 400 was chosen while the travel still
+     stuttered, and once it did not, it was long enough to wait through. */
+  .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,300ms) cubic-bezier(.25,.46,.45,.94)}
+  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,300ms) var(--sheet-ease,cubic-bezier(.7,.38,.8,1)) forwards}
 
   /* The bar: a × at the physical left (44px target) and a chip centred. Its
      underside is where the card's content begins. */
