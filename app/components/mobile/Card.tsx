@@ -119,6 +119,10 @@ export function cardAndSheet({
             {tail}
           </div>
           <SourceRail cards={cards ?? []} />
+          {/* The end of the reading, and the place gesture 2 lives: a swipe up
+              from here closes the sheet, so this line is what says there is an
+              end to be at (DIA-427). */}
+          <p className="deck-sheet-end">סוף הקריאה · החליקו למעלה לסגירה</p>
         </div>
       </div>
     ) : null,

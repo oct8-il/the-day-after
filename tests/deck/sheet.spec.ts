@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * The reading sheet (DIA-413, spec §5) and pulling it down (DIA-417).
+ * The reading sheet (DIA-413, spec §5) and its four gestures (DIA-427).
  *
  * A slide never scrolls. The reading continues in a sheet that opens above the
  * deck, aligned to the card it came from, and the whole reason it is not
@@ -571,81 +571,283 @@ test.describe('what the sheet holds', () => {
  * DIA-417. An accelerator and nothing more: the × and Back remain, and
  * nothing here becomes gesture-only.
  */
-test.describe('pull down to dismiss', () => {
-  /** A one-finger drag down the sheet, in steps, so the handler sees it move. */
-  async function pull(page: Page, from: { x: number; y: number }, dy: number, ms = 500) {
-    const steps = 10;
+/**
+ * The sheet under a finger (DIA-427).
+ *
+ * Four gestures: a swipe up on the card opens it and keeps scrolling it, and
+ * a swipe up at the end, sideways from anywhere, or down at the top closes
+ * it. Every one is an accelerator - the button, the ×, Escape and Back all
+ * still do what they did, which is asserted above and not repeated here.
+ *
+ * Real touch over CDP: Playwright has taps, not pans, and a mouse drag pans
+ * nothing.
+ */
+test.describe('under a finger', () => {
+  /** One finger, dispatched in steps so the handler sees it move. */
+  async function drag(
+    page: Page,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    opts?: { steps?: number; ms?: number; hold?: boolean },
+  ) {
+    const steps = opts?.steps ?? 10;
+    const ms = opts?.ms ?? 400;
     const cdp = await page.context().newCDPSession(page);
-    const send = (type: string, y: number) => cdp.send('Input.dispatchTouchEvent', {
-      type,
-      touchPoints: type === 'touchEnd' ? [] : [{ x: from.x, y }],
+    const at = (type: string, x: number, y: number) => cdp.send('Input.dispatchTouchEvent', {
+      type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }],
     } as never);
-    await send('touchStart', from.y);
+    await at('touchStart', from.x, from.y);
     for (let i = 1; i <= steps; i += 1) {
-      await send('touchMove', from.y + (dy * i) / steps);
+      await at('touchMove', from.x + ((to.x - from.x) * i) / steps, from.y + ((to.y - from.y) * i) / steps);
       await page.waitForTimeout(ms / steps);
     }
-    await send('touchEnd', from.y + dy);
+    if (opts?.hold) return cdp;
+    await at('touchEnd', to.x, to.y);
     await cdp.detach();
+    return null;
   }
 
-  test('a long pull from the top dismisses it, and a short one springs back', async ({ page }) => {
-    await open2(page);
-    await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(600);
+  const shown = (page: Page) => page.evaluate(() =>
+    !document.querySelector('#sheet-ov')!.hasAttribute('hidden'));
 
-    // Short of the threshold — a quarter of the frame is 211px here.
-    await pull(page, { x: 195, y: 300 }, 80);
-    await page.waitForTimeout(600);
-    expect(await page.evaluate(() => ({
-      hidden: document.querySelector('#sheet-ov')!.hasAttribute('hidden'),
-      top: Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top),
-      pull: document.querySelector('.deck')!.hasAttribute('data-pull'),
-    }))).toEqual({ hidden: false, top: 0, pull: false });
-
-    await pull(page, { x: 195, y: 300 }, 320);
-    await page.waitForTimeout(600);
-    expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(true);
-    // A close like any other: the entry is given back and focus returns.
-    expect(await page.evaluate(() => document.activeElement?.className)).toContain('deck-more');
-    expect(await page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'))).toBe('1');
+  const box = (page: Page) => page.evaluate(() => {
+    const el = document.querySelector('#sheet-ov')!;
+    const r = el.getBoundingClientRect();
+    return { top: Math.round(r.top), left: Math.round(r.left), opacity: parseFloat(getComputedStyle(el).opacity) };
   });
 
-  test('it follows the finger, and the dim goes with it', async ({ page }) => {
-    await open2(page);
-    await openFrom(page, '.deck-card[data-card="ov"] .deck-read .chip');
-    await page.waitForTimeout(600);
-
+  /**
+   * A drag that arms a gesture, then travels a known distance, and reports
+   * where the sheet was at each of the two moments.
+   *
+   * Two things make a naive drag unmeasurable. The gesture's origin is the
+   * point at which the mode was chosen, not the touch's start - as in the
+   * mock - so a follow ratio can only be read from the travel after it. And
+   * the browser has a touch slop of its own: it reports no `touchmove` at all
+   * until the finger has moved ~16px, so the arming move is never the small
+   * one a test dispatches. Hence: arm, read, travel, read, and assert the
+   * difference.
+   */
+  async function armThen(page: Page, from: { x: number; y: number }, by: { x: number; y: number }) {
     const cdp = await page.context().newCDPSession(page);
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 195, y: 300 }] } as never);
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 195, y: 330 }] } as never);
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 195, y: 420 }] } as never);
+    const at = (type: string, x: number, y: number) => cdp.send('Input.dispatchTouchEvent', {
+      type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }],
+    } as never);
+    const nx = by.x === 0 ? 0 : Math.sign(by.x) * 30;
+    const ny = by.y === 0 ? 0 : Math.sign(by.y) * 30;
+    await at('touchStart', from.x, from.y);
+    await page.waitForTimeout(40);
+    // Past the browser's slop: this move is the one that picks the mode.
+    await at('touchMove', from.x + nx, from.y + ny);
     await page.waitForTimeout(80);
-    const mid = await page.evaluate(() => ({
-      top: Math.round(document.querySelector('#sheet-ov')!.getBoundingClientRect().top),
-      dim: parseFloat(getComputedStyle(document.querySelector('.deck-dim')!).opacity),
-      pulling: document.querySelector('.deck')!.hasAttribute('data-pull'),
-    }));
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] } as never);
-    await cdp.detach();
+    const armed = await box(page);
 
-    expect(mid.pulling).toBe(true);
-    // 1:1 with the finger.
-    expect(mid.top).toBeCloseTo(120, -1);
-    // And the slide behind un-dims as it goes, so the gesture explains itself.
-    expect(mid.dim).toBeLessThan(1);
-    expect(mid.dim).toBeGreaterThan(0);
+    for (let i = 1; i <= 6; i += 1) {
+      await at('touchMove', from.x + nx + (by.x * i) / 6, from.y + ny + (by.y * i) / 6);
+      await page.waitForTimeout(30);
+    }
+    await page.waitForTimeout(120);
+    const moved = await box(page);
+    return {
+      armed,
+      moved,
+      end: async () => {
+        await at('touchEnd', from.x + nx + by.x, from.y + ny + by.y);
+        await cdp.detach();
+      },
+    };
+  }
+
+  const scrollTop = (page: Page) => page.evaluate(() =>
+    document.querySelector('#sheet-ov .deck-sheet-scroll')!.scrollTop);
+
+  test.describe('1 · a swipe up on the card opens it, on the move', () => {
+    test('the card lifts, the sheet opens at 40px, and the same finger scrolls it', async ({ page }) => {
+      await open2(page);
+      const cdp = (await drag(page, { x: 195, y: 500 }, { x: 195, y: 470 }, { hold: true }))!;
+      const at30 = await page.evaluate(() => ({
+        lift: document.querySelector('.deck-card[data-card="ov"]')!.hasAttribute('data-lift'),
+        y: new DOMMatrix(getComputedStyle(document.querySelector('.deck-card[data-card="ov"]')!).transform).m42,
+        open: !document.querySelector('#sheet-ov')!.hasAttribute('hidden'),
+      }));
+      // 30px of finger, 0.35x of card, and not open yet.
+      expect(at30.lift).toBe(true);
+      expect(at30.y).toBeCloseTo(-10.5, 0);
+      expect(at30.open).toBe(false);
+
+      // Past 40 it opens, in place, while the finger is still down.
+      const send = (type: string, y: number) => cdp.send('Input.dispatchTouchEvent', {
+        type, touchPoints: type === 'touchEnd' ? [] : [{ x: 195, y }],
+      } as never);
+      await send('touchMove', 440);
+      await page.waitForTimeout(60);
+      const opened = await page.evaluate(() => ({
+        open: !document.querySelector('#sheet-ov')!.hasAttribute('hidden'),
+        how: document.querySelector('#sheet-ov')!.getAttribute('data-in'),
+        card: getComputedStyle(document.querySelector('.deck-card[data-card="ov"]')!).transform,
+      }));
+      expect(opened.open).toBe(true);
+      // Parked, or already fading - the two frames in between are not a fact
+      // a test can hold still.
+      expect(['pre-fade', 'fade']).toContain(opened.how);
+      // And the card is back where it was: the sheet is what travels now.
+      expect(opened.card).toBe('none');
+
+      // And from there the same finger is the scroller.
+      await send('touchMove', 340);
+      await page.waitForTimeout(60);
+      expect(await scrollTop(page)).toBeCloseTo(100, -1);
+      await send('touchMove', 240);
+      await page.waitForTimeout(60);
+      expect(await scrollTop(page)).toBeCloseTo(200, -1);
+
+      await send('touchEnd', 240);
+      await cdp.detach();
+    });
+
+    test("a sideways drag on the card is still the deck's, and opens nothing", async ({ page }) => {
+      await open2(page);
+      await drag(page, { x: 195, y: 500 }, { x: 60, y: 480 });
+      await page.waitForTimeout(600);
+      expect(await shown(page)).toBe(false);
+    });
+
+    test("on a stage that can page, the vertical axis stays the stack's", async ({ page }) => {
+      // §6: slide 3's stack owns this finger, so the button is the only way
+      // in there. Nothing lifts and nothing opens, in either direction.
+      const id = await open3(page);
+      for (const to of [380, 620]) {
+        await drag(page, { x: 195, y: 500 }, { x: 195, y: to });
+        await page.waitForTimeout(700);
+        expect(await page.evaluate((s) => ({
+          sheet: document.getElementById(`sheet-${s}`)!.hasAttribute('hidden'),
+          lifted: document.querySelectorAll('.deck-card[data-lift],.deck-card[data-drop]').length,
+        }), id)).toEqual({ sheet: true, lifted: 0 });
+      }
+    });
   });
 
-  test('below the top of the reading a downward drag is an ordinary scroll', async ({ page }) => {
+  test.describe('2 · a swipe up at the end closes it', () => {
+    const toEnd = (page: Page) => page.evaluate(() => {
+      const sc = document.querySelector('#sheet-ov .deck-sheet-scroll')!;
+      sc.scrollTop = sc.scrollHeight - sc.clientHeight;
+    });
+
+    test('it is armed only at the end, follows at 0.6x, and fades', async ({ page }) => {
+      await open2(page);
+      await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+      await page.waitForTimeout(600);
+
+      // Not at the end: an ordinary scroll, and the sheet does not move.
+      await drag(page, { x: 195, y: 500 }, { x: 195, y: 380 });
+      await page.waitForTimeout(500);
+      expect(await shown(page)).toBe(true);
+      expect((await box(page)).top).toBe(0);
+
+      await toEnd(page);
+      const up = await armThen(page, { x: 195, y: 500 }, { x: 0, y: -60 });
+      await up.end();
+      // 60px of finger past the arming move moves the sheet 0.6x of that.
+      expect(up.moved.top - up.armed.top).toBeCloseTo(-36, -1);
+      // The fade is over the finger's own travel, not the sheet's: 1 + d/180.
+      expect(up.moved.opacity).toBeCloseTo(1 - 60 / 180, 1);
+    });
+
+    test('past 90px it goes; short of it, it springs back', async ({ page }) => {
+      await open2(page);
+      await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+      await page.waitForTimeout(600);
+      await toEnd(page);
+
+      await drag(page, { x: 195, y: 500 }, { x: 195, y: 430 });
+      await page.waitForTimeout(500);
+      expect(await shown(page)).toBe(true);
+      expect(await box(page)).toEqual({ top: 0, left: 0, opacity: 1 });
+
+      await toEnd(page);
+      await drag(page, { x: 195, y: 500 }, { x: 195, y: 380 });
+      await page.waitForTimeout(700);
+      expect(await shown(page)).toBe(false);
+      expect(await page.evaluate(() => document.querySelector('.deck')!.getAttribute('data-at'))).toBe('1');
+    });
+  });
+
+  test.describe('3 · a sideways swipe closes it, either way', () => {
+    for (const [way, to] of [['left', 60], ['right', 330]] as const) {
+      test(`${way}, past 90px`, async ({ page }) => {
+        await open2(page);
+        await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+        await page.waitForTimeout(600);
+        await drag(page, { x: 195, y: 400 }, { x: to, y: 400 });
+        await page.waitForTimeout(700);
+        expect(await shown(page)).toBe(false);
+      });
+    }
+
+    test('it moves 1:1 and fades over 200px; short of 90 it springs back', async ({ page }) => {
+      await open2(page);
+      await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+      await page.waitForTimeout(600);
+      const side = await armThen(page, { x: 195, y: 400 }, { x: -60, y: 0 });
+      await side.end();
+      expect(side.moved.left - side.armed.left).toBeCloseTo(-60, -1);
+      expect(side.moved.opacity).toBeCloseTo(1 - 60 / 200, 1);
+
+      await page.waitForTimeout(500);
+      expect(await shown(page)).toBe(true);
+      expect(await box(page)).toEqual({ top: 0, left: 0, opacity: 1 });
+    });
+  });
+
+  test.describe('4 · a swipe down at the top closes it', () => {
+    test('1:1, no fade, and past 110px it goes', async ({ page }) => {
+      await open2(page);
+      await openFrom(page, '.deck-card[data-card="ov"] .deck-read .chip');
+      await page.waitForTimeout(700);
+
+      const down = await armThen(page, { x: 195, y: 300 }, { x: 0, y: 80 });
+      await down.end();
+      expect(down.moved.top - down.armed.top).toBeCloseTo(80, -1);
+      // This is the cover leaving the way it came: it does not fade.
+      expect(down.moved.opacity).toBe(1);
+      await page.waitForTimeout(500);
+      expect(await shown(page)).toBe(true);
+
+      await drag(page, { x: 195, y: 260 }, { x: 195, y: 400 });
+      await page.waitForTimeout(700);
+      expect(await shown(page)).toBe(false);
+      expect(await page.evaluate(() => document.activeElement?.className)).toContain('chip');
+    });
+
+    test('below the top of the reading a downward drag is an ordinary scroll', async ({ page }) => {
+      await open2(page);
+      await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
+      await page.waitForTimeout(600);
+      await page.evaluate(() => { document.querySelector('#sheet-ov .deck-sheet-scroll')!.scrollTop = 200; });
+      await page.waitForTimeout(200);
+
+      await drag(page, { x: 195, y: 300 }, { x: 195, y: 440 });
+      await page.waitForTimeout(700);
+      expect(await shown(page)).toBe(true);
+    });
+  });
+
+  test('reduced motion: nothing follows the finger, and the threshold still closes it', async ({ browser }) => {
+    const ctx = await browser.newContext({ viewport: PHONE, reducedMotion: 'reduce', hasTouch: true });
+    const page = await ctx.newPage();
     await open2(page);
     await openFrom(page, '.deck-card[data-card="ov"] .deck-more');
-    await page.waitForTimeout(600);
-    await page.evaluate(() => { document.querySelector('#sheet-ov .deck-sheet-scroll')!.scrollTop = 200; });
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(400);
 
-    await pull(page, { x: 195, y: 300 }, 320);
-    await page.waitForTimeout(600);
-    expect(await page.evaluate(() => document.querySelector('#sheet-ov')!.hasAttribute('hidden'))).toBe(false);
+    const held = await armThen(page, { x: 195, y: 300 }, { x: 0, y: 80 });
+    await held.end();
+    // Nothing travelled, at either moment.
+    expect(held.armed.top).toBe(0);
+    expect(held.moved.top).toBe(0);
+
+    await drag(page, { x: 195, y: 260 }, { x: 195, y: 400 });
+    await page.waitForTimeout(400);
+    expect(await shown(page)).toBe(false);
+    await ctx.close();
   });
 });

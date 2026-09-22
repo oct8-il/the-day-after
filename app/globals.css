@@ -1323,21 +1323,23 @@
      than replaced. It un-fades with a pull. */
   .deck-dim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;
     transition:opacity var(--sheet-cover,300ms) cubic-bezier(.25,.46,.45,.94)}
-  .deck[data-dim] .deck-dim{opacity:calc(1 - var(--pull-p,0))}
-  .deck[data-pull] .deck-dim{transition:none}
+  .deck[data-dim] .deck-dim{opacity:1}
 
   .deck-sheet{position:absolute;inset:0;display:flex;flex-direction:column;
     background:var(--bg);
-    /* Pull down to dismiss follows the finger 1:1 (DIA-417); with no pull in
-       progress the same declaration is the spring back. */
-    transform:translateY(var(--pull,0px));
-    transition:transform .24s cubic-bezier(.2,.8,.3,1);
+    /* The four gestures (DIA-427) drive `transform` and `opacity` inline,
+       with `data-drag` holding the transitions off while the finger is down.
+       Released short of its threshold, clearing them here is the spring back
+       - 240ms, and nothing to write. */
+    transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s ease;
     /* The sheet is its own layer: its entrance and its pull move only
        `transform`, so the compositor moves it and the main thread never
        repaints a screen of reading per frame. No overflow:hidden - the frame
        clips, and the lip below has to be drawn outside the box. */
     will-change:transform}
-  .deck[data-pull] .deck-sheet{transition:none}
+  .deck-sheet[data-drag]{transition:none}
+  /* Released past its threshold: the flight out, 220ms, and then hidden. */
+  .deck-sheet[data-go]{transition:transform .22s ease,opacity .22s ease}
   .deck-sheet[hidden]{display:none}
   /* The leading edge: a rounded, shadowed lip that sits ABOVE the sheet's box.
      While the sheet is below the frame the lip is what rises first; once the
@@ -1440,6 +1442,22 @@
      open - a second copy, because the slide's own is inside the track and the
      sheet is not. Its top is the slide's: the frame's top plus the chrome. */
   .deck-sheet .deck-loc{top:calc(var(--deck-top,52px) + 77px);z-index:1}
+
+  /* Swipe up on the card to open the sheet (DIA-427, gesture 1). The card
+     lifts with the finger at 0.35x over the first 40px - enough to say the
+     gesture is doing something, not enough to look like a drawer - and drops
+     back over 220ms if the finger leaves before the sheet opens. */
+  .deck-card[data-lift]{transition:none}
+  .deck-card[data-drop]{transition:transform .22s ease}
+
+  /* §5's end of the reading, and where gesture 2 lives: a swipe up from here
+     closes the sheet, so the line is what says there is an end to be at. */
+  /* Margins, not padding: the rule stops where the reading does. Physical,
+     because the two gutters differ on a stage page (§2's RTL trap). */
+  .deck-sheet-end{margin:26px var(--gut-r,20px) 0 var(--gut-l,20px);padding:14px 0 0;
+    text-align:center;font-size:12.5px;
+    color:color-mix(in srgb,var(--text) 56%,transparent);
+    border-top:1px solid color-mix(in srgb,var(--text) 12%,transparent)}
 
   /* The card's own column. The frame's padding is the card's, not the
      slide's, so the sheet has one element to measure against. */

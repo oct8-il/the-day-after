@@ -130,6 +130,12 @@ const ONE_ROW = 48;
 const FADE = 160;
 const COVER = 300;
 
+/**
+ * How long a gesture's flight off the screen takes (DIA-427), and how long
+ * the card takes to drop back when a swipe up did not reach the sheet.
+ */
+const FLIGHT = 220;
+
 export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /**
    * §3's path, as three parts rather than a list, because the three behave
@@ -775,22 +781,17 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
-   * `from`: where the sheet already is, in px down from landed, when a pull
-   * (DIA-417) released it there. The exit then starts from the finger, over
-   * the distance that is left, rather than snapping back to landed to play
-   * the ×'s whole exit - which is what it did, and read as a teleport. The
-   * pull's `--pull` stays on the deck for the exit's duration on purpose:
-   * the sheet's base transform must not change under the animation (the
-   * .24s spring-back transition would start beneath it), so the pull is
-   * cleared only once the sheet is hidden.
+   * `silent`: the caller is already animating the sheet off the screen and
+   * only wants it hidden - a gesture's flight out (DIA-427), which starts
+   * from wherever the finger left it and so cannot be an exit animation of
+   * ours starting from landed.
    */
-  const closeSheet = useCallback((opts?: { history?: boolean; from?: number }) => {
+  const closeSheet = useCallback((opts?: { history?: boolean; silent?: boolean }) => {
     const open = sheet.current;
     if (!open) return;
     sheet.current = null;
     const deck = deckEl();
     const el = open.el;
-    const from = Math.max(0, opts?.from ?? 0);
 
     // Closing the sheet closes its drawer: an open drawer is a question the
     // reader has already answered (§5).
@@ -800,48 +801,23 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     });
     deck?.removeAttribute('data-sheet');
     deck?.removeAttribute('data-dim');
-    // data-pull goes now so the dim's fade has its transition back; the pull
-    // itself (--pull, --pull-p) stays until the sheet is hidden - see above.
-    deck?.removeAttribute('data-pull');
-    const clearPull = () => {
-      deck?.style.removeProperty('--pull');
-      deck?.style.removeProperty('--pull-p');
-    };
     track.current?.removeAttribute('inert');
     // Parked but not yet moving (openSheet's two frames): there is no
     // entrance to reverse, so it is hidden as `still` is.
     const wasPre = (el.getAttribute('data-in') ?? '').startsWith('pre');
     el.removeAttribute('data-in');
 
-    // It leaves the way it came. Under reduced motion both ways are instant.
+    // It leaves the way it came. Under reduced motion both ways are instant,
+    // and a gesture has already flown it off the screen itself.
     if (leaving.current) clearTimeout(leaving.current);
-    if (open.mode === 'still' || wasPre) {
+    if (open.mode === 'still' || wasPre || opts?.silent) {
       el.setAttribute('hidden', '');
-      clearPull();
     } else {
-      // A released pull always slides out, whichever way it came in: the
-      // finger has already made it a travelling panel, and fading one out
-      // from under the thumb is not what the gesture promised.
-      const way = from > 0 ? 'cover' : open.mode;
-      let ms = way === 'cover' ? COVER : FADE;
-      if (way === 'cover') {
-        // From a pull: start where the finger left it, take the time the
-        // remaining distance deserves, and ease out - the sheet is already
-        // moving, so an exit that accelerates from rest is the wrong shape.
-        const h = el.clientHeight || 1;
-        if (from > 0) ms = Math.max(140, Math.round(COVER * (1 - from / h)));
-        el.style.setProperty('--from', `${from}px`);
-        el.style.setProperty('--sheet-cover', `${ms}ms`);
-        if (from > 0) el.style.setProperty('--sheet-ease', 'cubic-bezier(.25,.46,.45,.94)');
-      }
-      el.setAttribute('data-out', way);
+      const ms = open.mode === 'cover' ? COVER : FADE;
+      el.setAttribute('data-out', open.mode);
       leaving.current = setTimeout(() => {
         el.removeAttribute('data-out');
         el.setAttribute('hidden', '');
-        el.style.removeProperty('--from');
-        el.style.removeProperty('--sheet-cover');
-        el.style.removeProperty('--sheet-ease');
-        clearPull();
         leaving.current = null;
       }, ms);
     }
@@ -940,80 +916,256 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   }, [openSheet, closeSheet]);
 
   /**
-   * Pull down to dismiss (DIA-417).
+   * The sheet under a finger (DIA-427). Four gestures, one model.
    *
-   * A panel that came up from the bottom invites being pulled back down, and
-   * it is what a reader who has just discovered they cannot swipe sideways
-   * will try. It is an accelerator and nothing more: the × and Back remain.
+   *   1 · a swipe up on the card opens the sheet and keeps scrolling it
+   *   2 · a swipe up at the end of the reading closes it
+   *   3 · a swipe sideways closes it, from anywhere
+   *   4 · a swipe down at the top closes it (what DIA-417 was)
    *
-   * Only from the top of the reading - anywhere else a downward drag is an
-   * ordinary scroll up - and only once the drag has proved it is vertical, so
-   * the carousel keeps its own axis. Touch events rather than pointer ones
-   * because cancelling the scroll needs a non-passive `touchmove`, which is
-   * the one listener that can take the gesture back from the scroller.
+   * Touch events rather than pointer ones throughout: cancelling a scroll
+   * needs a non-passive `touchmove`, which is the one listener that can take
+   * a gesture back from a scroller. Nothing here is gesture-only - the
+   * button, the ×, Escape and Back all still do what they did.
+   *
+   * Under reduced motion nothing follows the finger. The gestures still
+   * count: crossing a threshold closes the sheet, it simply does not travel
+   * to get there.
+   */
+
+  /**
+   * Gesture 1: a swipe up on the card opens the sheet mid-gesture.
+   *
+   * A touch that began on the slide cannot be handed to the sheet's own
+   * scroller once the sheet exists - the browser has already picked what this
+   * touch scrolls - so from the moment it opens, this handler *is* the
+   * scroller: `scrollTop = openY - y`, and a flick on release is integrated
+   * here rather than by the engine.
+   *
+   * Not on a card inside a stack that scrolls: there the vertical axis is the
+   * stage stack's, and a slide cannot have two things answering one finger
+   * (§6, DIA-416).
+   */
+  useEffect(() => {
+    // On the deck rather than on the track: `openSheet` makes the track inert
+    // while this very gesture is still running, and a listener inside an inert
+    // subtree is not one to rely on.
+    const el = deckEl();
+    if (!el) return;
+    let sx = 0, sy = 0, openY = 0;
+    let card: HTMLElement | null = null;
+    let axis: 'x' | 'y' | null = null;
+    let opened = false;
+    let hist: [number, number][] = [];
+    let raf = 0;
+
+    const scroller = () => sheet.current?.el.querySelector<HTMLElement>('.deck-sheet-scroll') ?? null;
+
+    /** The flick, integrated by hand: px/ms, 16ms a frame, 5% off each one. */
+    const flick = (v0: number) => {
+      cancelAnimationFrame(raf);
+      let v = v0;
+      const step = () => {
+        const sc = scroller();
+        if (!sc) return;
+        sc.scrollTop += v * 16;
+        v *= 0.95;
+        if (Math.abs(v) > 0.02) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    const drop = () => {
+      if (!card) return;
+      const c = card;
+      c.removeAttribute('data-lift');
+      c.setAttribute('data-drop', '');
+      c.style.transform = '';
+      setTimeout(() => c.removeAttribute('data-drop'), FLIGHT);
+    };
+
+    const start = (e: TouchEvent) => {
+      card = null; axis = null; opened = false; hist = [];
+      cancelAnimationFrame(raf);
+      if (e.touches.length !== 1 || sheet.current) return;
+      const t = e.touches[0]!;
+      const c = (t.target as HTMLElement | null)?.closest<HTMLElement>('.deck-card[data-card]') ?? null;
+      if (!c) return;
+      const id = c.getAttribute('data-card')!;
+      if (!sheetHost.current?.querySelector(`#sheet-${CSS.escape(id)}`)) return;
+      // The stack owns this axis wherever it has somewhere to go.
+      const stack = c.closest<HTMLElement>('.deck-stack');
+      if (stack && stack.scrollHeight - stack.clientHeight > 1) return;
+      card = c; sx = t.clientX; sy = t.clientY;
+      c.setAttribute('data-lift', '');
+      c.removeAttribute('data-drop');
+    };
+
+    const move = (e: TouchEvent) => {
+      if (!card) return;
+      const t = e.touches[0];
+      if (!t) return;
+      const dx = t.clientX - sx;
+      const dy = t.clientY - sy;
+      if (!axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        // Vertical has to win clearly: a swipe between slides is the deck's,
+        // and it is the gesture a reader makes far more often.
+        axis = Math.abs(dy) > Math.abs(dx) * 1.3 ? 'y' : 'x';
+      }
+      if (axis !== 'y') return;
+      if (e.cancelable) e.preventDefault();
+      hist.push([performance.now(), t.clientY]);
+      if (hist.length > 6) hist.shift();
+
+      if (!opened) {
+        if (dy < 0 && !reduced()) card.style.transform = `translateY(${dy * 0.35}px)`;
+        if (dy < -40) {
+          opened = true;
+          openY = t.clientY;
+          card.style.transform = '';
+          card.removeAttribute('data-lift');
+          openSheet(card.getAttribute('data-card')!, card, 'fade');
+        }
+        return;
+      }
+      const sc = scroller();
+      if (sc) sc.scrollTop = Math.max(0, openY - t.clientY);
+    };
+
+    const end = () => {
+      if (!card) return;
+      if (opened) {
+        // The flick the engine would have given the scroller, had the touch
+        // ever belonged to it.
+        if (hist.length > 1) {
+          const [t0, y0] = hist[0]!;
+          const [t1, y1] = hist[hist.length - 1]!;
+          const v = (y0 - y1) / Math.max(1, t1 - t0);
+          if (Math.abs(v) > 0.1) flick(v);
+        }
+      } else {
+        drop();
+      }
+      card = null; axis = null; opened = false;
+    };
+
+    el.addEventListener('touchstart', start, { passive: true });
+    el.addEventListener('touchmove', move, { passive: false });
+    el.addEventListener('touchend', end);
+    el.addEventListener('touchcancel', end);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('touchstart', start);
+      el.removeEventListener('touchmove', move);
+      el.removeEventListener('touchend', end);
+      el.removeEventListener('touchcancel', end);
+    };
+  }, [openSheet]);
+
+  /**
+   * Gestures 2, 3 and 4: the three ways out from inside the sheet.
+   *
+   * One handler, one mode chosen once per touch and then held. A drag that is
+   * none of the three is an ordinary scroll, and the origin is reset on every
+   * such move so that a finger which *reaches* the end mid-scroll can still
+   * arm the swipe-up without lifting.
    */
   useEffect(() => {
     const host = sheetHost.current;
     if (!host) return;
-    let y0 = 0, x0 = 0, t0 = 0, dy = 0, id = -1;
-    let live = false, taken = false;
+    let sx = 0, sy = 0, ox = 0, oy = 0;
+    let mode: 'x' | 'up' | 'down' | null = null;
+    let armed = false;
 
     const scroller = () => sheet.current?.el.querySelector<HTMLElement>('.deck-sheet-scroll') ?? null;
+    const room = (sc: HTMLElement) => sc.scrollHeight - sc.clientHeight;
 
     const start = (e: TouchEvent) => {
-      live = false; taken = false;
-      const sc = scroller();
-      if (!sc || e.touches.length !== 1 || sc.scrollTop > 0) return;
-      const t = e.touches[0];
-      id = t.identifier; y0 = t.clientY; x0 = t.clientX; t0 = performance.now(); dy = 0;
-      live = true;
+      mode = null;
+      armed = false;
+      if (e.touches.length !== 1 || !sheet.current) return;
+      // The carousel is the one thing in here with an axis of its own.
+      if ((e.touches[0]!.target as HTMLElement | null)?.closest('.deck-ov-sources')) return;
+      sx = e.touches[0]!.clientX; sy = e.touches[0]!.clientY;
+      armed = true;
     };
 
     const move = (e: TouchEvent) => {
-      if (!live) return;
-      const deck = deckEl();
-      const t = [...e.touches].find((x) => x.identifier === id);
-      if (!deck || !t) return;
-      const d = t.clientY - y0;
-      const across = Math.abs(t.clientX - x0);
-      if (!taken) {
-        if (Math.abs(d) < 8 && across < 8) return;
-        // Down, from the top, and more down than across. Anything else
-        // belongs to the scroller or to the carousel.
-        if (!(d > 0 && d > across)) { live = false; return; }
-        taken = true;
-        deck.setAttribute('data-pull', '');
-      }
-      dy = Math.max(0, d);
-      // Reduced motion: no follow. The gesture still counts, it just does not
-      // animate under the finger.
-      if (!reduced()) {
-        deck.style.setProperty('--pull', `${dy}px`);
-        deck.style.setProperty('--pull-p', String(Math.min(1, dy / (deck.clientHeight || 1) * 2)));
+      if (!armed) return;
+      const open = sheet.current;
+      const sc = scroller();
+      const t = e.touches[0];
+      if (!open || !sc || !t) return;
+      const x = t.clientX, y = t.clientY;
+      const dx = x - sx, dy = y - sy;
+
+      if (!mode) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dx) > Math.abs(dy) * 1.4) { mode = 'x'; ox = x; }
+        else if (dy < 0 && sc.scrollTop >= room(sc) - 1) { mode = 'up'; oy = y; }
+        else if (dy > 0 && sc.scrollTop <= 0) { mode = 'down'; oy = y; }
+        else {
+          // An ordinary scroll. Re-origin, so that arriving at the end or the
+          // top during this same touch still arms a gesture.
+          sx = x; sy = y;
+          return;
+        }
+        open.el.setAttribute('data-drag', '');
       }
       if (e.cancelable) e.preventDefault();
+      if (reduced()) return;
+
+      const el = open.el;
+      if (mode === 'x') {
+        const d = x - ox;
+        el.style.transform = `translateX(${d}px)`;
+        el.style.opacity = String(Math.max(0, 1 - Math.abs(d) / 200));
+      } else if (mode === 'up') {
+        const d = Math.min(0, y - oy);
+        el.style.transform = `translateY(${d * 0.6}px)`;
+        el.style.opacity = String(Math.max(0, 1 + d / 180));
+      } else {
+        // Down is 1:1 and does not fade: this is the cover leaving the way
+        // it came.
+        el.style.transform = `translateY(${Math.max(0, y - oy)}px)`;
+      }
     };
 
-    const end = () => {
-      if (!live) return;
-      live = false;
-      const deck = deckEl();
-      if (!deck || !taken) return;
-      taken = false;
-      // A quarter of the frame, or a flick.
-      const far = dy > deck.clientHeight / 4;
-      const flick = dy > 40 && performance.now() - t0 < 260;
-      if (far || flick) {
-        // The exit starts from here; closeSheet clears the pull itself once
-        // the sheet is hidden, so the base never moves under the animation.
-        closeSheet({ from: reduced() ? 0 : dy });
+    const end = (e: TouchEvent) => {
+      if (!armed) return;
+      armed = false;
+      const open = sheet.current;
+      const was = mode;
+      mode = null;
+      if (!open || !was) return;
+      const el = open.el;
+      const t = e.changedTouches[0];
+      const dx = (t?.clientX ?? ox) - ox;
+      const dy = (t?.clientY ?? oy) - oy;
+
+      const go = was === 'x' ? Math.abs(dx) > 90 : was === 'up' ? dy < -90 : dy > 110;
+      const clear = () => { el.style.transform = ''; el.style.opacity = ''; };
+
+      if (!go) {
+        // Short of it: clearing what the finger wrote is the spring back.
+        el.removeAttribute('data-drag');
+        clear();
         return;
       }
-      // Springs back: with data-pull gone the transitions are on again, and
-      // clearing the pull is the spring.
-      deck.removeAttribute('data-pull');
-      deck.style.removeProperty('--pull');
-      deck.style.removeProperty('--pull-p');
+      if (reduced()) { el.removeAttribute('data-drag'); clear(); closeSheet(); return; }
+
+      // Past it: out the way it was going, and hidden when it arrives.
+      el.removeAttribute('data-drag');
+      el.setAttribute('data-go', '');
+      if (was === 'x') { el.style.transform = `translateX(${dx < 0 ? -220 : 220}px)`; el.style.opacity = '0'; }
+      else if (was === 'up') { el.style.transform = 'translateY(-140px)'; el.style.opacity = '0'; }
+      else { el.style.transform = 'translateY(100%)'; }
+      setTimeout(() => {
+        closeSheet({ silent: true });
+        el.removeAttribute('data-go');
+        clear();
+      }, FLIGHT);
     };
 
     host.addEventListener('touchstart', start, { passive: true });
