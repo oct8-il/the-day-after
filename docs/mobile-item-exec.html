@@ -176,7 +176,7 @@ add(`<div>
 add(`<div class="center">
   <span class="tag done">done</span>
   <h2>What is finished</h2>
-  <p class="sub">Phases 2, 3 and 4, three gates, and everything that came up on the way to them.</p>
+  <p class="sub">Phases 2 to 6, three gates, the reading sheet and its gestures, and everything that came up on the way to them.</p>
 </div>`, null);
 
 add(`<div>
@@ -543,31 +543,88 @@ add(`<div>
 <p>It was caught because the entrance tests stopped sampling a pixel after a wait. An ease-out does most of its travel in the first fifth of its duration, so "60ms in" is a race with the harness; the animation's name, duration and keyframes are facts, and asking for them is what made the missing one obvious.</p>
 <p>Pulling the sheet down came with it, a phase earlier than filed, because it is the same object: from the top of the reading a downward drag moves the sheet 1:1, the slide behind un-dims with it, and past a quarter of the frame or on a flick it closes like any other close — giving the history entry back and returning focus. It needs a non-passive <span class="id">touchmove</span>, which is the one listener that can take a gesture back from a scroller.</p>`);
 
+add(`<div>
+  <span class="tag done">ux · the finger</span>
+  <h2>Four gestures, and a number no rule survived</h2>
+  <p class="sub">The sheet had one way in and one way out. It has four under a thumb now — and the first thing they met was the browser's own touch slop.</p>
+  <div class="stack">
+    <div class="item"><div class="v">4</div><div class="k">gestures on one surface: up on the card to open and keep scrolling, sideways to close, up at the end, down at the top</div></div>
+    <div class="item"><div class="v">16</div><div class="k">pixels the finger travels before a single <span class="id">touchmove</span> is reported — twice the 8px axis rule that was meant to see it first</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">mode decided per touch, at the first move that is actually reported, and never revisited while the finger is down</div></div>
+  </div>
+</div>`,
+`<p>The slop is the whole lesson. A handler that says "at 8px, decide the axis" reads as careful and is fiction: the browser has already swallowed the first ~16px, so the first event a handler ever sees is past every early threshold in it. Every rule here is written against the first <i>reported</i> move instead, and a gesture's origin is that move rather than the touch's own start.</p>
+<p>The mode is chosen once and kept. A thumb arcs, and a gesture that re-reads its axis every frame turns into a different gesture halfway through — which is how a close becomes a scroll and a reader loses their place. The sheet asks once: sideways only if it beats the vertical by 1.4x, up only at the end of the reading, down only at its top, and otherwise it re-origins and waits.</p>
+<p>The swipe up on the card is the odd one, because it starts before there is a sheet. It listens on the deck rather than on the track — <span class="id">openSheet</span> makes the track inert mid-gesture, and a listener on an inert subtree stops hearing the finger that is still moving on it.</p>`);
+
+add(`<div>
+  <span class="tag done">ux · the stack</span>
+  <h2>The stage stack lost forty-six lines and got better</h2>
+  <p class="sub">Every stage is one frame with a mandatory snap. The per-stage scroll memory went with it, and Roy's thumb found two faults the same afternoon.</p>
+  <div class="stack">
+    <div class="item"><div class="v">75</div><div class="k">lines deleted from the stack's shell against 29 added — the memory, <span class="id">driving</span>, <span class="id">want</span>, <span class="id">rest()</span> and <span class="id">settle</span> all go</div></div>
+    <div class="item"><div class="v">2</div><div class="k">faults from one thumb test, both in code that had passed every assertion written for it</div></div>
+    <div class="item mute"><div class="v">1</div><div class="k">of the two found by reading rather than by reproducing — an anchored scroll that clamps at zero</div></div>
+  </div>
+</div>`,
+`<p>All of that machinery existed to answer "where was this stage when I left it". Once a stage is exactly one frame there is no answer to remember: the page top is the only position a page has. Deleting state is rarely the fix on offer and it was the fix here, which is worth saying because the earlier instinct was to referee the scroll better.</p>
+<p>The first fault is the instructive one. The hand-scroll under gesture 1 was anchored — <span class="id">scrollTop = openY - y</span> — and an anchored value clamps at zero, so a finger that drifted back below the point where the sheet opened pinned the reading at its top and then did nothing at all for the rest of the stroke. It is incremental now: each frame moves by the delta since the last one, which cannot clamp. No screenshot shows this and no assertion had a reason to ask; it came out of reading the expression next to Roy's description of a thumb that "stopped working".</p>
+<p>The second was the close button painting a focus ring after a tap. Focus still has to move into the sheet — a screen reader needs it to — but <span class="id">:focus-visible</span> guesses, and it guesses wrong when the focus is script-driven and the input was a finger. The sheet marks itself as opened by a touch and the ring is suppressed for that case only.</p>`);
+
+add(`<div>
+  <span class="tag done">ux · the target</span>
+  <h2>The glyph is 20px, so the sentence is the target</h2>
+  <p class="sub">The right size to look at and the wrong size to hit. The whole cited passage takes the tap; the glyph stays the one control.</p>
+  <div class="stack">
+    <div class="item"><div class="v">0</div><div class="k">new elements in the markup — the annotation had already wrapped every cited passage, so the target maps onto what the author wrote</div></div>
+    <div class="item"><div class="v">2</div><div class="k">events in sequence on a card tap: the sheet lands aligned and unscrolled, and only then does the drawer open under the sentence</div></div>
+    <div class="item mute"><div class="v">605</div><div class="k">deck assertions across 189 tests, green on both projects</div></div>
+  </div>
+</div>`,
+`<p>The tap resolves to a chip rather than the reverse: which chip did this click mean — the one that was hit, or the one that ends the block it landed in. A link keeps its own behaviour, a button is already a control, and the quote inside an open drawer is a paragraph in the same column but is evidence rather than a claim. Writing it as one question, asked by both click handlers, is what keeps a passage meaning exactly what its glyph means.</p>
+<p>The hard part was that the card has to name a drawer it does not contain. Both copies of a field are the same text, so each chip now carries the name of the drawer its passage will open once the sheet is there. Counting glyphs instead would have been wrong in a way that only shows up on some items: a span that cites nothing draws no glyph, so the count and the span index part company. Naming it also exposed a mismatch nobody could have seen from the outside — the two copies of a stage's summary were being given different prefixes, so a stage card could not have named anything at all.</p>
+<p>Opening the drawer is deliberately not done directly: the sheet clicks its own chip once it has landed. That is how a passage tap inherits the drawer rules whole — one at a time, the cite's order, the minimum scroll when it would open below the fold — rather than restating them in a second place that can drift.</p>`);
+
 add(`<div class="center">
   <span class="tag defer">deferred</span>
   <h2>What is parked, and why</h2>
-  <p class="sub">Nothing here is forgotten and nothing here is blocking. Two were known before the build, the rest came out of it, and two now belong to the design session rather than to this one.</p>
+  <p class="sub">Nothing here is forgotten and nothing here is blocking. Sixteen rows on two boards: what the phases in front of us still owe, and what is being carried.</p>
 </div>`,
 `<p>A deferred item with no reason attached becomes a surprise later. Each row below says where it bites, so that the phase that reaches it inherits the reason rather than rediscovering it.</p>`);
 
 add(`<div>
-  <div class="kicker gold">the board</div>
-  <h2>Ten open, none of them blocking</h2>
+  <div class="kicker gold">the board · in front</div>
+  <h2>Eight in front of us</h2>
   <table class="board">
-    <tr><td class="w">DIA-416</td><td class="s">ux · next</td><td>The stage stack pages: every stage one frame, mandatory snap, and the per-stage scroll memory retired. The cards are already one frame tall, so what is left is the snap and the deletion</td></tr>
-    <tr><td class="w">DIA-414</td><td class="s">ux · next</td><td>The whole cited passage is the tap target, not the glyph, and it opens the sheet at itself with the drawer already open. The glyph opens the sheet today; the passage does not</td></tr>
-    <tr><td class="w">DIA-415</td><td class="s">Roy's ruling</td><td>Whether overviews are <i>written</i> as a lead, headings and lists. It binds the content pass and needs a heading in the annotation contract, so it is a ruling before it is a build</td></tr>
-    <tr><td class="w">DIA-367</td><td class="s">from the plan</td><td>Four stage strings never written — definitions for 3 and 6, absence statements for 3 and 4. Renders as placeholders; nothing waits on it</td></tr>
+    <tr><td class="w">DIA-426</td><td class="s">ux · next</td><td>The source drawer redrawn as an excerpt: a 2px rule in the type's colour, and the quote set as a newspaper clipping. The last build item on slide 2</td></tr>
+    <tr><td class="w">DIA-415</td><td class="s">Roy's ruling</td><td>Whether overviews are <i>written</i> as a lead, headings and lists. It binds the content pass, so it is a ruling before it is a build</td></tr>
+    <tr><td class="w">DIA-419</td><td class="s">follows 415</td><td>The annotation contract learns headings and the deck renders them. Nothing to build until the writing rule is settled</td></tr>
+    <tr><td class="w">DIA-420</td><td class="s">data · phase 6</td><td>What each stage means and why it matters. Slide 4's redrawn page is built around this text, so the words come first</td></tr>
+    <tr><td class="w">DIA-425</td><td class="s">ux · phase 6</td><td>Slide 4's unreached page redrawn: one frame, the stage's definition, the absence stated. Waits on DIA-420</td></tr>
+    <tr><td class="w">DIA-421</td><td class="s">ux · phase 6</td><td><span class="he">הגישו מקור</span> is on the screen and points nowhere. A destination has to be decided before the button can be honest</td></tr>
+    <tr><td class="w">DIA-422</td><td class="s">build</td><td>A slide's hash is its identity, not its position — an item that skips a slide renames every slide after it</td></tr>
+    <tr><td class="w">DIA-424</td><td class="s">build</td><td>Screen readers hear <span class="he">6 מתוך 5</span> on items that skip a slide. Same root as DIA-422, its own fix</td></tr>
+  </table>
+</div>`,
+`<p>The weight has moved. Slide 2 is one issue from finished and the rest of that phase is a ruling Roy owes himself; slide 4 picked up six issues in a morning, and two of them are waiting on words rather than on code — which is the right order, because the page is built around the wording rather than the other way round.</p>
+<p>The two build rows are one root with two symptoms. A slide's position is being used as its name, so an item that skips slide 4 shifts every hash after it and tells a screen reader it is on six of five. Both are cheap and neither is urgent, which is exactly the kind of row that sits on a board until someone writes down why.</p>`);
+
+add(`<div>
+  <div class="kicker gold">the board · carried</div>
+  <h2>Eight carried, none of them blocking</h2>
+  <table class="board">
+    <tr><td class="w">DIA-423</td><td class="s">ux · phase 6</td><td>Slide 4 drops the <span class="he">חזרה לשלב הנוכחי</span> pill. A deletion, waiting on the page around it</td></tr>
+    <tr><td class="w">DIA-367</td><td class="s">from the plan</td><td>Four stage strings never written — definitions for 3 and 6, absence statements for 3 and 4. Renders as placeholders</td></tr>
     <tr><td class="w">DIA-366</td><td class="s">from the plan</td><td>Photographs for the live ledger. Until it lands, the live pool shows the number ghost and nothing else</td></tr>
     <tr><td class="w">DIA-368</td><td class="s">from the plan</td><td>A fidelity gate for the deck, baselined against the spec's screens rather than against the app</td></tr>
     <tr><td class="w">DIA-376</td><td class="s">post-mvp</td><td>Slide 6's star strip, and the first endpoint this project would ever own. Version A ships; the strip is not built inert</td></tr>
     <tr><td class="w">card credit</td><td class="s">phase 8</td><td>The 111px card has no credit slot and cannot grow, and most of these images are CC BY-SA. Three candidate answers are ready</td></tr>
-    <tr><td class="w">DIA-408</td><td class="s">the build</td><td>The gesture tests need the full browser and the fidelity baselines are pinned to whatever CI installs. Named per file for now; which binary the config should use is Phase 9's question</td></tr>
+    <tr><td class="w">DIA-408 · 409</td><td class="s">the build</td><td>CI's headless shell cannot deliver a horizontal pan, and the second pass against <span class="id">next dev</span> fails at setup. Which binary the config should use is Phase 9's question</td></tr>
     <tr><td class="w">DIA-410</td><td class="s">pre-existing</td><td>A hydration mismatch on the home page and a redirect from <span class="id">/</span> to <span class="id">/about/</span>. Neither is the deck's, both are older than it</td></tr>
   </table>
 </div>`,
-`<p>Two rows left this board on 21 September without being fixed, which is the best way for a row to leave. <i>The cut</i> — slide 2's text running past the frame with no fade — is now the card's cut, specified rather than tolerated. <i>The chip</i> — the ~90px named source pill that wrapped below its own sentence — is a 20px glyph, and the source types got their colour back on the carousel card where telling authorities apart actually helps.</p>
-<p>The evidence map used to sit here too. It came off on 20 September with a ruling rather than a fix: it ships as the desktop component at 390.</p>`);
+`<p>Four rows have now left this board without being fixed, which is the best way for a row to leave. <i>The cut</i> — slide 2's text running past the frame with no fade — is the card's cut, specified rather than tolerated. <i>The chip</i> — the ~90px named source pill that wrapped below its own sentence — is a 20px glyph. <i>The evidence map</i> came off on 20 September with a ruling rather than a fix: it ships as the desktop component at 390. And <span class="id">DIA-383</span> — a casual scroll on slide 2 read as a swipe — has no surface left to happen on, because the slide it happened on no longer scrolls. It is still open in Linear and should not be.</p>
+<p>The three rows from the plan are the oldest things here and the least alarming: each is content or tooling that the build does not wait on, and each renders as an honest absence rather than as a hole.</p>`);
 
 add(`<div class="center">
   <div class="kicker gold">why this deck exists</div>
@@ -575,7 +632,8 @@ add(`<div class="center">
   <p class="sub">Every phase so far has been finished twice: once against the design, and once against a phone.</p>
 </div>`,
 `<p>Close here. The plan's shape held — settle the design, settle the data, build in an order where each phase is judged before the next one inherits its mistakes — and it is the judging that has produced almost everything in this deck.</p>
-<p>Four slides are built and merged, and the UX backlog is being worked as its own block — nine issues closed across two sprints, the chrome first and then the reading itself. The largest of them threw away the way these screens had read since Phase 3, which the gates had been circling for a week. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>`);
+<p>Four slides are built and merged, and the UX backlog has been worked as its own block — fifteen issues closed across three sprints, the chrome first, then the reading, then the reading under a thumb. The largest of them threw away the way these screens had read since Phase 3, which the gates had been circling for a week. On present form each gate costs a spec revision and a side-quest, and both of those are the system working rather than failing.</p>
+<p>The last three entries in this deck were all found the same way: by Roy holding a phone. The suite is at 605 assertions and it was silent on every one of them — a scroll that clamped at zero, a focus ring that should not have been painted, a target the right size to see and the wrong size to hit. That is not an argument against the tests. It is the reason the gate exists after them rather than instead of them.</p>`);
 
 /* ---------- runtime ---------- */
 const stage = document.getElementById('stage');
