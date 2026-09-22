@@ -84,23 +84,32 @@ test.describe('the stack', () => {
       };
     });
     expect(m.x).toBe(0);
-    // Proximity, not mandatory: a remembered position part-way down a page is
-    // not a snap point, and mandatory left the scroller floating there until
-    // the next touch - which read as the arrows undershooting. The engine
-    // normalises "y proximity" to "y", proximity being the initial value.
-    expect(m.snap).toContain('y');
-    expect(m.snap).not.toContain('mandatory');
+    // Mandatory since DIA-416. It was proximity for as long as a stage could
+    // be taller than the frame - a remembered position part-way down a page
+    // is not a snap point, and mandatory left the scroller floating there
+    // until the next touch, which read as the arrows undershooting. Every
+    // page is one frame now, so every rest position is a snap point.
+    expect(m.snap).toBe('y mandatory');
     expect(m.stop).toBe('always');
   });
 
-  test('a page is at least a frame tall, so a short stage still fills one', async ({ page }) => {
-    await open(page, 't03');
-    const m = await page.evaluate(() => {
-      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
-      return [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')]
-        .map((s) => Math.round(s.getBoundingClientRect().height) >= st.clientHeight - 1);
-    });
-    expect(m.every(Boolean)).toBe(true);
+  test('every page is exactly one frame, on every fixture', async ({ page }) => {
+    // DIA-416's own measure, and the thing the whole change rests on: a
+    // nearest-top reading of "which stage is showing" is only right while
+    // the pages are the same height.
+    for (const id of ['t01', 't02', 't03', 't06'] as const) {
+      await open(page, id);
+      const m = await page.evaluate(() => {
+        const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+        return {
+          frame: st.clientHeight,
+          pages: [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage')]
+            .map((s) => Math.round(s.getBoundingClientRect().height)),
+        };
+      });
+      expect(m.pages.length, id).toBeGreaterThan(0);
+      expect(m.pages.every((h) => Math.abs(h - m.frame) <= 1), `${id}: ${m.pages.join(',')} in ${m.frame}`).toBe(true);
+    }
   });
 
   test('the floor: one reached stage still makes a stack', async ({ page }) => {
@@ -143,18 +152,17 @@ test.describe('where a stage opens', () => {
     expect(Math.abs(into)).toBeLessThan(2);
   });
 
-  test('a stage already read reopens where it was left', async ({ page }) => {
-    // §6: that is what makes scrolling back up bearable - the reader returns
-    // to the foot of the stage they just read rather than above all of it.
+  test('a stage already read opens at its top too - there is no memory left', async ({ page }) => {
+    // §6, rewritten by DIA-416: a page has no inside to remember. What used
+    // to be asserted here is the opposite of what is asserted now, which is
+    // the honest shape of this change.
     await open(page, 't01', '#3-s1');
-    const stackTop = await page.evaluate(() => {
+    await page.evaluate(() => {
       const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
-      st.scrollTop += 260;
-      return st.scrollTop;
+      st.scrollTop += 120;
     });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
 
-    // Away, and back by the footer's arrows rather than by scrolling.
     await page.click('.deck-mid button[aria-label="השלב הבא"]');
     await page.waitForTimeout(700);
     expect(await here(page)).toBe('2');
@@ -162,8 +170,63 @@ test.describe('where a stage opens', () => {
     await page.waitForTimeout(700);
 
     expect(await here(page)).toBe('1');
-    const back = await page.evaluate(() => Math.round(document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!.scrollTop));
-    expect(Math.abs(back - Math.round(stackTop))).toBeLessThan(12);
+    const into = await page.evaluate(() => {
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      const one = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage[data-stage="1"]')!;
+      return Math.round(st.getBoundingClientRect().top - one.getBoundingClientRect().top);
+    });
+    expect(Math.abs(into)).toBeLessThan(2);
+  });
+
+  test('it never rests between two stages', async ({ page }) => {
+    // Mandatory snap, one page per gesture. Driven to a position between two
+    // pages, the engine puts it on one of them.
+    await open(page, 't01', '#3-s1');
+    await page.evaluate(() => {
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      st.scrollTo({ top: st.clientHeight * 1.5, behavior: 'instant' });
+    });
+    await page.waitForTimeout(600);
+    const m = await page.evaluate(() => {
+      const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+      return { rem: st.scrollTop % st.clientHeight, frame: st.clientHeight };
+    });
+    expect(Math.min(m.rem, m.frame - m.rem)).toBeLessThan(2);
+  });
+
+  test('the ring, the hash and the pill agree at every moment of a drag', async ({ page }) => {
+    // The fault DIA-416 names: 700px into a 1261px page the *next* page's top
+    // was nearer, so all three named a stage the reader had not reached. With
+    // uniform pages the nearest-top measure flips at the halfway mark, and
+    // 0.3 and 0.7 of the way between two pages are on either side of it.
+    await open(page, 't01', '#3-s1');
+    for (const [progress, want] of [[0.3, '1'], [0.7, '2']] as const) {
+      await page.evaluate((f) => {
+        const st = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stack')!;
+        // Snap is off for the read: a mid-drag position is not a rest
+        // position, and mandatory would put it back on a page before it
+        // could be measured.
+        (st as HTMLElement).style.scrollSnapType = 'none';
+        st.scrollTop = st.clientHeight * f;
+      }, progress);
+      await page.waitForTimeout(250);
+      const m = await page.evaluate(() => ({
+        stage: document.querySelector<HTMLElement>('.deck')!.dataset.stage2,
+        ring: document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung[data-on]')
+          ?.previousElementSibling === null ? 1 : [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')]
+            .findIndex((r) => r.hasAttribute('data-on')) + 1,
+        hash: location.hash,
+        pill: !document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-stage-back')!.hasAttribute('hidden'),
+      }));
+      expect(m.stage, `at ${progress}`).toBe(want);
+      expect(String(m.ring), `ring at ${progress}`).toBe(want);
+      expect(m.hash, `hash at ${progress}`).toBe(`#3-s${want}`);
+      // t01's current stage is 4, so the pill is out at both.
+      expect(m.pill).toBe(true);
+    }
+    await page.evaluate(() => {
+      (document.querySelector<HTMLElement>('.deck-track > .deck-slide:nth-child(3) .deck-stack')!).style.scrollSnapType = '';
+    });
   });
 
   test('the URL follows the page, and a refresh lands back on it', async ({ page }) => {

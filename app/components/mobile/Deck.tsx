@@ -827,7 +827,18 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if ((opts?.history ?? true) && window.history.state?.deckSheet) window.history.back();
   }, []);
 
-  const openSheet = useCallback((id: string, opener: HTMLElement | null, mode: 'fade' | 'cover') => {
+  const openSheet = useCallback((
+    id: string,
+    opener: HTMLElement | null,
+    mode: 'fade' | 'cover',
+    /**
+     * Opened by a finger rather than by a key. Focus still moves into the
+     * sheet - a screen reader needs it to - but the × does not paint a focus
+     * ring, which is what `:focus-visible` is for and what the engine guesses
+     * wrong when the focus is script-driven after a touch (DIA-429).
+     */
+    quiet?: boolean,
+  ) => {
     const deck = deckEl();
     const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
     const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`);
@@ -864,6 +875,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if (scroll) scroll.scrollTop = 0;
 
     deck.setAttribute('data-sheet', id);
+    if (quiet) el.setAttribute('data-quiet', ''); else el.removeAttribute('data-quiet');
     // The deck behind is not a second reading for a screen reader to find.
     track.current?.setAttribute('inert', '');
 
@@ -906,7 +918,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         // §5's two entrances. The button is a deliberate act and the sheet
         // appears in place; a tap on a citation is not, so the sheet covers
         // from the bottom up - the cover is what says the mode changed.
-        openSheet(btn.getAttribute('data-open')!, btn, btn.classList.contains('deck-more') ? 'fade' : 'cover');
+        // `detail` is 0 when a button was activated from the keyboard, and
+        // the count of clicks when it was pressed.
+        openSheet(btn.getAttribute('data-open')!, btn, btn.classList.contains('deck-more') ? 'fade' : 'cover', e.detail > 0);
         return;
       }
       if (t.closest('.deck-sheet-x')) { e.preventDefault(); closeSheet(); }
@@ -939,8 +953,16 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
    * A touch that began on the slide cannot be handed to the sheet's own
    * scroller once the sheet exists - the browser has already picked what this
    * touch scrolls - so from the moment it opens, this handler *is* the
-   * scroller: `scrollTop = openY - y`, and a flick on release is integrated
-   * here rather than by the engine.
+   * scroller, and a flick on release is integrated here rather than by the
+   * engine.
+   *
+   * It follows the finger's *deltas*. It used to be anchored -
+   * `scrollTop = openY - y` - which is the same thing going up and a trap
+   * coming back down: the anchor clamps at 0, so a finger that returns below
+   * where the sheet opened pins the reading at its top and then does nothing
+   * at all, however far it goes. That is DIA-428's "down scrolling stuck
+   * after entering from the up swipe": the reading had already been yanked to
+   * the top, and there was no way to re-grip it without lifting.
    *
    * Not on a card inside a stack that scrolls: there the vertical axis is the
    * stage stack's, and a slide cannot have two things answering one finger
@@ -952,7 +974,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // subtree is not one to rely on.
     const el = deckEl();
     if (!el) return;
-    let sx = 0, sy = 0, openY = 0;
+    let sx = 0, sy = 0, lastY = 0;
     let card: HTMLElement | null = null;
     let axis: 'x' | 'y' | null = null;
     let opened = false;
@@ -1022,15 +1044,16 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         if (dy < 0 && !reduced()) card.style.transform = `translateY(${dy * 0.35}px)`;
         if (dy < -40) {
           opened = true;
-          openY = t.clientY;
+          lastY = t.clientY;
           card.style.transform = '';
           card.removeAttribute('data-lift');
-          openSheet(card.getAttribute('data-card')!, card, 'fade');
+          openSheet(card.getAttribute('data-card')!, card, 'fade', true);
         }
         return;
       }
       const sc = scroller();
-      if (sc) sc.scrollTop = Math.max(0, openY - t.clientY);
+      if (sc) sc.scrollTop -= t.clientY - lastY;
+      lastY = t.clientY;
     };
 
     const end = () => {
@@ -1184,6 +1207,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   // §11: arrow keys on a hardware keyboard. The mapping is spatial, so in this
   // RTL frame ArrowLeft goes forward - the next slide is the one to the left.
   const onKey = (e: React.KeyboardEvent) => {
+    // A key is used: the sheet is being driven from a keyboard after all, so
+    // the × may paint its ring again (DIA-429).
+    sheet.current?.el.removeAttribute('data-quiet');
     // While the sheet is open the deck is not what the keyboard is talking to.
     if (sheet.current) {
       if (e.key === 'Escape') { e.preventDefault(); closeSheet(); }

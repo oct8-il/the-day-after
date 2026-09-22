@@ -1418,6 +1418,12 @@
     color:color-mix(in srgb,var(--text) 62%,transparent)}
   .deck-sheet-x svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;
     stroke-linecap:round}
+  /* Opened by a finger: focus still moves to the × - a screen reader needs it
+     to - but there is no keyboard to show a ring to, and the engine guesses
+     otherwise when the focus is script-driven after a touch (DIA-429). The
+     first key press takes the attribute off again. */
+  .deck-sheet[data-quiet] .deck-sheet-x:focus{outline:none}
+  .deck-sheet[data-quiet] .deck-sheet-x:focus-visible{outline:none}
   .deck-sheet-chip{display:flex;align-items:center;justify-content:center}
   /* §5's neutral pill: slide 2's own name, and the one place the fully-rounded
      chip this slide used to wear on the page survives. */
@@ -1593,14 +1599,17 @@
 
   /* The stack. scroll-snap makes the boundary a property of the scroller
      rather than of a listener, so the deck's own axis decision stays the only
-     one in the build. */
-  /* Proximity rather than mandatory. A stage reopens where it was left, and a
-     position part-way down a page is not a snap point - under mandatory the
-     engine left the scroller floating there and corrected only on the next
-     touch, which read as the arrows undershooting. Proximity snaps at the
-     boundaries, which is all §6 asks for, and leaves a rest position alone. */
+     one in the build.
+
+     Mandatory, since DIA-416. It was proximity for as long as a stage could
+     be taller than the frame: a remembered position part-way down a page is
+     not a snap point, and mandatory left the scroller floating there until
+     the next touch, which read as the arrows undershooting. Every page is one
+     frame now and every rest position is a snap point, so mandatory is what
+     it always wanted to be - one stage per gesture, never at rest between
+     two. */
   .deck-stack{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-    scroll-snap-type:y proximity;scrollbar-width:none}
+    scroll-snap-type:y mandatory;scrollbar-width:none}
   .deck-stack::-webkit-scrollbar{display:none}
 
   /* §6: a stage page is a card exactly one frame tall, so the stack is

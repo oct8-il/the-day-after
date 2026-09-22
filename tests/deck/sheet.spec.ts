@@ -701,8 +701,48 @@ test.describe('under a finger', () => {
       await page.waitForTimeout(60);
       expect(await scrollTop(page)).toBeCloseTo(200, -1);
 
-      await send('touchEnd', 240);
+      // Back down, in the same gesture: the finger carries the reading with
+      // it both ways. Anchored to the opening point instead, this clamped at
+      // 0 and then did nothing at all, however far the finger went — which
+      // is what DIA-428 felt like.
+      await send('touchMove', 440);
+      await page.waitForTimeout(60);
+      expect(await scrollTop(page)).toBeCloseTo(0, -1);
+      await send('touchMove', 340);
+      await page.waitForTimeout(60);
+      expect(await scrollTop(page)).toBeCloseTo(100, -1);
+
+      await send('touchEnd', 340);
       await cdp.detach();
+    });
+
+    test('a sheet opened by a finger does not paint a ring on the ×', async ({ page }) => {
+      // DIA-429. Focus still moves - a screen reader needs it to - but there
+      // is no keyboard to show a ring to.
+      await open2(page);
+      const cdp = (await drag(page, { x: 195, y: 500 }, { x: 195, y: 400 }, { hold: true }))!;
+      await page.waitForTimeout(300);
+      const m = await page.evaluate(() => {
+        const el = document.querySelector('#sheet-ov')!;
+        const x = el.querySelector('.deck-sheet-x')!;
+        return {
+          quiet: el.hasAttribute('data-quiet'),
+          focused: document.activeElement === x,
+          // getComputedStyle takes a pseudo-*element*, not a pseudo-class,
+          // so this is the outline actually painted on the focused ×.
+          outline: getComputedStyle(x).outlineStyle,
+        };
+      });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] } as never);
+      await cdp.detach();
+      expect(m.quiet).toBe(true);
+      expect(m.focused).toBe(true);
+      expect(m.outline).toBe('none');
+
+      // A key is used: the ring is a ring again.
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() =>
+        document.querySelector('#sheet-ov')!.hasAttribute('data-quiet'))).toBe(false);
     });
 
     test("a sideways drag on the card is still the deck's, and opens nothing", async ({ page }) => {

@@ -7,9 +7,14 @@ import type { ReactNode } from 'react';
  * Slide 3's stack - docs/mobile-item.html §6.
  *
  * One page per stage, chronological downward, opening on the current one.
- * Since DIA-413 a stage page is a card exactly one frame tall - a reading
- * that overruns is cut on the card and continues in the sheet - so the stack
- * pages rather than scrolls. One axis, one gesture, no control to find.
+ * A stage page is a card exactly one frame tall (DIA-413), so since DIA-416
+ * this stack is what the deck already is on the other axis: uniform pages,
+ * mandatory snap, one stage per gesture, never at rest between two.
+ *
+ * Everything that made a stage bearable while it could be taller than the
+ * frame is gone with the scrolling stage itself - the per-stage memory, the
+ * driven-scroll bookkeeping and the landing correction. A page has no inside
+ * to remember, and a stage opens at its top, always.
  *
  * The boundary is a property of the stack rather than of a listener - nested
  * scroll-snap, the way §11 calls it - so whatever DIA-383 eventually does to
@@ -104,27 +109,18 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
   const [at, setAt] = useState(() =>
     kind === 'reached' ? Math.max(0, pages.findIndex((p) => p.current)) : 0);
   const atRef = useRef(at);
-  /**
-   * Where the reader left each stage, for as long as the page is open. It is
-   * what makes scrolling back up bearable: they return to the foot of the
-   * stage they just read rather than above everything in it. Not a stored
-   * preference, and it does not survive a reload.
-   */
-  const seen = useRef(new Map<number, number>());
-  /**
-   * True while the stack is scrolling itself. The memory is the reader's, so
-   * the positions a driven scroll passes through on its way somewhere are not
-   * recorded - otherwise walking away from a stage overwrites the place it was
-   * left with the place the animation happened to be at.
-   */
-  const driving = useRef(false);
-  /** What a driven scroll asked for, so its landing can be checked against it. */
-  const want = useRef<{ page: number; into: number } | null>(null);
-
   const pageEls = useCallback(
     () => [...(stack.current?.querySelectorAll<HTMLElement>('.deck-stage') ?? [])], []);
 
-  /** Measured, not calculated: a page's height is its content's. */
+  /**
+   * Which page the stack is showing: the one whose top is nearest its own.
+   *
+   * This was the measure before DIA-416 and it was wrong then - 700px into a
+   * 1261px page the *next* page's top was nearer, so the ring, the hash and
+   * the pill all named a stage the reader had not reached. Nothing about it
+   * changed; the pages became uniform under it, and a nearest-top measure on
+   * uniform pages flips exactly at the halfway point of a drag.
+   */
   const indexNow = useCallback(() => {
     const box = stack.current;
     if (!box) return 0;
@@ -137,29 +133,18 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     return best;
   }, [pageEls]);
 
-  /**
-   * Open a stage. A stage the reader has not been to opens at its top; one
-   * they have already read reopens where they left it.
-   */
-  const open = useCallback((i: number, opts?: { top?: boolean; smooth?: boolean }) => {
+  /** Open a stage - at its top, which is the only place a page has. */
+  const open = useCallback((i: number, opts?: { smooth?: boolean }) => {
     const box = stack.current;
     const el = pageEls()[i];
     if (!box || !el) return;
-    const remembered = opts?.top ? 0 : (seen.current.get(i) ?? 0);
     const dy = el.getBoundingClientRect().top - box.getBoundingClientRect().top;
     atRef.current = i;
     setAt(i);
-    if (opts?.top) seen.current.set(i, 0);
 
     const room = box.scrollHeight - box.clientHeight;
-    const to = Math.max(0, Math.min(room, box.scrollTop + dy + remembered));
-    // A scroll that is already there fires no scroll event, so nothing would
-    // ever clear the intent - and the reader's next scroll would be pulled
-    // back to it. Arriving on the stage you are already on is the common case.
+    const to = Math.max(0, Math.min(room, box.scrollTop + dy));
     if (Math.abs(to - box.scrollTop) < 1) return;
-
-    driving.current = true;
-    want.current = { page: i, into: remembered };
     box.scrollTo({ top: to, behavior: opts?.smooth ? 'smooth' : 'instant' });
   }, [pageEls]);
 
@@ -170,11 +155,10 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
       const m = /^#([1-6])(?:-s([1-6]))?$/.exec(location.hash);
       if (!m || Number(m[1]) - 1 !== slide || !m[2]) return false;
       const i = pages.findIndex((p) => p.n === Number(m[2]));
-      // A deep link is a first visit: the top of that stage, no memory.
-      if (i >= 0) { open(i, { top: true }); return true; }
+      if (i >= 0) { open(i); return true; }
       return false;
     };
-    if (!read()) open(atRef.current, { top: true });
+    if (!read()) open(atRef.current);
     window.addEventListener('popstate', read);
     return () => {
       window.removeEventListener('popstate', read);
@@ -213,48 +197,18 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
 
   /* ------------------------------------------------- following the scroll */
   /**
-   * Where the scroll came to rest, and only there.
+   * Which page is showing, and nothing else.
    *
-   * Recording every frame looked like the same thing and was not: scrolling
-   * straight through a stage on the way to the next one wrote that stage's
-   * foot into the memory, so coming back to it by the arrows landed at its
-   * end with its title above the fold. A stage the reader passed through is
-   * not a stage they left off in.
-   *
-   * Debounced rather than hung off `scrollend`, which is young enough that a
-   * phone may not have it - and the memory going missing is the kind of fault
-   * that looks like nothing until someone tries to come back.
+   * There used to be a debounced `rest` under this that recorded where the
+   * reader left each stage and corrected a driven scroll's landing against
+   * what it had asked for. Both existed because a page could be taller than
+   * the frame. Neither has anything left to do: the snap lands the scroll on
+   * a page by itself, and a page has no inside to remember (DIA-416).
    */
-  const rest = useCallback(() => {
-    const box = stack.current;
-    if (!box) return;
-    driving.current = false;
-    const i = indexNow();
-    const el = pageEls()[i];
-    if (!el) return;
-    const dy = Math.round(box.getBoundingClientRect().top - el.getBoundingClientRect().top);
-
-    // What a driven scroll asked for and where the engine put it can differ by
-    // a snap. Corrected here rather than hoped for - the same self-correction
-    // the deck learned in Phase 2, and the reason a nudge used to fix this.
-    const asked = want.current;
-    want.current = null;
-    if (asked && asked.page === i && Math.abs(dy - asked.into) > 1) {
-      box.scrollTo({ top: box.scrollTop + (asked.into - dy), behavior: 'instant' });
-      return;
-    }
-
-    seen.current.set(i, Math.max(0, dy));
-  }, [indexNow, pageEls]);
-
-  const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const onScroll = useCallback(() => {
     const i = indexNow();
     if (i !== atRef.current) { atRef.current = i; setAt(i); }
-    if (settle.current) clearTimeout(settle.current);
-    settle.current = setTimeout(rest, 140);
-  }, [indexNow, rest]);
+  }, [indexNow]);
 
   const here = pages[at]?.n ?? current;
   // On slide 4 the current stage is never on the page, so the pill is always
