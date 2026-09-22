@@ -767,12 +767,23 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /** The exit's timer: an entrance that interrupts one must cancel it. */
   const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const closeSheet = useCallback((opts?: { history?: boolean }) => {
+  /**
+   * `from`: where the sheet already is, in px down from landed, when a pull
+   * (DIA-417) released it there. The exit then starts from the finger, over
+   * the distance that is left, rather than snapping back to landed to play
+   * the ×'s whole exit - which is what it did, and read as a teleport. The
+   * pull's `--pull` stays on the deck for the exit's duration on purpose:
+   * the sheet's base transform must not change under the animation (the
+   * .24s spring-back transition would start beneath it), so the pull is
+   * cleared only once the sheet is hidden.
+   */
+  const closeSheet = useCallback((opts?: { history?: boolean; from?: number }) => {
     const open = sheet.current;
     if (!open) return;
     sheet.current = null;
     const deck = deckEl();
     const el = open.el;
+    const from = Math.max(0, opts?.from ?? 0);
 
     // Closing the sheet closes its drawer: an open drawer is a question the
     // reader has already answered (§5).
@@ -782,9 +793,13 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     });
     deck?.removeAttribute('data-sheet');
     deck?.removeAttribute('data-dim');
+    // data-pull goes now so the dim's fade has its transition back; the pull
+    // itself (--pull, --pull-p) stays until the sheet is hidden - see above.
     deck?.removeAttribute('data-pull');
-    deck?.style.removeProperty('--pull');
-    deck?.style.removeProperty('--pull-p');
+    const clearPull = () => {
+      deck?.style.removeProperty('--pull');
+      deck?.style.removeProperty('--pull-p');
+    };
     track.current?.removeAttribute('inert');
     // Parked but not yet moving (openSheet's two frames): there is no cover
     // to reverse, so it is hidden as `still` is.
@@ -795,13 +810,26 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if (leaving.current) clearTimeout(leaving.current);
     if (open.mode === 'still' || wasPre) {
       el.setAttribute('hidden', '');
+      clearPull();
     } else {
+      // From a pull: start where the finger left it, take the time the
+      // remaining distance deserves, and ease out - the sheet is already
+      // moving, so an exit that accelerates from rest is the wrong shape.
+      const h = el.clientHeight || 1;
+      const ms = from > 0 ? Math.max(140, Math.round(COVER * (1 - from / h))) : COVER;
+      el.style.setProperty('--from', `${from}px`);
+      el.style.setProperty('--sheet-cover', `${ms}ms`);
+      if (from > 0) el.style.setProperty('--sheet-ease', 'cubic-bezier(.25,.46,.45,.94)');
       el.setAttribute('data-out', open.mode);
       leaving.current = setTimeout(() => {
         el.removeAttribute('data-out');
         el.setAttribute('hidden', '');
+        el.style.removeProperty('--from');
+        el.style.removeProperty('--sheet-cover');
+        el.style.removeProperty('--sheet-ease');
+        clearPull();
         leaving.current = null;
-      }, COVER);
+      }, ms);
     }
 
     open.opener?.focus?.();
@@ -950,13 +978,20 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       const deck = deckEl();
       if (!deck || !taken) return;
       taken = false;
-      deck.removeAttribute('data-pull');
-      deck.style.removeProperty('--pull');
-      deck.style.removeProperty('--pull-p');
       // A quarter of the frame, or a flick.
       const far = dy > deck.clientHeight / 4;
       const flick = dy > 40 && performance.now() - t0 < 260;
-      if (far || flick) closeSheet();
+      if (far || flick) {
+        // The exit starts from here; closeSheet clears the pull itself once
+        // the sheet is hidden, so the base never moves under the animation.
+        closeSheet({ from: reduced() ? 0 : dy });
+        return;
+      }
+      // Springs back: with data-pull gone the transitions are on again, and
+      // clearing the pull is the spring.
+      deck.removeAttribute('data-pull');
+      deck.style.removeProperty('--pull');
+      deck.style.removeProperty('--pull-p');
     };
 
     host.addEventListener('touchstart', start, { passive: true });

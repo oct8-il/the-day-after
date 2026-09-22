@@ -1378,13 +1378,16 @@
   /* Transform only. The edge and the shadow are the lip (::before above),
      which does not animate at all. */
   @keyframes deck-sheet-cover{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  @keyframes deck-sheet-uncover{from{transform:translateY(0)}to{transform:translateY(100%)}}
+  /* The exit starts from `--from`: 0 from the × or Back, or wherever a pull
+     released the sheet (the deck writes it, with a shorter `--sheet-cover`
+     and an ease-out `--sheet-ease` for that case). */
+  @keyframes deck-sheet-uncover{from{transform:translateY(var(--from,0px))}to{transform:translateY(100%)}}
   /* The cover's curve is an ordinary ease-out and the exit's its mirror. The
      first pair were drawn with both control points' y near 1 by x = .3, which
      put the whole travel into the first fifth of the duration: at 340ms that
      is a jump followed by nothing, and the duration stopped meaning anything. */
   .deck-sheet[data-in="cover"]{animation:deck-sheet-cover var(--sheet-cover,400ms) cubic-bezier(.25,.46,.45,.94)}
-  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,400ms) cubic-bezier(.7,.38,.8,1) forwards}
+  .deck-sheet[data-out="cover"]{animation:deck-sheet-uncover var(--sheet-cover,400ms) var(--sheet-ease,cubic-bezier(.7,.38,.8,1)) forwards}
 
   /* The bar: a × at the physical left (44px target) and a chip centred. Its
      underside is where the card's content begins. */
