@@ -834,7 +834,10 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // layout and the sheet appeared already part way up, then stuttered as
     // the paint caught up. Instead: park it laid out below the frame (`pre`,
     // no transition), force the layout now, and start the cover two frames
-    // later, once there is a painted sheet for the compositor to move.
+    // later, once there is a painted sheet for the compositor to move. The
+    // parking is the cover's own animation, paused (globals.css): setting a
+    // transform here instead would start the pull-back transition under the
+    // cover, and the two on one property hitched near the end.
     el.removeAttribute('hidden');
     el.setAttribute('data-in', how === 'cover' ? 'pre' : 'still');
     const scroll = el.querySelector<HTMLElement>('.deck-sheet-scroll');

@@ -1350,9 +1350,15 @@
     background:var(--bg);border-radius:18px 18px 0 0;
     box-shadow:0 -14px 34px rgba(0,0,0,.5);pointer-events:none}
   /* The frame before the entrance: laid out, painted, and parked below the
-     frame with no transition, so the cover's first frame is a move and not
-     the layout of a screen of reading (see openSheet). */
-  .deck-sheet[data-in="pre"]{transform:translateY(100%);transition:none}
+     frame, so the cover's first frame is a move and not the layout of a
+     screen of reading (see openSheet). Parked by the cover's own animation,
+     paused at its first keyframe - NOT by a transform of its own: a change
+     to the sheet's transform would start the .24s pull-back transition
+     underneath the cover, and a transition and an animation on the same
+     property, on the same layer, is what hitched at about 60% of the travel
+     (the transition ending under the animation). `cover` only unpauses;
+     same name, same animation, nothing restarts and the base never moves. */
+  .deck-sheet[data-in="pre"]{animation:deck-sheet-cover var(--sheet-cover,400ms) cubic-bezier(.25,.46,.45,.94) paused}
 
   /* The entrance, and the same exit - it leaves the way it came. The sheet
      covers from the bottom up, with a shadowed leading edge and rounded top
