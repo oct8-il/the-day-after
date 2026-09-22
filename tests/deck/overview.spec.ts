@@ -252,12 +252,15 @@ test.describe('the type scale', () => {
 
   test('consecutive items are one list, not a run of one-item lists', async ({ page }) => {
     // The renderer half of this is DIA-382; here it is what the reader sees.
+    // Since DIA-419 t01 has two runs of three with a heading between them, so
+    // the number to watch is items-per-list: six one-item lists would be the
+    // bug, and two threes are the shape the fixture is written in.
     await open(page, 't01');
     const shape = await page.evaluate((sel) => ({
-      lists: document.querySelectorAll(`${sel} .deck-read ul`).length,
+      lists: [...document.querySelectorAll(`${sel} .deck-read ul`)].map((u) => u.children.length),
       items: document.querySelectorAll(`${sel} .deck-read ul li`).length,
     }), CARD);
-    expect(shape).toEqual({ lists: 1, items: 3 });
+    expect(shape).toEqual({ lists: [3, 3], items: 6 });
   });
 
   test('one highlight at most, and it is the accent tint', async ({ page }) => {
@@ -377,5 +380,99 @@ test.describe('the floor', () => {
     expect(m.cards).toBe(1);
     expect(m.read).toBeGreaterThan(40);
     expect(m.n).toBe('מקור אחד');
+  });
+});
+
+/**
+ * Section headings (DIA-419, and the shape DIA-415 ruled in).
+ *
+ * The seventh feature of the annotation set, and the only one written outside
+ * a cite span - because it names a section rather than saying anything about
+ * it. t01's summary is the fixture the shape is measured on: a lead, two
+ * headings and six bullets, same sentences and same claims as before.
+ */
+test.describe('a section heading', () => {
+  test('t01 reads as a lead, headings and bullets', async ({ page }) => {
+    await open(page, 't01');
+    const shape = await page.evaluate((sel) =>
+      [...document.querySelectorAll(`${sel} .deck-read`)[0]!.children]
+        .map((e) => e.tagName + (e.className ? `.${e.className}` : '')), CARD);
+    expect(shape.slice(0, 5)).toEqual(['P', 'H3.ann-h', 'UL', 'H3.ann-h', 'UL']);
+  });
+
+  test('it is §5’s type, and it is one element in both trees', async ({ page }) => {
+    await open(page, 't01');
+    const m = await page.evaluate((sel) => {
+      const h = document.querySelector<HTMLElement>(`${sel} .deck-read .ann-h`)!;
+      const s = getComputedStyle(h);
+      return {
+        text: h.textContent!.trim(),
+        size: s.fontSize,
+        weight: s.fontWeight,
+        leading: s.lineHeight,
+        above: s.marginTop,
+        below: s.marginBottom,
+        // The desktop page renders the same field through the same component.
+        desktop: document.querySelectorAll('.clip .ann-h').length,
+      };
+    }, CARD);
+    expect(m.text.length).toBeGreaterThan(3);
+    expect(m.size).toBe('19px');
+    expect(m.weight).toBe('700');
+    expect(m.leading).toBe('26.6px');
+    expect(m.above).toBe('26px');
+    expect(m.below).toBe('12px');
+    expect(m.desktop).toBe(2);
+  });
+
+  test('it asserts nothing, so it carries no chip and opens no drawer', async ({ page }) => {
+    await page.goto('/item/t01/#2');
+    await page.waitForSelector('.deck-card[data-card="ov"]');
+    await page.evaluate(() => document.fonts?.ready);
+    await page.waitForTimeout(300);
+    const m = await page.evaluate(() => {
+      const heads = [...document.querySelectorAll('#sheet-ov .deck-read .ann-h')];
+      const read = document.querySelector('#sheet-ov .deck-read')!;
+      return {
+        heads: heads.length,
+        chips: heads.filter((h) => h.querySelector('.chip')).length,
+        controls: heads.filter((h) => h.hasAttribute('role') || h.hasAttribute('tabindex')
+          || h.hasAttribute('aria-controls')).length,
+        // One drawer per citation and not one per block.
+        drawers: read.querySelectorAll('.deck-drawer').length,
+        cites: read.querySelectorAll('.chip').length,
+      };
+    });
+    expect(m.heads).toBe(2);
+    expect(m.chips).toBe(0);
+    expect(m.controls).toBe(0);
+    expect(m.drawers).toBe(m.cites);
+  });
+
+  test('the cut never leaves a heading as the last legible thing', async ({ page }) => {
+    // A heading is a promise about what comes next. When the fade would land
+    // right under one, the deck raises the fade instead, so the reading trails
+    // off rather than announcing a section this card never shows. Swept over
+    // heights rather than staged, because which block the cut lands on is a
+    // measurement and not something a test can arrange honestly.
+    await open(page, 't01');
+    const bad: number[] = [];
+    for (let h = 660; h <= 860; h += 25) {
+      await page.setViewportSize({ width: 390, height: h });
+      await page.waitForTimeout(160);
+      const stranded = await page.evaluate((sel) => {
+        const card = document.querySelector(sel)!;
+        if (!card.hasAttribute('data-cut')) return false;
+        const read = card.querySelector<HTMLElement>('.deck-read')!;
+        const fade = parseFloat(getComputedStyle(read).getPropertyValue('--fade')) || 110;
+        const line = read.clientHeight - fade;
+        const kids = [...read.children] as HTMLElement[];
+        const legible = kids.filter((e) => e.offsetTop < line);
+        const last = legible[legible.length - 1];
+        return !!last && last.classList.contains('ann-h');
+      }, CARD);
+      if (stranded) bad.push(h);
+    }
+    expect(bad).toEqual([]);
   });
 });

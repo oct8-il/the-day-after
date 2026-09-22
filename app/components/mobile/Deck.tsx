@@ -136,6 +136,42 @@ const COVER = 300;
  */
 const FLIGHT = 220;
 
+/** Where the cut's fade begins, in pixels up from the floor (globals.css). */
+const FADE_AT = 110;
+
+/**
+ * A heading is a promise about what comes next, so the cut may not leave one
+ * as the last legible thing on the card (DIA-419). When it would, the fade
+ * begins just above that heading instead, and the reading trails off rather
+ * than announcing a section this card never shows. The sheet still has it.
+ *
+ * Nothing moves: the fade is a mask, so raising it changes no layout and
+ * therefore cannot change whether the reading fits - which is the whole reason
+ * it is done this way rather than by hiding the heading. The cap is there
+ * because a stranded heading that high means the overview is nearly all
+ * heading, and that is a writing problem the validator reports rather than one
+ * a mask should try to cover.
+ */
+const refade = (read: HTMLElement, cut: boolean) => {
+  read.style.removeProperty('--fade');
+  if (!cut) return;
+  const kids = [...read.children] as HTMLElement[];
+  const line = read.clientHeight - FADE_AT;
+  for (let i = kids.length - 1; i >= 0; i -= 1) {
+    const h = kids[i]!;
+    if (!h.classList.contains('ann-h')) continue;
+    // Already inside the fade: it is not the last legible thing, it is not
+    // legible. An earlier heading is not the one in question either.
+    if (h.offsetTop >= line) continue;
+    const next = kids[i + 1];
+    if (!next || next.offsetTop >= line) {
+      const want = read.clientHeight - h.offsetTop + 8;
+      if (want < read.clientHeight * 0.45) read.style.setProperty('--fade', `${Math.round(want)}px`);
+    }
+    break;
+  }
+};
+
 /**
  * A cited passage, and the blocks that only look like one (DIA-414).
  *
@@ -773,8 +809,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       // authored and has no sheet, and a fade over a reading that cannot be
       // continued is a promise the page has no way to keep.
       if (!read || !card.querySelector('.deck-more')) { card.removeAttribute('data-cut'); return; }
-      if (read.scrollHeight - read.clientHeight > 1) card.setAttribute('data-cut', '');
-      else card.removeAttribute('data-cut');
+      const cut = read.scrollHeight - read.clientHeight > 1;
+      if (cut) card.setAttribute('data-cut', ''); else card.removeAttribute('data-cut');
+      refade(read, cut);
     });
   }, []);
 

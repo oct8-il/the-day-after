@@ -76,8 +76,8 @@
 <header class="masthead">
   <div class="kicker">היום שאחרי · data contract</div>
   <h1>The annotation</h1>
-  <p class="lede">Some fields on an incident record are authored prose rather than plain strings. They carry a small, closed annotation: six features, one citation syntax, one coverage rule. This file is what the author writes to, what the validator rejects against, and what the interpreter renders.</p>
-  <p class="meta">v1.0 · 17 September 2026 · <span class="mono">DIA-365</span></p>
+  <p class="lede">Some fields on an incident record are authored prose rather than plain strings. They carry a small, closed annotation: seven features, one citation syntax, one coverage rule. This file is what the author writes to, what the validator rejects against, and what the interpreter renders.</p>
+  <p class="meta">v1.1 · 22 September 2026 · <span class="mono">DIA-365</span> · headings added by <span class="mono">DIA-419</span></p>
 </header>
 
 <nav class="toc">
@@ -103,7 +103,7 @@
 <p>What this is <em>not</em>: general markdown. The set is closed, and it is closed deliberately — every feature added here is a feature two renderers, a validator and a Hebrew RTL layout have to agree on forever.</p>
 
 <h2 id="set">2 · The annotation set</h2>
-<p>Exactly six features are supported.</p>
+<p>Exactly seven features are supported.</p>
 <table>
   <tr><th>Feature</th><th class="mono">Syntax</th><th>What it is for</th></tr>
   <tr><td>Bold</td><td class="mono">**text**</td><td>The bottom line. In an overview it carries the opening sentence's verdict; mid-sentence it marks the finding itself.</td></tr>
@@ -112,7 +112,20 @@
   <tr><td>Numbered list</td><td class="mono">1. item</td><td>A sequence: steps of a plan, stages of a process.</td></tr>
   <tr><td>Hyperlink</td><td class="mono">[text](https://…)</td><td><strong>Navigation.</strong> A report, a law, a background page. Takes the reader somewhere else.</td></tr>
   <tr><td>Source chip</td><td class="mono">[[text]](i13-c08)</td><td><strong>Citation.</strong> Points into this incident's own claims. §3.</td></tr>
+  <tr><td>Section heading</td><td class="mono">## text</td><td><strong>Structure.</strong> Breaks a long overview into sections a reader can scan. Asserts nothing, so it cites nothing. §3.</td></tr>
 </table>
+
+<h3>The heading is the one feature that lives outside a cite</h3>
+<p>Everything else in the set is written <em>inside</em> a span, because everything else is part of a statement. A heading is not a statement — it names the section under it — so it stands in the gap between spans, on a line of its own:</p>
+<pre class="he"><code>[[הלֵיד, שאומר מה נכשל.]](i13-c01)
+
+## איפה השרשרת נשברת
+
+* [[**אין מי שמכריע:** …]](i13-c02)
+* [[**עיכוב מובנה:** …]](i13-c05)</code></pre>
+<p><strong>One level.</strong> <code>#</code> through <code>######</code> all mean the same heading, because the reading system has exactly one heading style and refusing five of them would be pedantry about a difference no screen can show. <code>##</code> is what to write.</p>
+<p>A heading may carry the set's inline marks — bold, highlight, a hyperlink — and it may not carry a chip. <code>## [[text]](c01)</code> is an error rather than a heading: a heading asserts nothing, so there is nothing in it for a source to hold up. Inside a span a hash is not a heading at all; the mark is dropped and the words stay, like any other unsupported syntax (§5).</p>
+<div class="note"><strong>Added 22 September.</strong> Overviews are written as a lead, headings and lists (<span class="mono">DIA-415</span>) — a shape ruled in after the reading system was settled, and one the contract had no way to write. The renderer used to strip <code>#</code> everywhere and the coverage rule counted a heading line as an unsourced statement, so the feature could not have been used by accident before it existed. <span class="mono">DIA-419</span>.</div>
 
 <h3>Bold and highlight are not interchangeable</h3>
 <p>Bold is structural — it is how an overview states its conclusion first. Highlight is local — it picks out the load-bearing words inside a sentence that is already being read. A highlight stretched over a whole sentence is a misuse; so is bolding a date.</p>
@@ -123,7 +136,7 @@
 <div class="warn"><strong>Only a chip discharges the sourcing rule.</strong> A hyperlink never does. A sentence resting on a bare URL is not sourced, however authoritative the page behind it — the ledger's guarantee is that every published assertion points at a claim record with a quote read off its page, and a link is not one.</div>
 
 <h3>Everything else is dropped</h3>
-<p>Headings, images, blockquotes, tables, nested lists, and anything else that looks like markdown are <strong>stripped silently by the renderer</strong> — not rendered as literal characters, and never shown to a reader as an error. §5 says why the silence is on the renderer's side only.</p>
+<p>Images, blockquotes, tables, nested lists, and anything else that looks like markdown are <strong>stripped silently by the renderer</strong> — not rendered as literal characters, and never shown to a reader as an error. §5 says why the silence is on the renderer's side only.</p>
 
 <h2 id="chips">3 · Source chips and the coverage rule</h2>
 <p>A chip is a hyperlink's shape with doubled brackets, and a claim id where the URL would be:</p>
@@ -141,7 +154,7 @@
 <p>A markdown construct that opens inside one span and closes in another is an error, not a rendering puzzle.</p>
 
 <h3 id="coverage">The coverage rule</h3>
-<div class="note"><strong>The coverage rule:</strong> outside a cite span, only whitespace and list markers may appear. Anything else is <strong>uncovered text</strong>, and the record fails to validate.</div>
+<div class="note"><strong>The coverage rule:</strong> outside a cite span, only whitespace, list markers and section headings may appear. Anything else is <strong>uncovered text</strong>, and the record fails to validate.</div>
 <p>That is the whole of it. It is stated as a property of the text rather than of the sentence, so that it holds no matter how the author breaks up the prose.</p>
 
 <h3>On the page</h3>
@@ -182,7 +195,7 @@ into one list. Nothing in either pool used list syntax, so no screen changed. <s
   <tr><td class="mono">Parent.description</td><td class="off">—</td><td class="off">—</td></tr>
 </table>
 <p>Every annotated field gets the same errors — nested, unclosed or empty cite; a markdown construct crossing a span; an id that does not resolve to a claim of this incident; a duplicate id within one cite. <strong>Coverage is the only rule that varies.</strong></p>
-<p>The two exemptions are deliberate. <strong>The caveat states an absence</strong>, and an absence has nothing to cite. <strong>The question is put to the reader</strong> rather than asserted, so enforcing coverage there would force a chip onto text that is not a claim. Both still parse as annotation — bold, highlight, lists, hyperlinks and chips are all available in them — and a chip written in either is checked like any other.</p>
+<p>The exemptions are deliberate, and they are all one reason: <strong>text that asserts nothing has nothing to rest on.</strong> <strong>The caveat states an absence</strong>, and an absence has nothing to cite. <strong>The question is put to the reader</strong> rather than asserted, so enforcing coverage there would force a chip onto text that is not a claim. <strong>A section heading names what follows</strong> rather than saying anything about it, which is the same rule applied to a line instead of a field — so a heading is exempt wherever it is written, including in the fields marked enforced. Both still parse as annotation — bold, highlight, lists, hyperlinks and chips are all available in them — and a chip written in either is checked like any other.</p>
 
 <h2 id="readers">5 · The two readers</h2>
 <p>The renderer and the validator treat a mistake differently, on purpose.</p>
@@ -196,7 +209,8 @@ into one list. Nothing in either pool used list syntax, so no screen changed. <s
 
 <h3>What the validator names</h3>
 <ol>
-  <li><strong>Uncovered text</strong> — anything but whitespace or a list marker outside a cite span, in the fields §4 marks enforced.</li>
+  <li><strong>Uncovered text</strong> — anything but whitespace, a list marker or a section heading outside a cite span, in the fields §4 marks enforced.</li>
+  <li>A heading with no words — usually a cite written into the heading line, which is named as its own error because the fix is different.</li>
   <li>A nested cite, an unclosed cite, an empty cite.</li>
   <li>A markdown construct crossing a span boundary.</li>
   <li>An id that does not resolve to a claim of <em>this</em> incident.</li>
@@ -220,11 +234,12 @@ into one list. Nothing in either pool used list syntax, so no screen changed. <s
 <p>So that issues and commits can point at a rule instead of restating it:</p>
 <table>
   <tr><th>Name</th><th>Means</th></tr>
-  <tr><td><strong>the annotation set</strong></td><td>The six features of §2, and nothing else.</td></tr>
+  <tr><td><strong>the annotation set</strong></td><td>The seven features of §2, and nothing else.</td></tr>
   <tr><td><strong>a cite span</strong></td><td>The text a single <code>[[…]](ids)</code> covers.</td></tr>
   <tr><td><strong>the cite pre-pass</strong></td><td>The extraction of cite spans that runs before markdown is parsed.</td></tr>
   <tr><td><strong>a chip</strong></td><td>The mark a cite span draws at its end.</td></tr>
-  <tr><td><strong>the coverage rule</strong></td><td>§3: outside a cite span, only whitespace and list markers.</td></tr>
+  <tr><td><strong>the coverage rule</strong></td><td>§3: outside a cite span, only whitespace, list markers and headings.</td></tr>
+  <tr><td><strong>a section heading</strong></td><td>§2's seventh feature: <code>## text</code> on a line of its own, between spans.</td></tr>
   <tr><td><strong>uncovered text</strong></td><td>What breaks it.</td></tr>
 </table>
 

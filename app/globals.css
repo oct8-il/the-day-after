@@ -409,6 +409,14 @@
      an annotated summary may run to several (DIA-372). */
   .clip p:first-of-type::first-letter{font-size:2.6em;line-height:.85;float:right;margin:4px 0 0 8px;font-weight:700}
   .clip p+p{margin-top:10px}
+  /* A section heading inside the clipping (DIA-419). The deck gives it §5's
+     type; here it belongs to the clipping's own idiom, so it is a printed
+     subhead rather than a screen heading. §2 of docs/mobile-item.html has not
+     been edited for the desktop side yet - when it is, that table decides this
+     and this comment goes. */
+  .clip .ann-h{font-family:"Frank Ruhl Libre",serif;font-size:17.5px;font-weight:700;
+    line-height:1.35;color:var(--paper-ink);margin:18px 0 8px;text-align:start}
+  .clip .ann-h + p::first-letter{font-size:inherit;line-height:inherit;float:none;margin:0;font-weight:inherit}
   .clip .by{font-size:11.5px;color:var(--paper-muted);margin-top:10px;padding-top:6px;border-top:1px dotted var(--paper-rule)}
   @media (max-width:640px){.clip{padding:14px 16px 16px}.clip p{font-size:16.5px;text-align:start}}
   .answerbox{background:var(--surface);border:1px solid var(--line);padding:16px 18px;margin-top:20px}
@@ -1292,10 +1300,15 @@
 
   /* The cut. A mask over the last 110px, fading to nothing 8px from the
      bottom, so it lands mid-line and reads as "there is more" rather than as
-     an ending. Written by the deck only when the reading does not fit. */
+     an ending. Written by the deck only when the reading does not fit.
+
+     `--fade` is 110 unless the deck raises it, which it does when the cut
+     would otherwise leave a section heading as the last legible thing on the
+     card (DIA-419). Raising a mask moves nothing, so it cannot change whether
+     the reading fits - see `refade` in Deck.tsx. */
   .deck-card[data-cut] .deck-read{
-    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
-    mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - var(--fade,110px)),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - var(--fade,110px)),rgba(0,0,0,.06) calc(100% - 8px),transparent 100%);
   }
 
   /* §5's button: full width, outlined, the label at the reading end and the
@@ -1477,7 +1490,10 @@
   .deck-read p{margin:0 0 14px}
   .deck-read > p:first-child,.deck-read > :first-child > p:first-child{
     font-size:21px;line-height:1.5;font-weight:400}
-  .deck-read h3,.deck-read .deck-h{margin:26px 0 12px;font-size:19px;font-weight:700;line-height:1.4}
+  /* §5's section heading. It is written as the seventh feature of the
+     annotation set and drawn by Annotated (DIA-419); `.ann-h` is the hook the
+     desktop page styles by and the one the card's cut looks for. */
+  .deck-read h3,.deck-read .ann-h{margin:26px 0 12px;font-size:19px;font-weight:700;line-height:1.4}
   .deck-read strong{font-weight:700}
   .deck-read mark{background:color-mix(in srgb,var(--accent) 24%,transparent);
     border-radius:3px;padding:0 2px;color:inherit}

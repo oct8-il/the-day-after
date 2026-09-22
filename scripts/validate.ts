@@ -19,7 +19,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Incident, Parent, Place, Taxonomy, INDEPENDENT_TYPES } from '../data/schema/index.ts';
 import { stageOf, hasIndependentVerification } from '../lib/stage.ts';
-import { checkAnnotated, citedIds, plainText } from '../lib/annotation.ts';
+import { checkAnnotated, citedIds, plainText, renderAnnotation } from '../lib/annotation.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 /**
@@ -122,6 +122,42 @@ function checkAnnotatedField(where: string, text: string, claimIds: Set<string>,
   }
 }
 
+/**
+ * Roughly what the card holds before the cut (§5, DIA-415). 390 wide, the
+ * reading inset 20 each side, body at 17px/1.65 - about 44 Hebrew characters
+ * to a line and fifteen lines to the frame once the label, the lead's larger
+ * type and the button have taken their share. It is an estimate and it is
+ * meant to be: the warning below is about a wall of text, not about a
+ * boundary anyone should write up to.
+ */
+const CARD_CHARS = 600;
+
+/**
+ * Two shapes that parse and do not read (DIA-415, DIA-419).
+ *
+ * Both are warnings. Neither is a mistake in the marks - the record is valid
+ * and would ship - and the fix for either is a rewrite, which only the writer
+ * can make. An error here would stop a build over prose.
+ *
+ * It judges `summary` and not the stage overviews: those are short by nature
+ * and want the lead rule only.
+ */
+function checkOverviewShape(where: string, text: string) {
+  const parts = renderAnnotation(text);
+  if (!parts.length) return;
+
+  if (parts[parts.length - 1]!.kind === 'heading') {
+    warn(where, 'ends on a heading - a heading promises a section and there is nothing under this one');
+  }
+
+  const blocks = parts.flatMap((p) => (p.kind === 'span' ? p.blocks : []));
+  const wall = blocks.length === 1 && blocks[0]!.kind === 'p' && !parts.some((p) => p.kind === 'heading');
+  const len = plainText(text).length;
+  if (wall && len > CARD_CHARS) {
+    warn(where, `is one unbroken paragraph of ${len} characters and the card holds about ${CARD_CHARS} - an overview is written as a lead, headings and lists`);
+  }
+}
+
 const files = readdirSync(join(DATA, 'incidents')).filter((f) => f.endsWith('.json')).sort();
 let claimCount = 0;
 let publishable = 0;
@@ -147,6 +183,7 @@ for (const file of files) {
 
   const claimIds = new Set(inc.claims.map((c) => c.id));
   checkAnnotatedField(`${where} summary`, inc.summary, claimIds, true);
+  checkOverviewShape(`${where} summary`, inc.summary);
   if (!inc.claims.some((c) => c.asserts_stage === 1)) {
     fail(where, 'no stage-1 claim: nothing establishes that this failure was identified');
   }
