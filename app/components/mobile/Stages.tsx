@@ -99,7 +99,9 @@ function Claims({ claims }: { claims: Claim[] }) {
  * though what is above it does not. CSS can centre it in the leftover space;
  * only a measurement can centre it in the frame, and StagesShell makes it.
  */
-function Absence({ stage, current, days }: { stage: number; current: number; days: number | null }) {
+function Absence({ stage, he, current, days }: {
+  stage: number; he: string; current: number; days: number | null;
+}) {
   const { definition, why } = stageCopy(stage);
   return (
     <div className="deck-gap">
@@ -134,12 +136,21 @@ function Absence({ stage, current, days }: { stage: number; current: number; day
         )}
       </div>
 
-      {/* Not a control yet: where it goes is DIA-421, and a button that does
-          nothing is worse than a line that does not claim to be one. */}
-      <span className="deck-gap-do">
+      {/* §7's door into the deck's submission sheet (DIA-439). `data-from` is
+          the one thing the sheet learns about where it was opened: the name it
+          uses to send the reader back. */}
+      <button
+        type="button"
+        className="deck-gap-do"
+        data-open="send"
+        data-in-place=""
+        data-from={he}
+        aria-haspopup="dialog"
+        aria-controls="sheet-send"
+      >
         יודעים אחרת? הגישו מקור
         <i dir="ltr" aria-hidden="true">←</i>
-      </span>
+      </button>
     </div>
   );
 }
@@ -199,7 +210,7 @@ export function stagesParts({ inc, slide, kind }: {
           n: x.n, he: x.he, current: false,
           ...cardAndSheet({
             id, label, head,
-            card: <Absence stage={x.n} current={current} days={waited} />,
+            card: <Absence stage={x.n} he={x.he} current={current} days={waited} />,
             aside: <Locator rail={rail} on={x.n} />,
           }),
         };

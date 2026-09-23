@@ -413,7 +413,7 @@ test.describe('the page', () => {
     expect(m.bg).toContain('0.14');
   });
 
-  test('the way to say we are wrong is a full-width pill, and not a control yet', async ({ page }) => {
+  test('the way to say we are wrong is a full-width pill, and the page\'s only control', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate((s) => {
       const p = document.querySelector(s)!.querySelector('.deck-stage')!;
@@ -426,10 +426,11 @@ test.describe('the page', () => {
         full: Math.abs(r.width - read.width) <= 1,
         round: getComputedStyle(cta).borderTopLeftRadius,
         border: getComputedStyle(cta).borderTopWidth,
-        // DIA-421 owns where it goes. Until it does, it is drawn as a button
-        // and is not one - nothing here is focusable or clickable.
+        // It is the deck's submission sheet's first door (DIA-439), and the
+        // only control on a page that is otherwise a statement.
         tag: cta.tagName,
         controls: p.querySelectorAll('.deck-gap button,.deck-gap a').length,
+        opens: cta.getAttribute('data-open'),
         last: p.querySelector('.deck-gap')!.lastElementChild === cta,
       };
     }, four);
@@ -439,8 +440,9 @@ test.describe('the page', () => {
     expect(m.full).toBe(true);
     expect(m.round).toBe('999px');
     expect(m.border).toBe('1px');
-    expect(m.tag).toBe('SPAN');
-    expect(m.controls).toBe(0);
+    expect(m.tag).toBe('BUTTON');
+    expect(m.controls).toBe(1);
+    expect(m.opens).toBe('send');
     expect(m.last).toBe(true);
   });
 

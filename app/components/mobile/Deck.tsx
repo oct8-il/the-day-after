@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Send } from './Send';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -1041,8 +1042,21 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   ) => {
     const deck = deckEl();
     const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(id)}`);
-    const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`);
+    // Its own card, or - for a sheet that belongs to the deck rather than to
+    // a reading (§7's submission sheet) - the card the reader opened it from.
+    // Either way it is the column the sheet has to land in.
+    const card = track.current?.querySelector<HTMLElement>(`.deck-card[data-card="${CSS.escape(id)}"]`)
+      ?? opener?.closest<HTMLElement>('.deck-card') ?? null;
     if (!deck || !el || !card) return;
+
+    // A sheet that is not a reading's is told where the reader came from: the
+    // opener is the only thing that knows, and it is in the track, which the
+    // sheet is not. A link and a name, used for the mail body, the copy chip
+    // and the way back - and for nothing else (DIA-439).
+    if (opener?.hasAttribute('data-from')) {
+      el.setAttribute('data-from-href', location.href);
+      el.setAttribute('data-from-name', opener.getAttribute('data-from') ?? '');
+    }
     if (leaving.current) { clearTimeout(leaving.current); leaving.current = null; }
     el.removeAttribute('data-out');
 
@@ -1258,7 +1272,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         // the count of clicks when it was pressed.
         openSheet(
           btn.getAttribute('data-open')!, btn,
-          btn.classList.contains('deck-more') ? 'fade' : 'cover',
+          // A control the reader pressed deliberately appears in place; a tap
+          // on a citation is not that, so its sheet covers from the bottom up
+          // and the cover is what says the mode changed.
+          btn.classList.contains('deck-more') || btn.hasAttribute('data-in-place')
+            ? 'fade' : 'cover',
           e.detail > 0,
           btn.getAttribute('data-cite'),
         );
@@ -1466,7 +1484,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
 
       if (!mode) {
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-        if (Math.abs(dx) > Math.abs(dy) * 1.4) { mode = 'x'; ox = x; }
+        // §7: not while a form is showing. Gesture 3 closes the sheet, and on
+        // a half-filled form that is a swipe that loses work.
+        if (Math.abs(dx) > Math.abs(dy) * 1.4) {
+          if (open.el.hasAttribute('data-form')) { sx = x; sy = y; return; }
+          mode = 'x'; ox = x;
+        }
         else if (dy < 0 && sc.scrollTop >= room(sc) - 1) { mode = 'up'; oy = y; }
         else if (dy > 0 && sc.scrollTop <= 0) { mode = 'down'; oy = y; }
         else {
@@ -1852,6 +1875,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       <div className="deck-sheets" ref={sheetHost}>
         <div className="deck-dim" aria-hidden="true" />
         {sheets}
+        {/* One sheet for the whole deck, beside the readings rather than
+            inside any of them (§7, DIA-439). */}
+        <Send />
       </div>
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -
