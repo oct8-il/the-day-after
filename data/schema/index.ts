@@ -138,7 +138,26 @@ export const Place = z.object({
 });
 
 export const Taxonomy = z.object({
-  stages: z.array(z.object({ n: STAGE, he: z.string(), color: z.string() })).length(6),
+  /**
+   * definition: a clause that completes "לא מצאנו תיעוד לכך ש" on slide 4 and
+   * reads as a sentence on its own. why: the second paragraph of slide 4's box,
+   * opening "עד אז" - only stages 2-5 can be an unreached page, so only they
+   * carry one. Placeholder copy until DIA-420's final wording lands.
+   */
+  stages: z
+    .array(
+      z.object({
+        n: STAGE,
+        he: z.string(),
+        color: z.string(),
+        definition: z.string().min(1),
+        why: z.string().startsWith('עד אז').optional(),
+      }),
+    )
+    .length(6)
+    .refine((ss) => ss.every((s) => (s.n >= 2 && s.n <= 5) === (s.why !== undefined)), {
+      message: 'stages 2-5 carry a why, and only they do',
+    }),
   source_types: z.array(z.object({ id: SOURCE_TYPE, he: z.string(), color: z.string() })),
   domains: z.array(z.object({ id: DOMAIN, he: z.string() })).length(3),
   phases: z.array(z.object({ id: PHASE, he: z.string() })).length(3),
