@@ -1,8 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitSource, sourceLine, itemNumber, siblings, sourceLineText,
-  stageDefinition, definitionIsDraft, stageAge, DEFINITION_PLACEHOLDER,
-  stageAbsence, absenceIsDraft, checkingBody, sinceLabel, ABSENCE_PLACEHOLDER } from './deck.ts';
+import { splitSource, sourceLine, itemNumber, siblings, sourceLineText, stageAge,
+  stageAbsence, absenceIsDraft, notDocumented, sinceLabel, ABSENCE_PLACEHOLDER } from './deck.ts';
 
 const claim = (source_type: string, source: string, date: string) =>
   ({ source_type, source, date });
@@ -150,18 +149,13 @@ test('the tail collapses when there is nothing to count', () => {
   );
 });
 
-test('a stage definition never uses its own term, and an unwritten one says so', () => {
-  // §6's rule, and the reason the four that exist are worth guarding: "what
-  // was implemented" is not a definition of "implemented".
-  assert.equal(stageDefinition(1), 'מה שקרה בשטח, כפי שנרשם בתיעוד ציבורי');
-  assert.ok(!stageDefinition(4).includes('יושם'));
-  assert.ok(!stageDefinition(5).includes('אומת'));
-  // 3 and 6 were never written - DIA-367. They render as a placeholder rather
-  // than as nothing, so a review of the page can see the hole.
-  assert.equal(definitionIsDraft(3), true);
-  assert.equal(definitionIsDraft(6), true);
-  assert.equal(stageDefinition(3), DEFINITION_PLACEHOLDER);
-  assert.equal(definitionIsDraft(1), false);
+test('the definition box frames the stage\'s own clause into a sentence', () => {
+  // §7: one frame for every stage, completed by the taxonomy's clause. The
+  // clause is not a sentence, so the full stop belongs to the frame.
+  const said = notDocumented('הגוף האחראי הודה בפומבי שהכשל התרחש');
+  assert.equal(said, 'לא מצאנו תיעוד לכך שהגוף האחראי הודה בפומבי שהכשל התרחש.');
+  assert.ok(said.startsWith('לא מצאנו תיעוד לכך ש'));
+  assert.ok(said.endsWith('.'));
 });
 
 test('the age line reads as a date and a distance, and survives a month-only date', () => {
@@ -171,19 +165,14 @@ test('the age line reads as a date and a distance, and survives a month-only dat
   assert.equal(stageAge(null, null), null);
 });
 
-test('an unwritten absence statement says so, and only stage 5 names a checker', () => {
+test('an unwritten absence statement says so rather than showing nothing', () => {
   // §7's screens draw the statements for stages 2 and 5; 3 and 4 were never
-  // written - DIA-367, the same issue that holds definitions 3 and 6.
+  // written - DIA-367.
   assert.ok(stageAbsence(5).startsWith('לא תועד'));
   assert.equal(absenceIsDraft(2), false);
   assert.equal(absenceIsDraft(3), true);
   assert.equal(absenceIsDraft(4), true);
   assert.equal(stageAbsence(4), ABSENCE_PLACEHOLDER);
-
-  // "Who checks" is the whole content of stage 5 and of no other stage, so
-  // this returns null rather than an empty line for 2 to 4.
-  assert.ok(checkingBody(5));
-  for (const n of [2, 3, 4]) assert.equal(checkingBody(n), null);
 });
 
 test('the days-since label names the event that put the item where it is', () => {

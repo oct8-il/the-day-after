@@ -92,6 +92,20 @@ export const childrenOf = (pid: string) => visibleIncidents.filter((i) => i.pare
 
 export const STAGES = taxonomy.stages;
 export const stageMeta = (n: number) => taxonomy.stages.find((s) => s.n === n)!;
+
+/**
+ * §7's two strings for a stage that has not happened (DIA-420, DIA-425).
+ *
+ * A stage means the same thing on every item, so both live on the stage
+ * record rather than on the incident: `definition` is a clause that reads
+ * correctly after `לא מצאנו תיעוד לכך ש`, and `why` one sentence opening
+ * `עד אז`. The first and last stages have no `why` - nothing is waiting on
+ * them - which is why this hands back null rather than an empty string.
+ */
+export const stageCopy = (n: number): { definition: string; why: string | null } => {
+  const s = stageMeta(n) as { definition?: string; why?: string };
+  return { definition: s.definition ?? '', why: s.why ?? null };
+};
 export const TYPES = Object.fromEntries(
   taxonomy.source_types.map((t) => [t.id, t]),
 ) as Record<Claim['source_type'], { id: string; he: string; color: string }>;

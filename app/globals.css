@@ -1817,40 +1817,62 @@
   }
 
   /* ---------------------------------------------------------------- §7
-     Slide 4 — מה עוד לא נעשה. The head group stays where it is; everything
-     under the rule is centred horizontally and vertically as one column.
-     Absence is the content, and nothing here apologises for it. */
-  /* The reading is already the room the card has left over, so the column
-     only has to centre in it. §7's card is composed rather than authored: it
-     fits the frame by construction, has no button and has no sheet. */
+     Slide 4 — מה עוד לא נעשה, redrawn (DIA-425).
+
+     Four things in the reading system's own type: the computed statement as
+     the lead, the definition box, the age at the foot, and the way to say we
+     are wrong. Absence is the content, and nothing here apologises for it.
+
+     The card is composed rather than authored: it fits the frame by
+     construction, so there is nothing to cut, no button to continue with and
+     no sheet behind it. The reading is whatever room the card has left, and
+     this column fills it. */
   .deck-read:has(.deck-gap){display:flex}
   .deck-gap{flex:1;min-height:0;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;text-align:center;gap:15px;
-    font-size:15px;line-height:1.62;color:color-mix(in srgb,var(--text) 88%,transparent)}
-  .deck-gap-say{margin:0;max-width:300px;font-size:17px;line-height:1.45;color:var(--text)}
-  .deck-gap-say b{font-weight:700}
-  /* Stage 5 only, where "who checks" is the whole content of the stage. */
-  .deck-gap-who{margin:0;max-width:300px}
+    font-size:15px;line-height:1.6;color:var(--text)}
+  /* The lead, as §5 sets one: the same size and the same ink as a reading's
+     first line, because that is what this is. */
+  .deck-gap-say{margin:0;font-size:21px;line-height:1.5;color:var(--text)}
 
-  .deck-gap-wait{display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:6px}
-  /* The only place in the whole item page where a warning colour appears. */
-  .deck-gap-mark{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;
-    justify-content:center;background:color-mix(in srgb,var(--warn) 14%,transparent)}
-  .deck-gap-mark svg{width:28px;height:28px;stroke:var(--warn);fill:none;stroke-width:1.7;
-    stroke-linecap:round;stroke-linejoin:round}
-  /* Beneath the mark, not beside it. */
-  .deck-gap-n{font-size:38px;font-weight:700;line-height:1.05;
-    color:color-mix(in srgb,var(--text) 92%,transparent);font-variant-numeric:tabular-nums}
-  .deck-gap-since{font-size:13px;color:color-mix(in srgb,var(--text) 62%,transparent)}
+  /* The one unsourced paragraph in the item page - dim and dashed rather than
+     drawn like the reading around it, and with no header, because what it
+     says is not a heading's worth of thing.
 
-  .deck-gap-ask{max-width:320px;margin-top:4px;padding:12px 13px;border-radius:12px;
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    border:1px dashed color-mix(in srgb,var(--text) 30%,transparent);
+     `margin-block:auto` centres it in the space it was given; `top` is the
+     measurement that moves it from there to the centre of the frame, written
+     by StagesShell and clamped to stay clear of its neighbours. */
+  .deck-gap-def{position:relative;margin-block:auto;padding:14px 16px 15px;
+    border-radius:14px;border:1px dashed color-mix(in srgb,var(--text) 26%,transparent);
     background:color-mix(in srgb,var(--text) 4%,transparent)}
-  .deck-gap-ask b{font-size:14px;font-weight:700;color:var(--text)}
-  .deck-gap-ask > span{font-size:13px;line-height:1.5;color:color-mix(in srgb,var(--text) 75%,transparent)}
-  .deck-gap-do{margin-top:2px;padding:5px 12px;border-radius:14px;
-    background:color-mix(in srgb,var(--text) 12%,transparent);
-    font-size:12.5px;font-weight:600;color:var(--text)}
+  .deck-gap-def p{margin:0;font-size:15px;line-height:1.6;
+    color:color-mix(in srgb,var(--text) 62%,transparent)}
+  .deck-gap-def .deck-gap-why{margin-top:6px}
+
+  /* The age of the stage the item is standing on, at the foot of the card and
+     centred - the one thing on this page that is. */
+  .deck-gap-wait{display:flex;align-items:center;justify-content:center;gap:14px;
+    padding-bottom:6px}
+  /* The only place in the whole item page where a warning colour appears. */
+  .deck-gap-mark{width:48px;height:48px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:color-mix(in srgb,var(--warn) 14%,transparent)}
+  .deck-gap-mark svg{width:24px;height:24px;stroke:var(--warn);fill:none;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round}
+  .deck-gap-age{display:flex;flex-direction:column;gap:4px}
+  /* Aligned to the start of its own label rather than set `dir=ltr` and left:
+     the numeral is Hebrew text's neighbour here, not a foreign run. */
+  .deck-gap-age b{display:block;text-align:start;font-size:34px;line-height:1;
+    font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+  .deck-gap-since{font-size:13px;line-height:1.2;
+    color:color-mix(in srgb,var(--text) 62%,transparent)}
+
+  /* The card's full-width outlined pill. Not a control yet - where it goes is
+     DIA-421 - so it is drawn as one and is not one. */
+  .deck-gap-do{margin:12px 0 4px;box-sizing:border-box;width:100%;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 18px;border-radius:999px;
+    border:1px solid color-mix(in srgb,var(--text) 26%,transparent);
+    font-size:15px;font-weight:600;line-height:1;color:var(--text)}
+  .deck-gap-do i{font-style:normal;font-weight:400;font-size:16px}
 
 }
