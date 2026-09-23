@@ -213,61 +213,170 @@ test.describe('the page', () => {
     expect(m.rule).toBe(0);
   });
 
-  test('everything under the rule is one column, centred both ways', async ({ page }) => {
-    await open(page, 't01');
-    const m = await page.evaluate((s) => {
-      const gap = document.querySelector(s)!.querySelector('.deck-gap')!;
-      const g = gap.getBoundingClientRect();
-      const kids = [...gap.children];
-      const first = kids[0]!.getBoundingClientRect();
-      const last = kids[kids.length - 1]!.getBoundingClientRect();
-      const mid = (e: Element) => {
-        const r = e.getBoundingClientRect();
-        return Math.round(r.left + r.width / 2);
-      };
-      return {
-        above: Math.round(first.top - g.top),
-        below: Math.round(g.bottom - last.bottom),
-        centres: [...new Set(kids.map(mid))],
-        tall: g.height > 300,
-      };
-    }, four);
-    expect(m.tall).toBe(true);
-    // Centred vertically: the same air above the first child as below the last.
-    expect(Math.abs(m.above - m.below)).toBeLessThanOrEqual(1);
-    // And horizontally: every part shares one centre line.
-    expect(m.centres.length).toBe(1);
+  test('one frame at 844, 664 and 600, and it never scrolls', async ({ page }) => {
+    // The fault this page had was slide 3's: a card taller than its frame
+    // inside a snapping stack. §7's card is composed rather than authored,
+    // so it fits by construction - at every height the deck supports, and on
+    // the fixture whose stack is four pages deep as well as the one-page one.
+    for (const h of [844, 664, 600]) {
+      await page.setViewportSize({ width: 390, height: h });
+      for (const id of ['t01', 't02']) {
+        await open(page, id);
+        const m = await page.evaluate((s) => {
+          const four = document.querySelector(s)!;
+          const stack = four.querySelector('.deck-stack')!;
+          const pages = [...four.querySelectorAll('.deck-stage')];
+          return {
+            frame: Math.round(stack.clientHeight),
+            pages: [...new Set(pages.map((x) => Math.round(x.getBoundingClientRect().height)))],
+            // A card that ran past its page is what this is guarding.
+            over: pages.map((x) => Math.round(
+              x.querySelector('.deck-card')!.getBoundingClientRect().bottom
+              - x.getBoundingClientRect().bottom)),
+            // The stack scrolls by whole pages and by nothing else.
+            slack: stack.scrollHeight - stack.clientHeight - (pages.length - 1) * stack.clientHeight,
+          };
+        }, four);
+        expect(m.pages, `${id} at ${h}`).toEqual([m.frame]);
+        expect(m.over.every((o) => o <= 0), `${id} at ${h}`).toBe(true);
+        expect(m.slack, `${id} at ${h}`).toBe(0);
+      }
+    }
+    await page.setViewportSize(PHONE);
   });
 
-  test('the hourglass is above the numeral, and the numeral above the box', async ({ page }) => {
-    // §7 draws the numeral beneath the mark, not beside it.
+  test('the box sits at the centre of the screen, or as close as the clamp allows', async ({ page }) => {
+    // Of the screen, not of the space it was given: what stands above it is
+    // the label, the head and the lead, and what stands below is the age and
+    // the button, and those two do not weigh the same. Only a measurement can
+    // put it on the frame's centre, and StagesShell makes it.
+    for (const h of [844, 664, 600]) {
+      await page.setViewportSize({ width: 390, height: h });
+      await open(page, 't01');
+      const m = await page.evaluate((s) => {
+        const p = document.querySelector(s)!.querySelector('.deck-stage')!;
+        const deck = document.querySelector('.deck')!.getBoundingClientRect();
+        const d = p.querySelector('.deck-gap-def')!.getBoundingClientRect();
+        const lead = p.querySelector('.deck-gap-say')!.getBoundingClientRect();
+        const foot = p.querySelector('.deck-gap-wait')!.getBoundingClientRect();
+        return {
+          off: Math.abs((d.top + d.height / 2) - (deck.top + deck.height / 2)),
+          up: d.top - lead.bottom,
+          down: foot.top - d.bottom,
+        };
+      }, four);
+      expect(m.off, `at ${h}`).toBeLessThanOrEqual(1);
+      // And never nearer than 14px to either neighbour.
+      expect(m.up, `at ${h}`).toBeGreaterThanOrEqual(14);
+      expect(m.down, `at ${h}`).toBeGreaterThanOrEqual(14);
+    }
+    await page.setViewportSize(PHONE);
+  });
+
+  test('the box is dim, dashed, headerless, and carries the two strings from the taxonomy', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate((s) => {
-      const p = document.querySelector(s)!;
+      const p = document.querySelector(s)!.querySelector('.deck-stage')!;
+      const def = p.querySelector('.deck-gap-def')!;
+      const cs = getComputedStyle(def);
+      const ps = [...def.querySelectorAll('p')].map((x) => (x.textContent ?? '').trim());
+      return {
+        style: cs.borderTopStyle,
+        width: cs.borderTopWidth,
+        radius: cs.borderTopLeftRadius,
+        // No header inside it: what it says is not a heading's worth of thing.
+        heads: def.querySelectorAll('h1,h2,h3,h4,b,strong').length,
+        ps,
+        size: getComputedStyle(def.querySelector('p')!).fontSize,
+      };
+    }, four);
+    expect(m.style).toBe('dashed');
+    expect(m.width).toBe('1px');
+    expect(m.radius).toBe('14px');
+    expect(m.heads).toBe(0);
+    expect(m.size).toBe('15px');
+    expect(m.ps).toHaveLength(2);
+    // ¶1 is the page's own frame completed by the stage's clause; ¶2 is the
+    // stage's own sentence about why it matters. Both live in the taxonomy.
+    expect(m.ps[0].startsWith('לא מצאנו תיעוד לכך ש')).toBe(true);
+    expect(m.ps[0].endsWith('.')).toBe(true);
+    expect(m.ps[1].startsWith('עד אז')).toBe(true);
+  });
+
+  test('the age group is at the foot, centred, with the hourglass beside the numeral', async ({ page }) => {
+    await open(page, 't01');
+    const m = await page.evaluate((s) => {
+      const p = document.querySelector(s)!.querySelector('.deck-stage')!;
       const r = (q: string) => p.querySelector(q)!.getBoundingClientRect();
-      const mark = p.querySelector('.deck-gap-mark')!;
+      const wait = r('.deck-gap-wait');
+      const col = p.querySelector('.deck-read')!.getBoundingClientRect();
+      const card = p.querySelector('.deck-card')!.getBoundingClientRect();
+      const n = r('.deck-gap-age b');
+      const since = r('.deck-gap-since');
       return {
         markSize: Math.round(r('.deck-gap-mark').width),
         glyph: Math.round(r('.deck-gap-mark svg').width),
-        markAboveN: r('.deck-gap-mark').bottom <= r('.deck-gap-n').top,
-        nAboveAsk: r('.deck-gap-n').bottom <= r('.deck-gap-ask').top,
-        n: (p.querySelector('.deck-gap-n')?.textContent ?? '').trim(),
+        // Beside, not above: the mark and the numeral share a line.
+        beside: r('.deck-gap-mark').top < n.bottom && n.top < r('.deck-gap-mark').bottom,
+        // In RTL the mark is the right-hand end of the row.
+        markFirst: r('.deck-gap-mark').right > n.right,
+        size: getComputedStyle(p.querySelector('.deck-gap-age b')!).fontSize,
+        n: (p.querySelector('.deck-gap-age b')?.textContent ?? '').trim(),
         since: (p.querySelector('.deck-gap-since')?.textContent ?? '').trim(),
-        size: getComputedStyle(p.querySelector('.deck-gap-n')!).fontSize,
+        // The numeral starts where its label starts, rather than being set
+        // ltr and pushed to the left of it.
+        aligned: Math.abs(n.right - since.right) <= 1,
+        // Centred in the column, and at the foot of the card.
+        centred: Math.abs((wait.left + wait.right) / 2 - (col.left + col.right) / 2) <= 1,
+        toFoot: Math.round(card.bottom - wait.bottom),
         stroke: getComputedStyle(p.querySelector('.deck-gap-mark svg')!).stroke,
-        bg: getComputedStyle(mark).backgroundColor,
+        bg: getComputedStyle(p.querySelector('.deck-gap-mark')!).backgroundColor,
       };
     }, four);
-    expect(m.markSize).toBe(58);
-    expect(m.glyph).toBe(28);
-    expect(m.markAboveN).toBe(true);
-    expect(m.nAboveAsk).toBe(true);
-    expect(m.size).toBe('38px');
+    expect(m.markSize).toBe(48);
+    expect(m.glyph).toBe(24);
+    expect(m.beside).toBe(true);
+    expect(m.markFirst).toBe(true);
+    expect(m.size).toBe('34px');
     expect(m.n).toMatch(/^[\d,]+$/);
     expect(m.since.startsWith('ימים מאז')).toBe(true);
-    // The only warning colour in the item page.
+    expect(m.aligned).toBe(true);
+    expect(m.centred).toBe(true);
+    // Only the button stands between it and the bottom of the card.
+    expect(m.toFoot).toBeLessThan(80);
     expect(m.stroke).toBe('rgb(217, 165, 79)');
     expect(m.bg).toContain('0.14');
+  });
+
+  test('the way to say we are wrong is a full-width pill, and not a control yet', async ({ page }) => {
+    await open(page, 't01');
+    const m = await page.evaluate((s) => {
+      const p = document.querySelector(s)!.querySelector('.deck-stage')!;
+      const cta = p.querySelector('.deck-gap-do')!;
+      const read = p.querySelector('.deck-read')!.getBoundingClientRect();
+      const r = cta.getBoundingClientRect();
+      return {
+        text: (cta.firstChild?.textContent ?? '').trim(),
+        arrow: (cta.querySelector('i')?.textContent ?? '').trim(),
+        full: Math.abs(r.width - read.width) <= 1,
+        round: getComputedStyle(cta).borderTopLeftRadius,
+        border: getComputedStyle(cta).borderTopWidth,
+        // DIA-421 owns where it goes. Until it does, it is drawn as a button
+        // and is not one - nothing here is focusable or clickable.
+        tag: cta.tagName,
+        controls: p.querySelectorAll('.deck-gap button,.deck-gap a').length,
+        last: p.querySelector('.deck-gap')!.lastElementChild === cta,
+      };
+    }, four);
+    expect(m.text).toBe('יודעים אחרת? הגישו מקור');
+    // The arrow is the row's other end, not a word in the line.
+    expect(m.arrow).toBe('←');
+    expect(m.full).toBe(true);
+    expect(m.round).toBe('999px');
+    expect(m.border).toBe('1px');
+    expect(m.tag).toBe('SPAN');
+    expect(m.controls).toBe(0);
+    expect(m.last).toBe(true);
   });
 
   test('the warning colour is the hourglass\'s alone, on the whole page', async ({ page }) => {
@@ -290,23 +399,26 @@ test.describe('the page', () => {
     expect(n.marks).toBe(1);
   });
 
-  test('stage 5 names who would count; the others go straight to the mark', async ({ page }) => {
+  test('nothing on the page says who could fill the stage', async ({ page }) => {
+    // It used to, under the lead. It answered how the stage could be filled;
+    // a reader looking at an empty stage is asking what the stage is, which
+    // is what the box now says (Roy, 21 September - §7).
     await open(page, 't01');
     expect(await page.evaluate((s) =>
-      (document.querySelector(s)!.querySelector('.deck-gap-who')?.textContent ?? '').length, four))
-      .toBeGreaterThan(20);
+      document.querySelector(s)!.querySelectorAll('.deck-gap-who').length, four)).toBe(0);
 
     await open(page, 't02');
     const m = await page.evaluate((s) => {
       const pages = [...document.querySelector(s)!.querySelectorAll('.deck-stage')];
       return pages.map((p) => ({
         stage: p.getAttribute('data-stage'),
-        who: !!p.querySelector('.deck-gap-who'),
         say: (p.querySelector('.deck-gap-say')?.textContent ?? '').trim().length,
+        box: p.querySelectorAll('.deck-gap-def p').length,
       }));
     }, four);
-    expect(m.map((x) => x.who)).toEqual([false, false, false, true]);
+    // Every unreached stage has the same shape, whatever it is.
     expect(m.every((x) => x.say > 0)).toBe(true);
+    expect(m.map((x) => x.box)).toEqual([2, 2, 2, 2]);
   });
 
   test('an unwritten absence statement says so rather than showing nothing', async ({ page }) => {
@@ -343,24 +455,44 @@ test.describe('the four things it does not grow', () => {
     expect(m).toEqual({ now: 0, chips: 0, rails: 0, drawers: 0, buttons: 0, sheets: 0, cut: 0 });
   });
 
-  test('the back pill walks back a slide, and points at it', async ({ page }) => {
+  test('there is no back pill, and the footer is the way back to the current stage', async ({ page }) => {
+    // The pill said what the footer under it already said, one thumb-width
+    // away and to the same place (DIA-423).
     await open(page, 't01');
-    const shown = await page.evaluate((s) =>
-      !!document.querySelector(s)!.querySelector('.deck-stage-back:not([hidden])'), four);
-    expect(shown).toBe(true);
+    expect(await page.evaluate((s) =>
+      document.querySelector(s)!.querySelectorAll('.deck-stage-back,.deck-stage-backrow').length, four))
+      .toBe(0);
+    // Slide 3 keeps its own pill: there it does a job nothing else does.
+    expect(await page.evaluate(() =>
+      document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-stage-back').length))
+      .toBe(1);
 
-    await page.evaluate((s) =>
-      (document.querySelector(s)!.querySelector('.deck-stage-back') as HTMLElement).click(), four);
+    // Leave slide 3 standing somewhere other than the current stage, so that
+    // "lands on the current stage" is a claim about more than the default.
+    await page.evaluate(() => { location.hash = '#3'; });
+    await page.waitForTimeout(500);
+    await page.evaluate(() =>
+      window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide: 2, dir: -1 } })));
+    await page.waitForTimeout(700);
+    expect(await page.evaluate(() =>
+      document.querySelector<HTMLElement>('.deck')!.dataset.stage2)).not.toBe('4');
+
+    await page.evaluate(() => { location.hash = '#4'; });
     await page.waitForTimeout(800);
-    const after = await page.evaluate(() => ({
+    await page.evaluate(() => {
+      const link = [...document.querySelectorAll<HTMLElement>('.deck-link')]
+        .find((a) => (a.textContent ?? '').includes('מה נעשה מאז'))!;
+      link.click();
+    });
+    await page.waitForTimeout(900);
+    expect(await page.evaluate(() => ({
       at: document.querySelector('.deck')!.getAttribute('data-at'),
       stage: document.querySelector<HTMLElement>('.deck')!.dataset.stage2,
       tail: location.hash,
-    }));
-    // Slide 3, landing on its current stage - and the tail naming it, which a
-    // single shared `data-stage` got wrong: slide 4's stack wrote it last.
-    expect(after.at).toBe('2');
-    expect(after.stage).toBe('4');
-    expect(after.tail).toBe('#3-s4');
+      // And the pill is not showing, because the reader is on the current
+      // stage again.
+      pill: !!document.querySelector(
+        '.deck-track > .deck-slide:nth-child(3) .deck-stage-back:not([hidden])'),
+    }))).toEqual({ at: '2', stage: '4', tail: '#3-s4', pill: false });
   });
 });

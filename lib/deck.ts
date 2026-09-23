@@ -168,33 +168,6 @@ export function sourceLineText(s: SourceLine): string {
 }
 
 /**
- * The stage definitions of docs/mobile-item.html §6 - one line under the stage
- * name, on a reached page and an unreached one alike.
- *
- * A definition may not use its own term: "what was implemented" is not a
- * definition of "implemented". Stages 3 and 6 were never written; they render
- * as a placeholder rather than as nothing, so a review of the page reviews its
- * shape and can see the hole. DIA-367.
- */
-export const STAGE_DEFINITION: Record<number, string | null> = {
-  1: 'מה שקרה בשטח, כפי שנרשם בתיעוד ציבורי',
-  2: 'הגוף האחראי הודה בפומבי שהכשל התרחש',
-  3: null,
-  4: 'התיקון דווח כמבוצע בשטח בידי הגוף האחראי',
-  5: 'גוף שאינו הגוף האחראי בדק את התיקון בשטח ופרסם ממצאים',
-  6: null,
-};
-
-/** What an unwritten definition says until DIA-367 lands. */
-export const DEFINITION_PLACEHOLDER = 'הגדרת השלב טרם נכתבה';
-
-export const stageDefinition = (n: number): string =>
-  STAGE_DEFINITION[n] ?? DEFINITION_PLACEHOLDER;
-
-/** Whether a stage still carries a placeholder, so a test can name the hole. */
-export const definitionIsDraft = (n: number): boolean => STAGE_DEFINITION[n] == null;
-
-/**
  * The date a stage was reached, as §6 draws it: the day, then its distance
  * from the morning of 7 October. Nothing in the data says when a stage was
  * reached, so both are computed from the earliest claim asserting it - which
@@ -227,14 +200,20 @@ export const stageAbsence = (n: number): string => STAGE_ABSENCE[n] ?? ABSENCE_P
 export const absenceIsDraft = (n: number): boolean => STAGE_ABSENCE[n] == null;
 
 /**
- * Who would count as a checking body - stage 5 only, where "who checks" is the
- * whole content of the stage. Stages 2 to 4 go straight from the statement to
- * the mark, which is why this returns null rather than an empty string.
+ * The first paragraph of §7's definition box: the one frame the page writes
+ * itself, completed by the stage's own definition from the taxonomy.
+ *
+ * It is a frame rather than a sentence per stage so that the page says the
+ * same thing about every stage, and so that the copy a stage carries is the
+ * same string wherever it is read. The definition is a clause, so the full
+ * stop belongs here.
+ *
+ * The line that used to stand here named who would count as a checking body.
+ * It answered how the stage could be filled; a reader looking at an empty
+ * stage is asking what the stage is (Roy, 21 September - spec §7).
  */
-export const checkingBody = (n: number): string | null =>
-  n === 5
-    ? 'מבקר המדינה, ועדת חקירה, מחקר או עיתונות — כל אחד מהם נחשב. עד שאחד מהם יפרסם בדיקה, השלב נשאר ריק.'
-    : null;
+export const notDocumented = (definition: string): string =>
+  `לא מצאנו תיעוד לכך ש${definition}.`;
 
 /**
  * What the days-since numeral is counting, named after the event that put the

@@ -59,6 +59,9 @@ export type Rung = {
 
 const CHEVRON = { down: 'M6 9l6 6 6-6', up: 'M18 15l-6-6-6 6', right: 'M9 5l7 7-7 7' };
 
+/** §7: how close the definition box may come to the lead or the age group. */
+const CLEAR = 14;
+
 function Chevron({ d }: { d: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -252,6 +255,92 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     return () => window.removeEventListener('deck:stage', onStep);
   }, [open, pages, slide]);
 
+  /* --------------------------------------------- slide 4 only (§7) */
+  /**
+   * The definition box sits at the vertical centre of the *screen*.
+   *
+   * CSS can centre it in the space it was given; that space is not symmetric
+   * about the frame, because the label, the head and the lead stand above it
+   * and only the age group and the button below. So the box is centred in its
+   * own space by `margin-block:auto` and then nudged, once, by a measurement -
+   * the same rule the sheet's alignment follows, and for the same reason:
+   * arithmetic here would be alignment until someone changed the head.
+   *
+   * Every page is exactly one frame and snaps (DIA-416), so a page that is
+   * showing has the stack's own top - which is what lets one measurement
+   * place the box on every page, including the ones scrolled off.
+   *
+   * It is clamped to stay 14px clear of the lead above and the age below. At
+   * 844, 664 and 600 with today's copy it never reaches the clamp.
+   */
+  useEffect(() => {
+    const box = stack.current;
+    const deck = box?.closest<HTMLElement>('.deck');
+    if (kind !== 'unreached' || !box || !deck) return;
+
+    const place = () => {
+      const mid = deck.getBoundingClientRect().height / 2
+        - (box.getBoundingClientRect().top - deck.getBoundingClientRect().top);
+      for (const page of box.querySelectorAll<HTMLElement>('.deck-stage')) {
+        const def = page.querySelector<HTMLElement>('.deck-gap-def');
+        const lead = page.querySelector<HTMLElement>('.deck-gap-say');
+        const foot = page.querySelector<HTMLElement>('.deck-gap-wait');
+        if (!def || !lead || !foot) continue;
+        // Measured with no shift on it, so the reading is of the layout and
+        // not of the last answer.
+        def.style.removeProperty('top');
+        const top = page.getBoundingClientRect().top;
+        const d = def.getBoundingClientRect();
+        const want = mid - (d.top - top + d.height / 2);
+        const up = d.top - lead.getBoundingClientRect().bottom - CLEAR;
+        const down = foot.getBoundingClientRect().top - d.bottom - CLEAR;
+        const shift = Math.max(-up, Math.min(down, want));
+        def.style.top = `${Math.round(shift)}px`;
+      }
+    };
+
+    place();
+    // The frame changes height when a phone's URL bar comes and goes, and the
+    // box is 15px type: both move it.
+    const ro = new ResizeObserver(place);
+    ro.observe(deck);
+    void document.fonts?.ready.then(place);
+    return () => ro.disconnect();
+  }, [kind, pages]);
+
+  /**
+   * Leaving slide 4 sends slide 3 back to the current stage (DIA-423).
+   *
+   * The footer's `מה נעשה מאז` is the only way back now that the pill is
+   * gone, and §7 says it lands on the current stage rather than on whichever
+   * page the reader last left. The deck owns the slide, so the only thing
+   * this stack knows is that the deck stopped showing it - which the deck
+   * writes on itself, and is enough.
+   */
+  useEffect(() => {
+    const box = stack.current;
+    const deck = box?.closest<HTMLElement>('.deck');
+    if (kind !== 'unreached' || !deck) return;
+    const mine = String(slide);
+    // Leaving, not being elsewhere. A deck that was never on this slide has
+    // not left it, and a deep link into `#3-s1` arrives with `data-at` going
+    // straight from 0 to 2 - which, read as "not slide 4", would send slide 3
+    // to its current stage and throw the link away.
+    let was = deck.getAttribute('data-at');
+    const watch = new MutationObserver(() => {
+      const now = deck.getAttribute('data-at');
+      if (now === was) return;
+      const left = was === mine;
+      was = now;
+      if (!left) return;
+      window.dispatchEvent(new CustomEvent('deck:stage', {
+        detail: { slide: slide - 1, to: 'current' },
+      }));
+    });
+    watch.observe(deck, { attributes: true, attributeFilter: ['data-at'] });
+    return () => watch.disconnect();
+  }, [kind, slide]);
+
   /* ------------------------------------------------- following the scroll */
   /**
    * Which page is showing, and nothing else.
@@ -268,15 +357,12 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
   }, [indexNow]);
 
   const here = pages[at]?.n ?? current;
-  // On slide 4 the current stage is never on the page, so the pill is always
-  // there and always walks back a slide rather than a page (§7).
-  const off = kind === 'unreached' || here !== current;
+  // Slide 3 only. On slide 4 the pill said what the footer under it already
+  // said, one thumb-width away and to the same place, so slide 4 has no pill
+  // and the footer's `מה נעשה מאז` is the way back (DIA-423).
+  const off = kind === 'reached' && here !== current;
   const back = pages.findIndex((p) => p.n === current);
-  const walk = () => {
-    if (kind === 'reached') { if (back >= 0) open(back, { smooth: true }); return; }
-    window.dispatchEvent(new CustomEvent('deck:slide', { detail: { to: 3 } }));
-    window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide: slide - 1, to: 'current' } }));
-  };
+  const walk = () => { if (back >= 0) open(back, { smooth: true }); };
 
   return (
     <div className="deck-stages">
@@ -289,18 +375,23 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
       </div>
 
       {/* The row keeps its height whether or not the pill is in it: a chrome
-          that resizes the scroller is what DIA-379 was. */}
-      <div className="deck-stage-backrow">
-        <button
-          type="button"
-          className="deck-stage-back"
-          hidden={!off}
-          onClick={walk}
-        >
-          <Chevron d={kind === 'unreached' ? CHEVRON.right : here < current ? CHEVRON.down : CHEVRON.up} />
-          חזרה לשלב הנוכחי
-        </button>
-      </div>
+          that resizes the scroller is what DIA-379 was. Slide 4 has no pill
+          at all, so it has no row either and its stack is 31px taller - the
+          two slides' frames are their own, and the locator above them is what
+          has to line up (DIA-423). */}
+      {kind === 'reached' && (
+        <div className="deck-stage-backrow">
+          <button
+            type="button"
+            className="deck-stage-back"
+            hidden={!off}
+            onClick={walk}
+          >
+            <Chevron d={here < current ? CHEVRON.down : CHEVRON.up} />
+            חזרה לשלב הנוכחי
+          </button>
+        </div>
+      )}
     </div>
   );
 }

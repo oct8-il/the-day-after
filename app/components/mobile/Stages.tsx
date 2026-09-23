@@ -2,8 +2,8 @@ import { Fragment } from 'react';
 import { Annotated } from '@/app/components/Annotated';
 import { EvidenceMap, pinsOf } from '@/app/components/EvidenceMap';
 import { citedIds } from '@/lib/annotation';
-import { STAGES, TYPES, type Claim, type Incident } from '@/lib/data';
-import { stageAge, stageAbsence, checkingBody, sinceLabel, NOT_YET_DOCUMENTED } from '@/lib/deck';
+import { STAGES, TYPES, stageCopy, type Claim, type Incident } from '@/lib/data';
+import { stageAge, stageAbsence, notDocumented, sinceLabel, NOT_YET_DOCUMENTED } from '@/lib/deck';
 import { daysAfter, daysWaiting } from '@/lib/days';
 import {
   reached as reachedStages, unreached as unreachedStages, stageDate, stageOf, type Stage,
@@ -83,20 +83,38 @@ function Claims({ claims }: { claims: Claim[] }) {
 }
 
 /**
- * What a stage that has not happened says - §7.
+ * What a stage that has not happened says - §7, redrawn (DIA-425).
  *
- * Absence is the content, and nothing here apologises for it: a computed
- * statement, the line naming who would count as a checker where that is the
- * whole point of the stage, the wait, and a way to say we are wrong. The
- * hourglass is the only place in the item page where a warning colour appears.
+ * Four things, top to bottom, and the whole page is one frame: the computed
+ * statement as the lead, the definition box, the age of the stage the item is
+ * actually standing on, and the way to say we are wrong.
+ *
+ * The box is the one unsourced paragraph in the item page, which is why it is
+ * dim and dashed rather than drawn like the reading around it - and why it
+ * carries no header. Both of its strings come from the taxonomy: a stage
+ * means the same thing on every item.
+ *
+ * It sits at the vertical centre of the *screen* rather than of the space it
+ * was given, so the page reads the same on a 600px frame as on 844 even
+ * though what is above it does not. CSS can centre it in the leftover space;
+ * only a measurement can centre it in the frame, and StagesShell makes it.
  */
 function Absence({ stage, current, days }: { stage: number; current: number; days: number | null }) {
-  const who = checkingBody(stage);
+  const { definition, why } = stageCopy(stage);
   return (
     <div className="deck-gap">
-      <p className="deck-gap-say"><b>{stageAbsence(stage)}</b></p>
-      {who && <p className="deck-gap-who">{who}</p>}
+      <p className="deck-gap-say">{stageAbsence(stage)}</p>
 
+      <div className="deck-gap-def">
+        <p>{notDocumented(definition)}</p>
+        {/* Dropped first if the card would ever overflow: it is the sentence
+            that says why the absence matters, and the one above it is the one
+            that says what is missing. */}
+        {why && <p className="deck-gap-why">{why}</p>}
+      </div>
+
+      {/* The wait belongs to the item, not to the stage that has not happened:
+          it counts from the stage the item is standing on. */}
       <div className="deck-gap-wait">
         <span className="deck-gap-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24">
@@ -105,18 +123,19 @@ function Absence({ stage, current, days }: { stage: number; current: number; day
           </svg>
         </span>
         {days !== null && (
-          <>
-            <span className="deck-gap-n" dir="ltr">{days.toLocaleString('en-US')}</span>
+          <span className="deck-gap-age">
+            <b dir="ltr">{days.toLocaleString('en-US')}</b>
             <span className="deck-gap-since">{sinceLabel(current)}</span>
-          </>
+          </span>
         )}
       </div>
 
-      <div className="deck-gap-ask">
-        <b>יודעים אחרת?</b>
-        <span>אם פורסמה בדיקה כזאת ולא מצאנו אותה — הגישו את המקור, והשלב ישתנה.</span>
-        <span className="deck-gap-do">הגישו מקור</span>
-      </div>
+      {/* Not a control yet: where it goes is DIA-421, and a button that does
+          nothing is worse than a line that does not claim to be one. */}
+      <span className="deck-gap-do">
+        יודעים אחרת? הגישו מקור
+        <i dir="ltr" aria-hidden="true">←</i>
+      </span>
     </div>
   );
 }
