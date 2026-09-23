@@ -1451,6 +1451,30 @@
   .deck-sheet-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
     scrollbar-width:none;padding-bottom:26px}
   .deck-sheet-scroll::-webkit-scrollbar{display:none}
+
+  /* The swap, when a rung is tapped (DIA-430). Only the reading moves: the
+     bar and the ladder are the same two elements before and after, so what
+     the reader sees is one sheet changing its mind rather than two sheets
+     trading places - which is what it is underneath.
+
+     Four sets of keyframes and not two reversed. An animation restarts only
+     when its *name* changes, so a reversed pair leaves the engine holding a
+     finished animation and nothing moves - which is exactly how DIA-413's
+     exit came to be a no-op. The nudge goes the way the jump goes: up the
+     ladder and the reading leaves upwards, and the next one arrives from
+     below it. */
+  @keyframes deck-swap-out-up{from{opacity:1;transform:none}
+    to{opacity:0;transform:translateY(-14px)}}
+  @keyframes deck-swap-out-down{from{opacity:1;transform:none}
+    to{opacity:0;transform:translateY(14px)}}
+  @keyframes deck-swap-in-up{from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:none}}
+  @keyframes deck-swap-in-down{from{opacity:0;transform:translateY(-14px)}
+    to{opacity:1;transform:none}}
+  .deck-sheet-scroll[data-swap="out-up"]{animation:deck-swap-out-up 140ms ease forwards}
+  .deck-sheet-scroll[data-swap="out-down"]{animation:deck-swap-out-down 140ms ease forwards}
+  .deck-sheet-scroll[data-swap="in-up"]{animation:deck-swap-in-up 180ms ease}
+  .deck-sheet-scroll[data-swap="in-down"]{animation:deck-swap-in-down 180ms ease}
   .deck-sheet-h{margin:26px 0 12px;font-size:19px;font-weight:700;line-height:1.4;color:var(--text)}
   .deck-sheet-body{display:flex;flex-direction:column}
   /* The one place the sheet's column is set, and it is a measurement. */
@@ -1737,6 +1761,28 @@
   .deck-loc-rung[data-un][data-on]{box-shadow:0 0 0 2px var(--bg),
     0 0 0 4px color-mix(in srgb,var(--text) 55%,transparent)}
 
+  /* Inside a reading sheet the ladder is the way between stages, and the only
+     one (§6, DIA-430). The rung stays 5px of ink - the ladder in the sheet
+     looks exactly like the ladder on the slide - and the target is a button
+     laid over it that reaches 24px into the reading and 14px out to the
+     screen edge, and 5px past the rung at each end: 43x36, the floor for a
+     thumb, found by aiming at a mark that is only 5px of it. The ladder's
+     pitch is 35, so two neighbours overlap by a pixel and the lower one wins
+     it; there is no gap between them, which is the half that matters.
+
+     Pressed, the rung widens to 1.6x from its physical right edge, so the
+     clearance to the screen edge does not move while it answers. */
+  .deck-loc-rung{position:relative;transition:transform .12s ease;transform-origin:right center}
+  .deck-loc-jump{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;
+    background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .deck-loc-jump::after{content:"";position:absolute;inset:-5px -14px -5px -24px}
+  .deck-loc-rung:has(.deck-loc-jump:active){transform:scaleX(1.6)}
+  /* A keyboard needs to see which rung it is on, and the ring that says
+     "viewed" is already spoken for. */
+  .deck-loc-jump:focus-visible{outline:none}
+  .deck-loc-rung:has(.deck-loc-jump:focus-visible){box-shadow:0 0 0 2px var(--bg),
+    0 0 0 4px var(--text)}
+
   /* Only when the reader is off the current stage, with the arrow pointing the
      way. The row keeps its height either way: a chrome that resizes the
      scroller is exactly what DIA-379 turned out to be. */
@@ -1764,6 +1810,10 @@
     /* Belt and braces: the deck writes `still` in place of either entrance,
        and nothing here has an animation to cancel. */
     .deck-sheet,.deck-dim{transition:none}
+    /* The jump swaps instantly, with no nudge: the deck writes no `data-swap`
+       under reduced motion, and this is the belt for it. */
+    .deck-sheet-scroll[data-swap]{animation:none}
+    .deck-loc-rung{transition:none}
   }
 
   /* ---------------------------------------------------------------- §7

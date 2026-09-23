@@ -131,6 +131,13 @@ const FADE = 160;
 const COVER = 300;
 
 /**
+ * How long the reading takes to leave when a rung is tapped (DIA-430). The
+ * arrival is 180 and lives in the stylesheet alone, because nothing has to be
+ * timed against its end; this one does, so it is written here as well.
+ */
+const SWAP = 140;
+
+/**
  * How long a gesture's flight off the screen takes (DIA-427), and how long
  * the card takes to drop back when a swipe up did not reach the sheet.
  */
@@ -384,6 +391,13 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // replacing it, so the deck never leaves a second copy of the arrival URL
     // on the stack for Back to stop at.
     if (pushed.current && i === entrySlide.current && !stage) { history.back(); return; }
+    // The state goes out as null, and the deck keeps nothing in it. Passing
+    // the router's own state back to it here makes `next dev` treat the
+    // replacement as a navigation and undo the tail on the next frame - a
+    // stage drag then reports the stage it came from (DIA-430). Which is why
+    // the open sheet's entry is remembered in a ref rather than in the state:
+    // this line rewrites the very entry a sheet sits on, every time a rung is
+    // tapped, and anything written there would not survive it.
     if (pushed.current) history.replaceState(null, '', url);
     else { history.pushState(null, '', url); pushed.current = true; }
   }, []);
@@ -484,6 +498,23 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // A Back that lands anywhere re-reads the hash and moves without writing.
     // Our entry is gone once it is popped, so the next move pushes again.
     const onPop = () => {
+      // Two pops do not spend the deck's entry, and forgetting it for either
+      // would leave a second copy of it on the stack the next time anything
+      // moved - which is every time, because closing a sheet moves the focus
+      // back into the stack (DIA-430).
+      //
+      // One is the pop the close itself causes, which the deck marks. This is
+      // the last listener on that pop that cares - the stacks run first,
+      // being children - so the mark is cleared here rather than by whoever
+      // reads it, and it is read before it is gone.
+      const deck = deckEl();
+      if (deck?.hasAttribute('data-popping')) {
+        deck.removeAttribute('data-popping');
+        return;
+      }
+      // The other is a reader pressing Back on an open sheet: that spends the
+      // sheet's entry, and ours is still on the stack underneath it.
+      if (sheet.current) return;
       pushed.current = false;
       const t = parseHash(location.hash);
       scrollTo(t ? t.slide : 0, false);
@@ -865,6 +896,15 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   const sheet = useRef<{ el: HTMLElement; mode: Entrance; opener: HTMLElement | null } | null>(null);
   /** The exit's timer: an entrance that interrupts one must cancel it. */
   const leaving = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /**
+   * Whether the entry the open sheet pushed is still on the stack, so closing
+   * it gives that entry back exactly once. It is a ref and not a flag in
+   * `history.state` because `writeHash` replaces the state of this very entry
+   * whenever a rung is tapped (DIA-430), and a flag there would not last.
+   */
+  const sheetEntry = useRef(false);
+  /** The jump's own timer: the sheet closing mid-swap has to cancel it. */
+  const swapping = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * `silent`: the caller is already animating the sheet off the screen and
@@ -882,9 +922,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // Closing the sheet closes its drawer: an open drawer is a question the
     // reader has already answered (§5).
     el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(el, d));
+    if (swapping.current) { clearTimeout(swapping.current); swapping.current = null; }
+    el.querySelector('.deck-sheet-scroll')?.removeAttribute('data-swap');
     deck?.removeAttribute('data-sheet');
     deck?.removeAttribute('data-dim');
     track.current?.removeAttribute('inert');
+    bottom.current?.removeAttribute('inert');
     // Parked but not yet moving (openSheet's two frames): there is no
     // entrance to reverse, so it is hidden as `still` is.
     const wasPre = (el.getAttribute('data-in') ?? '').startsWith('pre');
@@ -907,7 +950,18 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
 
     open.opener?.focus?.();
     // Give the entry back, so §2's push-once rule is whole again afterwards.
-    if ((opts?.history ?? true) && window.history.state?.deckSheet) window.history.back();
+    const owed = sheetEntry.current;
+    sheetEntry.current = false;
+    if ((opts?.history ?? true) && owed) {
+      // That Back rewinds the URL to what it was when the sheet opened, tail
+      // and all - which would undo a jump between stages made inside it
+      // (DIA-430). The pop is the deck's own, so the deck says so: the stack
+      // that recognises the mark stays where the reader left it and re-asserts
+      // the tail instead of following a hash that is behind it. The deck
+      // clears the mark on that same pop, after both stacks have read it.
+      deck?.setAttribute('data-popping', '');
+      window.history.back();
+    }
   }, []);
 
   const openSheet = useCallback((
@@ -968,13 +1022,19 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     deck.setAttribute('data-sheet', id);
     if (quiet) el.setAttribute('data-quiet', ''); else el.removeAttribute('data-quiet');
     // The deck behind is not a second reading for a screen reader to find.
+    // The footer goes with it: the sheet is `aria-modal`, and §6 is explicit
+    // that while it is open the ladder is the only way between stages - which
+    // is not true of a dots row and two stage arrows a Tab key can still
+    // reach behind it (DIA-430).
     track.current?.setAttribute('inert', '');
+    bottom.current?.setAttribute('inert', '');
 
     sheet.current = { el, mode: how, opener };
     // preventScroll: the × is inside a frame that clips, and a focus that
     // tried to reveal it would scroll the frame itself.
     const x = el.querySelector<HTMLElement>('.deck-sheet-x');
-    window.history.pushState({ ...window.history.state, deckSheet: true }, '');
+    window.history.pushState(window.history.state, '');
+    sheetEntry.current = true;
 
     // It arrives by clicking the sheet's own chip, so a passage tap inherits
     // DIA-386 whole: one drawer at a time, and the minimum scroll if it would
@@ -1004,9 +1064,109 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     }));
   }, []);
 
+  /**
+   * The ladder, tapped (§6, DIA-430).
+   *
+   * Inside a reading sheet the locator is the way between stages and the only
+   * one. Underneath, each stage has its own sheet already in the HTML, so a
+   * jump is two sheets trading places - but the bar and the ladder are drawn
+   * identically in both, so swapping them whole and animating only the
+   * reading reads as one sheet changing its mind. That is the whole trick,
+   * and it is why nothing here rebuilds any markup.
+   *
+   * The order is the issue's, and each step is doing work the next one needs:
+   * the drawer closes because it answered a sentence that is leaving; the
+   * ring moves at once, on the sheet still showing, so the press is answered
+   * before the reading has finished going; and only then do the two swap.
+   */
+  const jumpSheet = useCallback((rung: HTMLElement) => {
+    const open = sheet.current;
+    const deck = deckEl();
+    const to = rung.getAttribute('data-jump');
+    const stage = Number(rung.getAttribute('data-stage'));
+    const slide = Number(rung.getAttribute('data-slide'));
+    if (!open || !deck || !to) return;
+    const el = sheetHost.current?.querySelector<HTMLElement>(`#sheet-${CSS.escape(to)}`);
+    // The rung it is already standing on does nothing, which is what a
+    // reader expects of the mark that says where they are.
+    if (!el || el === open.el) return;
+
+    if (swapping.current) { clearTimeout(swapping.current); swapping.current = null; }
+
+    const was = open.el.querySelector<HTMLElement>('.deck-loc-jump[aria-current="true"]');
+    const from = Number(was?.getAttribute('data-stage') ?? stage);
+    const dir = stage < from ? 'up' : 'down';
+    const still = reduced();
+
+    // 1 · the drawer goes: it answered a sentence that is about to leave.
+    open.el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(open.el, d));
+
+    // 2 · the ring answers the press at once, on the sheet still showing.
+    open.el.querySelectorAll<HTMLElement>('.deck-loc-jump').forEach((b) => {
+      const on = b === rung;
+      if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+      b.parentElement?.toggleAttribute('data-on', on);
+    });
+
+    // 3 · the reading swaps.
+    const out = open.el.querySelector<HTMLElement>('.deck-sheet-scroll');
+    const land = () => {
+      swapping.current = null;
+      if (sheet.current?.el !== open.el) return;
+      out?.removeAttribute('data-swap');
+
+      // The new sheet inherits the column the old one was measured into:
+      // every stage card on this slide shares it, and re-measuring against a
+      // card that is behind an open sheet would measure the wrong thing.
+      for (const v of ['--bar', '--gut-r', '--gut-l']) {
+        el.style.setProperty(v, open.el.style.getPropertyValue(v));
+      }
+      if (open.el.hasAttribute('data-quiet')) el.setAttribute('data-quiet', '');
+      else el.removeAttribute('data-quiet');
+
+      // The opener moves with the reading. It is where the focus goes when the
+      // sheet closes, and the browser reveals whatever it focuses - so an
+      // opener left behind on the stage they jumped away from would scroll the
+      // stack back to it and undo the jump the moment they closed (DIA-430).
+      const back = track.current?.querySelector<HTMLElement>(
+        `[data-open="${CSS.escape(to)}"]`,
+      ) ?? null;
+
+      open.el.removeAttribute('data-in');
+      open.el.setAttribute('hidden', '');
+      el.removeAttribute('hidden');
+      // Landed, with no entrance of its own: the reading's own swap is the
+      // only motion, and a second one over it would be two animations saying
+      // different things about the same 180ms.
+      el.setAttribute('data-in', 'still');
+      const into = el.querySelector<HTMLElement>('.deck-sheet-scroll');
+      if (into) into.scrollTop = 0;
+      deck.setAttribute('data-sheet', to);
+      sheet.current = { el, mode: open.mode, opener: back ?? open.opener };
+      if (!still) into?.setAttribute('data-swap', `in-${dir}`);
+
+      // The rung the reader pressed does not exist any more - it belonged to
+      // the sheet that just left. Its twin is where the focus belongs, and it
+      // is also what announces the stage they have arrived at.
+      el.querySelector<HTMLElement>(`.deck-loc-jump[data-stage="${stage}"]`)?.focus({ preventScroll: true });
+
+      // The stack walks underneath, silently and instantly, so closing the
+      // sheet lands on what was read and the hash says so. Nothing in the
+      // deck animates: the reader is not looking at it.
+      window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide, stage } }));
+    };
+
+    if (still) { land(); return; }
+    out?.setAttribute('data-swap', `out-${dir}`);
+    swapping.current = setTimeout(land, SWAP);
+  }, []);
+
   /** Back closes the sheet and nothing else. */
   useEffect(() => {
-    const onPop = () => { if (sheet.current) closeSheet({ history: false }); };
+    const onPop = () => {
+      if (!sheet.current) return;
+      closeSheet({ history: false });
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, [closeSheet]);
@@ -1016,6 +1176,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if (!deck) return;
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
+      // The ladder, inside a sheet (DIA-430). First, because a rung sits over
+      // the reading's own gutter and a passage tap must not claim it.
+      const rung = t.closest<HTMLElement>('.deck-loc-jump');
+      if (rung) { e.preventDefault(); jumpSheet(rung); return; }
+
       // The whole cited passage opens the sheet, not only the glyph that ends
       // it (DIA-414); `.deck-more` is a button of its own and is hit directly.
       const chip = chipOf(t);
@@ -1040,7 +1205,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     };
     deck.addEventListener('click', onClick);
     return () => deck.removeEventListener('click', onClick);
-  }, [openSheet, closeSheet]);
+  }, [openSheet, closeSheet, jumpSheet]);
 
   /**
    * The sheet under a finger (DIA-427). Four gestures, one model.

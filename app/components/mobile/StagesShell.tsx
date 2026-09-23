@@ -42,7 +42,20 @@ export type StagePage = {
 export type StackKind = 'reached' | 'unreached';
 
 /** A rung, drawn or held as an invisible spacer so nothing ever moves. */
-export type Rung = { n: number; color: string; drawn: boolean; reached: boolean };
+export type Rung = {
+  n: number;
+  /** The stage's name, for the rung's label where the rung is a control. */
+  he: string;
+  color: string;
+  drawn: boolean;
+  reached: boolean;
+  /**
+   * The reading sheet this rung jumps to, where there is one (DIA-430). Only
+   * the copy inside a sheet uses it; slide 4 has no sheets, so none of its
+   * rungs carry it and the rule has nowhere to apply there.
+   */
+  sheet?: string;
+};
 
 const CHEVRON = { down: 'M6 9l6 6 6-6', up: 'M18 15l-6-6-6 6', right: 'M9 5l7 7-7 7' };
 
@@ -56,16 +69,28 @@ function Chevron({ d }: { d: string }) {
 
 /**
  * §6's locator. Drawn twice: once on the slide, and once inside the stage's
- * reading sheet, which covers the frame - "it stays visible, and stays an
- * indicator, while the reading sheet is open". A copy rather than a lift,
- * because the sheet is outside the track and the slide's own locator is
- * inside it: two stacking contexts that cannot be reconciled.
+ * reading sheet, which covers the frame - "it stays visible while the reading
+ * sheet is open". A copy rather than a lift, because the sheet is outside the
+ * track and the slide's own locator is inside it: two stacking contexts that
+ * cannot be reconciled.
  *
- * Nothing on it is a control, on either copy.
+ * The two copies read the same and do not do the same thing. On the slide it
+ * is an indicator: the stack under it is what the reader moves, so a control
+ * there would be a second way to do one thing. In the sheet the stack is
+ * inert, and the ladder is how the reader moves between stages without
+ * leaving the reading at all (DIA-430).
  */
-export function Locator({ rail, on }: { rail: Rung[]; on: number }) {
+export function Locator({ rail, on, slide }: { rail: Rung[]; on: number; slide?: number }) {
+  /*
+   * `slide` is passed only to the copy that lives inside a reading sheet,
+   * where §6 makes the ladder the way between stages and the only one
+   * (DIA-430). On the slide itself it is an indicator and nothing else, so it
+   * stays out of the accessibility tree entirely - and an `aria-hidden` list
+   * with focusable buttons inside it would be worse than either.
+   */
+  const jumps = slide !== undefined;
   return (
-    <ol className="deck-loc" aria-hidden="true">
+    <ol className="deck-loc" aria-hidden={jumps ? undefined : true}>
       {rail.map((r) => (
         <li
           key={r.n}
@@ -74,7 +99,19 @@ export function Locator({ rail, on }: { rail: Rung[]; on: number }) {
           data-un={r.drawn && !r.reached ? '' : undefined}
           data-on={r.drawn && r.n === on ? '' : undefined}
           style={{ ['--c' as string]: r.color }}
-        />
+        >
+          {jumps && r.drawn && r.sheet ? (
+            <button
+              type="button"
+              className="deck-loc-jump"
+              data-jump={r.sheet}
+              data-stage={r.n}
+              data-slide={slide}
+              aria-label={`שלב ${r.n} · ${r.he}`}
+              aria-current={r.n === on ? 'true' : undefined}
+            />
+          ) : null}
+        </li>
       ))}
     </ol>
   );
@@ -154,6 +191,17 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     const read = () => {
       const m = /^#([1-6])(?:-s([1-6]))?$/.exec(location.hash);
       if (!m || Number(m[1]) - 1 !== slide || !m[2]) return false;
+      // The deck marks the pop it causes when a reading sheet closes. That
+      // pop rewinds the URL to before the sheet opened, so the tail it
+      // carries is older than the jump the reader made inside it (DIA-430) -
+      // and this stack is already standing where they left off. It stays
+      // there and says so, rather than reading a hash that is behind it. The
+      // mark is only read here; the deck clears it, last on that pop, so both
+      // stacks see it.
+      if (deck?.hasAttribute('data-popping')) {
+        window.dispatchEvent(new CustomEvent('deck:stagechange'));
+        return true;
+      }
       const i = pages.findIndex((p) => p.n === Number(m[2]));
       if (i >= 0) { open(i); return true; }
       return false;
@@ -181,11 +229,20 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
   /* --------------------------------------------------------- the two arrows */
   useEffect(() => {
     const onStep = (e: Event) => {
-      const d = (e as CustomEvent<{ slide: number; dir?: number; to?: 'current' }>).detail;
+      const d = (e as CustomEvent<{ slide: number; dir?: number; to?: 'current'; stage?: number }>).detail;
       if (!d || d.slide !== slide) return;
       if (d.to === 'current') {
         const i = pages.findIndex((p) => p.current);
         if (i >= 0 && i !== atRef.current) open(i, { smooth: true });
+        return;
+      }
+      // A jump from the ladder in a reading sheet (DIA-430). Instant and
+      // unannounced: the reader is inside the sheet and has already seen the
+      // stage change there; the stack is only making sure that closing the
+      // sheet lands on what was read, and that the hash says so.
+      if (typeof d.stage === 'number') {
+        const j = pages.findIndex((p) => p.n === d.stage);
+        if (j >= 0 && j !== atRef.current) open(j);
         return;
       }
       const next = Math.min(pages.length - 1, Math.max(0, atRef.current + (d.dir ?? 0)));

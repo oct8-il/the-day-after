@@ -166,7 +166,7 @@ test.describe('it opens in place, aligned', () => {
     expect(m.scrollTop).toBe(0);
   });
 
-  test('the locator stays where it was, and stays an indicator', async ({ page }) => {
+  test('the locator stays where it was, and becomes the way between stages', async ({ page }) => {
     const id = await open3(page);
     const slide = await page.evaluate(() => {
       const r = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-loc')!.getBoundingClientRect();
@@ -181,13 +181,21 @@ test.describe('it opens in place, aligned', () => {
         top: Math.round(r.top), right: Math.round(r.right),
         rings: loc.querySelectorAll('.deck-loc-rung[data-on]').length,
         controls: loc.querySelectorAll('button,a,[role="button"]').length,
+        jumps: loc.querySelectorAll('.deck-loc-jump').length,
+        drawn: loc.querySelectorAll('.deck-loc-rung[data-drawn]').length,
         seen: !!(r.width && r.height),
       };
     }, `#sheet-${id}`);
     expect(m.seen).toBe(true);
+    // The same ladder, in the same place: it did not move when it learnt to
+    // be pressed (DIA-430).
     expect({ top: m.top, right: m.right }).toEqual(slide);
     expect(m.rings).toBe(1);
-    expect(m.controls).toBe(0);
+    // Here, and only here, every drawn rung is a control - the reading is the
+    // surface, so the ladder is the way off it.
+    expect(m.controls).toBe(m.jumps);
+    expect(m.jumps).toBe(m.drawn);
+    expect(m.jumps).toBeGreaterThan(1);
   });
 });
 
@@ -1487,5 +1495,232 @@ test.describe('the drawer is an excerpt', () => {
       // The button the reader just dismissed is gone; the chip gets the focus.
       onChip: document.activeElement?.classList.contains('chip') ?? false,
     }))).toEqual({ open: 0, hot: 0, expanded: 0, onChip: true });
+  });
+});
+
+/**
+ * The ladder jumps - DIA-430, spec §6.
+ *
+ * Inside the reading sheet the stage ladder stops being a picture of where the
+ * reader is and becomes how they move: the stack behind is inert, so a rung is
+ * the only way from one stage to the next without closing anything. Everything
+ * below is about that one change and the things it drags with it - what the
+ * reading does on the way, what the drawer does, where the focus lands, and
+ * what the history says afterwards.
+ */
+
+/** Slide 3's sheet, opened from whichever stage the stack rests on. */
+async function ladder(page: Page, id = 't01') {
+  const card = await open3(page, id);
+  await openFrom(page, `.deck-card[data-card="${card}"] .deck-more`);
+  await page.waitForTimeout(600);
+  return card;
+}
+
+/** Press the nth rung of the open sheet's ladder and let the swap land. */
+const jumpTo = async (page: Page, i: number) => {
+  await page.evaluate((n) => {
+    document.querySelectorAll<HTMLElement>('.deck-sheet:not([hidden]) .deck-loc-jump')[n]!.click();
+  }, i);
+  await page.waitForTimeout(500);
+};
+
+/** What the deck is showing: the sheet, the stage under it, and the URL. */
+const showing = (page: Page) => page.evaluate(() => {
+  const deck = document.querySelector<HTMLElement>('.deck')!;
+  const rungs = [...document.querySelectorAll('.deck-track > .deck-slide:nth-child(3) .deck-loc-rung')];
+  return {
+    sheet: deck.getAttribute('data-sheet'),
+    hash: location.hash,
+    stage: rungs.findIndex((r) => r.hasAttribute('data-on')) + 1,
+    chip: document.querySelector('.deck-sheet:not([hidden]) .deck-sheet-chip')?.textContent?.trim() ?? null,
+  };
+});
+
+test.describe('the ladder is the way between stages', () => {
+  test('on the slide it is a picture; in the sheet every drawn rung is a button', async ({ page }) => {
+    const id = await ladder(page);
+    const m = await page.evaluate((s) => {
+      const slide = document.querySelector('.deck-track > .deck-slide:nth-child(3) .deck-loc')!;
+      const sheet = document.querySelector(`${s} .deck-loc`)!;
+      const jumps = [...sheet.querySelectorAll('.deck-loc-jump')];
+      return {
+        slideHidden: slide.getAttribute('aria-hidden'),
+        slideButtons: slide.querySelectorAll('button').length,
+        sheetHidden: sheet.getAttribute('aria-hidden'),
+        tags: [...new Set(jumps.map((j) => j.tagName))],
+        // Each one says which stage it is, in words, so the ladder reads as a
+        // list of places rather than four unlabelled dots.
+        labels: jumps.map((j) => (j.getAttribute('aria-label') ?? '').trim()),
+        current: jumps.filter((j) => j.getAttribute('aria-current') === 'true').length,
+      };
+    }, `#sheet-${id}`);
+    expect(m.slideHidden).toBe('true');
+    expect(m.slideButtons).toBe(0);
+    expect(m.sheetHidden).toBe(null);
+    expect(m.tags).toEqual(['BUTTON']);
+    expect(m.labels.every((l) => /^שלב [1-6] · .+/.test(l))).toBe(true);
+    expect(m.current).toBe(1);
+  });
+
+  test('the target is 36px, and reaches well past the rung it is drawn as', async ({ page }) => {
+    const id = await ladder(page);
+    const m = await page.evaluate((s) => {
+      const j = document.querySelector<HTMLElement>(`${s} .deck-loc-jump`)!;
+      const box = j.getBoundingClientRect();
+      const a = getComputedStyle(j, '::after');
+      const px = (v: string) => parseFloat(v) || 0;
+      return {
+        // The rung is a hairline by design; the target around it is not.
+        drawn: { w: Math.round(box.width), h: Math.round(box.height) },
+        target: {
+          w: box.width - px(a.left) - px(a.right),
+          h: box.height - px(a.top) - px(a.bottom),
+        },
+        // Asked of the page, not of the numbers: a finger landing above the
+        // rung, and one landing inside the column beside it, both hit it.
+        above: document.elementFromPoint(box.left + box.width / 2, box.top - 4) === j,
+        beside: document.elementFromPoint(box.left - 20, box.top + box.height / 2) === j,
+      };
+    }, `#sheet-${id}`);
+    expect(m.drawn.w).toBeLessThan(10);
+    expect(m.target.h).toBeGreaterThanOrEqual(36);
+    expect(m.target.w).toBeGreaterThanOrEqual(36);
+    expect(m.above).toBe(true);
+    expect(m.beside).toBe(true);
+  });
+
+  test('a rung swaps the reading, the tag and the ring, and starts it at the top', async ({ page }) => {
+    await ladder(page);
+    const before = await showing(page);
+    await page.evaluate(() => {
+      document.querySelector<HTMLElement>('.deck-sheet:not([hidden]) .deck-sheet-scroll')!.scrollTop = 200;
+    });
+    await jumpTo(page, 0);
+    const after = await showing(page);
+    expect(before.sheet).not.toBe(after.sheet);
+    expect(after.sheet).toMatch(/-1$/);
+    expect(after.hash).toBe('#3-s1');
+    // The stack walked underneath: closing now lands on what was read.
+    expect(after.stage).toBe(1);
+    expect(after.chip).not.toBe(before.chip);
+    expect(await page.evaluate(() => ({
+      scrollTop: document.querySelector('.deck-sheet:not([hidden]) .deck-sheet-scroll')!.scrollTop,
+      rings: document.querySelectorAll('.deck-sheet:not([hidden]) .deck-loc-jump[aria-current="true"]').length,
+      ring: document.querySelector('.deck-sheet:not([hidden]) .deck-loc-jump[aria-current="true"]')
+        ?.getAttribute('data-stage'),
+    }))).toEqual({ scrollTop: 0, rings: 1, ring: '1' });
+  });
+
+  test('the focus follows the reader onto the same rung of the new ladder', async ({ page }) => {
+    await ladder(page);
+    await jumpTo(page, 0);
+    expect(await page.evaluate(() => ({
+      cls: document.activeElement?.className,
+      stage: document.activeElement?.getAttribute('data-stage'),
+      // Inside the sheet that is now showing, not the one that left.
+      inSheet: !!document.activeElement?.closest('.deck-sheet:not([hidden])'),
+    }))).toEqual({ cls: 'deck-loc-jump', stage: '1', inSheet: true });
+  });
+
+  test('the rung it is standing on does nothing at all', async ({ page }) => {
+    await ladder(page);
+    const before = await showing(page);
+    const i = await page.evaluate(() => [...document.querySelectorAll('.deck-sheet:not([hidden]) .deck-loc-jump')]
+      .findIndex((j) => j.getAttribute('aria-current') === 'true'));
+    expect(i).toBeGreaterThanOrEqual(0);
+    await jumpTo(page, i);
+    expect(await showing(page)).toEqual(before);
+  });
+
+  test('the drawer goes with the sentence it answered', async ({ page }) => {
+    // st2-2 is the stage whose reading is cited, so there is a drawer to open.
+    await ladder(page);
+    await page.evaluate(() => {
+      document.querySelectorAll<HTMLElement>('.deck-sheet:not([hidden]) .deck-loc-jump')[1]!.click();
+    });
+    await page.waitForTimeout(500);
+    await page.evaluate(() => {
+      document.querySelector<HTMLElement>('.deck-sheet:not([hidden]) .deck-read button.chip')!.click();
+    });
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => ({
+      open: document.querySelectorAll('.deck-sheet:not([hidden]) .deck-drawer:not([hidden])').length,
+      hot: document.querySelectorAll('.deck-sheet:not([hidden]) .deck-read [data-hot]').length,
+    }))).toEqual({ open: 1, hot: 1 });
+
+    await jumpTo(page, 0);
+    expect(await page.evaluate(() => ({
+      anywhere: document.querySelectorAll('.deck-sheet .deck-drawer:not([hidden])').length,
+      hot: document.querySelectorAll('.deck-sheet .deck-read [data-hot]').length,
+      expanded: document.querySelectorAll('.deck-sheet .chip[aria-expanded="true"]').length,
+    }))).toEqual({ anywhere: 0, hot: 0, expanded: 0 });
+
+    // And coming back is a first visit, not a return to an answered question.
+    await jumpTo(page, 1);
+    expect(await page.evaluate(() =>
+      document.querySelectorAll('.deck-sheet .deck-drawer:not([hidden])').length)).toBe(0);
+  });
+
+  test('the reading leaves in the direction of travel, and arrives from it', async ({ page }) => {
+    await ladder(page);
+    const swap = () => page.evaluate(() =>
+      document.querySelector('.deck-sheet:not([hidden]) .deck-sheet-scroll')?.getAttribute('data-swap') ?? null);
+    await page.evaluate(() => {
+      document.querySelectorAll<HTMLElement>('.deck-sheet:not([hidden]) .deck-loc-jump')[0]!.click();
+    });
+    await page.waitForTimeout(60);
+    expect(await swap()).toBe('out-up');
+    await page.waitForTimeout(440);
+    expect(await swap()).toBe('in-up');
+
+    await page.evaluate(() => {
+      document.querySelectorAll<HTMLElement>('.deck-sheet:not([hidden]) .deck-loc-jump')[3]!.click();
+    });
+    await page.waitForTimeout(60);
+    expect(await swap()).toBe('out-down');
+    await page.waitForTimeout(440);
+    expect(await swap()).toBe('in-down');
+  });
+
+  test('nothing else on the deck can be reached while the sheet is open', async ({ page }) => {
+    await ladder(page);
+    expect(await page.evaluate(() => ({
+      track: document.querySelector('.deck-track')?.hasAttribute('inert'),
+      bottom: document.querySelector('.deck-bottom')?.hasAttribute('inert'),
+      // The ladder is inside the sheet, so it is not under the inert subtree.
+      jumps: [...document.querySelectorAll('.deck-sheet:not([hidden]) .deck-loc-jump')]
+        .every((j) => !j.closest('[inert]')),
+    }))).toEqual({ track: true, bottom: true, jumps: true });
+  });
+
+  test('closing after a jump lands on the stage that was jumped to', async ({ page }) => {
+    await ladder(page);
+    await jumpTo(page, 0);
+    await page.click('.deck-sheet:not([hidden]) .deck-sheet-x');
+    await page.waitForTimeout(700);
+    const m = await showing(page);
+    expect(m.sheet).toBe(null);
+    expect(m.stage).toBe(1);
+    expect(m.hash).toBe('#3-s1');
+  });
+
+  test('Back closes it on the jumped-to stage too, and the deck still costs one entry', async ({ page }) => {
+    await ladder(page);
+    await jumpTo(page, 0);
+    await page.goBack();
+    await page.waitForTimeout(700);
+    const closed = await showing(page);
+    expect(closed.sheet).toBe(null);
+    expect(closed.stage).toBe(1);
+    expect(closed.hash).toBe('#3-s1');
+
+    // §2's invariant survives the jump: the sheet's entry is the one Back just
+    // spent, and the deck's own is still the only other one it added - so one
+    // more Back is standing where the reader came in, tail and all.
+    await page.goBack();
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => ({ hash: location.hash, path: location.pathname })))
+      .toEqual({ hash: '#3', path: '/item/t01/' });
   });
 });

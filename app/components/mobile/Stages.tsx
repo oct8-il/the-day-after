@@ -137,7 +137,17 @@ export function stagesParts({ inc, slide, kind }: {
   // rung never moves between slide 3 and slide 4.
   const rail: Rung[] = STAGES
     .filter((x) => x.n <= 5 || has.has(x.n))
-    .map((x) => ({ n: x.n, color: x.color, drawn: shown.has(x.n), reached: has.has(x.n) }));
+    .map((x) => ({
+      n: x.n,
+      he: x.he,
+      color: x.color,
+      drawn: shown.has(x.n),
+      reached: has.has(x.n),
+      // The sheet this rung jumps to, inside a sheet (DIA-430). Only a
+      // reached stage has one: slide 4's pages are composed rather than
+      // authored, so they have no sheet to jump to and no rung to jump from.
+      sheet: kind === 'reached' && shown.has(x.n) ? `st${slide}-${x.n}` : undefined,
+    }));
 
   // How long the item has been where it is. One number for the whole slide:
   // the wait belongs to the item, not to the stage that has not happened.
@@ -201,7 +211,11 @@ export function stagesParts({ inc, slide, kind }: {
           sheet: summary
             ? <Annotated text={summary} claims={inc.claims} chip="glyph" drawers={id} />
             : <Claims claims={claims} />,
-          aside: <Locator rail={rail} on={x.n} />,
+          // The copy inside the sheet, where the ladder is the way between
+          // stages (§6, DIA-430) - `slide` is what turns its rungs into
+          // controls. The slide's own copy is StagesShell's, and stays an
+          // indicator.
+          aside: <Locator rail={rail} on={x.n} slide={slide} />,
           // §6: stage 1 hosts the evidence map, and the map comes before the
           // carousel - which puts it in the sheet, under מקורות.
           tail: pins.length > 0 ? <div className="deck-stage-map"><EvidenceMap pins={pins} /></div> : null,
