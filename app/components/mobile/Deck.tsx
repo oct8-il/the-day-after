@@ -61,36 +61,34 @@ const Chevron = ({ d }: { d: string }) => (
 );
 
 /**
- * §2's hash grammar: `#3` is a slide, `#3-s2` a stage page inside one. The
- * stage half belongs to slide 3's stack, which is Phase 5 - it is parsed and
- * carried here rather than dropped, so a link written today still resolves when
- * that lands.
+ * §2's hash grammar: `#3` is a slide, `#3-s2` a stage page inside one.
+ *
+ * The number is the slide's **identity** in the six-slide scheme, not its
+ * position in this item's deck (DIA-422): `#5` is דעת הציבור on every item,
+ * including the one that has no slide 4 and shows it fourth. A link is a
+ * thing one reader sends another, and it has to mean the same thing on both
+ * ends - and the same thing next month, when an item reaches its last stage
+ * and its slide 4 disappears.
  */
 export function parseHash(hash: string): { slide: number; stage: number | null } | null {
   const m = /^#?([1-6])(?:-s([1-6]))?$/.exec(hash.trim());
   if (!m) return null;
-  return { slide: Number(m[1]) - 1, stage: m[2] ? Number(m[2]) : null };
+  return { slide: Number(m[1]), stage: m[2] ? Number(m[2]) : null };
 }
 
 /**
- * The slides this item actually has.
+ * The slides this item actually has, each carrying its number in the
+ * canonical six.
  *
- * The hash counts off *this* list, not off the canonical six, so `#4` is
- * "מה עוד לא נעשה" on most items and "דעת הציבור" on one that is at the last
- * stage. Deep links are per item, so nothing breaks - but it is the kind of
- * thing that is better written down than discovered.
+ * That number is what the hash says and what the slide's `id` is; the
+ * position in this list is what the dots count, what the footer chain walks
+ * and what a screen reader hears. The two are the same on every item except
+ * one that has nothing unreached, and there they are one apart from slide 5
+ * on (DIA-422, DIA-424).
  */
 export type SlideName = { n: number; he: string };
 export const slidesOf = (omit: readonly number[] = []): SlideName[] =>
   ALL.filter((s) => !omit.includes(s.n)).map((s) => ({ n: s.n, he: s.he }));
-
-/**
- * The gate is the bare item URL, never `#1`. §9 wants every shared link to be
- * the bare URL, and a reader who copies what is in the address bar is sharing
- * whatever the deck last wrote there.
- */
-const hashFor = (i: number, stage: number | null) =>
-  i === 0 && !stage ? '' : `#${i + 1}${stage ? `-s${stage}` : ''}`;
 
 /**
  * How long a photo credit can be before the gate's footer gives it two rows.
@@ -300,6 +298,31 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   const SLIDES = useMemo(() => slidesOf(omit), [omit]);
   const LAST = SLIDES.length - 1;
 
+  /**
+   * The gate is the bare item URL, never `#1`. §9 wants every shared link to
+   * be the bare URL, and a reader who copies what is in the address bar is
+   * sharing whatever the deck last wrote there.
+   */
+  const hashFor = useCallback((i: number, stage: number | null) => {
+    if (i === 0 && !stage) return '';
+    return `#${SLIDES[i]?.n ?? i + 1}${stage ? `-s${stage}` : ''}`;
+  }, [SLIDES]);
+
+  /**
+   * Which slide a hash opens (DIA-422).
+   *
+   * A hash naming a slide this item does not have opens the nearest earlier
+   * one that it does, rather than whatever happens to sit in that position:
+   * `#4` on an item with nothing unreached is מה נעשה מאז, not דעת הציבור.
+   * The caller rewrites the hash to say so, so the address bar never keeps a
+   * number that names a different screen than the one on it.
+   */
+  const indexOf = useCallback((n: number) => {
+    let best = 0;
+    SLIDES.forEach((s, i) => { if (s.n <= n) best = i; });
+    return best;
+  }, [SLIDES]);
+
   const [armed, setArmed] = useState(false);
   /** The live index, for the handlers that a scrub re-enters faster than React
    *  re-subscribes them. Kept in step with `at` by every setter below. */
@@ -415,7 +438,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // tapped, and anything written there would not survive it.
     if (pushed.current) history.replaceState(null, '', url);
     else { history.pushState(null, '', url); pushed.current = true; }
-  }, []);
+  }, [hashFor]);
 
   const go = useCallback((i: number, opts?: { smooth?: boolean; write?: boolean }) => {
     const n = Math.min(LAST, Math.max(0, i));
@@ -501,7 +524,17 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   /* ---------------------------------------------------- arrival and history */
   useEffect(() => {
     const entry = parseHash(location.hash);
-    if (entry) { entrySlide.current = entry.slide; scrollTo(entry.slide, false); }
+    if (entry) {
+      const i = indexOf(entry.slide);
+      entrySlide.current = i;
+      scrollTo(i, false);
+      // The link asked for a slide this item does not have. It opens the one
+      // before it and says so, rather than leaving a number in the address
+      // bar that names a screen the reader is not looking at.
+      if (SLIDES[i]!.n !== entry.slide) {
+        history.replaceState(null, '', location.pathname + location.search + hashFor(i, entry.stage));
+      }
+    }
     // The deck is alive. It is the one thing on this element the server cannot
     // render, and that is the whole of its job: `data-at` ships in the HTML,
     // so anything waiting for *that* is waiting for a painted deck rather than
@@ -532,7 +565,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       if (sheet.current) return;
       pushed.current = false;
       const t = parseHash(location.hash);
-      scrollTo(t ? t.slide : 0, false);
+      scrollTo(t ? indexOf(t.slide) : 0, false);
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -1788,7 +1821,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
             key={s.n}
             className="deck-slide"
             id={`slide-${s.n}`}
-            aria-label={`${s.n} מתוך ${SLIDES.length} · ${s.he}`}
+            /* Position, at both ends of the count. The hash is the slide's
+               identity (DIA-422); what a reader hears is where they are in
+               this deck, and an item with five slides has no sixth to be
+               (DIA-424). */
+            aria-label={`${i + 1} מתוך ${SLIDES.length} · ${s.he}`}
             aria-current={i === at ? 'true' : undefined}
           >
             {s.n === 1 && ground ? (

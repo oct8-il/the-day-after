@@ -54,19 +54,74 @@ test.describe('the item that has no slide 4', () => {
     expect(m.slides).toBe(5);
     expect(m.dots).toBe(5);
     expect(m.gaps).toBe(0);
-    // The sections count off this item's own list, not off the canonical six.
-    expect(m.labels.every((l) => l?.includes('מתוך 5'))).toBe(true);
+    // Both numbers count off this item's own deck: a five-slide item has no
+    // sixth slide for anyone to be on, and a reader used to hear "6 מתוך 5"
+    // on the last one because the numerator came from the canonical six
+    // (DIA-424).
+    expect(m.labels.map((l) => (l ?? '').split(' · ')[0]))
+      .toEqual(['1 מתוך 5', '2 מתוך 5', '3 מתוך 5', '4 מתוך 5', '5 מתוך 5']);
     expect(m.labels.some((l) => l?.includes('מה עוד לא נעשה'))).toBe(false);
   });
 
-  test('the hash counts off the item, so #4 is a different slide on t05', async ({ page }) => {
-    await open(page, 't01');
-    expect(await page.evaluate(() =>
-      (document.querySelector('.deck-slide[aria-current]')?.getAttribute('aria-label') ?? ''))).toContain('מה עוד לא נעשה');
+  test('a six-slide item still counts to six', async ({ page }) => {
+    await open(page, 't01', '');
+    expect(await page.evaluate(() => [...document.querySelectorAll('.deck-slide')]
+      .map((s) => (s.getAttribute('aria-label') ?? '').split(' · ')[0])))
+      .toEqual(['1 מתוך 6', '2 מתוך 6', '3 מתוך 6', '4 מתוך 6', '5 מתוך 6', '6 מתוך 6']);
+  });
 
-    await open(page, 't05');
-    expect(await page.evaluate(() =>
-      (document.querySelector('.deck-slide[aria-current]')?.getAttribute('aria-label') ?? ''))).toContain('דעת הציבור');
+  test('the hash is the slide\'s identity, so #5 is דעת הציבור on every item', async ({ page }) => {
+    // It used to count off this item's own list, so the same link opened
+    // different screens on different items - and would change its own meaning
+    // the day an item reached its last stage and lost slide 4 (DIA-422).
+    const on = () => page.evaluate(() =>
+      (document.querySelector('.deck-slide[aria-current]')?.getAttribute('aria-label') ?? ''));
+
+    await open(page, 't01', '#5');
+    expect(await on()).toContain('דעת הציבור');
+    await open(page, 't05', '#5');
+    expect(await on()).toContain('דעת הציבור');
+
+    await open(page, 't01', '#4');
+    expect(await on()).toContain('מה עוד לא נעשה');
+  });
+
+  test('a hash for a slide this item does not have opens the one before it, and says so', async ({ page }) => {
+    // Not whatever happens to sit in that position. t05 has nothing
+    // unreached, so `#4` is מה נעשה מאז - and the address bar is corrected,
+    // because a number naming a screen the reader is not looking at is the
+    // same fault in a quieter place.
+    await open(page, 't05', '#4');
+    const m = await page.evaluate(() => ({
+      on: document.querySelector('.deck-slide[aria-current]')?.getAttribute('aria-label') ?? '',
+      hash: location.hash,
+      at: document.querySelector('.deck')!.getAttribute('data-at'),
+    }));
+    expect(m.on).toContain('מה נעשה מאז');
+    expect(m.at).toBe('2');
+    // `#3`, and then its stack's own tail: slide 3 says which stage it is
+    // showing, which is the one thing about the hash that did not change.
+    expect(m.hash).toMatch(/^#3(-s[1-6])?$/);
+  });
+
+  test('the dots keep counting positions', async ({ page }) => {
+    // Only the hash changed. t05 shows דעת הציבור fourth, so the dots have
+    // five of them and the fourth is the lit one.
+    await open(page, 't05', '#5');
+    expect(await page.evaluate(() => ({
+      dots: document.querySelectorAll('.deck-dot').length,
+      lit: [...document.querySelectorAll('.deck-dot')].findIndex((d) => d.hasAttribute('data-on')),
+      at: document.querySelector('.deck')!.getAttribute('data-at'),
+    }))).toEqual({ dots: 5, lit: 3, at: '3' });
+  });
+
+  test('a stage tail still names the stage, under the slide\'s identity', async ({ page }) => {
+    await open(page, 't05', '#3-s2');
+    expect(await page.evaluate(() => ({
+      hash: location.hash,
+      at: document.querySelector('.deck')!.getAttribute('data-at'),
+      stage: document.querySelector<HTMLElement>('.deck')!.dataset.stage2,
+    }))).toEqual({ hash: '#3-s2', at: '2', stage: '2' });
   });
 
   test('the footer chain skips it rather than pointing at nothing', async ({ page }) => {

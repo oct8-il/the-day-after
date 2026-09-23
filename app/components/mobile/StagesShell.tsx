@@ -193,7 +193,11 @@ export function StagesShell({ slide, kind, pages, rail, current }: {
     const deck = stack.current?.closest<HTMLElement>('.deck');
     const read = () => {
       const m = /^#([1-6])(?:-s([1-6]))?$/.exec(location.hash);
-      if (!m || Number(m[1]) - 1 !== slide || !m[2]) return false;
+      // The number in the hash is the slide's identity, not its position
+      // (DIA-422) - and these two stacks have fixed identities: the stages an
+      // item reached are always slide 3 and the ones it has not always slide
+      // 4, whatever position they sit in on an item that skips one.
+      if (!m || Number(m[1]) !== (kind === 'reached' ? 3 : 4) || !m[2]) return false;
       // The deck marks the pop it causes when a reading sheet closes. That
       // pop rewinds the URL to before the sheet opened, so the tail it
       // carries is older than the jump the reader made inside it (DIA-430) -

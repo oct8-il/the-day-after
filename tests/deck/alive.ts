@@ -27,13 +27,22 @@ export const at = (page: Page) =>
 /**
  * Alive, and standing where the URL says it should stand.
  *
- * Section 2's hash counts slides from one and `data-at` is an index, so the
- * two differ by one; a hash the grammar does not recognise is the gate, which
- * is index 0. Use it after anything that changes the hash, the load included.
+ * The number in the hash is the slide's identity, not its position (DIA-422),
+ * and `data-at` is a position - so the two agree only on an item that has all
+ * six slides. The slides carry their identity in their `id`, which is how
+ * this resolves one to the other, including the fallback: a hash naming a
+ * slide this item does not have opens the nearest earlier one that it does. A
+ * hash the grammar does not recognise is the gate, which is index 0. Use it
+ * after anything that changes the hash, the load included.
  */
 export const arrived = (page: Page) => page.waitForFunction(() => {
   const deck = document.querySelector('.deck');
   if (!deck?.hasAttribute('data-live')) return false;
   const m = /^#?([1-6])(?:-s[1-6])?$/.exec(location.hash.trim());
-  return deck.getAttribute('data-at') === String(m ? Number(m[1]) - 1 : 0);
+  const want = m ? Number(m[1]) : 1;
+  const ids = [...document.querySelectorAll('.deck-track > .deck-slide')]
+    .map((s) => Number((s.id.split('-')[1]) ?? 0));
+  let i = 0;
+  ids.forEach((n, k) => { if (n <= want) i = k; });
+  return deck.getAttribute('data-at') === String(i);
 });
