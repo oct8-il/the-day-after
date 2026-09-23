@@ -311,8 +311,16 @@ test.describe('the page', () => {
       const wait = r('.deck-gap-wait');
       const col = p.querySelector('.deck-read')!.getBoundingClientRect();
       const card = p.querySelector('.deck-card')!.getBoundingClientRect();
-      const n = r('.deck-gap-age b');
-      const since = r('.deck-gap-since');
+      // The *text's* box, not the block's: a full-width block reports the
+      // column's edges whichever way its text is set, which is how a numeral
+      // hanging off the wrong end passed this once already.
+      const text = (q: string) => {
+        const range = document.createRange();
+        range.selectNodeContents(p.querySelector(q)!);
+        return range.getBoundingClientRect();
+      };
+      const n = text('.deck-gap-age b');
+      const since = text('.deck-gap-since');
       return {
         markSize: Math.round(r('.deck-gap-mark').width),
         glyph: Math.round(r('.deck-gap-mark svg').width),
@@ -321,6 +329,7 @@ test.describe('the page', () => {
         // In RTL the mark is the right-hand end of the row.
         markFirst: r('.deck-gap-mark').right > n.right,
         size: getComputedStyle(p.querySelector('.deck-gap-age b')!).fontSize,
+        ltr: p.querySelector('.deck-gap-age b')!.getAttribute('dir'),
         n: (p.querySelector('.deck-gap-age b')?.textContent ?? '').trim(),
         since: (p.querySelector('.deck-gap-since')?.textContent ?? '').trim(),
         // The numeral starts where its label starts, rather than being set
@@ -341,6 +350,7 @@ test.describe('the page', () => {
     expect(m.n).toMatch(/^[\d,]+$/);
     expect(m.since.startsWith('ימים מאז')).toBe(true);
     expect(m.aligned).toBe(true);
+    expect(m.ltr).toBe(null);
     expect(m.centred).toBe(true);
     // Only the button stands between it and the bottom of the card.
     expect(m.toFoot).toBeLessThan(80);

@@ -124,7 +124,11 @@ function Absence({ stage, current, days }: { stage: number; current: number; day
         </span>
         {days !== null && (
           <span className="deck-gap-age">
-            <b dir="ltr">{days.toLocaleString('en-US')}</b>
+            {/* No `dir="ltr"`: digits run left-to-right on their own, and
+                forcing the direction here would flip `text-align:start` to
+                the left and hang the numeral off the wrong end of its own
+                label. */}
+            <b>{days.toLocaleString('en-US')}</b>
             <span className="deck-gap-since">{sinceLabel(current)}</span>
           </span>
         )}
