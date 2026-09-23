@@ -208,6 +208,21 @@ const chipOf = (t: HTMLElement): HTMLElement | null => {
  * closing the sheet - and a passage left tinted with nothing under it would be
  * pointing at an answer that is no longer on the screen.
  */
+/**
+ * Puts a sheet ladder's ring on one stage and takes it off every other, in
+ * the DOM rather than in React (DIA-430). React renders each sheet's ladder
+ * ringed on its own stage and never re-renders it, so every move made here
+ * has to be undone here too: a sheet is hidden, not unmounted, and the ring
+ * left on it is what the reader sees the next time they come back to it.
+ */
+const ringTo = (sheetEl: HTMLElement, stage: number) => {
+  sheetEl.querySelectorAll<HTMLElement>('.deck-loc-jump').forEach((b) => {
+    const on = Number(b.getAttribute('data-stage')) === stage;
+    if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    b.parentElement?.toggleAttribute('data-on', on);
+  });
+};
+
 const shutDrawer = (root: ParentNode, d: Element) => {
   d.setAttribute('hidden', '');
   const chip = root.querySelector(`[aria-controls="${CSS.escape(d.id)}"]`);
@@ -905,6 +920,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
   const sheetEntry = useRef(false);
   /** The jump's own timer: the sheet closing mid-swap has to cancel it. */
   const swapping = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /**
+   * How to put the leaving sheet's ring back where React drew it. The jump
+   * moves it before the swap lands, so anything that interrupts the swap -
+   * the sheet closing, or a second rung - owes this first (DIA-430).
+   */
+  const unring = useRef<(() => void) | null>(null);
 
   /**
    * `silent`: the caller is already animating the sheet off the screen and
@@ -923,6 +944,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // reader has already answered (§5).
     el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(el, d));
     if (swapping.current) { clearTimeout(swapping.current); swapping.current = null; }
+    if (unring.current) { unring.current(); unring.current = null; }
     el.querySelector('.deck-sheet-scroll')?.removeAttribute('data-swap');
     deck?.removeAttribute('data-sheet');
     deck?.removeAttribute('data-dim');
@@ -1092,6 +1114,10 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     if (!el || el === open.el) return;
 
     if (swapping.current) { clearTimeout(swapping.current); swapping.current = null; }
+    // Before reading where this sheet says it is: a second rung pressed
+    // mid-swap would otherwise read the ring the first press moved, and take
+    // both the direction and the undo from it.
+    if (unring.current) { unring.current(); unring.current = null; }
 
     const was = open.el.querySelector<HTMLElement>('.deck-loc-jump[aria-current="true"]');
     const from = Number(was?.getAttribute('data-stage') ?? stage);
@@ -1101,12 +1127,10 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // 1 · the drawer goes: it answered a sentence that is about to leave.
     open.el.querySelectorAll('.deck-drawer:not([hidden])').forEach((d) => shutDrawer(open.el, d));
 
-    // 2 · the ring answers the press at once, on the sheet still showing.
-    open.el.querySelectorAll<HTMLElement>('.deck-loc-jump').forEach((b) => {
-      const on = b === rung;
-      if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
-      b.parentElement?.toggleAttribute('data-on', on);
-    });
+    // 2 · the ring answers the press at once, on the sheet still showing -
+    // and owes that sheet its own ring back before it is seen again.
+    ringTo(open.el, stage);
+    unring.current = () => ringTo(open.el, from);
 
     // 3 · the reading swaps.
     const out = open.el.querySelector<HTMLElement>('.deck-sheet-scroll');
@@ -1131,6 +1155,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
       const back = track.current?.querySelector<HTMLElement>(
         `[data-open="${CSS.escape(to)}"]`,
       ) ?? null;
+
+      // The sheet leaving goes back to being a picture of itself, and the one
+      // arriving is put right whatever state an interrupted swap left it in.
+      unring.current = null;
+      ringTo(open.el, from);
+      ringTo(el, stage);
 
       open.el.removeAttribute('data-in');
       open.el.setAttribute('hidden', '');

@@ -1662,6 +1662,34 @@ test.describe('the ladder is the way between stages', () => {
       document.querySelectorAll('.deck-sheet .deck-drawer:not([hidden])').length)).toBe(0);
   });
 
+  test('every sheet keeps its own ring, however many jumps it took to get back', async ({ page }) => {
+    // The ring moves in the DOM on the sheet that is leaving, so that the
+    // press is answered before the reading has finished going. React drew
+    // that sheet ringed on its own stage and will not draw it again, so the
+    // move has to be given back - otherwise a sheet returned to wears the
+    // ring of wherever the reader went from it, while the reading under it is
+    // right. That is invisible on the first jump and wrong on every one after.
+    await ladder(page);
+    const rings = () => page.evaluate(() => [...document.querySelectorAll('.deck-sheet[id^="sheet-st"]')]
+      .map((s) => ({
+        id: s.id,
+        on: [...s.querySelectorAll('.deck-loc-jump[aria-current="true"]')]
+          .map((b) => b.getAttribute('data-stage') ?? ''),
+        lit: [...s.querySelectorAll('.deck-loc-rung[data-on]')].length,
+      })));
+    const own = (r: { id: string; on: string[]; lit: number }) =>
+      r.on.length === 1 && r.on[0] === r.id.split('-').pop() && r.lit === 1;
+
+    for (const i of [0, 3, 1, 0, 3, 2]) {
+      await jumpTo(page, i);
+      const now = await showing(page);
+      // Every ladder in the deck, shown or hidden, rings its own stage.
+      expect((await rings()).filter((r) => !own(r))).toEqual([]);
+      // And the sheet on screen is the one the reader pressed for.
+      expect(now.sheet).toBe(`st2-${i + 1}`);
+    }
+  });
+
   test('the reading leaves in the direction of travel, and arrives from it', async ({ page }) => {
     await ladder(page);
     const swap = () => page.evaluate(() =>
