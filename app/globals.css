@@ -1854,7 +1854,10 @@
   .deck-send-out{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;
     stroke-linecap:round;stroke-linejoin:round;
     color:color-mix(in srgb,var(--text) 56%,transparent)}
-  .deck-send-aside{font-size:15px;color:color-mix(in srgb,var(--text) 62%,transparent)}
+  /* Under the address rather than beside it: it is an instruction about the
+     line above, not a continuation of it. */
+  .deck-send-aside{margin:8px 0 0;font-size:13px;line-height:1.55;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
   /* The link to this page, for the one channel that cannot carry one. */
   .deck-send-copy{margin-top:10px;padding:7px 12px;border-radius:999px;
     border:1px solid color-mix(in srgb,var(--text) 26%,transparent);

@@ -94,9 +94,11 @@ test.describe('the door', () => {
 });
 
 test.describe('what the sheet says', () => {
-  test('it names neither the item nor the stage', async ({ page }) => {
+  test('it names neither the item nor the stage, but the letter does', async ({ page }) => {
     // The whole reason it is one sheet: what it offers is the same wherever
-    // it was opened, so it says nothing about where that was.
+    // it was opened, so nothing a reader can see says where that was. The
+    // mail template is the opposite case and is asserted below - a letter
+    // arrives in an inbox with no page around it.
     await door(page);
     await open(page);
     expect(await page.evaluate(() => {
@@ -128,6 +130,7 @@ test.describe('what the sheet says', () => {
         igText: ig.textContent?.trim(),
         mail: decodeURIComponent(mail.getAttribute('href') ?? ''),
         mailText: mail.textContent?.trim(),
+        aside: s.querySelector('.deck-send-aside')?.textContent,
         fine: s.querySelector('.deck-send-fine')?.textContent,
       };
     });
@@ -140,11 +143,32 @@ test.describe('what the sheet says', () => {
     // The address is the link text, so it survives a mail link that opens
     // nothing - which is most of them inside an in-app browser.
     expect(m.mailText).toContain('info@oct8.co.il');
-    expect(m.mail).toContain('subject=מקור / הערה — היום שאחרי');
-    // The page the reader is on rides in the body.
-    expect(m.mail).toContain('/item/t01/');
-    expect(m.mail).toContain('קישור למקור:');
+    expect(m.aside).toBe('ניתן ללחוץ על הכתובת ליצירת הודעה');
     expect(m.fine).toBe('כל מקור נבדק לפני שהוא מופיע באתר. לא צריך שם או חשבון.');
+  });
+
+  test('the letter is written except for what only the reader knows', async ({ page }) => {
+    await door(page);
+    await open(page);
+    const m = await page.evaluate(() => {
+      const href = document.querySelector<HTMLAnchorElement>('#sheet-send a[href^="mailto:"]')!
+        .getAttribute('href')!;
+      const u = new URL(href);
+      return { to: u.pathname, subject: u.searchParams.get('subject') ?? '',
+        body: u.searchParams.get('body') ?? '', here: location.href };
+    });
+    expect(m.to).toBe('info@oct8.co.il');
+    // The subject says which failure, because the sheet would not.
+    expect(m.subject).toMatch(/^מקור \/ הערה על כשל מס׳ \d+ - .+/);
+    // Three fields and the page, in that order. Empty on purpose: a body with
+    // headings is a form that works in any mail client.
+    expect(m.body.split('\n')).toEqual([
+      'השקופית: 4 · מה עוד לא נעשה',
+      'הטענה: ',
+      'קישור למקור: ',
+      '',
+      `העמוד: ${m.here}`,
+    ]);
   });
 
   test('with no endpoint, nothing in the sheet points at a form', async ({ page }) => {
@@ -162,23 +186,33 @@ test.describe('what the sheet says', () => {
 });
 
 test.describe('the one piece of state', () => {
-  test('the copy chip carries this page\'s link, and says so for a moment', async ({ page, context }) => {
+  test('two chips: the link to paste into a message, and the address itself', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await door(page);
     await open(page);
-    const said = () => page.evaluate(() =>
-      document.querySelector('#sheet-send .deck-send-copy')!.textContent);
-    expect(await said()).toBe('העתקת הקישור לעמוד הזה');
+    const says = () => page.evaluate(() =>
+      [...document.querySelectorAll('#sheet-send .deck-send-copy')].map((c) => c.textContent));
+    const press = async (i: number) => {
+      await page.evaluate((n) =>
+        document.querySelectorAll<HTMLElement>('#sheet-send .deck-send-copy')[n]!.click(), i);
+      await page.waitForTimeout(250);
+    };
+    expect(await says()).toEqual(['העתקת הקישור לשליחת הודעה', 'העתקת כתובת מייל']);
 
-    await page.evaluate(() => document.querySelector<HTMLElement>('#sheet-send .deck-send-copy')!.click());
-    await page.waitForTimeout(250);
-    expect(await said()).toBe('הועתק ✓');
+    // Instagram carries no link, so this is the one the reader pastes in.
+    await press(0);
+    expect(await says()).toEqual(['הועתק ✓', 'העתקת כתובת מייל']);
     expect(await page.evaluate(() => navigator.clipboard.readText()))
       .toBe(await page.evaluate(() => location.href));
 
-    // 1.6s, and then it is a control again rather than a receipt.
+    // 1.6s, and it is a control again rather than a receipt.
     await page.waitForTimeout(1600);
-    expect(await said()).toBe('העתקת הקישור לעמוד הזה');
+    expect(await says()).toEqual(['העתקת הקישור לשליחת הודעה', 'העתקת כתובת מייל']);
+
+    // And where a mail link opens nothing, the address by hand.
+    await press(1);
+    expect(await says()).toEqual(['העתקת הקישור לשליחת הודעה', 'הועתק ✓']);
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('info@oct8.co.il');
   });
 
   test('the sheet learns where it was opened from, and only that', async ({ page }) => {
@@ -186,8 +220,16 @@ test.describe('the one piece of state', () => {
     await open(page);
     expect(await page.evaluate(() => {
       const s = document.getElementById('sheet-send')!;
-      return { name: s.getAttribute('data-from-name'), href: s.getAttribute('data-from-href') };
-    })).toEqual({ name: 'אומת עצמאית', href: await page.evaluate(() => location.href) });
+      return {
+        name: s.getAttribute('data-from-name'),
+        href: s.getAttribute('data-from-href'),
+        slide: s.getAttribute('data-from-slide'),
+      };
+    })).toEqual({
+      name: 'אומת עצמאית',
+      href: await page.evaluate(() => location.href),
+      slide: '4 · מה עוד לא נעשה',
+    });
   });
 });
 
@@ -239,6 +281,6 @@ test.describe('the ways out', () => {
     await open(page);
     expect(await page.evaluate(() =>
       document.querySelector('#sheet-send .deck-send-copy')!.textContent))
-      .toBe('העתקת הקישור לעמוד הזה');
+      .toBe('העתקת הקישור לשליחת הודעה');
   });
 });

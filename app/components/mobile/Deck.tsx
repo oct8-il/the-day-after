@@ -229,7 +229,7 @@ const shutDrawer = (root: ParentNode, d: Element) => {
   chip?.closest(PASSAGE)?.removeAttribute('data-hot');
 };
 
-export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
+export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }: {
   /**
    * §3's path, as three parts rather than a list, because the three behave
    * differently: the root is a link home, the parent is inert until a page
@@ -279,6 +279,8 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
    * the track is inset:0 and the chrome overlays it.
    */
   ground?: ReactNode;
+  /** What the submission sheet's mail template is about (DIA-439). */
+  send?: { leaf: string; title: string };
 }) {
   const track = useRef<HTMLDivElement>(null);
   const foot = useRef<HTMLElement>(null);
@@ -1054,8 +1056,13 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
     // sheet is not. A link and a name, used for the mail body, the copy chip
     // and the way back - and for nothing else (DIA-439).
     if (opener?.hasAttribute('data-from')) {
+      const here = SLIDES[atRef.current];
       el.setAttribute('data-from-href', location.href);
       el.setAttribute('data-from-name', opener.getAttribute('data-from') ?? '');
+      // The slide by its identity and its name, for the mail template's first
+      // line: a letter that says only "something is wrong" is a letter we
+      // cannot act on.
+      el.setAttribute('data-from-slide', here ? `${here.n} · ${here.he}` : '');
     }
     if (leaving.current) { clearTimeout(leaving.current); leaving.current = null; }
     el.removeAttribute('data-out');
@@ -1877,7 +1884,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground }: {
         {sheets}
         {/* One sheet for the whole deck, beside the readings rather than
             inside any of them (§7, DIA-439). */}
-        <Send />
+        <Send {...send} />
       </div>
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -

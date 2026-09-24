@@ -157,6 +157,10 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           of an inert tree (DIA-413). */}
       <Deck
         crumbs={{ root: '7 באוקטובר', parent: parent.he, leaf: gate.leaf }}
+        /* What the submission sheet's mail template says this is about.
+           The sheet itself names neither (DIA-439); a letter addressed to
+           us has to, or we cannot tell which failure it is about. */
+        send={{ leaf: gate.leaf, title: inc.he }}
         slides={[
           <Gate key="gate" {...gate.props} />,
           phone.ov.card, phone.st.card, phone.gap?.card ?? null,

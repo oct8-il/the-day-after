@@ -28,14 +28,34 @@ const ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? '';
 
 const IG = 'https://ig.me/m/oct8.co.il';
 const MAIL = 'info@oct8.co.il';
-const SUBJECT = 'מקור / הערה — היום שאחרי';
+
+/**
+ * The letter the reader sends, already written except for what only they know.
+ *
+ * The sheet names neither the item nor the stage - that is what makes it one
+ * sheet. The letter is the opposite case: it arrives in an inbox with no page
+ * around it, so it has to say which failure it is about and where on it the
+ * reader was standing, or it cannot be acted on. The fields are empty on
+ * purpose; a body with headings is a form that works in any mail client.
+ */
+const subjectOf = (leaf: string, title: string) =>
+  [`מקור / הערה על ${leaf}`, title].filter(Boolean).join(' - ');
+
+const bodyOf = (slide: string, href: string) => [
+  `השקופית: ${slide}`,
+  'הטענה: ',
+  'קישור למקור: ',
+  '',
+  `העמוד: ${href}`,
+].join('\n');
 
 type Stage = 'ways' | 'form' | 'sent';
 
-export function Send() {
+export function Send({ leaf = '', title = '' }: { leaf?: string; title?: string }) {
   const el = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState<Stage>('ways');
-  const [copied, setCopied] = useState(false);
+  /** Which of the two chips has just been pressed, if either. */
+  const [copied, setCopied] = useState<'link' | 'mail' | null>(null);
   const [url, setUrl] = useState('');
   const [note, setNote] = useState('');
   const [say, setSay] = useState<string | null>(null);
@@ -55,8 +75,9 @@ export function Send() {
   const from = () => ({
     href: el.current?.getAttribute('data-from-href') ?? '',
     name: el.current?.getAttribute('data-from-name') ?? '',
+    slide: el.current?.getAttribute('data-from-slide') ?? '',
   });
-  const [origin, setOrigin] = useState({ href: '', name: '' });
+  const [origin, setOrigin] = useState({ href: '', name: '', slide: '' });
 
   // The sheet is reused. Every opening is a first visit: a reader who sent
   // something last time is not looking at their own receipt now.
@@ -70,7 +91,7 @@ export function Send() {
       setSay(null);
       setTried(false);
       setFailed(false);
-      setCopied(false);
+      setCopied(null);
     });
     watch.observe(node, { attributes: true, attributeFilter: ['hidden'] });
     return () => watch.disconnect();
@@ -84,25 +105,24 @@ export function Send() {
 
   useEffect(() => () => { if (copying.current) clearTimeout(copying.current); }, []);
 
-  const copy = useCallback(async () => {
-    const link = origin.href || location.href;
+  const copy = useCallback(async (what: 'link' | 'mail') => {
+    const text = what === 'mail' ? MAIL : (origin.href || location.href);
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(text);
     } catch {
-      // A clipboard the browser will not give us is not worth a message: the
-      // address is on the screen above, and the reader can take it.
+      // A clipboard the browser will not give us is not worth a message: what
+      // it would have copied is on the screen above, and the reader can take
+      // it by hand.
       return;
     }
-    setCopied(true);
+    setCopied(what);
     if (copying.current) clearTimeout(copying.current);
-    copying.current = setTimeout(() => setCopied(false), 1600);
+    copying.current = setTimeout(() => setCopied(null), 1600);
   }, [origin.href]);
 
-  const mail = () => {
-    const link = origin.href || '';
-    const body = `${link}\n\nקישור למקור: \n`;
-    return `mailto:${MAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(body)}`;
-  };
+  const mail = () =>
+    `mailto:${MAIL}?subject=${encodeURIComponent(subjectOf(leaf, title))}`
+    + `&body=${encodeURIComponent(bodyOf(origin.slide, origin.href))}`;
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,21 +196,37 @@ export function Send() {
                   <svg className="deck-send-out" viewBox="0 0 24 24" aria-hidden="true"><path d={OUT} /></svg>
                 </a>
               </p>
-              {/* The link to this page, for a channel that cannot carry one. */}
-              <button type="button" className="deck-send-copy" onClick={copy} data-said={copied ? '' : undefined}>
-                {copied ? 'הועתק ✓' : 'העתקת הקישור לעמוד הזה'}
+              {/* Instagram carries no link of its own, so the reader pastes
+                  one into the message they are about to write. */}
+              <button
+                type="button"
+                className="deck-send-copy"
+                onClick={() => copy('link')}
+                data-said={copied === 'link' ? '' : undefined}
+              >
+                {copied === 'link' ? 'הועתק ✓' : 'העתקת הקישור לשליחת הודעה'}
               </button>
 
               <h2 className="deck-sheet-h">מייל</h2>
               <p>
                 {/* The address is the link text, so it can be read and copied
-                    where a mail link opens nothing. */}
+                    where a mail link opens nothing - which is most of them
+                    inside an in-app browser. */}
                 <a className="deck-send-at" href={mail()}>
                   <span dir="ltr">{MAIL}</span>
                   <svg className="deck-send-out" viewBox="0 0 24 24" aria-hidden="true"><path d={OUT} /></svg>
                 </a>
-                <span className="deck-send-aside"> · הקישור לעמוד כבר בפנים.</span>
               </p>
+              <p className="deck-send-aside">ניתן ללחוץ על הכתובת ליצירת הודעה</p>
+              {/* And where it opens nothing, the address itself. */}
+              <button
+                type="button"
+                className="deck-send-copy"
+                onClick={() => copy('mail')}
+                data-said={copied === 'mail' ? '' : undefined}
+              >
+                {copied === 'mail' ? 'הועתק ✓' : 'העתקת כתובת מייל'}
+              </button>
 
               {/* §7: nothing in the sheet may point at a form that does not
                   exist. Without an endpoint this block is not drawn at all. */}
