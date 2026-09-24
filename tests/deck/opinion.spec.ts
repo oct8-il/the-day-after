@@ -43,7 +43,7 @@ async function open(page: Page, id: string, hash = '#5') {
 const op = '.deck-op';
 
 test.describe('what is on the slide', () => {
-  test('label, three lines, question and a sealed ballot — and no button', async ({ page }) => {
+  test('label, three lines, question, a sealed ballot and one control', async ({ page }) => {
     await open(page, 't01');
     const m = await page.evaluate(() => {
       const card = document.querySelector('.deck-op')!.closest('.deck-card')!;
@@ -56,9 +56,12 @@ test.describe('what is on the slide', () => {
         legend: o.querySelector('.deck-op-poll legend')?.textContent?.trim(),
         circles: o.querySelectorAll('.deck-op-scale i').length,
         fieldset: o.querySelector('.deck-op-poll')?.tagName,
-        // DIA-435 rule 6: no provider is chosen, so the newsletter pill does
-        // not ship dead — the slide ends at the ballot.
-        buttons: card.querySelectorAll('button,a,.deck-more').length,
+        // One control on the card and one only: the pill that opens the
+        // updates sheet (DIA-447). It is drawn only where a newsletter is
+        // configured — nothing ships dead — so what is asserted is that
+        // there is never a second one, whichever way the site was built.
+        controls: [...card.querySelectorAll('button,a')]
+          .map((b) => b.className),
         // §8: the head cites nothing, and there is no sheet behind this card.
         chips: o.querySelectorAll('.chip').length,
         sheet: !!document.querySelector('.deck-sheet[id="sheet-op"]'),
@@ -71,7 +74,8 @@ test.describe('what is on the slide', () => {
     expect(m.legend).toBe('המענה ייפתח בהמשך');
     expect(m.circles).toBe(5);
     expect(m.fieldset).toBe('FIELDSET');
-    expect(m.buttons).toBe(0);
+    expect(m.controls.every((c) => c === 'deck-op-do')).toBe(true);
+    expect(m.controls.length).toBeLessThanOrEqual(1);
     expect(m.chips).toBe(0);
     expect(m.sheet).toBe(false);
   });

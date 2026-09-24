@@ -1,5 +1,6 @@
 import { Annotated } from '@/app/components/Annotated';
 import { plainText } from '@/lib/annotation';
+import { NEWSLETTER } from '@/lib/channels';
 import type { Poll } from '@/lib/data';
 import { cardAndSheet, type Parts } from './Card';
 
@@ -20,11 +21,14 @@ import { cardAndSheet, type Parts } from './Card';
  *   there is no reading sheet here, no drawer and no swipe-up: there is
  *   nothing on this slide for a sheet to continue.
  *
- *   Nothing on it is live. The ballot is drawn, dashed, and answers a tap by
- *   going amber for a moment; it writes nowhere, because a static export has
- *   nowhere to write. The newsletter pill that stood at its foot in the mock
- *   is not here either: no provider is chosen, and DIA-435's own rule is that
- *   the button must not ship dead - so the slide ends at the ballot.
+ *   Nothing on the card is live. The ballot is drawn, dashed, and answers a
+ *   tap by going amber for a moment; it writes nowhere, because a static
+ *   export has nowhere to write. The one thing that does act is the pill at
+ *   the foot, and it opens a sheet rather than doing anything itself - the
+ *   updates sheet, which is the deck's (DIA-447). With no newsletter account
+ *   configured the pill is not drawn at all and the slide ends at the ballot,
+ *   because a control that cannot do what it says should not be on a page
+ *   whose whole subject is promises that were not kept.
  *
  * The three lines are authored per incident in `poll`, and the editorial rule
  * is that they may only say what slides 2 and 3 say, or the pointer lies.
@@ -154,6 +158,25 @@ function Opinion({ poll }: { poll: Poll }) {
           <span>במידה מלאה</span>
         </div>
       </fieldset>
+
+      {/* The card's full-width outlined pill, the same object slide 4's door
+          is. `data-in-place` because a control the reader pressed deliberately
+          gets the fade and not the cover, and `data-from` because the sheet's
+          way back names the slide it was opened from (§5, DIA-439). */}
+      {NEWSLETTER ? (
+        <button
+          type="button"
+          className="deck-op-do"
+          data-open="nl"
+          data-in-place=""
+          data-from={TITLE}
+          aria-haspopup="dialog"
+          aria-controls="sheet-nl"
+        >
+          עדכנו אותי כשהמענה ייפתח
+          <i dir="ltr" aria-hidden="true">←</i>
+        </button>
+      ) : null}
     </div>
   );
 }

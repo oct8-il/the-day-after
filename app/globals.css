@@ -1828,6 +1828,11 @@
      Nothing in it names the item or the stage. The bar wears slide 2's
      neutral pill, and the one thing the sheet knows about where it was opened
      is used in the mail body, the copy chip and the way back. */
+  /* The `.deck-send-*` rules below are the sheet chassis rather than one
+     sheet's skin: §8's updates sheet (DIA-447) is built from the same object
+     and carries the same class, because "built exactly like the submission
+     sheet" is what its design says and two skins would be two answers to one
+     question. What is only §8's is the `.deck-nl-*` block further down. */
   .deck-send .deck-sheet-body{padding-bottom:30px}
   .deck-send-pill{display:inline-flex;align-items:center;padding:4px 12px 5px;border-radius:999px;
     background:color-mix(in srgb,var(--text) 10%,transparent);
@@ -1985,7 +1990,14 @@
      Nothing here is live. The ballot is a real fieldset because that is what
      it is - a set of choices with a caption saying it is not open yet - and
      the dashes are the seal: nothing is dimmed and nothing is blurred. */
-  .deck-op{font-size:15px;line-height:1.6;color:var(--text)}
+  /* At least the frame, so the pill at the foot has somewhere to be pushed
+     to - and no more than the frame's own flow, so that a card which does
+     overflow still says so in `.deck-read`'s scrollHeight, which is what the
+     shedding measurement reads. A `flex:1` child would be clamped to the
+     frame and would overflow itself instead, silently. */
+  .deck-op{min-height:100%;box-sizing:border-box;
+    display:flex;flex-direction:column;
+    font-size:15px;line-height:1.6;color:var(--text)}
 
   /* The three lines: start-aligned body text in the one ink, which is what
      §5 sets a reading in. Nothing is centred here but the question. */
@@ -2049,6 +2061,25 @@
     margin-top:-4px;font-size:12px;opacity:.45;
     color:color-mix(in srgb,var(--text) 56%,transparent)}
 
+  /* The one live control on the slide: the card's full-width outlined pill,
+     the same object slide 4's door is. `margin-top:auto` puts it at the foot
+     whatever is above it - which is where the eye looks for an action, and
+     where it stays when the ballot sheds down to five dots. */
+  .deck-op-do{margin:14px 0 0;box-sizing:border-box;width:100%;
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:auto;padding:12px 18px;border-radius:999px;background:none;
+    border:1px solid color-mix(in srgb,var(--text) 26%,transparent);
+    font:inherit;font-size:15px;font-weight:600;line-height:1;cursor:pointer;
+    color:var(--text)}
+  .deck-op-do i{font-style:normal;font-weight:400;font-size:16px}
+  .deck-op-do:active{background:color-mix(in srgb,var(--text) 8%,transparent)}
+  /* The gap between the ballot and the pill is free space, and `margin-top:
+     auto` gives all of it to the pill - so on a frame with none left the two
+     would touch. This is the floor under that, and only while there is a pill
+     to have one: without it the ballot is the last thing on the card. */
+  .deck-op:has(.deck-op-do) .deck-op-poll{margin-bottom:12px}
+  .deck-op-do{margin-bottom:4px}
+
   /* §8's shedding order, for a frame the copy does not fit. The deck writes
      the step; each one is cumulative, and the lines, the question and the
      legend are in none of them. */
@@ -2064,5 +2095,57 @@
   .deck-op[data-shed="3"] .deck-op-cav{display:none}
   /* 3 - the question drops a size. It never goes. */
   .deck-op[data-shed="3"] .deck-op-q{margin-top:16px;font-size:20px}
+
+  /* ---------------------------------------------------------------- §8
+     The updates sheet (DIA-447), behind slide 5's pill.
+
+     §7's sheet, with three channels in it instead of three ways to send one
+     thing. Everything structural above it is `.deck-send-*`; what is here is
+     the divider, the two rows, and the two lines the mail form needs that a
+     submission form did not. */
+  .deck-nl .deck-send-lead{margin:0 0 16px}
+  .deck-nl-form{display:flex;flex-direction:column}
+  /* §8 sets the form's parts 12px apart, which is tighter than §7's fields:
+     there is one field here, and the pill under it is part of the same act. */
+  .deck-nl-form .deck-send-field{margin-top:0}
+  .deck-nl-form .deck-send-do{margin-top:12px}
+  .deck-nl-form .deck-send-say{margin-top:12px}
+  .deck-nl-fine{margin:2px 0 0;font-size:13px;line-height:1.55;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+  /* A send that left and did not arrive. Drawn rather than said in the line
+     under the field, because the field is not what was wrong. */
+  .deck-nl-fail{margin:12px 0 0;padding:10px 12px;border-radius:10px;
+    background:rgba(224,122,106,.12);
+    font-size:14px;line-height:1.5;color:#efc0b6}
+
+  /* `או`, between the list and the two places that are not a list. */
+  .deck-nl-alt{margin-top:28px}
+  .deck-nl-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;
+    font-size:13px;font-weight:600;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+  .deck-nl-or::before,.deck-nl-or::after{content:"";flex:1;height:1px;
+    background:color-mix(in srgb,var(--text) 12%,transparent)}
+
+  /* Two rows of one shape. The whole row is the link - the caption under the
+     name is part of what is being offered, not a note beside it. */
+  .deck-nl-row{display:flex;align-items:center;gap:12px;padding:12px 0;
+    text-decoration:none;color:var(--text);
+    border-top:1px solid color-mix(in srgb,var(--text) 8%,transparent)}
+  .deck-nl-row:first-of-type{border-top:0;padding-top:4px}
+  .deck-nl-row:active{background:color-mix(in srgb,var(--text) 6%,transparent)}
+  .deck-nl-ic{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;
+    stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+  .deck-nl-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .deck-nl-tx b{font-size:15px;font-weight:700;line-height:1.3}
+  .deck-nl-tx small{font-size:13px;line-height:1.45;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+  .deck-nl-go{flex:none}
+
+  /* Where the form posts. Not `hidden`: a frame that is not rendered is not a
+     reliable submission target, and this one has to load for the receipt to
+     arrive - so it is taken out of the layout instead of out of the box tree. */
+  .deck-nl-sink{position:absolute;width:0;height:0;border:0;
+    opacity:0;pointer-events:none}
 
 }

@@ -75,6 +75,35 @@ if (pool === 'test' && environment !== 'dev') {
 }
 
 /**
+ * The outward channels of §8's updates sheet (DIA-447), derived here for the
+ * same reason the pool is: one rule in one place, handed to the app through
+ * NEXT_PUBLIC_* the way the environment and the pool are. They are read from
+ * plain names so that no account and no invite link is written into the repo.
+ *
+ * Nothing ships dead. With no newsletter username slide 5's button is not
+ * drawn at all and the slide ends at the ballot; with no WhatsApp invite the
+ * WhatsApp row is not drawn. Instagram carries a default because the account
+ * exists and is public either way.
+ *
+ * An http link is refused rather than downgraded: these three are the only
+ * places the item page sends a reader off-site, and one of them is a mail
+ * list's sign-up.
+ */
+const channel = (name, fallback = '') => {
+  const v = (process.env[name] ?? fallback).trim();
+  if (v && !/^https:\/\//.test(v)) {
+    throw new Error(`${name} is ${JSON.stringify(v)}; expected an https:// link.`);
+  }
+  return v;
+};
+
+const channels = {
+  NEXT_PUBLIC_NEWSLETTER_USERNAME: (process.env.NEWSLETTER_USERNAME ?? '').trim(),
+  NEXT_PUBLIC_WHATSAPP_INVITE_URL: channel('WHATSAPP_INVITE_URL'),
+  NEXT_PUBLIC_INSTAGRAM_URL: channel('INSTAGRAM_URL', 'https://instagram.com/oct8.co.il'),
+};
+
+/**
  * `next dev` serves /_next/ only to the origin it was opened from, so a phone
  * on the same wi-fi loading http://<laptop-ip>:3000 gets the HTML and none of
  * the JavaScript - the page renders and nothing on it reacts. Every private
@@ -97,5 +126,5 @@ export default {
   images: { unoptimized: true },
   reactStrictMode: true,
   allowedDevOrigins: devOrigins,
-  env: { NEXT_PUBLIC_ENV: environment, NEXT_PUBLIC_POOL: pool },
+  env: { NEXT_PUBLIC_ENV: environment, NEXT_PUBLIC_POOL: pool, ...channels },
 };

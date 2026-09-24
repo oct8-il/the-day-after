@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Send } from './Send';
+import { Updates } from './Updates';
+import { NEWSLETTER } from '@/lib/channels';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -1970,9 +1972,16 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       <div className="deck-sheets" ref={sheetHost}>
         <div className="deck-dim" aria-hidden="true" />
         {sheets}
-        {/* One sheet for the whole deck, beside the readings rather than
-            inside any of them (§7, DIA-439). */}
+        {/* Two sheets for the whole deck, beside the readings rather than
+            inside any of them (§7, DIA-439; §8, DIA-447). Neither belongs to
+            a slide: one is reached from three of them and the other from a
+            button, and a sheet inside the track is the crossing every fault
+            of these screens came from. */}
         <Send {...send} />
+        {/* Nothing ships dead, and a sheet nothing can open is as dead as a
+            button that opens nothing: with no newsletter account configured
+            neither is drawn (§8, DIA-447). */}
+        {NEWSLETTER ? <Updates /> : null}
       </div>
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -
