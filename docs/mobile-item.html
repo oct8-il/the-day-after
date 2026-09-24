@@ -139,10 +139,14 @@
   .scr-r .hot{background:rgba(233,230,223,.06);box-shadow:0 0 0 6px rgba(233,230,223,.06);border-radius:6px}
   .scr-r .rbtn{margin:12px 0 4px;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-radius:999px;border:1px solid rgba(233,230,223,.26);color:var(--ink);font-size:15px;font-weight:600;line-height:1}
   .scr-r .rbtn i{font-style:normal;font-weight:400;font-size:13px;color:var(--mut)}
-  .scr-r .drw{margin:10px 0 0;padding:12px 14px;border-radius:10px;background:rgba(233,230,223,.07);display:flex;flex-direction:column;gap:5px}
-  .scr-r .drw .dh{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;font-weight:600;color:var(--mut)}
-  .scr-r .drw .dq{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:15px;line-height:1.55;color:var(--ink)}
-  .scr-r .drw .do{font-size:13px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:5px}
+  /* the source drawer, v3.4 (DIA-426): an excerpt - a typed rule, a head line, the quote as a clipping, the way out */
+  .scr-r .drw{margin:12px 0 4px;padding:2px 14px 2px 0;border-inline-start:2px solid var(--tc);display:flex;flex-direction:column;gap:6px}
+  .scr-r .drw+.drw{margin-top:14px}
+  .scr-r .drw .dh{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--tc)}
+  .scr-r .drw .dh b{font-size:14px;color:var(--ink)}
+  .scr-r .drw .dh i{font-style:normal;font-weight:400;color:var(--mut)}
+  .scr-r .drw .dq{font-family:"Frank Ruhl Libre",Georgia,serif;font-style:italic;font-size:16.5px;line-height:1.5;color:#1f1c17;background:#e8e1d3;padding:13px 12px;margin:0;clip-path:polygon(0.0% 2.3px,3.6% 0.5px,7.1% 2.9px,10.7% 0.3px,14.3% 2.7px,17.9% 1.3px,21.4% 1.9px,25.0% 1.8px,28.6% 1.8px,32.1% 1.5px,35.7% 1.9px,39.3% 0.3px,42.9% 2.5px,46.4% 2.9px,50.0% 2.0px,53.6% 0.8px,57.1% 2.8px,60.7% 3.3px,64.3% 2.8px,67.9% 1.4px,71.4% 3.5px,75.0% 0.2px,78.6% 3.3px,82.1% 1.0px,85.7% 2.0px,89.3% 0.4px,92.9% 2.3px,96.4% 2.9px,100.0% 2.1px,100.0% calc(100% - 2.6px),96.2% calc(100% - 0.5px),92.3% calc(100% - 3.1px),88.5% calc(100% - 1.5px),84.6% calc(100% - 2.0px),80.8% calc(100% - 3.4px),76.9% calc(100% - 2.3px),73.1% calc(100% - 2.6px),69.2% calc(100% - 3.3px),65.4% calc(100% - 1.8px),61.5% calc(100% - 2.8px),57.7% calc(100% - 0.9px),53.8% calc(100% - 3.0px),50.0% calc(100% - 2.8px),46.2% calc(100% - 2.3px),42.3% calc(100% - 1.6px),38.5% calc(100% - 2.8px),34.6% calc(100% - 1.1px),30.8% calc(100% - 2.5px),26.9% calc(100% - 2.4px),23.1% calc(100% - 2.1px),19.2% calc(100% - 0.2px),15.4% calc(100% - 1.9px),11.5% calc(100% - 1.9px),7.7% calc(100% - 2.4px),3.8% calc(100% - 2.2px),0.0% calc(100% - 2.8px))}
+  .scr-r .drw .do{font-size:12.5px;font-weight:600;color:var(--mut);display:inline-flex;align-items:center;gap:5px}
   .scr-r .sbar{flex:none;box-sizing:border-box;height:var(--bar,82.8px);display:grid;grid-template-columns:44px 1fr 44px;align-items:center;padding:0 10px;border-bottom:1px solid rgba(233,230,223,.12)}
   .scr-r .sbar .x{grid-column:3;grid-row:1;justify-self:end;width:44px;height:44px;display:grid;place-items:center;color:var(--ink)}
   .scr-r .sbar .x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
@@ -160,6 +164,30 @@
   .scr-r .sthead h2{margin:0;font-size:24px;line-height:1.25;font-weight:700;color:var(--ink);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .scr-r .sthead em{font-style:normal;font-size:12.5px;font-weight:600;color:#e0a44a}
   .scr-r .sthead .dt{font-size:13px;color:var(--mut);margin-top:3px}
+  .scr-r .gbody{flex:1;min-height:0;display:flex;flex-direction:column}
+  .scr-r .gdef{position:relative;margin:auto 0;padding:14px 16px 15px;border-radius:14px;border:1px dashed rgba(233,230,223,.26);background:rgba(233,230,223,.04)}
+  .scr-r .rd .gdef p{font-size:15px;line-height:1.6;color:rgba(233,230,223,.62)}
+  .scr-r .rd .gdef p+p{margin-top:6px}
+  .scr-r .gmark{display:flex;align-items:center;justify-content:center;gap:14px;padding-bottom:6px}
+  .scr-r .gmark .hg{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none;background:rgba(217,165,79,.14)}
+  .scr-r .gmark .hg svg{width:24px;height:24px;fill:none;stroke:#d9a54f;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .scr-r .gmark .age{display:flex;flex-direction:column;gap:4px}
+  .scr-r .gmark b{display:block;text-align:start;font-size:34px;line-height:1;font-weight:700;color:var(--ink)}
+  .scr-r .gmark .age span{font-size:13px;line-height:1.2;color:var(--mut)}
+  .scr-r .rbtn.act i{font-size:16px;color:var(--ink)}
+  /* slide 5, v3.6 (DIA-394): the MVP in the reading system */
+  .scr-r .oplines p{font-size:17px;line-height:1.6}
+  .scr-r .oplines p+p{margin-top:10px}
+  .scr-r .oplines p.cav{color:var(--mut);font-size:15px}
+  .scr-r .ref{display:inline-flex;align-items:center;gap:5px;margin-inline-start:6px;padding:2px 8px 2px 7px;border-radius:12px;background:rgba(233,230,223,.10);font-size:11.5px;font-weight:600;color:rgba(233,230,223,.82);white-space:nowrap;vertical-align:middle;line-height:1.5}
+  .scr-r .ref .ut{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .scr-r .opq{margin:22px 0 0;font-size:22px;line-height:1.35;font-weight:700;text-align:center;text-wrap:balance;color:var(--ink)}
+  .scr-r .opoll{margin:22px 0 0;padding:14px 16px 16px;border:1px dashed rgba(233,230,223,.30);border-radius:14px;min-inline-size:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .scr-r .opoll legend{margin:0 auto;padding:0 10px;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;color:rgba(233,230,223,.78)}
+  .scr-r .opoll legend svg{width:16px;height:16px;fill:none;stroke:#d9a54f;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .scr-r .opoll .scale{display:flex;gap:10px;direction:ltr;opacity:.45}
+  .scr-r .opoll .scale i{width:52px;height:52px;border-radius:50%;border:1px dashed rgba(233,230,223,.5);display:grid;place-items:center;font-style:normal;font-size:19px;color:var(--ink)}
+  .scr-r .opoll .anch{width:100%;display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:-4px;opacity:.45}
   .scr-r .loc{position:absolute;right:14px;top:96px;display:flex;flex-direction:column;gap:9px;z-index:3}
   .scr-r .loc i{width:5px;height:26px;border-radius:2px;opacity:.8;display:block}
   .scr-r .loc i.un{visibility:hidden}
@@ -175,7 +203,7 @@
   <div class="kicker">היום שאחרי · design spec</div>
   <h1>The mobile item page</h1>
   <p class="lede">The item page on a phone is a slideshow post of six slides. This is what each slide holds, what the chrome does, how it behaves under a finger, and which rules the data has to satisfy for any of it to render.</p>
-  <p class="meta">v3.2 · 21 September 2026 · the reading system: two sizes, one ink, quiet citations · no slide scrolls · slide 6 ships version A · <span class="mono">DIA-360</span></p>
+  <p class="meta">v3.10 · 23 September 2026 · the reading system: two sizes, one ink, quiet citations · no slide scrolls · slide 6 ships version A · <span class="mono">DIA-360</span></p>
 </header>
 
 <nav class="toc">
@@ -527,15 +555,8 @@
       <p class="lead">מערכת ההתרעה לאזרחים בעוטף עזה ידעה לומר דבר אחד: רקטה בדרך. <mark>לחדירה קרקעית לא הייתה לה מילה</mark> — ולכן גם לא הייתה דרך להורות לתושבים מה לעשות.</p>
       <p>המערך נבנה סביב איום שמגיע מהאוויר: זמן התרעה ידוע מראש, הוראה אחת — כניסה למרחב מוגן — וערוץ שידור אחד לכל היישוב.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg></span></p>
       <p class="hot">התרעת „חדירת מחבלים“ לא הייתה רעיון חדש: היא פעלה מ־2022 ביישובים ביהודה ושומרון, ופיקוד העורף ביקש להתקין אותה גם ביישובי העוטף. הבקשה לא יושמה.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg><b dir="ltr" style="font-weight:600">+1</b></span></p>
-      <div class="drw">
-          <div class="dh"><span>עיתונות · כל רגע</span><span class="mono">19.10.2023</span></div>
-          <div class="dq">„כבר במאי 2022 פיקוד העורף התכוון להתקין את המערכת ביישובי עוטף עזה, אך הבקשה לא יושמה“</div>
-          <div class="do">כל רגע <span style="font-size:11px">↗</span></div>
-          <div style="border-top:1px solid rgba(233,230,223,.12);margin-top:4px;padding-top:9px;display:flex;flex-direction:column;gap:5px">
-            <div class="dh"><span>פיקוח · נציב תלונות הציבור</span><span class="mono">19.12.2023</span></div>
-            <div class="dq">„ההתרעה לחדירת מחבלים לא הותקנה ביישובי העוטף עד למועד האירוע“</div>
-            <div class="do">נציב תלונות הציבור <span style="font-size:11px">↗</span></div>
-          </div>
+      <div class="drw" style="--tc:#d29a7c"><div class="dh"><b>כל רגע</b>·<span>עיתונות</span><i dir="ltr">19.10.2023</i></div><div class="dq">„כבר במאי 2022 פיקוד העורף התכוון להתקין את המערכת ביישובי עוטף עזה, אך הבקשה לא יושמה“</div><div class="do">לפתיחת המקור <span dir="ltr">↗</span></div></div>
+      <div class="drw" style="--tc:#b9a6d6"><div class="dh"><b>נציב תלונות הציבור</b>·<span>פיקוח</span><i dir="ltr">19.12.2023</i></div><div class="dq">„ההתרעה לחדירת מחבלים לא הותקנה ביישובי העוטף עד למועד האירוע“</div><div class="do">לפתיחת המקור <span dir="ltr">↗</span></div></div>
         </div>
       <p style="margin-top:20px">גם ההנחיה עצמה נכתבה לרקטה: היכנסו למרחב מוגן ושהו בו עשר דקות — הוראה שנועדה לאיום שחולף מעצמו.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg></span></p>
       <h3>מה המערכת לא ידעה לעשות</h3>
@@ -570,9 +591,11 @@
 <table>
   <tr><th></th><th>The reading fits</th><th>The reading overruns</th></tr>
   <tr><td>The cut</td><td>None. Nothing is faded and nothing is hidden</td><td>A mask over the <strong>last ~110px</strong> of the reading, fading to nothing 8px from the bottom — so the cut lands mid-line and reads as "there is more", not as an ending</td></tr>
-  <tr><td>The button</td><td><span class="he">המקורות</span></td><td><span class="he">יותר מידע</span>, with the source count beside it — <span class="he">7 מקורות</span> — in the muted ink at 13px/400</td></tr>
-  <tr><td>What the button opens</td><td>The sheet, aligned to the card's first line — the sources begin just under a reading this short</td><td>The sheet, aligned to the card's first line</td></tr>
+  <tr><td>The button row</td><td><strong>Two half-width pills</strong>, 8px apart, both centred: <span class="he">המקורות</span> and <span class="he">הגישו מקור</span>. No count, no arrow</td><td><strong>One full-width pill</strong>: <span class="he">יותר מידע</span>, with the source count beside it — <span class="he">7 מקורות</span> — in the muted ink at 13px/400</td></tr>
+  <tr><td>What it opens</td><td><span class="he">המקורות</span>: the sheet, aligned to the card's first line — the sources begin just under a reading this short. <span class="he">הגישו מקור</span>: the submission sheet of §7</td><td>The sheet, aligned to the card's first line</td></tr>
+  <tr><td>Submitting a source</td><td>From the slide, by the second pill</td><td>From the end of the reading sheet — the same pill, full width, after the sources and before <span class="he">סוף הקריאה</span></td></tr>
 </table>
+<div class="note"><strong>The shared control, <span class="mono">DIA-436</span>.</strong> <span class="he">הגישו מקור</span> is one object — the outlined pill — on slides 2, 3 and 4, and it opens the one submission sheet of §7 from wherever it was pressed. On the reading slides its place follows the card's state: a card that fits has room for it beside <span class="he">המקורות</span>, and its reader never needs the sheet; a card that is cut keeps its single <span class="he">יותר מידע</span> pill, and its reader meets the control where they end up — at the foot of the sheet, after the sources. Both copies always exist; which one the reader sees is decided by the card. Slide 4 keeps its full pill (§7). Slide 6 carries a quiet line instead (§9). The submission sheet returns the reader to the page it was opened from, by name.</div>
 <div class="note"><strong>This is what closes the fit problem.</strong> Slide 2's drawn density needs 474px and an iPhone SE offers 405 (measured, 20 September). The answer is no longer to let the column scroll, and it was never to shrink the type: <strong>the card takes what the frame gives it and the rest continues in the sheet.</strong> Every phone from the 600 guard upward shows the same design at the same size; what changes is how much of the reading is on the first screen.</div>
 
 <h3 id="sheet">The reading sheet</h3>
@@ -591,6 +614,14 @@
   <li><strong>From a tap on a passage it covers, from the bottom up</strong> — an opaque panel with a shadowed leading edge, the slide dimming behind it. The reader did not ask to change mode, so the cover is what says the mode changed.</li>
   <li><strong>Either way it lands aligned</strong>: the sheet opens unscrolled and every line sits where it sat on the card. Keeping the text still "helps with orientation much more than scrolling" — which is why the sheet does not scroll itself to the tapped passage. It leaves the way it came, and reduced motion makes both instant.</li>
 </ul>
+<h4>Under a finger</h4>
+<p>Four gestures, all accelerators — the button, the × and Back remain, and nothing becomes gesture-only. <span class="mono">DIA-427</span>; the thresholds and curves are there and in <code>docs/mobile-item-ux.html</code>.</p>
+<ul>
+  <li><strong>Swipe up on the slide opens the sheet, on the move.</strong> On slides 2 and 4 (slide 3's vertical axis is the stage stack's). The card lifts a little with the finger; at 40px the sheet appears in place, aligned, <em>while the finger is still down</em>, and the same finger goes on scrolling it, with momentum on release.</li>
+  <li><strong>Swipe up at the end closes it.</strong> Scrolled to the end, dragging on moves the sheet up and fades it; past 90px it dissolves upward, short of that it springs back. A <span class="he">סוף הקריאה</span> line marks the end so the gesture has a place to exist.</li>
+  <li><strong>A sideways swipe closes it from anywhere</strong>, either direction, moving with the finger and fading; same threshold, same dissolve.</li>
+  <li><strong>Swipe down at the top closes it</strong>, 1:1 and without fading — the cover leaving the way it came. Past 110px it slides out.</li>
+</ul>
 <div class="note"><strong>Why a sheet and not a scrolling slide.</strong> Reading inside the slide put a vertical scroller inside a horizontal track, and every fault of these screens came from that crossing: a casual scroll read as a swipe, the snap fighting the reader at a stage boundary, the stack naming the wrong stage mid-read (<span class="mono">DIA-383</span>). An axis lock was tried and reverted — owning an axis means owning its inertia. A sheet above the track has no horizontal ancestor, so there is nothing left to referee. The gestures are <span class="mono">DIA-413</span> in <code>docs/mobile-item-ux.html</code>.</div>
 
 <h3>Citations</h3>
@@ -604,13 +635,14 @@
 <p><strong>The drawer lives in the sheet.</strong> On the card a passage tap opens the sheet <em>with that passage's drawer already open</em>; inside the sheet a tap toggles it. This is the one interaction shared by every slide that cites — 2, 3 and 5 — and it replaced the earlier ruling that a chip moves the sources carousel, which slide 5, having citations and no carousel, could never honour. <span class="mono">DIA-386</span></p>
 <table>
   <tr><th>Part</th><th>What it is</th></tr>
-  <tr><td>Ground</td><td><code>rgba(233,230,223,.07)</code>, radius 10. <strong>Colourless</strong> — the type-colour edge went with the named chip; what ties the drawer to its passage is the passage staying tinted above it</td></tr>
-  <tr><td>Head</td><td>Type name · outlet or document · date at the far end in mono, all in the muted ink</td></tr>
-  <tr><td>Quote</td><td>Frank Ruhl Libre 15px/1.55, <strong>unclamped</strong>. The carousel clamps to two lines because it is a strip to skim; the drawer is where a reader went to read it. The schema caps a quote at 280 characters, so it is bounded without clamping</td></tr>
-  <tr><td>The way out</td><td>The outlet name and an arrow. <strong>Not the whole block</strong> — a wrapping link would make the quote unselectable, and a quote is the thing a reader copies</td></tr>
-  <tr><td>Several claims</td><td>A <code>+N</code> passage stacks its claims in one drawer, hairline between, each with its own head, quote and way out. They appear <strong>in the order the author wrote them in the cite</strong>, not the carousel's order: the drawer answers what this passage rests on, in the order it was argued</td></tr>
-  <tr><td>No quote</td><td><code>quote</code> is optional. The drawer still opens, still names the source and still gets the reader out to it, and says the quote is missing rather than pretending the source is</td></tr>
+  <tr><td>Shape</td><td><strong>No box.</strong> An excerpt set into the reading, 12px under its passage: a <strong>2px rule in the source-type colour</strong> down the start edge with 14px after it, and three things stacked at 6px. This rule is the one place the type colour touches the reading; what ties the excerpt to its passage is the passage staying tinted above it</td></tr>
+  <tr><td>Head</td><td>Outlet or document in bold ink 14px · the type name 12.5px in the type colour · the date 12.5px muted, <code>dir=ltr</code></td></tr>
+  <tr><td>Quote</td><td><strong>A newspaper clipping.</strong> Paper <code>#e8e1d3</code>, ink <code>#1f1c17</code> — the desktop clip's paper and ink, black not grey. Frank Ruhl Libre <em>italic</em> 16.5px/1.5 (the face has no italic cut; the browser's slant is accepted), the quotation marks kept, no drop cap, no rules. Padding 13px 12px, sides straight, and <strong>a torn edge top and bottom</strong> about 3px deep — irregular but fixed, one <code>clip-path</code> polygon the same on every render (the CSS above carries it). <strong>Unclamped</strong>: the schema caps a quote at 280 characters, so it is bounded without clamping</td></tr>
+  <tr><td>The way out</td><td><span class="he">לפתיחת המקור ↗</span>, 12.5px/600 muted. <strong>Not the whole block</strong> — a wrapping link would make the quote unselectable, and a quote is the thing a reader copies</td></tr>
+  <tr><td>Several claims</td><td>A <code>+N</code> passage stacks one excerpt per claim, 14px apart, each with its own rule, head, clipping and way out. They appear <strong>in the order the author wrote them in the cite</strong>, not the carousel's order: the drawer answers what this passage rests on, in the order it was argued</td></tr>
+  <tr><td>No quote</td><td><code>quote</code> is optional. The excerpt still opens with its rule, head and way out, and says the quote is missing rather than pretending the source is</td></tr>
 </table>
+<p class="mono" style="font-size:12px;color:var(--mut)">DIA-426 · settled 22 September after seven rounds on a phone: four directions (excerpt, card, tray, popover) → the excerpt; the clipping on the quote only; italic; a fade tried and replaced by the tear; a schematic zigzag tried against the natural tear; grey tried at 26–40% and replaced by black.</p>
 <h4>The drawer's behaviour</h4>
 <ul>
   <li><strong>One at a time.</strong> Opening a drawer closes any other. Two open drawers push the body twice and the reader loses the line they were on.</li>
@@ -688,15 +720,8 @@
       <p class="lead">מערכת התרעת החדירה הותקנה ביישובי העוטף, <mark>והאזעקה לחדירה שונה מזו שלרקטה</mark>.</p>
       <p>פיקוד העורף דיווח על השלמת ההתקנה בכלל יישובי הקו הראשון, לרבות הוראות התגוננות נפרדות לכל אחד משני האיומים.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg></span></p>
       <p class="hot">ההוראה לחדירה — לנעול, להחשיך, להסתתר — מועברת כיום בערוץ נפרד, ולא באותה אזעקה.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg><b dir="ltr" style="font-weight:600">+1</b></span></p>
-      <div class="drw">
-          <div class="dh"><span>רשמי · פיקוד העורף</span><span class="mono">14.08.2025</span></div>
-          <div class="dq">„ההוראה לאיום החדירה מועברת בערוץ נפרד מזה של אזעקת הרקטות, בכלל יישובי הקו הראשון“</div>
-          <div class="do">פיקוד העורף <span style="font-size:11px">↗</span></div>
-          <div style="border-top:1px solid rgba(233,230,223,.12);margin-top:4px;padding-top:9px;display:flex;flex-direction:column;gap:5px">
-            <div class="dh"><span>עיתונות · ynet</span><span class="mono">02.09.2025</span></div>
-            <div class="dq">„המערכת הופעלה לראשונה בתרגיל יישובי בחודש אוגוסט“</div>
-            <div class="do">ynet <span style="font-size:11px">↗</span></div>
-          </div>
+      <div class="drw" style="--tc:#b3ada4"><div class="dh"><b>פיקוד העורף</b>·<span>רשמי</span><i dir="ltr">14.08.2025</i></div><div class="dq">„ההוראה לאיום החדירה מועברת בערוץ נפרד מזה של אזעקת הרקטות, בכלל יישובי הקו הראשון“</div><div class="do">לפתיחת המקור <span dir="ltr">↗</span></div></div>
+      <div class="drw" style="--tc:#d29a7c"><div class="dh"><b>ynet</b>·<span>עיתונות</span><i dir="ltr">02.09.2025</i></div><div class="dq">„המערכת הופעלה לראשונה בתרגיל יישובי בחודש אוגוסט“</div><div class="do">לפתיחת המקור <span dir="ltr">↗</span></div></div>
         </div>
       <ul>
         <li><strong>מה שהותקן:</strong> אותה מערכת שפעלה מ־2022 ביישובי יהודה ושומרון, באותה תצורה.<span class="cite"><svg viewBox="0 0 24 24"><path d="M10.5 13.5a4.5 4.5 0 0 0 6.4 0l2-2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1"/><path d="M13.5 10.5a4.5 4.5 0 0 0-6.4 0l-2 2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1"/></svg></span></li>
@@ -776,7 +801,7 @@
 <div class="note"><strong>A reached stage with no written overview falls back to its claims</strong> — quote, source and date rendered directly under the head group, carousel unchanged. An overview improves the page; it does not gate it, and every published item renders from the first build.</div>
 
 <h4>Locator</h4>
-<p>The gate's ladder reused, minus the labels — the page heading already names the stage. <strong>It stays visible, and stays an indicator, while the reading sheet is open.</strong></p>
+<p>The gate's ladder reused, minus the labels — the page heading already names the stage. <strong>It stays visible while the reading sheet is open — and there it becomes the way between stages.</strong></p>
 <table>
   <tr><th>Property</th><th>Value</th></tr>
   <tr><td>Rungs</td><td>Five, 5 × 26px, radius 2, gap 9px, stage colours at 80% when unmarked; an unreached rung is a <strong>solid</strong> grey bar at 40% ink, as on the gate</td></tr>
@@ -786,7 +811,8 @@
   <tr><td>Viewed stage</td><td>Ring in that stage's own colour, 2px. <strong>The only ring on the locator</strong></td></tr>
   <tr><td>Current stage</td><td>Nothing. Splitting reached from unreached made the mark redundant: on slide 3 the current stage is always the last rung drawn, and on slide 4 it is not drawn at all. A second ring that says what the reader can already count is a second ring to mistake for the first</td></tr>
   <tr><td>Stage 6 <span class="he">(נסוג)</span></td><td>A sixth rung, drawn only when the item has reached it. The ladder is five slots on every other item</td></tr>
-  <tr><td>Tapping</td><td>None — the rungs are indicators. Navigation is the vertical swipe, the back-to-current pill, and jump mode (§3)</td></tr>
+  <tr><td>Tapping, on the slide</td><td>None — the rungs are indicators. Navigation is the vertical swipe, the back-to-current pill, and jump mode (§3)</td></tr>
+  <tr><td>Tapping, in the sheet</td><td><strong>Tap-to-jump, and the only way between stages</strong> (<span class="mono">DIA-430</span>). A tap on a reached rung swaps the sheet to that stage's reading without leaving it: any drawer closes, the ring moves, the reading fades out with a 14px nudge in the direction of the jump and the new stage fades in unscrolled, the bar's chip takes the new stage's tag, and the stack follows underneath without animating — so closing the sheet lands on the stage that was read. The ladder looks exactly as it does on the slide; each rung's target is the full 35px pitch tall and reaches 24px into the column and 14px to the edge, and the rung widens to 1.6× while pressed. Unreached rungs stay hidden, so nothing is tappable that has nothing to read. Slide 4 has no sheet (§7), so this applies to slide 3</td></tr>
 </table>
 <pre><code>/* ring, offset by 2px — a hugging border in the stage's own colour
    is invisible against the same-coloured fill */
@@ -799,111 +825,54 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed */</co
 <p>The same component as slide 3 with the opposite filter: the stages the item has <strong>not</strong> reached, opening at the next one. Everything structural is inherited — head group, locator geometry, footer, and the paged stack (§6) — so this section only records what differs.</p>
 <div class="shots">
   <figure class="shot">
-    <div class="vp"><div class="scr scr-3"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
-
-  <div style="padding:16px 20px 0;font-size:12.5px;letter-spacing:0.1px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap">
+    <div class="vp"><div class="scr scr-r"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column"><div style="padding:16px 20px 0;font-size:12.5px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap;flex:none">
     <span>7 באוקטובר</span><span style="opacity:0.45">›</span><span>העורף האזרחי</span><span style="opacity:0.45">›</span><span style="color:#e9e6df;font-weight:600">כשל מס׳ 13</span>
+  </div><div class="loc">
+    <i class="un"></i><i class="un"></i><i class="un"></i><i class="un"></i><i class="on" style="background:rgba(233,230,223,.4);color:rgba(233,230,223,.55);visibility:visible"></i>
   </div>
-  <div style="position:absolute;top:112px;right:14px;display:flex;flex-direction:column;gap:9px;align-items:flex-end">
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;opacity:0.85;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c18e67;opacity:0.85;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c1a967;opacity:0.85;"></div></div>
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#91c167;"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
-  </div>
-  <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
-    <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה עוד לא נעשה</div>
-    <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:13px;border-bottom:1px solid rgba(233,230,223,0.14);margin-bottom:4px">
-      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px solid rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">5 · אומת עצמאית</span></div>
-      <div style="font-size:13.5px;line-height:1.4;color:rgba(233,230,223,0.74)">גוף שאינו הגוף האחראי בדק את התיקון בשטח ופרסם ממצאים</div>
-      <div style="font-size:12px;color:rgba(233,230,223,0.5)">טרם תועד</div>
+  <div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:26px 36px 0 20px">
+    <div class="rlab">מה עוד לא נעשה</div>
+    <div class="sthead">
+      <div><h2>אומת עצמאית</h2><div class="dt">טרם תועד</div></div>
     </div>
-    <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:15px;font-size:15px;line-height:1.62;color:rgba(233,230,223,0.88)">
-      <p style="font-size:17px;line-height:1.45;color:#e9e6df;max-width:300px"><b>לא תועד אימות בלתי תלוי של היישום.</b></p>
-      <p style="max-width:300px">מבקר המדינה, ועדת חקירה, מחקר או עיתונות — כל אחד מהם נחשב. עד שאחד מהם יפרסם בדיקה, השלב נשאר ריק.</p>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:6px">
-        <div style="width:58px;height:58px;border-radius:50%;background:rgba(217,165,79,0.14);display:flex;align-items:center;justify-content:center">
-          <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#d9a54f;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h10"></path><path d="M7 21h10"></path><path d="M8 3v4l4 5 4-5V3"></path><path d="M8 21v-4l4-5 4 5v4"></path></svg>
-        </div>
-        <div style="font-size:38px;font-weight:700;line-height:1.05;color:rgba(233,230,223,0.92)">1,053</div>
-        <div style="font-size:13px;color:rgba(233,230,223,0.62)">ימים מאז שהיישום דווח</div>
-      </div>
-      <div style="max-width:320px;border:1px dashed rgba(233,230,223,0.3);border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(233,230,223,0.04);margin-top:4px">
-        <div style="font-size:14px;font-weight:700;color:#e9e6df">יודעים אחרת?</div>
-        <div style="font-size:13px;line-height:1.5;color:rgba(233,230,223,0.75)">אם פורסמה בדיקה כזאת ולא מצאנו אותה — הגישו את המקור, והשלב ישתנה.</div>
-        <div style="margin-top:2px;padding:5px 12px;border-radius:14px;background:rgba(233,230,223,0.12);font-size:12.5px;font-weight:600;color:#e9e6df">הגישו מקור</div>
-      </div>
+    <div class="gbody rd">
+      <p class="lead">לא תועד אימות בלתי תלוי של היישום.</p>
+      <div class="gdef" style="top:7px"><p>לא מצאנו תיעוד לכך שגוף שאינו הגוף המבצע בדק את התיקון בשטח ומצא שהוא פועל.</p><p>עד אז היישום נשען על דיווח עצמי בלבד — מי שתיקן הוא גם מי שמעיד שתוקן.</p></div>
+      <div class="gmark"><span class="hg"><svg viewBox="0 0 24 24"><path d="M7 3h10M7 21h10M8 3v4l4 5 4-5V3M8 21v-4l4-5 4 5v4"/></svg></span><div class="age"><b>1,053</b><span>ימים מאז שהיישום דווח</span></div></div>
     </div>
-    <div style="margin-top:auto"></div>
+    <div class="rbtn act"><span>יודעים אחרת? הגישו מקור</span><i>←</i></div>
   </div>
-
-  <div style="display:flex;justify-content:flex-start;padding:0 20px 2px">
-    <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:14px;border:1px solid rgba(233,230,223,0.22);background:rgba(233,230,223,0.06);font-size:11.5px;color:rgba(233,230,223,0.78);white-space:nowrap"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 5l7 7-7 7"></path></svg>חזרה לשלב הנוכחי</span>
-  </div>
-  <div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:16px 0 14px">
-    <div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;gap:10px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);font-size:11.5px;color:rgba(233,230,223,0.7)">
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:start"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"></path></svg>מה נעשה מאז</span>
+  <div style="display:flex;justify-content:center;gap:7px;padding:18px 0 14px;flex:none"><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div></div><div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);flex:none;font-size:11.5px;color:rgba(233,230,223,0.7)">
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:start"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"/></svg>מה נעשה מאז</span>
     <span></span>
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:end">דעת הציבור<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"></path></svg></span>
-  </div>
-
-</div></div></div>
-    <figcaption class="cap"><b>Slide 4 · one stage left</b><span class="he">כשל מס׳ 13</span> reached stage 4, so this slide holds a single page. Only the fifth rung is drawn, still in the fifth slot. No centre arrows — there is nothing to scroll. Stage 5, so it carries the line naming who would count as a checking body.</figcaption>
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:end">דעת הציבור<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"/></svg></span>
+  </div></div></div></div>
+    <figcaption class="cap"><b>Slide 4 · one stage left</b><span class="he">כשל מס׳ 13</span> reached stage 4, so this slide holds a single page. Only the fifth rung is drawn, still in the fifth slot. No centre arrows — there is nothing to page. Label, stage name, <span class="he">טרם תועד</span>; the lead; the dashed definition box at the centre of the screen; the age at the foot; the button. No back pill.</figcaption>
   </figure>
   <figure class="shot">
-    <div class="vp"><div class="scr scr-1"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
-
-  <div style="padding:16px 20px 0;font-size:12.5px;letter-spacing:0.1px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap">
+    <div class="vp"><div class="scr scr-r"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column"><div style="padding:16px 20px 0;font-size:12.5px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap;flex:none">
     <span>7 באוקטובר</span><span style="opacity:0.45">›</span><span>העורף האזרחי</span><span style="opacity:0.45">›</span><span style="color:#e9e6df;font-weight:600">כשל מס׳ 20</span>
+  </div><div class="loc">
+    <i class="un"></i><i class="on" style="background:rgba(233,230,223,.4);color:rgba(233,230,223,.55);visibility:visible"></i><i style="background:rgba(233,230,223,.4);visibility:visible;opacity:.55"></i><i style="background:rgba(233,230,223,.4);visibility:visible;opacity:.55"></i><i style="background:rgba(233,230,223,.4);visibility:visible;opacity:.55"></i>
   </div>
-  <div style="position:absolute;top:112px;right:14px;display:flex;flex-direction:column;gap:9px;align-items:flex-end">
-    <div style="position:relative;visibility:hidden;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:#c17367;"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);box-shadow:0 0 0 2px #121519,0 0 0 4px rgba(233,230,223,0.55);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
-    <div style="position:relative;"><div style="box-sizing:border-box;height:26px;width:5px;border-radius:2px;margin-inline-start:auto;background:rgba(233,230,223,0.4);"></div></div>
-  </div>
-  <div style="padding:22px 36px 0 20px;display:flex;flex-direction:column;gap:13px;flex:1;min-height:0">
-    <div style="font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55);margin-bottom:-6px">מה עוד לא נעשה</div>
-    <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:13px;border-bottom:1px solid rgba(233,230,223,0.14);margin-bottom:4px">
-      <div style="margin-bottom:2px;display:flex;align-items:flex-end;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:3px;border:1.5px solid rgba(233,230,223,0.42);color:rgba(233,230,223,0.7);font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap">2 · הוכר</span></div>
-      <div style="font-size:13.5px;line-height:1.4;color:rgba(233,230,223,0.74)">הגוף האחראי הודה בפומבי שהכשל התרחש</div>
-      <div style="font-size:12px;color:rgba(233,230,223,0.5)">טרם תועד</div>
+  <div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:26px 36px 0 20px">
+    <div class="rlab">מה עוד לא נעשה</div>
+    <div class="sthead">
+      <div><h2>הוכר</h2><div class="dt">טרם תועד</div></div>
     </div>
-    <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:15px;font-size:15px;line-height:1.62;color:rgba(233,230,223,0.88)">
-      <p style="font-size:17px;line-height:1.45;color:#e9e6df;max-width:300px"><b>לא תועדה הודאה פומבית של הגוף האחראי בכשל.</b></p>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:7px;padding-top:6px">
-        <div style="width:58px;height:58px;border-radius:50%;background:rgba(217,165,79,0.14);display:flex;align-items:center;justify-content:center">
-          <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#d9a54f;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round"><path d="M7 3h10"></path><path d="M7 21h10"></path><path d="M8 3v4l4 5 4-5V3"></path><path d="M8 21v-4l4-5 4 5v4"></path></svg>
-        </div>
-        <div style="font-size:38px;font-weight:700;line-height:1.05;color:rgba(233,230,223,0.92)">1,071</div>
-        <div style="font-size:13px;color:rgba(233,230,223,0.62)">ימים מאז שהכשל זוהה</div>
-      </div>
-      <div style="max-width:320px;border:1px dashed rgba(233,230,223,0.3);border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(233,230,223,0.04);margin-top:4px">
-        <div style="font-size:14px;font-weight:700;color:#e9e6df">יודעים אחרת?</div>
-        <div style="font-size:13px;line-height:1.5;color:rgba(233,230,223,0.75)">אם פורסמה בדיקה כזאת ולא מצאנו אותה — הגישו את המקור, והשלב ישתנה.</div>
-        <div style="margin-top:2px;padding:5px 12px;border-radius:14px;background:rgba(233,230,223,0.12);font-size:12.5px;font-weight:600;color:#e9e6df">הגישו מקור</div>
-      </div>
+    <div class="gbody rd">
+      <p class="lead">לא תועדה הודאה פומבית של הגוף האחראי בכשל.</p>
+      <div class="gdef" style="top:-9px"><p>לא מצאנו תיעוד לכך שהגוף האחראי הודה בפומבי שהכשל התרחש.</p><p>עד אז אין גוף שהתיקון רשום על שמו.</p></div>
+      <div class="gmark"><span class="hg"><svg viewBox="0 0 24 24"><path d="M7 3h10M7 21h10M8 3v4l4 5 4-5V3M8 21v-4l4-5 4 5v4"/></svg></span><div class="age"><b>1,071</b><span>ימים מאז שהכשל זוהה</span></div></div>
     </div>
-    <div style="margin-top:auto"></div>
+    <div class="rbtn act"><span>יודעים אחרת? הגישו מקור</span><i>←</i></div>
   </div>
-
-  <div style="display:flex;justify-content:flex-start;padding:0 20px 2px">
-    <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:14px;border:1px solid rgba(233,230,223,0.22);background:rgba(233,230,223,0.06);font-size:11.5px;color:rgba(233,230,223,0.78);white-space:nowrap"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 5l7 7-7 7"></path></svg>חזרה לשלב הנוכחי</span>
-  </div>
-  <div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:16px 0 14px">
-    <div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;gap:10px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);font-size:11.5px;color:rgba(233,230,223,0.7)">
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:start"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"></path></svg>מה נעשה מאז</span>
+  <div style="display:flex;justify-content:center;gap:7px;padding:18px 0 14px;flex:none"><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div></div><div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);flex:none;font-size:11.5px;color:rgba(233,230,223,0.7)">
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:start"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"/></svg>מה נעשה מאז</span>
     <span style="display:inline-flex;align-items:center;gap:7px;white-space:nowrap;justify-self:center"><span dir="ltr" style="letter-spacing:1px;color:rgba(233,230,223,0.55)">↑↓</span><span>שלבים</span></span>
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:end">דעת הציבור<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"></path></svg></span>
-  </div>
-
-</div></div></div>
-    <figcaption class="cap"><b>Slide 4 · four stages left</b><span class="he">כשל מס׳ 20</span> is stuck at stage 1. Rungs 2–5 are drawn, the first slot stands empty, and the centre arrows return because the stack is real. Stage 2, so it goes straight from the statement to the mark — no methodology line.</figcaption>
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:end">דעת הציבור<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"/></svg></span>
+  </div></div></div></div>
+    <figcaption class="cap"><b>Slide 4 · four stages left</b><span class="he">כשל מס׳ 20</span> is stuck at stage 1. Rungs 2–5 are drawn, the first slot stands empty, and the centre arrows return because the stack is real. Every unreached stage has the same shape — the box carries stage 2's definition here. Its second paragraph is placeholder copy until <span class="mono">DIA-420</span>.</figcaption>
   </figure>
 </div>
 
@@ -913,8 +882,8 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed */</co
   <li><strong>No gold pill.</strong> <span class="he">סטטוס נוכחי</span> marks the current stage, and the current stage is never on this slide.</li>
   <li><strong>No gold ring in the locator</strong>, for the same reason. Only the viewed-stage ring appears.</li>
   <li><strong>No sources carousel, and no citations.</strong> There is nothing to cite for something that has not happened.</li>
-  <li><strong>No button and no reading sheet</strong>, therefore. This slide's card is composed, not authored: it fits the frame by construction, so there is nothing to cut and nothing to continue. It is the one slide with no way into a sheet.</li>
-  <li><strong>The back pill walks back a slide</strong> — right-pointing chevron, landing on slide 3's current stage.</li>
+  <li><strong>No reading sheet</strong>, therefore. This slide's card is composed, not authored: it fits the frame by construction, so there is nothing to cut and nothing to continue. Its one sheet is the button's — <span class="he">הגישו מקור</span>, below — built like the reading sheet but holding instructions, not a reading.</li>
+  <li><strong>No back pill</strong> (<span class="mono">DIA-423</span>). The footer's <span class="he">מה נעשה מאז</span> is one thumb-width below where it sat and goes to the same place — slide 3's current stage.</li>
   <li><strong>The centre footer arrows appear only when this stack holds more than one page.</strong> <span class="he">כשל מס׳ 13</span> has one stage left, so its slide 4 shows no arrows; <span class="he">כשל מס׳ 20</span> has four, so it does.</li>
 </ul>
 
@@ -926,62 +895,80 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed */</co
 <div class="warn"><strong>An item at the last stage has no slide 4 — the slide is skipped entirely</strong>, and that item is a five-slide post with five dots. There is no "nothing left" screen; a slide with nothing to say is not shown.</div>
 
 <h4>The page itself</h4>
-<p>No colour, no carousel, and the body is composed differently from a reached stage: the head group stays where it is, and everything below it is <strong>centred horizontally and vertically</strong> as one column. (There is no hairline rule under the head any more — §6.)</p>
+<p>Drawn in the reading system of §5 — same label, same head, same lead, same ink — and, like every stage page, exactly one frame tall. No colour and no carousel. Top to bottom:</p>
 <ol>
-  <li>The computed statement, 17px bold — <span class="he">לא תועד אימות בלתי תלוי של היישום</span>.</li>
-  <li>One line naming who would count as a checking body — <strong>on stage 5 only</strong>, where "who checks" is the whole content of the stage. Stages 2–4 go straight from the statement to the mark, and the screens below show both shapes.</li>
-  <li>An <strong>hourglass mark</strong>: a 28px outline glyph in warning yellow <code>#d9a54f</code> on a 58px round backdrop at <code>rgba(217,165,79,.14)</code>.</li>
-  <li>Directly beneath it the days-since numeral at 38px/700, and <em>beneath that</em> — not beside it — <span class="he">ימים מאז שהיישום דווח</span> at 13px.</li>
-  <li>The dashed <span class="he">יודעים אחרת?</span> box with <span class="he">הגישו מקור</span>, centred, part of the same group.</li>
+  <li>The label <span class="he">מה עוד לא נעשה</span>, the stage name at 24px/700, and <span class="he">טרם תועד</span> muted where a reached stage has its date. No tag, no definition line in the head, no rule.</li>
+  <li>The computed statement as the lead, 21px/1.5 — <span class="he">לא תועד אימות בלתי תלוי של היישום.</span></li>
+  <li><strong>The definition box.</strong> 1px dashed border at 26% ink, ground at 4% ink, radius 14px, padding 14/16/15, no header. Two paragraphs at 15px/1.6 in 62% ink, 6px apart: <span class="he">לא מצאנו תיעוד לכך ש…</span> completed by the stage's definition, then why it matters, opening <span class="he">עד אז</span>. Both strings come from the taxonomy (§10). The box sits at the <strong>vertical centre of the screen</strong> — the 844px frame, not the space left over — and is clamped to stay 14px clear of the lead above and the age below. If the card would overflow, the second paragraph is dropped first; with today's copy it fits at 844, 664 and 600.</li>
+  <li><strong>The age group</strong>, at the foot of the card and centred horizontally: an hourglass, 24px outline glyph in warning yellow <code>#d9a54f</code> on a 48px round backdrop at <code>rgba(217,165,79,.14)</code>; to its left the days-since numeral at 34px/700 with its label at 13px muted beneath. The numeral is aligned to the right edge of its label.</li>
+  <li>The button: the card's full-width outlined pill, reading <span class="he">יודעים אחרת? הגישו מקור</span> with a <span class="he">←</span>. It opens the submission sheet, below.</li>
 </ol>
+<p>The line naming who would count as a checking body is gone from every stage: it answered how the stage could be filled, and the reader is asking what the stage is. The dashed box used to belong to <span class="he">יודעים אחרת?</span>; it now marks the one unsourced paragraph in the item page, which is why it is dim and dashed rather than drawn like the reading around it.</p>
 <p>Absence is the content; nothing on the page apologises for it. The hourglass is the only place in the item page where a warning colour appears.</p>
 
+<h4>Where <span class="he">הגישו מקור</span> leads <span class="mono">DIA-421</span></h4>
+<p>Ruled 23 September on a phone (round 2 of the general-purpose version). The button opens <strong>the submission sheet</strong> — one sheet for the whole deck, drawn here because slide 4 is its first door; slides 2, 3 and maybe 6 get the same control under <span class="mono">DIA-436</span>. It is §5's reading-sheet build, appearing in place as a button entrance does. <strong>Nothing in it names the item or the stage</strong>: the bar carries a neutral pill, <span class="he">הגשת מקור</span>, like slide 2's, and the X. The body is set in the reading type — lead 21px, headings 19px/700, text 17px/1.65.</p>
+<ol>
+  <li><strong>The lead</strong>, one line: <span class="he">מכירים מקור שלא מופיע כאן, או שמשהו שגוי? שלחו לנו.</span></li>
+  <li><strong><span class="he">הודעה באינסטגרם</span></strong> — <span dir="ltr">@oct8.co.il</span> as a link to <code>https://ig.me/m/oct8.co.il</code> with the drawer's <span class="he">↗</span>, and under it a small outlined chip <span class="he">העתקת הקישור לעמוד הזה</span> that copies the page's own link and reads <span class="he">הועתק ✓</span> for 1.6s.</li>
+  <li><strong><span class="he">מייל</span></strong> — <span dir="ltr">info@oct8.co.il</span> as the same link style, <code>mailto:</code> with the subject <span class="he">מקור / הערה — היום שאחרי</span> and a body carrying the page's link and an empty <span class="he">קישור למקור:</span> line; then <span class="he">· הקישור לעמוד כבר בפנים.</span> The address is the link text so it can be copied where mail links fail.</li>
+  <li><strong><span class="he">טופס</span></strong> — <span class="he">קישור והערה. העמוד מצורף לבד.</span> and the card's outlined pill <span class="he">מילוי הטופס ←</span>.</li>
+  <li>A muted 13px line: <span class="he">כל מקור נבדק לפני שהוא מופיע באתר. לא צריך שם או חשבון.</span></li>
+</ol>
+<p><strong>The form</strong> replaces the sheet's body in place; a back chevron appears at the bar's start and returns to the three channels. It holds only <span class="he">קישור למקור</span> (required, <code>type="url"</code>, left-to-right, validated on send with <span class="he">צריך קישור שמתחיל ב־http.</span>), <span class="he">הערה · לא חובה</span> (a textarea), a filled pill <span class="he">שליחה</span>, and one muted line: <span class="he">העמוד שממנו הגעתם מצורף לבד. כל מקור נבדק לפני שהוא מופיע באתר.</span> On success the body becomes the received state — a check in the text ink, <span class="he">התקבל. תודה.</span>, <span class="he">נבדוק, ואם נדרש — נעדכן כאן.</span>, and an outlined pill <span class="he">חזרה ל״…״</span>. On failure the text is kept, a line says it was not sent, and the pill reads <span class="he">לשלוח שוב</span>.</p>
+<p><strong>The one piece of state is where the reader came from</strong> — the page's link with its hash. It does three things and nothing else: the form attaches it silently, the mail body and the copy chip carry it, and the received state's pill names the place — <span class="he">חזרה ל״אומת עצמאית״</span> from a stage page, <span class="he">חזרה ל״סקירת הכשל״</span> from slide 2 — and returns there. The sheet inherits §5's exits (<span class="mono">DIA-427</span>), except that a sideways swipe does nothing while the form page is showing.</p>
+<div class="note"><strong>The form is MVP at the lowest priority, and may be deferred.</strong> It posts the page link, the source link and the note to a form service's endpoint (Formspree) — the static export has no endpoint of its own. If it is not ready at launch, the <span class="he">טופס</span> heading, its line and its pill are not drawn. Nothing in the sheet may point at a form that does not exist.</div>
+
+<h4>Implementation notes <span class="mono">DIA-439</span></h4>
+<p>What the build does, recorded rather than ruled: nothing here reopens the design above. Where a string differs from the one settled on 23 September, the reason is given (Roy, 24 September).</p>
+<ul>
+  <li><strong>Two copy chips, not one.</strong> The Instagram chip reads <span class="he">העתקת הקישור לשליחת הודעה</span> rather than <span class="he">העתקת הקישור לעמוד הזה</span>: it is pressed in order to paste the link into the message the reader is about to write, and naming what it is for reads better at that moment than naming what it is. A second chip, <span class="he">העתקת כתובת מייל</span>, sits under the mail address and copies the address itself — for the in-app browsers where a <code>mailto:</code> opens nothing. Both say <span class="he">הועתק ✓</span> for 1.6s, and only one of them at a time.</li>
+  <li><strong>The line under the mail address</strong> is <span class="he">ניתן ללחוץ על הכתובת ליצירת הודעה</span>, on a line of its own rather than trailing the address. It replaces <span class="he">· הקישור לעמוד כבר בפנים.</span> — what the reader needs to know there is that the address is pressable; that the page's link is already inside is something they find when it opens.</li>
+  <li><strong>The letter is a template.</strong> The sheet names neither the item nor the stage and that does not change; a letter has to, because it arrives in an inbox with no page around it.
+    <ul>
+      <li>Subject: <span class="he">מקור / הערה על כשל מס׳ N - &lt;the item's title&gt;</span>.</li>
+      <li>Body — one line naming where the reader was, two empty fields, and the page:<br>
+        <span class="he">השקופית: 4 · מה עוד לא נעשה</span><br>
+        <span class="he">הטענה: </span><br>
+        <span class="he">קישור למקור: </span><br>
+        <br>
+        <span class="he">העמוד: &lt;the page's link, with its hash&gt;</span></li>
+      <li>The fields are empty on purpose. A body with headings is a form that works in every mail client and needs no endpoint, which is the one thing the real form does need.</li>
+    </ul>
+  </li>
+  <li><strong><span class="he">לשלוח שוב</span> appears only after a send that failed.</strong> A url the check refused never left, so offering to send it <em>again</em> named the wrong thing.</li>
+  <li><strong>The form is behind <code>NEXT_PUBLIC_FORM_ENDPOINT</code>, unset.</strong> With no endpoint the <span class="he">טופס</span> heading, its line and its pill are not rendered at all — the note above, as code. Turning it on is the variable and nothing else.</li>
+  <li><strong>Alignment.</strong> This sheet has no card of its own, so it measures its column against the card it was opened from, which is the column it has to land in either way.</li>
+</ul>
+
 <h2 id="opinion">8 · Slide 5 — <span class="he">דעת הציבור</span></h2>
-<p>The slide where the reader is addressed. It exists in two forms: an <strong>MVP</strong> that shows the question and says answering opens later, and the <strong>full version</strong> that carries both opinion registers and a ballot. The full version is the only screen in the item page that <strong>scrolls vertically</strong> — about 1,960px, a little over two screens.</p>
-<p><strong>The head carries chips, and this slide has no carousel</strong> — nor should it: it is where the reader is addressed, not a reading surface. Those chips open the source drawer of §5, which is what lets them mean the same thing here as on slides 2 and 3. Under the ruling this replaced they pointed at a carousel that is not on the screen.</p>
+<p>The slide where the reader is addressed. It exists in two forms: an <strong>MVP</strong> that shows the question and says answering opens later, and the <strong>full version</strong> that carries both opinion registers and a ballot. The MVP is one frame in the reading system of §5 and never scrolls. The full version is drawn below as a ~1,960px scrolling page; that drawing predates the no-scroll rule of <span class="mono">DIA-413</span> and will be recomposed before it is built (noted there).</p>
+<p><strong>The head cites nothing, and this slide has no carousel.</strong> Its two lines are slides 2 and 3 condensed, so instead of a citation each ends in a <strong>back-reference chip</strong> that scrolls the deck back to the slide it summarises. The evidence is one slide and one tap away, and this slide stays what it is — a question, not a reading surface. Ruled 23 September (<span class="mono">DIA-394</span>); this replaced the ruling that the head carries citations opening the §5 drawer, which would have needed a reading sheet for three lines.</p>
 <div class="shots">
   <figure class="shot">
-    <div class="vp"><div class="scr scr-4"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
-
-  <div style="padding:16px 20px 0;font-size:12.5px;letter-spacing:0.1px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap">
+    <div class="vp"><div class="scr scr-r"><div dir="rtl" lang="he" style="width:390px;height:844px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column"><div style="padding:16px 20px 0;font-size:12.5px;color:rgba(233,230,223,0.6);display:flex;align-items:center;gap:6px;white-space:nowrap;flex:none">
     <span>7 באוקטובר</span><span style="opacity:0.45">›</span><span>העורף האזרחי</span><span style="opacity:0.45">›</span><span style="color:#e9e6df;font-weight:600">כשל מס׳ 13</span>
   </div>
-  <div style="padding:52px 20px 0;display:flex;flex-direction:column;gap:22px;flex:1;min-height:0">
-    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
-      <div style="align-self:flex-start;font-size:11.5px;font-weight:700;letter-spacing:0.08em;color:rgba(233,230,223,0.55)">דעת הציבור</div>
-      <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;line-height:1.55;color:rgba(233,230,223,0.72);max-width:330px">
-        <p>ב־7 באוקטובר תושבי העוטף לא קיבלו התרעה על חדירת מחבלים, משום שהמערכת לא הותקנה.<span style="display:inline-flex;align-items:center;gap:5px;vertical-align:middle;margin-inline-start:5px;padding:1px 8px 1px 6px;border-radius:12px;background:rgba(233,230,223,0.10);font-size:11px;font-weight:600;color:rgba(233,230,223,0.8);white-space:nowrap;line-height:1.5"><span style="width:7px;height:7px;border-radius:50%;background:#d29a7c;box-shadow:0 0 0 1.5px rgba(233,230,223,0.27);flex:none"></span>עיתונות</span></p>
-        <p>מאז דווח כי המערכת הותקנה, והתרעות נצפו בזיקים, בכרמיה ובבית אריה.<span style="display:inline-flex;align-items:center;gap:5px;vertical-align:middle;margin-inline-start:5px;padding:1px 8px 1px 6px;border-radius:12px;background:rgba(233,230,223,0.10);font-size:11px;font-weight:600;color:rgba(233,230,223,0.8);white-space:nowrap;line-height:1.5"><span style="width:7px;height:7px;border-radius:50%;background:#d29a7c;box-shadow:0 0 0 1.5px rgba(233,230,223,0.27);flex:none"></span>עיתונות <b>+1</b></span></p>
-        <p style="color:rgba(233,230,223,0.55)">היקף הפריסה לא דווח, ולא פורסמה בדיקה של גורם חיצוני.</p>
-      </div>
-      <h2 style="margin:2px 0 0;font-size:22px;line-height:1.34;font-weight:700;color:#e9e6df;max-width:330px;text-wrap:balance">האם התרעות החדירה שהותקנו נותנות מענה לכשל המקורי?</h2>
+  <div class="opc" style="flex:1;min-height:0;display:flex;flex-direction:column;padding:26px 20px 0">
+    <div class="rlab">דעת הציבור</div>
+    <div class="rd oplines">
+      <p>ב־7 באוקטובר תושבי העוטף לא קיבלו התרעה על חדירת מחבלים, משום שהמערכת לא הותקנה.<span class="ref"><svg class="ut" viewBox="0 0 24 24"><path d="M9 18H6a4 4 0 0 1 0-8h12M14 6l4 4-4 4"/></svg>סקירת הכשל</span></p>
+      <p>מאז דווח כי המערכת הותקנה, והתרעות נצפו בזיקים, בכרמיה ובבית אריה.<span class="ref"><svg class="ut" viewBox="0 0 24 24"><path d="M9 18H6a4 4 0 0 1 0-8h12M14 6l4 4-4 4"/></svg>מה נעשה מאז</span></p>
+      <p class="cav">היקף הפריסה לא דווח, ולא פורסמה בדיקה של גורם חיצוני.</p>
     </div>
-    <div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:18px">
-      <div style="border:1px dashed rgba(233,230,223,0.3);border-radius:12px;background:rgba(233,230,223,0.04);padding:16px 15px 15px;display:flex;flex-direction:column;gap:14px">
-        <div style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:14px;font-weight:700;color:#e9e6df"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#d9a54f;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>המענה ייפתח בהמשך</div>
-      <div style="display:flex;flex-direction:column;gap:8px;opacity:0.4">
-        <div style="display:flex;justify-content:space-between;gap:6px"><div style="width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(233,230,223,0.28);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#e9e6df;background:rgba(233,230,223,0.05)">1</div><div style="width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(233,230,223,0.28);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#e9e6df;background:rgba(233,230,223,0.05)">2</div><div style="width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(233,230,223,0.28);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#e9e6df;background:rgba(233,230,223,0.05)">3</div><div style="width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(233,230,223,0.28);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#e9e6df;background:rgba(233,230,223,0.05)">4</div><div style="width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(233,230,223,0.28);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#e9e6df;background:rgba(233,230,223,0.05)">5</div></div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:rgba(233,230,223,0.6)"><span>בכלל לא</span><span>במידה מלאה</span></div>
-      </div>
-        <p style="font-size:12.5px;line-height:1.5;color:rgba(233,230,223,0.6);text-align:center">כרגע האתר מציג את הרישום בלבד. כשהמענה ייפתח, כאן תדרגו עד כמה מה שנעשה נותן מענה — והתפלגות התשובות תוצג לצד השאלה.</p>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:9px">
-        <p style="font-size:13px;line-height:1.5;color:rgba(233,230,223,0.66);text-align:center;max-width:300px">מה שאפשר לעשות כבר עכשיו: אם יש בידיכם מקור שמראה אחרת</p>
-        <span style="padding:6px 14px;border-radius:3px;background:rgba(233,230,223,0.12);font-size:13px;font-weight:600;color:#e9e6df">הגישו מקור</span>
-      </div>
-    </div>
+    <h2 class="opq">האם התרעות החדירה שהותקנו נותנות מענה לכשל המקורי?</h2>
+    <fieldset class="opoll"><legend><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>המענה ייפתח בהמשך</span></legend>
+      <div class="scale"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></div>
+      <div class="anch"><span>במידה מלאה</span><span>בכלל לא</span></div>
+    </fieldset>
+    <div class="rbtn act" style="margin-top:auto"><span>עדכנו אותי כשהמענה ייפתח</span><i>←</i></div>
   </div>
-
-  <div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:16px 0 14px">
-    <div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);font-size:11.5px;color:rgba(233,230,223,0.7)">
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"></path></svg>מה עוד לא נעשה</span>
-    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap">הלאה<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"></path></svg></span>
-  </div>
-
-</div></div></div>
-    <figcaption class="cap"><b>Slide 5 · MVP</b>What ships: the question, the dimmed scale inside <span class="he">המענה ייפתח בהמשך</span>, and <span class="he">הגישו מקור</span> as the one live action.</figcaption>
+  <div style="display:flex;justify-content:center;gap:7px;padding:18px 0 14px;flex:none"><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div><div style="width:6px;height:6px;border-radius:50%;background:#e9e6df"></div><div style="width:6px;height:6px;border-radius:50%;background:rgba(233,230,223,0.3)"></div></div><div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;padding:11px 20px 26px;border-top:1px solid rgba(233,230,223,0.16);flex:none;font-size:11.5px;color:rgba(233,230,223,0.7)">
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:start"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M9 5l7 7-7 7"/></svg>מה עוד לא נעשה</span>
+    <span></span>
+    <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;justify-self:end">הלאה<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 5l-7 7 7 7"/></svg></span>
+  </div></div></div></div>
+    <figcaption class="cap"><b>Slide 5 · MVP</b>What ships, in the reading system: the three lines with their back-reference chips, the question, the sealed ballot with <span class="he">המענה ייפתח בהמשך</span> as its legend, and the newsletter button as the one live action. One frame; nothing scrolls.</figcaption>
   </figure>
   <figure class="shot">
     <div class="vp tall"><div class="scr scr-4"><div dir="rtl" lang="he" style="width:390px;height:1960px;box-sizing:border-box;background:#121519;position:relative;overflow:hidden;font-family:'Assistant',system-ui,sans-serif;display:flex;flex-direction:column">
@@ -1273,16 +1260,18 @@ box-shadow: 0 0 0 2px #121519, 0 0 0 4px &lt;stage colour&gt;;  /* viewed */</co
 
 <h4>Head (both versions)</h4>
 <ul>
-  <li>Slide title <span class="he">דעת הציבור</span>, right-aligned; everything under it centred, in Assistant. No status chip, no grouping box, no rule — slide 3's head does not apply here.</li>
-  <li>Three summary lines, centred: what failed, what has been reported since, and a dimmer third line for caveats. The first two carry citations — the 20px glyph of §5, like every other reading on the deck; the caveat carries none, because an absence has nothing to cite.</li>
-  <li>The question, 22px/700. It is <strong>generic in substance, phrased in the item's context</strong>: <span class="he">האם התרעות החדירה שהותקנו נותנות מענה לכשל המקורי?</span> — never an item-specific curiosity.</li>
+  <li>The label <span class="he">דעת הציבור</span> as on every reading slide. No status chip, no grouping box, no rule — slide 3's head does not apply here.</li>
+  <li>Three summary lines as <strong>start-aligned body text</strong>, 17px/1.6 in the one ink: what failed, what has been reported since, and the caveat at 15px muted. The first two end in a <strong>back-reference chip</strong> — the old source chip's chassis (11.5px/600, radius 12, 10% ink ground) holding a sideways U-turn arrow pointing right and the slide's name, <span class="he">סקירת הכשל</span> and <span class="he">מה נעשה מאז</span>. <strong>The whole line is the target</strong>; it tints while pressed, and the deck scrolls to that slide — line two lands on the current stage. The caveat carries none, because an absence has nowhere to point. The lines may only say what slides 2 and 3 say.</li>
+  <li>The question, 22px/700, <strong>centred</strong> — the one centred thing on the slide. It is <strong>generic in substance, phrased in the item's context</strong>: <span class="he">האם התרעות החדירה שהותקנו נותנות מענה לכשל המקורי?</span> — never an item-specific curiosity.</li>
   <li>No stage age anywhere on this slide. Content starts 46–52px below the breadcrumb, not at the top edge.</li>
 </ul>
 
 <div class="note"><strong>Only the MVP ships.</strong> The registers and the ballot are designed and specified below, and none of it is built in this pass — the question, the dimmed scale and <span class="he">הגישו מקור</span> are the whole screen at launch. The whole MVP head is <strong>authored per incident</strong>: the question (<code>opinion.question</code>) and the three summary lines (<code>opinion.failed</code>, <code>.since</code>, <code>.caveat</code>). The question stays <strong>generic in substance and phrased in this item’s context</strong>, as the head rule above requires — a stage-generic string reused verbatim across items is a cheaper thing than the screen asks for. Keeping it fresh when an item moves is an editorial job, not a reason to weaken the question.</div>
 
 <h4>MVP</h4>
-<p>The 1–5 scale is shown dimmed inside a dashed box headed <span class="he">המענה ייפתח בהמשך</span>, so the reader sees what is coming without it pretending to work, plus the one live action: <span class="he">הגישו מקור</span>.</p>
+<p><strong>The sealed ballot</strong> sits 22px under the question: a dashed box (1px at 30% ink, radius 14) whose <strong>legend</strong> is <span class="he">המענה ייפתח בהמשך</span> with the amber clock, set into the top border and centred — a real <code>fieldset</code>/<code>legend</code>. Inside, the five 52px circles are drawn with <strong>dashed</strong> borders at 45% ink, numbers 19px, the anchors 12px muted. Nothing is dimmed or blurred and there is no explanatory paragraph: the dashes are the seal. A tap anywhere on the box <strong>answers without acting</strong> — the legend turns amber for 650ms and settles; no toast, no text.</p>
+<p><strong>The one live action</strong> is the card's full-width outlined pill at the foot, <span class="he">עדכנו אותי כשהמענה ייפתח</span> with <span class="he">←</span> — the newsletter sign-up, whose channel, wording and trip are <span class="mono">DIA-435</span>. <span class="he">הגישו מקור</span> left this slide with it; where it lives now is <span class="mono">DIA-436</span>.</p>
+<p><strong>Fit.</strong> One frame at 844 and 664 with nothing shed. When the card would overflow, in order: the circles become five 12px dashed dots (the symbolic ballot, legend kept); the caveat goes; the question drops to 20px. At 600 the first two apply. The lines, the question, the legend and the button never go.</p>
 
 <h4>The two opinion registers (full version)</h4>
 <p>Both come from the desktop and keep their distinction — published analysis is named and institutional, public answers are many anonymous voices.</p>
@@ -1491,20 +1480,21 @@ mask-image: linear-gradient(to bottom,
 <p>The deck never scrolls, so slide 6 must fit the frame it is given rather than assume 844. <strong>The card list fills the space it has and sheds cards when it cannot</strong> — everything else on the slide is fixed and stays. The floor is two cards; below that the slide has nothing left to say.</p>
 <table>
   <tr><th>Frame height</th><th>Version A</th><th>Version B</th></tr>
-  <tr><td>≥ 754px</td><td>Four cards</td><td>Three cards</td></tr>
-  <tr><td>705–753px</td><td>Three cards</td><td>Three cards</td></tr>
-  <tr><td>634–704px</td><td>Three cards</td><td>Two cards</td></tr>
-  <tr><td>585–633px</td><td>Two cards</td><td>Two cards</td></tr>
-  <tr><td>Below 585px</td><td>Two cards</td><td colspan="1">Two cards; the strip is the first thing to go</td></tr>
+  <tr><td>844px</td><td>Four cards</td><td>Three cards</td></tr>
+  <tr><td>704–753px</td><td>Three cards</td><td>Two cards</td></tr>
+  <tr><td>664px and below</td><td>Two cards — the floor</td><td>Two cards; the strip is the first thing to go</td></tr>
 </table>
-<p class="meta">Measured at 390 wide against the artboards, not estimated: a card plus its gap is 120px, and the rest of the slide is 634px of fixed furniture in version A, 705px in version B.</p>
+<p class="meta">Re-measured 23 September in the deck's own chrome — the docked dots and footer and the slide's padding, which the artboards did not carry — rather than the earlier 634px of furniture. An in-app browser at 664 therefore lands on the floor; accepted (Roy, <span class="mono">DIA-395</span>). The count line reads the number actually shown. Measure once more against the real build before the baseline is frozen.</p>
 <div class="warn"><strong>This is the one place the <code>min-height: 600px</code> guard in §2 is not enough.</strong> A four-card slide 6 needs 754px and an iPhone SE clears the guard at 667 while giving roughly 580 of <code>100dvh</code>. Shedding cards is the answer — <strong>not</strong> raising the guard, which would hand those phones the desktop page over one slide. Every other slide fits under 545px.</div>
 
 <h4>Share</h4>
-<p>The Web Share API where it exists — on iOS and Android that is the native sheet, which is the entire point on a page reached from Instagram. Where it does not, the fallback <strong>copies the bare item link</strong> — <code>/item/i13/</code>, no hash — so a shared link always opens at the gate rather than dropping a stranger onto slide 4. A short toast confirms the copy.</p>
+<p>The Web Share API where it exists — on iOS and Android that is the native sheet, which is the entire point on a page reached from Instagram. The payload is the title <span class="he">כשל מס׳ 13 · היום שאחרי</span> and the <strong>bare item link</strong> — <code>/item/i13/</code>, no hash — so a shared link always opens at the gate rather than dropping a stranger onto slide 4. Where the API does not exist, the fallback copies that link and says so: a toast <span class="he">הקישור הועתק</span> above the dots for 1.8s; the button itself does not change. A cancelled native share does nothing.</p>
+
+<h4>The card, and the way out</h4>
+<p>A card is a plain link to the sibling's page — no hash, so it opens at its gate. It scales to .985 and brightens a little while pressed and lets go in 120ms; nothing else animates, the trip is a page load. Coming back is Back, and the deck restores slide 6 on return; that it must do so <em>without showing the gate first</em> is <span class="mono">DIA-402</span>, Post-MVP for now. <span class="he">כל 29 הכשלים</span> carries this item's parent as its hash, so the ledger opens with that tile in view — the reader returns to their own row rather than to the top. <span class="mono">DIA-395</span></p>
 
 <h4>Sign-off</h4>
-<p>A 3×14px gold bar and <span class="he">היום שאחרי</span> in Frank Ruhl Libre 14px at 72% ink, centred above the dots. The site name only — no tagline, no URL.</p>
+<p>Above it, one quiet line: <span class="he">יודעים אחרת? הגישו מקור</span>, 13px/600 muted, centred, 6px of padding — the shared control of <span class="mono">DIA-436</span> in its smallest form, because a second pill under share would fight it. It opens the submission sheet of §7, which returns here as <span class="he">חזרה ל״הלאה״</span>. Then a 3×14px gold bar and <span class="he">היום שאחרי</span> in Frank Ruhl Libre 14px at 72% ink, centred above the dots. The site name only — no tagline, no URL.</p>
 
 <h4>Footer</h4>
 <p><span class="he">דעת הציבור ›</span> on the right. <strong>The left slot is empty</strong> — slide 6 is the last slide and there is nothing to name. This is the one exception to the footer's next-slide rule, as slide 2 is the exception to its previous-slide rule.</p>
@@ -1535,6 +1525,7 @@ mask-image: linear-gradient(to bottom,
   <li><strong>A systemic description per incident</strong> (slide 2) and <strong>an overview per reached stage</strong> (slide 3), as authored annotated text. There is no separate "bottom line" field — the opening sentence carries it, and it is the <strong>lead</strong>: distinguished by size, not by weight (§2, §5).</li>
   <li><strong>The annotation is <a href="annotations.html">docs/annotations.html</a></strong>: the six features, the <span class="mono">[[text]](claim-id)</span> chip syntax, the coverage rule, the fields each applies to, and what the validator names. <strong>That file supersedes this section</strong> on every one of those points, and nothing about the marks is specified here any more.</li>
   <li><strong>The sources carousel is pure presentation</strong> — one card per cited document, deduplicated, ordered by first appearance.</li>
+  <li><strong>Two strings per stage, in the taxonomy</strong> (slide 4, <span class="mono">DIA-420</span>): <code>definition</code> — a clause that reads correctly after <span class="he">לא מצאנו תיעוד לכך ש</span> and stands alone as a sentence elsewhere — and <code>why</code>, one sentence opening <span class="he">עד אז</span>. They live on the stage records in <code>data/taxonomy.json</code>, once, because a stage means the same thing on every item; the definitions now held in <code>lib/deck.ts</code> move there. Together with the frame they fit four lines at 15px — about 190 characters.</li>
   <li><strong>The unreached-stage statement is computed</strong>, not authored — a fallback, not a field. So is the stage date, the item number and the gate's source line (§4).</li>
   <li><strong>A reached stage with no overview is not an error</strong> — it renders its claims (§6).</li>
   <li><strong>Two photo crops per incident</strong>, portrait and landscape, each optional and each with its own credit. Dimensions are not validated; the crop is trusted. Sourcing and licensing are <span class="mono">DIA-366</span>.</li>
@@ -1564,6 +1555,7 @@ mask-image: linear-gradient(to bottom,
 <p>Everything the 13 September canvases left open was closed on 14 September. What remains — including anything §10 asks for that implementation cannot meet, which is recorded here rather than folded back into the design:</p>
 <table>
   <tr><th>Question</th><th>Where it bites</th></tr>
+  
   <tr><td><strong>Credit for the card photographs.</strong> The gate has a credit slot; the 111px card has none and cannot grow, and most of these images are CC BY-SA. Candidates: one credits line at the foot of slide 6, a credits page linked from <span class="he">אודות</span>, or landscape crops only from sources needing no attribution</td><td>Slide 6 — deliberately deferred to the build phase that reaches it</td></tr>
   
   <tr><td>The evidence map is still the desktop component at mobile width</td><td>Slide 3, stage 1 — <strong>it ships as it is.</strong> Ruled 20 September: render the desktop component at 390 and look at it on a phone; if it is a problem there, it becomes one then. No 390 pass is scheduled</td></tr>
@@ -1589,6 +1581,14 @@ mask-image: linear-gradient(to bottom,
   <tr><td>The source drawer</td><td class="mono">DIA-383</td><td>A chip opens the quote and the way out under its own passage, on slides 2, 3 and 5, replacing the ruling that it moves the carousel — which slide 5, having chips and no carousel, could never honour. The carousel keeps its place and its cards and loses its job as a target. Slide 4 has neither chips nor carousel and is untouched</td></tr>
   <tr><td>Slide 2's five questions</td><td class="mono">DIA-381</td><td>A chip moves the carousel rather than leaving the deck, which makes the carousel load-bearing. One <code>Annotated</code> with a declared chip variant. The lead is the first paragraph, chosen in CSS. Lists in both forms — shared source and source-per-item — the second of which the renderer drops today, against its own contract (<span class="mono">DIA-382</span>)</td></tr>
   <tr><td>The frame stops being a ceiling <em>(superseded 21 Sep — see below)</em></td><td class="mono">20 Sep</td><td>Slide 2's drawn density needs 474px and an iPhone SE offers 405, so the design never fit the phones it is for. The body column scrolls, the chip stays docked, and §11's “every stage page must fit the frame” is retired. Slides 3 and 4 take the same behaviour: a stage scrolls, the boundary carries the reader on, and a stage reopens where it was left rather than at its top</td></tr>
+  <tr><td>The shared control finds its places</td><td class="mono">v3.10</td><td><span class="he">הגישו מקור</span> on slides 2, 3, 4 and 6 (<span class="mono">DIA-436</span>, Roy): a fitting card splits its button row into <span class="he">המקורות</span> and <span class="he">הגישו מקור</span>; a cut card keeps its single pill and the control waits at the end of the reading sheet; slide 4 keeps its pill; slide 6 gets a quiet line above the sign-off. §5's card-state table and §9 amended</td></tr>
+  <tr><td>The submission sheet, made general-purpose</td><td class="mono">v3.9</td><td>§7's sheet redrawn after Roy's ruling that it serves slides 2, 3, 4 and maybe 6 alike: nothing in it names the item or the stage, the bar carries a neutral pill, the copy is cut to one line per channel, the Instagram handle becomes a DM deep link with a chip that copies the page's link, the mail body carries the page's link, and the only state is where the reader came from — which the received state's pill names and returns to (<span class="mono">DIA-421</span>, round 2)</td></tr>
+  <tr><td>Where <span class="he">הגישו מקור</span> leads</td><td class="mono">v3.8</td><td>§7 gains the submission sheet (<span class="mono">DIA-421</span>, Roy, round 2 on a phone): the reading sheet's build holding three channels — an Instagram DM as text, mail as a link with the subject filled, and a short form of our own behind a button, posting to a form service. The form is MVP at the lowest priority and may be deferred, in which case it is not drawn. Removed from §12. Mock <span class="mono">JVsTcx3U</span></td></tr>
+  <tr><td>Slide 6's behaviour, and its ladder re-measured</td><td class="mono">v3.7</td><td>§9 gains the card's press state and trip, the share payload and its fallback toast, and <span class="he">כל 29 הכשלים</span> landing on the parent tile (<span class="mono">DIA-395</span>, Roy). The shedding table is re-measured in the deck's chrome: four cards at 844, three from 704, two from 664 — the floor — where the artboards had promised three. Photo credit for the card grounds is <span class="mono">DIA-437</span> on the Launch track</td></tr>
+  <tr><td>Slide 5 joins the reading system</td><td class="mono">v3.6</td><td>§8's MVP screen redrawn after five rounds on a phone (Roy, <span class="mono">DIA-394</span>). The head's citations are replaced by back-reference chips to slides 2 and 3 — a sideways U-turn arrow and the slide's name, the whole line the target; the lines become start-aligned body text and only the question stays centred. The dimmed scale becomes a sealed ballot: a dashed fieldset whose legend is <span class="he">המענה ייפתח בהמשך</span>, dashed circles, no explanatory paragraph, a tap that answers without acting. The one live action becomes the newsletter button (<span class="mono">DIA-435</span>), and <span class="he">הגישו מקור</span> becomes a shared control to be placed (<span class="mono">DIA-436</span>). A shedding order for short screens. The full version's scrolling page is flagged on <span class="mono">DIA-413</span></td></tr>
+  <tr><td>The ladder in the sheet jumps</td><td class="mono">v3.5</td><td>§6's locator gains a second row: on the slide it stays an indicator; inside the reading sheet it is tap-to-jump and the only way between stages, the reading swapping in place and the stack following underneath (<span class="mono">DIA-430</span>, Roy's ruling, approved on a mock)</td></tr>
+  <tr><td>The excerpt, the clipping, and the sheet under a finger</td><td class="mono">v3.4</td><td>§5's source drawer redrawn (<span class="mono">DIA-426</span>): the grey box goes; an excerpt with a 2px rule in the type colour, a head line, the quote as a newspaper clipping in paper and black italic serif with a torn edge, and <span class="he">לפתיחת המקור</span> as the way out. Both drawer screens redrawn. Four gestures added to the sheet (<span class="mono">DIA-427</span>, folding in DIA-417): swipe up on slide 2 or 4 opens it mid-gesture and the same finger scrolls; swipe up at the end, sideways anywhere, or down at the top closes it (Roy)</td></tr>
+  <tr><td>Slide 4 joins the reading system</td><td class="mono">v3.3</td><td>§7's two screens redrawn after six rounds on a phone (Roy). The unreached page was 604px in a 500px stack at in-app-browser height; it is now a card one frame tall in §5's system — label, stage name, <span class="he">טרם תועד</span>, the statement as the lead. The "who would count" line is retired from every stage; in its place a dim dashed box at the vertical centre of the screen holds the stage's definition in the negative and why it matters, two paragraphs, both from the taxonomy (§10, <span class="mono">DIA-420</span>). The hourglass group moves to the foot of the card, centred, number beside the glyph and aligned to the right of its label. <span class="he">יודעים אחרת?</span> stops being a box and becomes the card's button; where it leads is §12. The back pill leaves this slide (<span class="mono">DIA-423</span>)</td></tr>
   <tr><td>The reading system, redrawn to the mock</td><td class="mono">v3.2</td><td>v3.1's four screens were drawn from the mock and missed it in five places, corrected here by the session that built the mock. The × sat on the right: the bar is a grid in an RTL screen, so column 1 is the right-hand one — §2's trap again, fixed physically and measured. The sheet did not land aligned: its reading began 22px above the card's on slide 2, and on slide 3 the head group was missing from the sheet altogether; the bar now ends where the card's content begins and the head is in the sheet. A 5px stage-colour bar beside the stage name is removed. The fitting card's button keeps its count. Slide 2's reading gains its section heading, which is what makes it lead → heading → list rather than five paragraphs (Roy)</td></tr>
   <tr><td>Calm Reading, rounds 1–4</td><td class="mono">DIA-412</td><td>The reading system, settled on a phone over four rounds. Two text sizes and a heading against nine; one ink and one muted step against six; one highlight in the lead and bold only as a list item's lead-in, against scattered bold everywhere; plain disc markers; the slide title demoted from a pill to a quiet label. The named, coloured source chip becomes a <strong>20px glyph with <code>+N</code></strong>, and the source-type colours move to the carousel card, which is where telling authorities apart actually helps. Slide 3's head loses its filled tag, its definition and its rule. The model was what Google's AI Overview does well: <em>sparse text, big font, large gaps, toned-down colour</em></td></tr>
   <tr><td>The card and the reading sheet</td><td class="mono">DIA-413</td><td>No slide scrolls. Content is a card that fits the frame; overrun is cut with a fade and a button — <span class="he">יותר מידע</span> with the source count, or <span class="he">המקורות</span> when it fits — and the full reading with its carousel opens in a sheet above the deck: one plain vertical scroller, no snap, no horizontal ancestor. The sheet takes the card's geometry and opens unscrolled, so nothing moves; from the button it appears in place, from a passage tap it covers from the bottom up. This is the third and final answer to the fit question — it does not referee the crossed axes of <span class="mono">DIA-383</span>, it removes the crossing</td></tr>
