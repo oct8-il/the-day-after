@@ -17,11 +17,12 @@ import { Gate, GateGround, type GateRung } from '@/app/components/mobile/Gate';
 import { overviewParts } from '@/app/components/mobile/Overview';
 import { stagesParts } from '@/app/components/mobile/Stages';
 import { opinionParts } from '@/app/components/mobile/Opinion';
+import { Rest, type RestCard } from '@/app/components/mobile/Rest';
 import { StageArrows } from '@/app/components/mobile/StagesShell';
 import { sourceLine } from '@/lib/deck';
 import { reached as reachedStages, unreached as unreachedStages, stageDate } from '@/lib/stage';
 import { daysAfter } from '@/lib/days';
-import { itemNumberOf, published, STAGES } from '@/lib/data';
+import { itemNumberOf, itemTotal, siblingsOf, published, STAGES } from '@/lib/data';
 import { SourceLink } from '@/app/components/SourceLink';
 
 export const dynamicParams = false;
@@ -128,6 +129,40 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     };
   })();
 
+  /**
+   * Slide 6 - §9's version A: four other tracked failures, the way out, and
+   * share.
+   *
+   * The four are siblings under this parent first and then a walk on down the
+   * ledger from this item's own position, which is lib/deck.ts's rule and
+   * what stops item 30's row being identical to item 2's. Each card carries
+   * its own breadcrumb, because the fill beyond the siblings comes from
+   * elsewhere and a card that lied about where it leads would be worse than
+   * an uneven row.
+   */
+  const six = (() => {
+    const cards: RestCard[] = siblingsOf(inc, 4).map((x) => {
+      const n = itemNumberOf(x.id);
+      const s = stageOf(x);
+      return {
+        id: x.id,
+        leaf: n === null ? 'כשל' : `כשל מס׳ ${n}`,
+        parent: parentById(x.parent)?.he ?? '',
+        // §9 wants a short authored form rather than the title truncated, so
+        // that every card measures the same. Where none is written yet the
+        // title stands in and is clamped like any other - an item has to
+        // render from the first build (DIA-445 tracks the copy).
+        line: x.card_line ?? x.he,
+        stage: `${s} · ${stageMeta(s).he}`,
+        color: stageMeta(s).color,
+        // The card's ground is the landscape crop: the portrait is the gate's,
+        // and a tall photograph behind a 111px card is all sky.
+        photo: x.photo?.landscape?.file ?? null,
+      };
+    });
+    return { cards, total: itemTotal, parent: inc.parent, leaf: gate.leaf, href: `/item/${id}/` };
+  })();
+
   /** The phone deck's slides 2-5: each hands back a card and its sheet. */
   const phone = {
     ov: overviewParts({ summary: inc.summary, claims: inc.claims }),
@@ -182,6 +217,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           3: phone.st.card,
           4: phone.gap?.card ?? null,
           5: phone.op?.card ?? null,
+          6: <Rest key="rest" root="7 באוקטובר" {...six} />,
         })}
         sheets={bySlide({ 2: phone.ov.sheet, 3: phone.st.sheet, 4: phone.gap?.sheet ?? null })}
         omit={deck.omit}

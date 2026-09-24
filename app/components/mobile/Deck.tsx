@@ -140,6 +140,15 @@ const COVER = 300;
 const SEAL = 650;
 
 /**
+ * How long §9's copied-link toast stands above the dots.
+ *
+ * It is the whole of the fallback's feedback - the share button itself does
+ * not change state - so it has to outlast a glance, and it is gone before the
+ * reader's thumb has found the next thing.
+ */
+const TOAST = 1800;
+
+/**
  * How long the reading takes to leave when a rung is tapped (DIA-430). The
  * arrival is 180 and lives in the stylesheet alone, because nothing has to be
  * timed against its end; this one does, so it is written here as well.
@@ -192,6 +201,42 @@ const shed = (deck: HTMLElement | null) => {
       else op.removeAttribute('data-shed');
       if (read.scrollHeight - read.clientHeight <= 1) return;
     }
+  });
+};
+
+/**
+ * §9's card ladder: slide 6 fills the frame it is given and sheds from the
+ * end when it cannot (DIA-395).
+ *
+ * The deck never scrolls, so the list is the only thing on this slide that
+ * can give way - the sign-off, the head, the two actions, the source line and
+ * the wordmark are fixed and stay. Two cards is the floor: below that the
+ * slide has nothing left to say, and it is allowed to overflow rather than
+ * show one.
+ *
+ * Measured rather than written as height queries, for the same reason slide
+ * 5's is: how tall the furniture above the list comes out is a property of
+ * the copy and the chrome, and §9's own table was re-measured twice already.
+ * The count line is written from the same number, because a line that said
+ * four over three cards would be the slide contradicting itself.
+ */
+const FLOOR = 2;
+const cards = (deck: HTMLElement | null) => {
+  deck?.querySelectorAll<HTMLElement>('.deck-six').forEach((six) => {
+    const all = six.querySelectorAll('.deck-six-card').length;
+    if (!all) return;
+    // Measured on the column itself and not on the slide around it. The slide
+    // is a fixed-height flex container that clips, so whatever overruns is
+    // clipped there and its scrollHeight never moves; this column is pinned
+    // to exactly one frame by `min-height:100%` with nothing to grow into, so
+    // it is the one box whose content can be taller than itself.
+    let n = all;
+    for (; n > FLOOR; n -= 1) {
+      six.setAttribute('data-n', String(n));
+      if (six.scrollHeight - six.clientHeight <= 1) break;
+    }
+    six.setAttribute('data-n', String(n));
+    six.querySelector('.deck-six-n')?.setAttribute('data-n', String(n));
   });
 };
 
@@ -734,6 +779,46 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
   useEffect(() => () => { if (sealing.current) clearTimeout(sealing.current); }, []);
 
   /**
+   * §9's share, and the toast that stands in for it where it cannot happen.
+   *
+   * `navigator.share` is the native sheet on the two phones that matter, and
+   * on a page reached from Instagram that sheet is the entire point - it is
+   * the only route out to the apps the reader actually uses. The payload is
+   * the item's bare link: a shared URL has to open at the gate rather than
+   * drop a stranger onto slide 4 of a post they have not read.
+   *
+   * Where the API is absent the link is copied and the toast says so; the
+   * button itself does not change, because it has not done a different thing.
+   * A cancelled native share does nothing at all - the reader chose not to,
+   * and a toast after a deliberate dismissal would read as a reprimand.
+   */
+  const [toast, setToast] = useState<string | null>(null);
+  const toasting = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (toasting.current) clearTimeout(toasting.current); }, []);
+
+  const share = useCallback(async (btn: HTMLElement) => {
+    const title = btn.getAttribute('data-share-title') ?? document.title;
+    const url = new URL(btn.getAttribute('data-share-url') ?? location.pathname, location.href).href;
+    if (navigator.share) {
+      // A rejection here is almost always the reader dismissing the sheet,
+      // and it is indistinguishable from a real failure. Treated as the
+      // former, because that is what it nearly always is.
+      try { await navigator.share({ title, url }); } catch { /* dismissed */ }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // A clipboard the browser will not give us leaves nothing to say: the
+      // link is in the address bar, and a failure toast would only be noise.
+      return;
+    }
+    setToast('הקישור הועתק');
+    if (toasting.current) clearTimeout(toasting.current);
+    toasting.current = setTimeout(() => setToast(null), TOAST);
+  }, []);
+
+  /**
    * A slide that owns pages moved between them. The deck owns the URL, so it
    * rewrites the tail; the stack only says that there is a new one.
    */
@@ -974,6 +1059,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
    */
   const measure = useCallback(() => {
     shed(deckEl());
+    cards(deckEl());
     deckEl()?.querySelectorAll<HTMLElement>('.deck-card').forEach((card) => {
       const read = card.querySelector<HTMLElement>('.deck-read');
       // A card with no way on is never cut. §7's slide is composed rather than
@@ -1350,6 +1436,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       const back = t.closest<HTMLElement>('[data-back]');
       if (back) { e.preventDefault(); goBack(back); return; }
 
+      // §9's share. A button, so there is no default to prevent - and the
+      // call has to happen inside the gesture or the native sheet refuses.
+      const out = t.closest<HTMLElement>('[data-share]');
+      if (out) { void share(out); return; }
+
       // The whole cited passage opens the sheet, not only the glyph that ends
       // it (DIA-414); `.deck-more` is a button of its own and is hit directly.
       const chip = chipOf(t);
@@ -1378,7 +1469,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
     };
     deck.addEventListener('click', onClick);
     return () => deck.removeEventListener('click', onClick);
-  }, [openSheet, closeSheet, jumpSheet, goBack]);
+  }, [openSheet, closeSheet, jumpSheet, goBack, share]);
 
   /**
    * The sheet under a finger (DIA-427). Four gestures, one model.
@@ -1992,6 +2083,10 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
           still the counter. It is above the strip because the thumb is on it
           (DIA-399). */}
       {label !== null && <div className="deck-jump" aria-hidden="true">{label}</div>}
+      {/* §9's copied-link toast, in the same slot the jump pill uses: above
+          the strip, because that is where the thumb is not. It is announced
+          rather than only drawn - the button it answers does not change. */}
+      {toast !== null && <div className="deck-toast" role="status">{toast}</div>}
       {/* Not six buttons: §3 says neither strip is tappable, because a dot is
           6px and the rungs are 5px - under any touch target worth offering -
           and a long press is what both of them take instead. So the row is a

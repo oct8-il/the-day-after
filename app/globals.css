@@ -2148,4 +2148,138 @@
   .deck-nl-sink{position:absolute;width:0;height:0;border:0;
     opacity:0;pointer-events:none}
 
+  /* ---------------------------------------------------------------- §9
+     Slide 6 - הלאה (DIA-395, DIA-444).
+
+     The last slide: a sign-off, four other tracked failures, the way out to
+     the whole ledger, and share. Version A - four cards, no star strip; the
+     strip is DIA-376 and needs somewhere to put an answer.
+
+     One rule shapes the layout. The deck never scrolls, so the card list is
+     the only thing here that gives way: it fills the room it has and the deck
+     drops cards from the end when it cannot, down to a floor of two. So the
+     list is the flexible part and everything else is drawn at a fixed size. */
+  .deck-six{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;
+    /* The sign-off stands in the slide-title slot, as §9 asks - but on §9's
+       own 19px rather than the reading slides' 26. The difference is a card:
+       this slide is the only one whose furniture competes with its content,
+       and every pixel above the list is one the ladder cannot use. */
+    padding-top:19px;
+    color:var(--text)}
+
+  /* §9's drawing sets the whole column on a 10px rhythm, and the label's own
+     14px is the reading slides'. Same reason as the padding above. */
+  .deck-six .deck-label{margin-bottom:10px}
+  .deck-six-head{flex:none;display:flex;align-items:baseline;justify-content:space-between;
+    gap:10px;margin-bottom:10px}
+  .deck-six-head b{font-size:16px;font-weight:700}
+  .deck-six-count{font-size:12px;color:color-mix(in srgb,var(--text) 56%,transparent)}
+  /* Written by the deck once it has measured how many cards fit, and drawn
+     from the attribute rather than from the render - the two have to agree,
+     and only one of them can count. */
+  .deck-six-n{font-style:normal}
+  .deck-six-n::before{content:attr(data-n)}
+
+  .deck-six-cards{flex:none;margin:0;padding:0;list-style:none;
+    display:flex;flex-direction:column;gap:9px}
+  /* Shedding, from the end. The deck writes `data-n`; a card past it is not
+     drawn at all rather than hidden by opacity, because the space is the
+     whole point. */
+  .deck-six[data-n="3"] .deck-six-card:nth-child(n+4),
+  .deck-six[data-n="2"] .deck-six-card:nth-child(n+3),
+  .deck-six[data-n="1"] .deck-six-card:nth-child(n+2){display:none}
+
+  /* One card, capped at 111px: the list must not become the slide. */
+  .deck-six-card{position:relative;height:111px}
+  .deck-six-card a{
+    position:relative;display:block;overflow:hidden;height:100%;box-sizing:border-box;
+    padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--text);
+    background:color-mix(in srgb,var(--c) 12%,var(--bg));
+    border:1px solid color-mix(in srgb,var(--c) 32%,transparent);
+    /* Physical start, which in RTL is the right edge - the stage's own rule. */
+    border-inline-start:4px solid var(--c);
+    transition:transform .12s ease,filter .12s ease}
+  /* The trip is a page load, so the press is the only thing that animates. */
+  .deck-six-card a:active{transform:scale(.985);filter:brightness(1.12)}
+
+  /* The photograph is a watermark, not an image slot: full-bleed behind the
+     whole card, drained of its own colour and dyed in the stage's, then
+     masked from 30% at the top to nothing by the foot.
+
+     The mask reaches zero rather than a low value so the stage chip stays
+     legible over any photograph - a picture that is bright at its foot still
+     never reaches the chip, and the chip carries its own ground besides. */
+  .deck-six-photo{position:absolute;inset:0;display:block;
+    background-image:var(--src);background-size:cover;background-position:center;
+    filter:grayscale(1) contrast(1.05);
+    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.30) 0%,rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,.30) 0%,rgba(0,0,0,0) 100%)}
+  .deck-six-photo::after{content:"";position:absolute;inset:0;
+    background:var(--c);mix-blend-mode:color;opacity:.66}
+
+  .deck-six-in{position:relative;display:flex;flex-direction:column;height:100%}
+  /* Its own path, not this item's. One line, clipped rather than wrapped: a
+     breadcrumb that took two rows would cost the statement one. */
+  .deck-six-crumb{display:flex;align-items:center;gap:4px;
+    font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;
+    color:color-mix(in srgb,var(--text) 72%,transparent)}
+  .deck-six-crumb i{font-style:normal;opacity:.45}
+  .deck-six-crumb b{font-weight:600;color:color-mix(in srgb,var(--text) 88%,transparent)}
+  /* Two lines always reserved whether or not they are used, so every card
+     measures the same and the ladder above is arithmetic, not a guess. */
+  .deck-six-say{margin-top:3px;min-height:40px;
+    font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;
+    font-size:15px;line-height:1.32;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .deck-six-stage{margin-top:auto;align-self:flex-start;
+    padding:1px 8px;border-radius:3px;border:1px solid var(--c);color:var(--c);
+    background:color-mix(in srgb,var(--bg) 65%,transparent);
+    font-size:11.5px;font-weight:700;line-height:1.5;white-space:nowrap}
+
+  /* Version A's one flexible gap. Version B splits it in two (DIA-376). */
+  .deck-six-gap{flex:1;min-height:14px}
+
+  .deck-six-do{flex:none;display:flex;flex-direction:column;gap:9px}
+  .deck-six-all,.deck-six-share{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    box-sizing:border-box;border-radius:6px;text-decoration:none;
+    font:inherit;font-weight:600;cursor:pointer}
+  .deck-six-all{min-height:43px;font-size:14.5px;color:var(--text);
+    background:none;border:1px solid color-mix(in srgb,var(--text) 22%,transparent)}
+  /* The only gold-filled action on the item page. */
+  .deck-six-share{min-height:46px;font-size:15px;font-weight:700;border:0;
+    background:var(--accent);color:var(--accent-ink)}
+  .deck-six-all:active{background:color-mix(in srgb,var(--text) 8%,transparent)}
+  .deck-six-share:active{filter:brightness(1.06)}
+  .deck-six-all svg,.deck-six-share svg{flex:none;fill:none;stroke:currentColor;
+    stroke-linecap:round;stroke-linejoin:round}
+  .deck-six-all svg{width:17px;height:17px;stroke-width:1.7}
+  .deck-six-share svg{width:18px;height:17px;stroke-width:2}
+
+  /* DIA-436's control in its smallest form: a line, because a second pill
+     under share would fight it. Not drawn yet - DIA-395 puts it in DIA-436's
+     round - and kept here because the rule is the same wherever it lands. */
+  .deck-six-src{flex:none;display:block;width:100%;margin:0;padding:6px 0;
+    border:0;background:none;font:inherit;font-size:13px;font-weight:600;
+    text-align:center;cursor:pointer;
+    color:color-mix(in srgb,var(--text) 56%,transparent)}
+
+  /* The site's name and nothing else - no tagline, no address. */
+  .deck-six-mark{flex:none;display:flex;align-items:center;justify-content:center;
+    gap:7px;padding-top:2px}
+  .deck-six-mark i{width:3px;height:14px;background:var(--accent);display:block}
+  .deck-six-mark span{font-family:"Frank Ruhl Libre",Georgia,serif;font-size:14px;
+    color:color-mix(in srgb,var(--text) 72%,transparent)}
+
+  /* The fallback's whole feedback, in the slot the jump pill uses - above the
+     strip, where the thumb is not. Centred rather than tracking a finger,
+     because nothing is under one when it appears. */
+  .deck-toast{
+    position:absolute;z-index:3;bottom:100%;margin-bottom:10px;
+    left:50%;transform:translateX(-50%);
+    padding:7px 14px;border-radius:999px;white-space:nowrap;
+    background:var(--text);color:var(--bg);
+    font-size:13px;font-weight:600;line-height:1.4;
+    pointer-events:none}
+
 }
