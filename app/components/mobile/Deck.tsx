@@ -130,6 +130,14 @@ const FADE = 160;
 const COVER = 300;
 
 /**
+ * How long §8's sealed ballot stays amber after a tap (DIA-394).
+ *
+ * The tap is answered and nothing acts: long enough to be seen as a reply,
+ * short enough that nothing is left switched on to be wondered about.
+ */
+const SEAL = 650;
+
+/**
  * How long the reading takes to leave when a rung is tapped (DIA-430). The
  * arrival is 180 and lives in the stylesheet alone, because nothing has to be
  * timed against its end; this one does, so it is written here as well.
@@ -158,6 +166,33 @@ const FADE_AT = 110;
  * heading, and that is a writing problem the validator reports rather than one
  * a mask should try to cover.
  */
+/**
+ * §8's shedding order, applied until slide 5 fits (DIA-394).
+ *
+ * Slide 5 has no sheet to continue into, so a reading that overruns cannot be
+ * cut - it has to be made smaller. §8 gives three things to give up, in order:
+ * the ballot's five circles become five dots, then the caveat goes, then the
+ * question drops a size. The lines, the question and the legend never go.
+ *
+ * It is a measurement and not a set of height queries because how much room
+ * the lines take is a property of the copy, not of the frame: a 664px phone
+ * with three long lines needs a step that an 844px phone with short ones does
+ * not. Each step is written and then read back, which costs a reflow apiece -
+ * three of them, on one card, once per resize.
+ */
+const SHED = 3;
+const shed = (deck: HTMLElement | null) => {
+  deck?.querySelectorAll<HTMLElement>('.deck-op').forEach((op) => {
+    const read = op.parentElement;
+    if (!read) return;
+    for (let step = 0; step <= SHED; step += 1) {
+      if (step) op.setAttribute('data-shed', String(step));
+      else op.removeAttribute('data-shed');
+      if (read.scrollHeight - read.clientHeight <= 1) return;
+    }
+  });
+};
+
 const refade = (read: HTMLElement, cut: boolean) => {
   read.style.removeProperty('--fade');
   if (!cut) return;
@@ -667,6 +702,36 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
   }, [SLIDES, go]);
 
   /**
+   * §8's back-reference: a line on slide 5 that condenses another slide, and
+   * points at it (DIA-394).
+   *
+   * The deck *scrolls* rather than jumps - the reader is being shown where the
+   * evidence is, and a slide appearing out of nowhere would not show them
+   * that. Coming back is the ordinary swipe forward, and the move pushes the
+   * deck's one entry like any other.
+   *
+   * `data-back` names the slide in the canonical six and is resolved here,
+   * because the deck is the only thing that knows which slides this item has
+   * (DIA-422).
+   */
+  const goBack = useCallback((el: HTMLElement) => {
+    const i = SLIDES.findIndex((s) => s.n === Number(el.getAttribute('data-back')));
+    if (i < 0) return;
+    go(i);
+    // Slide 3 holds one stage per page, and the line summarises the stage the
+    // item is standing on - so the stack walks to it rather than staying
+    // wherever the reader last left it. The stack is addressed by the slide's
+    // index, which is what it publishes itself under.
+    if (el.hasAttribute('data-back-stage')) {
+      window.dispatchEvent(new CustomEvent('deck:stage', { detail: { slide: i, to: 'current' } }));
+    }
+  }, [SLIDES, go]);
+
+  /** The seal's one timer, so a second tap restarts it rather than racing it. */
+  const sealing = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (sealing.current) clearTimeout(sealing.current); }, []);
+
+  /**
    * A slide that owns pages moved between them. The deck owns the URL, so it
    * rewrites the tail; the stack only says that there is a new one.
    */
@@ -906,6 +971,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
    * fallback face and the real one do not wrap in the same place.
    */
   const measure = useCallback(() => {
+    shed(deckEl());
     deckEl()?.querySelectorAll<HTMLElement>('.deck-card').forEach((card) => {
       const read = card.querySelector<HTMLElement>('.deck-read');
       // A card with no way on is never cut. §7's slide is composed rather than
@@ -1265,6 +1331,23 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       const rung = t.closest<HTMLElement>('.deck-loc-jump');
       if (rung) { e.preventDefault(); jumpSheet(rung); return; }
 
+      // §8's sealed ballot. It answers and does not act: the legend goes amber
+      // and settles. No toast and no text - a sentence appearing under a
+      // sealed box would be the explanatory paragraph §8 refused.
+      const seal = t.closest<HTMLElement>('.deck-op-poll');
+      if (seal) {
+        e.preventDefault();
+        if (sealing.current) clearTimeout(sealing.current);
+        seal.setAttribute('data-said', '');
+        sealing.current = setTimeout(() => seal.removeAttribute('data-said'), SEAL);
+        return;
+      }
+
+      // §8's pointing line, before the chip: the whole line is the target, so
+      // the tap must not be claimed by anything the paragraph happens to hold.
+      const back = t.closest<HTMLElement>('[data-back]');
+      if (back) { e.preventDefault(); goBack(back); return; }
+
       // The whole cited passage opens the sheet, not only the glyph that ends
       // it (DIA-414); `.deck-more` is a button of its own and is hit directly.
       const chip = chipOf(t);
@@ -1293,7 +1376,7 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
     };
     deck.addEventListener('click', onClick);
     return () => deck.removeEventListener('click', onClick);
-  }, [openSheet, closeSheet, jumpSheet]);
+  }, [openSheet, closeSheet, jumpSheet, goBack]);
 
   /**
    * The sheet under a finger (DIA-427). Four gestures, one model.
@@ -1586,6 +1669,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       if (e.key === 'Escape') { e.preventDefault(); closeSheet(); }
       return;
     }
+    // §8's pointing line is a `role="button"` wrapper rather than a `button`,
+    // because it holds a paragraph - so the keys a button answers to have to
+    // be answered here: a div gets no click from Enter or Space.
+    const back = (e.target as HTMLElement).closest?.<HTMLElement>('[data-back]');
+    if (back && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); goBack(back); return; }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(at + 1); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); go(at - 1); }
     else if (e.key === 'Home') { e.preventDefault(); go(0); }

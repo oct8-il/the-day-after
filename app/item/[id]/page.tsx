@@ -16,6 +16,7 @@ import { Deck } from '@/app/components/mobile/Deck';
 import { Gate, GateGround, type GateRung } from '@/app/components/mobile/Gate';
 import { overviewParts } from '@/app/components/mobile/Overview';
 import { stagesParts } from '@/app/components/mobile/Stages';
+import { opinionParts } from '@/app/components/mobile/Opinion';
 import { StageArrows } from '@/app/components/mobile/StagesShell';
 import { sourceLine } from '@/lib/deck';
 import { reached as reachedStages, unreached as unreachedStages, stageDate } from '@/lib/stage';
@@ -127,12 +128,26 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     };
   })();
 
-  /** The phone deck's slides 2-4: each hands back a card and its sheet. */
+  /** The phone deck's slides 2-5: each hands back a card and its sheet. */
   const phone = {
     ov: overviewParts({ summary: inc.summary, claims: inc.claims }),
     st: stagesParts({ inc, slide: 2, kind: 'reached' }),
     gap: deck.hasGap ? stagesParts({ inc, slide: 3, kind: 'unreached' }) : null,
+    // §8's whole head is authored per incident, so an item with no `poll`
+    // block has no slide 5 to draw yet and keeps the naming placeholder.
+    op: inc.poll ? opinionParts({ poll: inc.poll }) : null,
   };
+
+  /**
+   * Everything the deck is handed is indexed by *position*, and a slide may be
+   * absent: an item with nothing unreached has no slide 4 and shows slide 5
+   * fourth (§7, DIA-422). So the slots are written against the canonical six
+   * and flattened here, once, rather than four arrays each having to remember
+   * which item is the short one - which is how slide 5's card would have
+   * landed in slide 4's frame on t05.
+   */
+  const bySlide = <T,>(slot: Record<number, T | null>): (T | null)[] =>
+    [1, 2, 3, 4, 5, 6].filter((n) => !deck.omit.includes(n)).map((n) => slot[n] ?? null);
 
   const chapters = [
     { n: 1, t: 'הבעיה', color: 'var(--s2)', d: 'מה נכשל' },
@@ -161,17 +176,19 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
            The sheet itself names neither (DIA-439); a letter addressed to
            us has to, or we cannot tell which failure it is about. */
         send={{ leaf: gate.leaf, title: inc.he }}
-        slides={[
-          <Gate key="gate" {...gate.props} />,
-          phone.ov.card, phone.st.card, phone.gap?.card ?? null,
-        ]}
-        sheets={[null, phone.ov.sheet, phone.st.sheet, phone.gap?.sheet ?? null]}
+        slides={bySlide({
+          1: <Gate key="gate" {...gate.props} />,
+          2: phone.ov.card,
+          3: phone.st.card,
+          4: phone.gap?.card ?? null,
+          5: phone.op?.card ?? null,
+        })}
+        sheets={bySlide({ 2: phone.ov.sheet, 3: phone.st.sheet, 4: phone.gap?.sheet ?? null })}
         omit={deck.omit}
-        mid={[
-          null, null,
-          deck.reachedPages > 1 ? <StageArrows key="up" slide={2} /> : null,
-          deck.hasGap && deck.gapPages > 1 ? <StageArrows key="down" slide={3} /> : null,
-        ]}
+        mid={bySlide({
+          3: deck.reachedPages > 1 ? <StageArrows key="up" slide={2} /> : null,
+          4: deck.hasGap && deck.gapPages > 1 ? <StageArrows key="down" slide={3} /> : null,
+        })}
         ground={<GateGround {...gate.props} />}
         credit={gate.credit}
       />

@@ -23,7 +23,7 @@ import { TYPES, type Claim } from '@/lib/data';
  * media query on purpose: the difference between the surfaces is content, and a
  * mark may not quietly mean one thing here and another there.
  */
-export type ChipVariant = 'dot' | 'named' | 'glyph';
+export type ChipVariant = 'dot' | 'named' | 'glyph' | 'none';
 
 /**
  * §5's citation mark on the phone: a link glyph in a 20px round, and `+N`
@@ -77,6 +77,10 @@ function Chip({ ids, claims, variant, drawer, opens, cites }: {
    */
   cites?: string | null;
 }) {
+  // §8's opinion lines carry annotation and draw no mark: they are slides 2
+  // and 3 condensed, and what stands at the end of each is a way back to the
+  // slide it condenses, not a citation of its own (DIA-394).
+  if (variant === 'none') return null;
   const cited = cite(ids, claims);
   if (!cited.length) return null;
   const label = cited.map((c) => `${TYPES[c.source_type].he} · ${c.source}`).join(' · ');
@@ -258,10 +262,21 @@ function Item({ span, claims, k, variant, drawer, opens, cites }: {
  * per-item form. Each item keeps its own chip, because each rests on its own
  * claim; that is the whole reason the form exists.
  */
-export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
+export function Annotated({ text, claims, chip = 'dot', drawers, opens, end }: {
   text: string;
   claims: Claim[];
   chip?: ChipVariant;
+  /**
+   * What stands at the very end of the field, where a chip would stand.
+   *
+   * §8's opinion lines end in a back-reference to the slide they condense
+   * rather than in a citation (DIA-394), and it has to sit in the last line's
+   * own flow - a sibling after the paragraph would wrap onto a line of its
+   * own. It is placed only on a field whose last part is a span, which is
+   * every field that has anything to point at: a heading or a list at the end
+   * of one is a reading, not a summary line.
+   */
+  end?: ReactNode;
   /**
    * A prefix for the drawer ids, and the switch that turns them on. One page
    * can carry several of these - a stage stack has one per stage - so the
@@ -299,11 +314,15 @@ export function Annotated({ text, claims, chip = 'dot', drawers, opens }: {
     const span = part;
     if (!span.marker) {
       const id = idOf(i);
+      const tail = i === parts.length - 1 ? end : null;
       out.push(
         <Span
           key={i}
           blocks={span.blocks}
-          chip={<Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} cites={citeOf(i)} />}
+          chip={<>
+            <Chip ids={span.ids} claims={claims} variant={chip} drawer={id} opens={opens} cites={citeOf(i)} />
+            {tail}
+          </>}
           after={drawers && id ? <Drawer id={id} ids={span.ids} claims={claims} /> : null}
           k={i}
         />,
