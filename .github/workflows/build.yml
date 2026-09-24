@@ -127,7 +127,28 @@ jobs:
       - run: npm ci
       # The environment comes from the branch name, which GITHUB_REF_NAME
       # already carries. Nothing to configure here or in Vercel.
+      #
+      # The channels are the one exception, and they are set here rather than
+      # left off on purpose. §8's rule is that nothing ships dead: with no
+      # list endpoint slide 5's pill and its sheet are not drawn at all, which
+      # is the shape a deployment has until one is chosen (DIA-435) - and a
+      # shape with nothing in it is a shape the deck tests cannot test. So this
+      # artifact, which is only ever served to the test jobs and never
+      # deployed, is built as the configured shape.
+      #
+      # The endpoint below is deliberately nobody's: no provider has been
+      # chosen, the tests answer every off-site request themselves, and nothing
+      # leaves the runner. The field names are the ones the suite asserts are
+      # carried, not any provider's.
+      #
+      # WHATSAPP_INVITE_URL is left unset, because that is genuinely where
+      # DIA-446 stands: the tests assert that every row drawn has somewhere to
+      # go, which holds in both shapes.
       - run: npm run build
+        env:
+          NEWSLETTER_ACTION: https://example.invalid/not-a-real-list
+          NEWSLETTER_PAGE_FIELD: page
+          NEWSLETTER_HIDDEN: embed=1
       - uses: actions/upload-artifact@v4
         with: { name: site, path: out/, retention-days: 7 }
 
@@ -170,6 +191,10 @@ jobs:
       # them. It cost a round of phone review to learn.
       - name: serve a development build
         run: npm run dev -- --port 3000 & npx wait-on http://localhost:3000 -t 60000
+        env:
+          NEWSLETTER_ACTION: https://example.invalid/not-a-real-list
+          NEWSLETTER_PAGE_FIELD: page
+          NEWSLETTER_HIDDEN: embed=1
       - name: assert again, where the dev warnings live
         run: npm run test:deck
         env:

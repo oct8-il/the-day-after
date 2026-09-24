@@ -134,3 +134,46 @@ test('inside a cite a hash is not a heading - the words stay, the mark goes', ()
   assert.equal(first?.kind === 'p' && first.children[0]?.kind === 'text'
     && first.children[0].text, 'כותרת');
 });
+
+/* ------------------------------------------------------- prose in a gap
+   The two fields docs/annotations.html §4 exempts from coverage - a poll's
+   question and its caveat - are gaps from end to end: they carry the set's
+   inline marks and no cite, so the whole field used to fall out of the
+   renderer and draw an empty element (DIA-443). */
+
+test('a field with no cite at all is still drawn, and cites nothing', () => {
+  const parts = renderAnnotation('לא פורסם **אימות חיצוני** לכך שהמתווה פועל.');
+  assert.deepEqual(parts.map((p) => p.kind), ['span']);
+  const span = parts[0];
+  assert.equal(span?.kind === 'span' && span.ids.length, 0);
+  assert.equal(span?.kind === 'span' && span.blocks[0]?.kind, 'p');
+  assert.equal(
+    span?.kind === 'span' && span.blocks[0]?.kind === 'p'
+      && span.blocks[0].children.some((c) => c.kind === 'bold'),
+    true,
+  );
+});
+
+test('prose before a cited passage keeps its place ahead of it', () => {
+  const parts = renderAnnotation('הקדמה.\n\n[[פסקה.]](c01)');
+  assert.deepEqual(parts.map((p) => p.kind), ['span', 'span']);
+  assert.deepEqual(parts.map((p) => (p.kind === 'span' ? p.ids : [])), [[], ['c01']]);
+});
+
+test('a heading and the prose under it are two parts, in that order', () => {
+  const parts = renderAnnotation('## כותרת\n\nהקדמה.\n\n[[פסקה.]](c01)');
+  assert.deepEqual(parts.map((p) => p.kind), ['heading', 'span', 'span']);
+});
+
+test('a lone list marker belongs to the span it introduces, not to the prose', () => {
+  // The marker line is the gap's last line and is how a list whose items each
+  // rest on a different source is written - it is not a paragraph of its own.
+  const parts = renderAnnotation('הקדמה.\n\n* [[פריט]](c01)');
+  assert.deepEqual(parts.map((p) => p.kind), ['span', 'span']);
+  assert.equal(parts[0]?.kind === 'span' && parts[0].blocks.length, 1);
+  assert.equal(parts[1]?.kind === 'span' && parts[1].marker, 'ul');
+});
+
+test('a field of nothing but whitespace still draws nothing', () => {
+  assert.deepEqual(renderAnnotation('   \n\n  '), []);
+});

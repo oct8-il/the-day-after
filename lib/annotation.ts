@@ -383,15 +383,46 @@ export function renderAnnotation(src: string): RenderPart[] {
     }
   };
 
+  /**
+   * The prose a gap holds, as a span that cites nothing.
+   *
+   * Almost everywhere there is none: the coverage rule keeps prose inside a
+   * cite span, and uncoveredText is what refuses a field that breaks it. The
+   * exceptions are the two fields docs/annotations.html §4 exempts - a poll's
+   * question and its caveat - where the *whole field* is a gap. Dropping it
+   * was the renderer answering a writing rule by deleting writing that is not
+   * breaking one, and §8's caveat line was the first field to be drawn empty
+   * by it (DIA-443).
+   *
+   * It carries no ids, so it draws no chip and opens no drawer - there is
+   * nothing under it to open. `marked` is the gap whose last line is the list
+   * marker for the span that follows it: that line belongs to the span, not
+   * to the prose above it.
+   */
+  const spill = (gap: string, marked: boolean) => {
+    const lines = gap.split('\n');
+    if (marked) lines.pop();
+    const prose = lines.filter((l) => l.trim() && headingText(l) === null).join('\n');
+    if (!prose.trim()) return;
+    const bs = blocks(prose);
+    if (bs.length) out.push({ kind: 'span', blocks: bs, ids: [] });
+  };
+
   spans.forEach((s, i) => {
-    headings(gaps[i] ?? '');
-    const marker = gapMarker(gaps[i] ?? '');
+    const gap = gaps[i] ?? '';
+    const marker = gapMarker(gap);
+    headings(gap);
+    spill(gap, marker !== null);
     out.push({ kind: 'span', blocks: blocks(s.text), ids: s.ids, ...(marker ? { marker } : {}) });
   });
   // A heading after the last passage is still the author's words, so it is
   // drawn. The validator is where that shape is called out (DIA-419); the
   // renderer does not answer a writing problem by deleting the writing.
-  headings(gaps[spans.length] ?? '');
+  const tail = gaps[spans.length] ?? '';
+  headings(tail);
+  // A field with no spans at all has its own last line still to place, and no
+  // span for a marker to belong to - so nothing is held back from it.
+  spill(tail, spans.length > 0 && gapMarker(tail) !== null);
 
   return out;
 }

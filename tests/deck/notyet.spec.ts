@@ -454,15 +454,26 @@ test.describe('the page', () => {
       for (const el of document.querySelectorAll('.deck *')) {
         const s = getComputedStyle(el);
         if (s.stroke !== 'rgb(217, 165, 79)' && s.color !== 'rgb(217, 165, 79)') continue;
-        out.push(el.closest('.deck-gap-mark') ? 'mark' : `${el.tagName}.${el.className}`);
+        out.push(
+          el.closest('.deck-gap-mark') ? 'mark'
+          : el.closest('.deck-op-poll legend') ? 'seal'
+          : `${el.tagName}.${el.className}`,
+        );
       }
       return { warn, out, marks: document.querySelectorAll('.deck-gap-mark').length };
     });
     expect(n.warn).toBe('#d9a54f');
     // `stroke` is inherited, so the svg and its four paths all report it. What
-    // matters is that nothing outside the one mark does.
+    // matters is that nothing outside the two ruled uses does.
+    //
+    // There were two of them from 24 September. §7's hourglass was the only
+    // one while slide 5 was a placeholder; §8's sealed ballot puts the same
+    // amber on the clock in its legend, and on the legend's words for the
+    // 650ms a tap is answered in (DIA-394). The scan stays deck-wide rather
+    // than narrowing to slide 4, because what it is guarding is that a third
+    // one cannot appear without someone ruling on it.
     expect(n.out.length).toBeGreaterThan(0);
-    expect([...new Set(n.out)]).toEqual(['mark']);
+    expect([...new Set(n.out)].sort()).toEqual(['mark', 'seal']);
     expect(n.marks).toBe(1);
   });
 
