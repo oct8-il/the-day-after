@@ -1,0 +1,283 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>היום שאחרי · The outward channels — configuring the updates sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#121519; --surface:#191d23; --surface-2:#20252c; --line:#2b323b; --line-soft:#232931;
+    --text:#e9e6df; --text-2:#b5bcc5; --muted:#8a939e;
+    --accent:#e0a44a; --accent-ink:#1a1206; --accent-soft:rgba(224,164,74,.14);
+    --yes:#6fbf8a; --partial:#d9a54f; --no:#d96a5f;
+    --mark:rgba(224,164,74,.22);
+    color-scheme:dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+      --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+      --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+      --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+      --mark:rgba(185,122,28,.20);
+      color-scheme:light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f4ef; --surface:#ffffff; --surface-2:#f0ede6; --line:#d8d3c8; --line-soft:#e6e2d9;
+    --text:#1d2126; --text-2:#3d444d; --muted:#6c7580;
+    --accent:#b97a1c; --accent-ink:#ffffff; --accent-soft:rgba(185,122,28,.12);
+    --yes:#2f8f5b; --partial:#b97a1c; --no:#c4483c;
+    --mark:rgba(185,122,28,.20);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover,a:focus-visible{border-bottom-color:var(--accent);outline:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .frame{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+  header.masthead{padding:60px 0 36px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.1;margin:14px 0 10px}
+  .lede{font-size:19px;color:var(--text-2);max-width:64ch;margin:0}
+  h2{font-family:"Frank Ruhl Libre",Georgia,serif;font-weight:500;font-size:29px;line-height:1.2;margin:56px 0 6px;scroll-margin-top:20px}
+  h3{font-size:18px;font-weight:700;margin:30px 0 6px;letter-spacing:.01em}
+  h4{font-size:14.5px;font-weight:700;margin:20px 0 4px;color:var(--text-2);letter-spacing:.04em;text-transform:uppercase}
+  p{margin:10px 0;max-width:72ch}
+  ul,ol{max-width:72ch;padding-inline-start:22px}
+  li{margin:6px 0}
+  code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px}
+  pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:14px 0}
+  pre code{background:none;border:0;padding:0;font-size:13.5px;line-height:1.6}
+  .he{direction:rtl;unicode-bidi:isolate}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  td.mono,th.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px}
+  .yes{color:var(--yes);font-weight:700}
+  .off{color:var(--muted)}
+  .no{color:var(--no);font-weight:700}
+  mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 3px}
+  .note{border-inline-start:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  .warn{border-inline-start:3px solid var(--no);background:rgba(217,106,95,.10);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:72ch}
+  nav.toc{margin:26px 0 0;font-size:15px;columns:2;column-gap:36px}
+  nav.toc a{display:block;padding:3px 0;color:var(--text-2)}
+  nav.toc a:hover{color:var(--accent)}
+  hr{border:0;border-top:1px solid var(--line);margin:44px 0}
+  .meta{color:var(--muted);font-size:14px}
+  ol.steps{counter-reset:s;list-style:none;padding-inline-start:0;max-width:72ch}
+  ol.steps>li{counter-increment:s;position:relative;padding-inline-start:44px;margin:18px 0}
+  ol.steps>li::before{content:counter(s);position:absolute;inset-inline-start:0;top:1px;width:28px;height:28px;border-radius:50%;
+    display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--text-2)}
+  @media (max-width:640px){ nav.toc{columns:1} .frame{padding:0 18px 64px} table{font-size:14px} }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header class="masthead">
+  <div class="kicker">היום שאחרי · configuration</div>
+  <h1>The outward channels</h1>
+  <p class="lede">Slide 5's sealed ballot promises that the answer opens later. The pill under it opens the updates sheet, which is the one place the item page asks a reader for anything. This file is how that sheet is switched on: six values, where each comes from, and what happens when one is missing.</p>
+  <p class="meta">v1.0 · 24 September 2026 · <span class="mono">DIA-447</span> · the design is <a href="mobile-item.html#opinion">mobile-item.html §8</a>, the provider decision is <span class="mono">DIA-435</span></p>
+</header>
+
+<nav class="toc">
+  <a href="#scope">1 · What this governs</a>
+  <a href="#values">2 · The six values</a>
+  <a href="#mail">3 · Switching the mail list on</a>
+  <a href="#whatsapp">4 · WhatsApp</a>
+  <a href="#instagram">5 · Instagram</a>
+  <a href="#where">6 · Where to set them</a>
+  <a href="#verify">7 · Verifying, and the one thing that lies</a>
+  <a href="#code">8 · What the code does with them</a>
+</nav>
+
+<h2 id="scope">1 · What this governs</h2>
+
+<p>One screen: the updates sheet behind slide 5's pill <span class="he">עדכנו אותי כשהמענה ייפתח</span>. It holds a mail form, a divider, and two rows — a WhatsApp group and the Instagram account. Nothing else on the site reads these values.</p>
+
+<p><strong>No provider is chosen in the code.</strong> What the build knows is that a mail list takes an HTTP POST with an address in it. Which list that is, what it promises and what its privacy line says are <span class="mono">DIA-435</span>'s, still open. So the endpoint is a whole URL and the field names are values: switching between Buttondown, Kit, Mailchimp or a plain form service is four values and no commit.</p>
+
+<div class="note"><strong>Nothing ships dead.</strong> A control that cannot do what it says is not drawn. With no endpoint, neither the pill nor the sheet behind it exists and the slide ends at the ballot — which is the shape every deployment has today. With no WhatsApp link, that row is not drawn. Instagram has no dependency.</div>
+
+<h2 id="values">2 · The six values</h2>
+
+<p>All six are read in <code>next.config.mjs</code> and handed to the app as <code>NEXT_PUBLIC_*</code>, the same way the environment and the data pool are. You set the plain name; the prefix is added for you.</p>
+
+<table>
+  <tr><th class="mono">name</th><th>what it is</th><th>default</th><th>empty means</th></tr>
+  <tr>
+    <td class="mono">NEWSLETTER_ACTION</td>
+    <td>The form's action — the <em>whole</em> URL the address is posted to.</td>
+    <td class="off">none</td>
+    <td>No pill and no sheet. The slide ends at the ballot.</td>
+  </tr>
+  <tr>
+    <td class="mono">NEWSLETTER_EMAIL_FIELD</td>
+    <td>What that endpoint calls the address.</td>
+    <td class="mono">email</td>
+    <td>Falls back to <code>email</code>.</td>
+  </tr>
+  <tr>
+    <td class="mono">NEWSLETTER_PAGE_FIELD</td>
+    <td>Where the page the reader was on goes, with its hash — so a mail sent later can say which failure it is about.</td>
+    <td class="off">none</td>
+    <td>The page is not sent. The sign-up still works.</td>
+  </tr>
+  <tr>
+    <td class="mono">NEWSLETTER_HIDDEN</td>
+    <td>Whatever else that endpoint needs, as a query string: <code>embed=1</code>, a list id, a bot-trap. Parsed into hidden inputs and not interpreted.</td>
+    <td class="off">none</td>
+    <td>No extra fields are sent.</td>
+  </tr>
+  <tr>
+    <td class="mono">WHATSAPP_INVITE_URL</td>
+    <td>The group or channel invite link.</td>
+    <td class="off">none</td>
+    <td>The WhatsApp row is not drawn.</td>
+  </tr>
+  <tr>
+    <td class="mono">INSTAGRAM_URL</td>
+    <td>The account.</td>
+    <td class="mono">https://instagram.com/oct8.co.il</td>
+    <td>Falls back to the default.</td>
+  </tr>
+</table>
+
+<p>Every URL among them must be <code>https://</code>. An <code>http</code> value fails the build with the variable's name in the error rather than being silently downgraded — these are the only places the item page sends a reader off-site, and one of them takes an address.</p>
+
+<h2 id="mail">3 · Switching the mail list on</h2>
+
+<ol class="steps">
+  <li><strong>Create the list</strong> with whichever provider <span class="mono">DIA-435</span> settles on. The only requirement from this side is that it accepts a plain HTML form POST — no JavaScript SDK and no API key. Every major one does; it is how their "embed" snippet works.</li>
+  <li><strong>Copy its HTML embed snippet</strong> out of the provider's dashboard. You are not going to paste it anywhere — you are going to read four values off it.</li>
+  <li><strong>Read the four values.</strong> From <code>&lt;form action="…"&gt;</code> take <code>NEWSLETTER_ACTION</code>. From the visible e-mail <code>&lt;input&gt;</code> take its <code>name</code> — that is <code>NEWSLETTER_EMAIL_FIELD</code>. Every <code>&lt;input type="hidden"&gt;</code> in the snippet becomes one <code>key=value</code> pair in <code>NEWSLETTER_HIDDEN</code>, joined with <code>&amp;</code>. If the provider supports a custom or metadata field, name it in <code>NEWSLETTER_PAGE_FIELD</code>; if it does not, leave it empty.</li>
+  <li><strong>Set them</strong> on the deployment (<a href="#where">§6</a>) and redeploy.</li>
+  <li><strong>Verify with one real address</strong> (<a href="#verify">§7</a>). This step is not optional — see the warning there.</li>
+</ol>
+
+<h3>What the four look like</h3>
+
+<p>Illustrations, not instructions: read yours off your own snippet, because these change and the id in each is yours.</p>
+
+<table>
+  <tr><th>provider</th><th class="mono">ACTION</th><th class="mono">EMAIL_FIELD</th><th class="mono">HIDDEN</th><th class="mono">PAGE_FIELD</th></tr>
+  <tr>
+    <td>Buttondown</td>
+    <td class="mono">https://buttondown.com/api/emails/embed-subscribe/&lt;username&gt;</td>
+    <td class="mono">email</td>
+    <td class="mono">embed=1</td>
+    <td class="mono">metadata__page</td>
+  </tr>
+  <tr>
+    <td>Kit</td>
+    <td class="mono">https://app.kit.com/forms/&lt;form-id&gt;/subscriptions</td>
+    <td class="mono">email_address</td>
+    <td class="off">—</td>
+    <td class="mono">fields[page]</td>
+  </tr>
+  <tr>
+    <td>Mailchimp</td>
+    <td class="mono">https://&lt;dc&gt;.list-manage.com/subscribe/post</td>
+    <td class="mono">EMAIL</td>
+    <td class="mono">u=…&amp;id=…</td>
+    <td class="off">a merge field, if you make one</td>
+  </tr>
+  <tr>
+    <td>a plain form service</td>
+    <td class="mono">https://…/f/&lt;form-id&gt;</td>
+    <td class="mono">email</td>
+    <td class="off">—</td>
+    <td class="mono">page</td>
+  </tr>
+</table>
+
+<div class="note"><strong>Mailchimp's e-mail field is not always <code>EMAIL</code></strong> — some accounts' generated snippets call it <code>MERGE0</code>. This is exactly why the name is a value and not code: read it off your own form.</div>
+
+<h4>Worked example</h4>
+<pre><code>NEWSLETTER_ACTION=https://buttondown.com/api/emails/embed-subscribe/oct8
+NEWSLETTER_EMAIL_FIELD=email
+NEWSLETTER_PAGE_FIELD=metadata__page
+NEWSLETTER_HIDDEN=embed=1</code></pre>
+
+<h3>How the send actually works</h3>
+
+<p>The form is submitted by the browser into a hidden <code>&lt;iframe&gt;</code> — a real HTML form POST, not a <code>fetch</code>. Three reasons, and they are why the provider must accept a plain form:</p>
+
+<ul>
+  <li>A static export has no server, so there is no key to keep. The embed endpoints want none.</li>
+  <li>A navigation would throw the reader out of Instagram's in-app browser, which is where most of them will be, and lose the failure they were reading.</li>
+  <li>No CORS negotiation to fail: a form POST is allowed to any origin.</li>
+</ul>
+
+<p>The cost is in <a href="#verify">§7</a>.</p>
+
+<h2 id="whatsapp">4 · WhatsApp</h2>
+
+<p><code>WHATSAPP_INVITE_URL</code> is the invite link for the silent updates group. The row reads <span class="he">קבוצת עדכונים בוואטסאפ · שקטה. רק אנחנו כותבים, רק כשיש מה.</span> and it is not drawn while the value is empty, which is where <span class="mono">DIA-446</span> stands today.</p>
+
+<p>Before it is set, that issue wants four things decided: the group created with <em>only admins can send</em> on (or a Channel, which is one-way by design and does not show every member's phone number to every other member); a phone number for it that is not a personal one; a rule for rotating the link if it leaks, remembering that on a static site a link change is a deploy; and a privacy line on <code>/about</code> naming WhatsApp as a third party the reader chooses to join.</p>
+
+<div class="warn"><strong>A WhatsApp <em>group</em> shows every member's phone number to every other member.</strong> That is a real disclosure to make on a site about accountability, and it is the argument for a Channel. Decide it on <span class="mono">DIA-446</span>, not here.</div>
+
+<h2 id="instagram">5 · Instagram</h2>
+
+<p><code>INSTAGRAM_URL</code> defaults to the project's account, so this row ships without configuration. The row reads <span class="he">@oct8.co.il · נפרסם שם כשהמענה ייפתח.</span> — which is a promise, and it belongs to whoever runs the account on the day.</p>
+
+<p>The handle is a latin run inside a Hebrew line, so it is isolated with <code>&lt;bdi&gt;</code> rather than <code>dir="ltr"</code>: the second would push it to the wrong end of its own row.</p>
+
+<h2 id="where">6 · Where to set them</h2>
+
+<h3>On the deployment</h3>
+<p>Project settings → Environment Variables. Plain names, no <code>NEXT_PUBLIC_</code> prefix. Set them for every environment you want the sheet on; a change needs a redeploy, because a static export bakes them into the HTML.</p>
+
+<div class="note"><strong>Staging first.</strong> Set them on staging, send yourself one real address, and only then put them on prod. Nothing about this can be tested after the fact from the site itself.</div>
+
+<h3>Locally</h3>
+<pre><code>NEWSLETTER_ACTION=https://example.invalid/list \
+NEWSLETTER_PAGE_FIELD=page \
+NEWSLETTER_HIDDEN=embed=1 \
+npm run dev</code></pre>
+<p>Any URL will do while you are looking at the screen — the sheet will report a failure when the post does not land, which is the failure state working. Add <code>WHATSAPP_INVITE_URL=https://chat.whatsapp.com/…</code> to see the second row.</p>
+
+<h3>In CI</h3>
+<p><code>.github/workflows/build.yml</code> sets the endpoint to <code>https://example.invalid/not-a-real-list</code> on the artifact the test jobs are served. That artifact is never deployed. Without it, eleven of the twelve sheet tests would skip themselves — the shape a deployment has today is the one with no pill, and a shape with nothing in it is a shape the tests cannot test. The suite answers every off-site request itself, so nothing leaves the runner whatever the endpoint is.</p>
+
+<h2 id="verify">7 · Verifying, and the one thing that lies</h2>
+
+<div class="warn">
+  <p style="margin-top:0"><strong>A wrong endpoint reads as success.</strong> The form posts to another origin, so nothing about the answer can be read back: a subscription, a 404, a typo'd username and the browser's own error page are <em>the same event</em> from this side. The frame loading is the whole receipt.</p>
+  <p style="margin-bottom:0">This is not a bug to fix — it is the price of having no server. It is also why the sheet says <span class="he">כמעט. בדקו את המייל.</span> rather than claiming a subscription, and why double opt-in is doing real work: a reader whose sign-up never arrived finds out from the absence of the confirmation mail.</p>
+</div>
+
+<p>Two cases <em>are</em> knowable and are answered: a browser that reports itself offline is told before the form leaves, and a load that does not come within 8 seconds is a failure with the address kept.</p>
+
+<h3>The check, once, per environment</h3>
+<ol class="steps">
+  <li>Open an item page on a phone at the deployed URL, swipe to <span class="he">דעת הציבור</span>, tap the pill.</li>
+  <li>Enter a real address you can read. Send. You should see <span class="he">כמעט. בדקו את המייל.</span></li>
+  <li><strong>Open the provider's dashboard and confirm the subscriber is there.</strong> The screen is not evidence; the dashboard is.</li>
+  <li>Confirm the double opt-in mail arrived, and that its from-address and subject are ones you are willing to have land in a stranger's inbox.</li>
+  <li>If you set <code>NEWSLETTER_PAGE_FIELD</code>, check the subscriber's record carries the item URL with its <code>#5</code>.</li>
+</ol>
+
+<h2 id="code">8 · What the code does with them</h2>
+
+<table>
+  <tr><th>file</th><th>what it does</th></tr>
+  <tr><td class="mono">next.config.mjs</td><td>Reads the six plain names, refuses a non-https URL, and hands them out as <code>NEXT_PUBLIC_*</code>. One rule in one place, beside the environment and the pool.</td></tr>
+  <tr><td class="mono">lib/channels.ts</td><td>The app's view of them, and the only file that knows a mail list exists. <code>NEWSLETTER_HIDDEN</code> is parsed here into name/value pairs.</td></tr>
+  <tr><td class="mono">app/components/mobile/Updates.tsx</td><td>The sheet: lead, form, divider, rows, received state. Renders the hidden fields from configuration, and treats the frame's <code>load</code> as the receipt.</td></tr>
+  <tr><td class="mono">app/components/mobile/Opinion.tsx</td><td>Slide 5's card, and the pill — drawn only when there is an endpoint.</td></tr>
+  <tr><td class="mono">app/components/mobile/Deck.tsx</td><td>Renders the sheet beside the track, opens and closes it. Same gate.</td></tr>
+  <tr><td class="mono">tests/deck/updates.spec.ts</td><td>Twelve tests. They know no host name: they answer everything that is not the site under test, and assert what the form <em>carries</em> rather than what the fields are called.</td></tr>
+</table>
+
+<hr>
+<p class="meta">Design: <a href="mobile-item.html#opinion">mobile-item.html §8</a> · behaviour: <a href="mobile-item-ux.html">mobile-item-ux.html</a> Phase 7 · issues: <span class="mono">DIA-435</span> (provider and promise), <span class="mono">DIA-446</span> (WhatsApp), <span class="mono">DIA-447</span> (this sheet).</p>
+
+</div>
+</body></html>
