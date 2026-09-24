@@ -1,6 +1,6 @@
 import { Annotated } from '@/app/components/Annotated';
 import { plainText } from '@/lib/annotation';
-import { NEWSLETTER } from '@/lib/channels';
+import { NEWSLETTER_ACTION } from '@/lib/channels';
 import type { Poll } from '@/lib/data';
 import { cardAndSheet, type Parts } from './Card';
 
@@ -25,7 +25,7 @@ import { cardAndSheet, type Parts } from './Card';
  *   tap by going amber for a moment; it writes nowhere, because a static
  *   export has nowhere to write. The one thing that does act is the pill at
  *   the foot, and it opens a sheet rather than doing anything itself - the
- *   updates sheet, which is the deck's (DIA-447). With no newsletter account
+ *   updates sheet, which is the deck's (DIA-447). With no list endpoint
  *   configured the pill is not drawn at all and the slide ends at the ballot,
  *   because a control that cannot do what it says should not be on a page
  *   whose whole subject is promises that were not kept.
@@ -163,7 +163,7 @@ function Opinion({ poll }: { poll: Poll }) {
           is. `data-in-place` because a control the reader pressed deliberately
           gets the fade and not the cover, and `data-from` because the sheet's
           way back names the slide it was opened from (§5, DIA-439). */}
-      {NEWSLETTER ? (
+      {NEWSLETTER_ACTION ? (
         <button
           type="button"
           className="deck-op-do"

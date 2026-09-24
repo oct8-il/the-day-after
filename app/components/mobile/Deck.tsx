@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Send } from './Send';
 import { Updates } from './Updates';
-import { NEWSLETTER } from '@/lib/channels';
+import { NEWSLETTER_ACTION } from '@/lib/channels';
 
 /**
  * The phone deck's shell: the frame, the chrome and the gestures (DIA-377).
@@ -1979,9 +1979,9 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
             of these screens came from. */}
         <Send {...send} />
         {/* Nothing ships dead, and a sheet nothing can open is as dead as a
-            button that opens nothing: with no newsletter account configured
-            neither is drawn (§8, DIA-447). */}
-        {NEWSLETTER ? <Updates /> : null}
+            button that opens nothing: with no endpoint configured neither
+            is drawn (§8, DIA-447). */}
+        {NEWSLETTER_ACTION ? <Updates /> : null}
       </div>
 
       {/* §3: six dots, first slide rightmost, and no numeric counter anywhere -

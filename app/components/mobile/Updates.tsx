@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { NEWSLETTER_ACTION, WHATSAPP, INSTAGRAM } from '@/lib/channels';
+import {
+  NEWSLETTER_ACTION, NEWSLETTER_EMAIL_FIELD, NEWSLETTER_PAGE_FIELD, NEWSLETTER_HIDDEN,
+  WHATSAPP, INSTAGRAM,
+} from '@/lib/channels';
 
 /**
  * The updates sheet - docs/mobile-item.html §8, behind slide 5's button
@@ -213,7 +216,7 @@ export function Updates() {
                   <input
                     ref={field}
                     type="email"
-                    name="email"
+                    name={NEWSLETTER_EMAIL_FIELD}
                     dir="ltr"
                     inputMode="email"
                     autoComplete="email"
@@ -224,11 +227,17 @@ export function Updates() {
                   />
                 </label>
                 {bad && <p className="deck-send-say" id="deck-nl-err" role="alert">צריך כתובת מייל.</p>}
-                {/* What Buttondown's embed endpoint expects, and the page the
-                    reader was on - so a later mail can say which failure it
-                    is about. Neither is anything the reader types. */}
-                <input type="hidden" name="embed" value="1" readOnly />
-                <input type="hidden" name="metadata__page" value={here} readOnly />
+                {/* Whatever else this endpoint wants, and the page the reader
+                    was on where it has somewhere to put it. Neither is
+                    anything the reader types, and neither is this page's
+                    opinion: which provider these belong to is DIA-435's, and
+                    they arrive as configuration (lib/channels.ts). */}
+                {NEWSLETTER_HIDDEN.map(([k, v]) => (
+                  <input key={k} type="hidden" name={k} value={v} readOnly />
+                ))}
+                {NEWSLETTER_PAGE_FIELD
+                  ? <input type="hidden" name={NEWSLETTER_PAGE_FIELD} value={here} readOnly />
+                  : null}
                 {failed && (
                   <p className="deck-nl-fail" role="alert">לא נשלח — אין חיבור כרגע. נסו שוב.</p>
                 )}

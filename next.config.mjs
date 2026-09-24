@@ -80,16 +80,22 @@ if (pool === 'test' && environment !== 'dev') {
  * NEXT_PUBLIC_* the way the environment and the pool are. They are read from
  * plain names so that no account and no invite link is written into the repo.
  *
- * Nothing ships dead. With no newsletter username slide 5's button is not
- * drawn at all and the slide ends at the ballot; with no WhatsApp invite the
- * WhatsApp row is not drawn. Instagram carries a default because the account
- * exists and is public either way.
+ * NEWSLETTER_ACTION is a whole URL rather than an account name on purpose.
+ * Which mail list this posts to is DIA-435's decision and it has not been
+ * made; naming one here would put an undecided choice in the code instead of
+ * in the deployment. The three field names go with it, because every provider
+ * spells the same three things differently - so switching between them is
+ * four values and no commit.
  *
- * An http link is refused rather than downgraded: these three are the only
- * places the item page sends a reader off-site, and one of them is a mail
- * list's sign-up.
+ * Nothing ships dead. With no endpoint slide 5's pill and the sheet behind it
+ * are not drawn at all and the slide ends at the ballot; with no WhatsApp
+ * invite the WhatsApp row is not drawn. Instagram carries a default because
+ * the account exists and is public either way.
+ *
+ * An http link is refused rather than downgraded: these are the only places
+ * the item page sends a reader off-site, and one of them takes an address.
  */
-const channel = (name, fallback = '') => {
+const secure = (name, fallback = '') => {
   const v = (process.env[name] ?? fallback).trim();
   if (v && !/^https:\/\//.test(v)) {
     throw new Error(`${name} is ${JSON.stringify(v)}; expected an https:// link.`);
@@ -98,9 +104,12 @@ const channel = (name, fallback = '') => {
 };
 
 const channels = {
-  NEXT_PUBLIC_NEWSLETTER_USERNAME: (process.env.NEWSLETTER_USERNAME ?? '').trim(),
-  NEXT_PUBLIC_WHATSAPP_INVITE_URL: channel('WHATSAPP_INVITE_URL'),
-  NEXT_PUBLIC_INSTAGRAM_URL: channel('INSTAGRAM_URL', 'https://instagram.com/oct8.co.il'),
+  NEXT_PUBLIC_NEWSLETTER_ACTION: secure('NEWSLETTER_ACTION'),
+  NEXT_PUBLIC_NEWSLETTER_EMAIL_FIELD: (process.env.NEWSLETTER_EMAIL_FIELD ?? '').trim(),
+  NEXT_PUBLIC_NEWSLETTER_PAGE_FIELD: (process.env.NEWSLETTER_PAGE_FIELD ?? '').trim(),
+  NEXT_PUBLIC_NEWSLETTER_HIDDEN: (process.env.NEWSLETTER_HIDDEN ?? '').trim(),
+  NEXT_PUBLIC_WHATSAPP_INVITE_URL: secure('WHATSAPP_INVITE_URL'),
+  NEXT_PUBLIC_INSTAGRAM_URL: secure('INSTAGRAM_URL', 'https://instagram.com/oct8.co.il'),
 };
 
 /**

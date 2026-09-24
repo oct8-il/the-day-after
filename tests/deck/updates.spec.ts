@@ -23,11 +23,20 @@ test.use({ viewport: PHONE, contextOptions: { reducedMotion: 'no-preference' } }
 
 const IGNORE = [
   /fonts\.googleapis\.com/, /ERR_TUNNEL_CONNECTION_FAILED/, /_next\/hmr/, /React DevTools/,
-  // The form's own destination. A test runner has no route to it, and the
-  // frame's failure to load is the thing being worked around rather than a
-  // fault in the page.
-  /buttondown/, /net::ERR_/, /Failed to load resource/,
+  // Anything the page reaches for off-site. A runner has no route to it, and
+  // it is answered below rather than allowed out.
+  /net::ERR_/, /Failed to load resource/,
 ];
+
+/**
+ * Everything that is not the site under test.
+ *
+ * The form's destination is configuration and no provider has been chosen
+ * (DIA-435), so this suite must not know a host name - and it must not let
+ * one out of the runner either. Whatever the endpoint turns out to be, it is
+ * answered here.
+ */
+const OFFSITE = /^https?:\/\/(?!(127\.0\.0\.1|localhost)[:/])/;
 
 test.beforeEach(async ({ page }, testInfo) => {
   const noise: string[] = [];
@@ -39,9 +48,8 @@ test.beforeEach(async ({ page }, testInfo) => {
   });
   (testInfo as unknown as { _noise: string[] })._noise = noise;
   // Nothing in this suite wants the form to actually leave: the destination is
-  // another origin and its answer is unreadable either way, so it is answered
-  // here and the receipt is fired by hand, as the browser would fire it.
-  await page.route('**/buttondown.com/**', (r) => r.fulfill({ status: 200, body: '' }));
+  // another origin and its answer is unreadable either way.
+  await page.route(OFFSITE, (r) => r.fulfill({ status: 200, body: '' }));
 });
 
 test.afterEach(async ({}, testInfo) => {
@@ -76,7 +84,8 @@ test.describe('nothing ships dead', () => {
       return {
         btn: !!btn,
         sheet: !!sh,
-        // A form with no action would post the page to itself.
+        // A form with no action would post the page to itself. Which host it
+        // names is DIA-435's decision and not this suite's business.
         action: sh?.querySelector('form')?.getAttribute('action') ?? '',
         opens: btn?.getAttribute('data-open') ?? null,
         controls: btn?.getAttribute('aria-controls') ?? null,
@@ -84,7 +93,7 @@ test.describe('nothing ships dead', () => {
     });
     expect(m.btn).toBe(m.sheet);
     if (!m.btn) return;
-    expect(m.action).toMatch(/^https:\/\/buttondown\.com\/api\/emails\/embed-subscribe\/.+/);
+    expect(m.action).toMatch(/^https:\/\/\S+$/);
     expect(m.opens).toBe('nl');
     expect(m.controls).toBe('sheet-nl');
   });
@@ -219,25 +228,27 @@ test.describe('the one trip', () => {
 
     const carried = await page.evaluate(() => {
       const s = document.querySelector('#sheet-nl')!;
+      const hidden = [...s.querySelectorAll<HTMLInputElement>('input[type="hidden"]')];
       return {
-        embed: s.querySelector<HTMLInputElement>('input[name="embed"]')?.value,
-        page: s.querySelector<HTMLInputElement>('input[name="metadata__page"]')?.value ?? '',
+        // What the fields are called is configuration, so what is asserted is
+        // what is carried: the address, and the page the reader was on.
+        address: s.querySelector<HTMLInputElement>('input[type="email"]')?.name ?? '',
+        page: hidden.map((i) => i.value).filter((v) => v.includes('/item/')),
         target: s.querySelector('form')?.getAttribute('target'),
         sink: s.querySelector('iframe')?.getAttribute('name'),
       };
     });
-    expect(carried.embed).toBe('1');
-    // The page the reader was on, with its hash - so a mail sent later can
-    // say which failure it is about.
-    expect(carried.page).toContain('/item/t01/');
-    expect(carried.page).toContain('#5');
+    expect(carried.address.length).toBeGreaterThan(0);
+    // With its hash, so a mail sent later can say which failure it is about.
+    // Empty where the endpoint has nowhere to put it, which is allowed.
+    for (const v of carried.page) expect(v).toContain('#5');
     expect(carried.target).toBe('deck-nl-sink');
     expect(carried.sink).toBe('deck-nl-sink');
 
     // Held open long enough to see the sending state, because the receipt
     // otherwise arrives on the next frame: the form really is submitted, and
     // the frame really does load.
-    await page.route('**/buttondown.com/**', async (r) => {
+    await page.route(OFFSITE, async (r) => {
       await new Promise((go) => setTimeout(go, 400));
       await r.fulfill({ status: 200, body: '' });
     });
