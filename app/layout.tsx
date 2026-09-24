@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { ENV, IS_PROD, IS_HELD, LAUNCHED } from './env';
 import { POOL } from '@/lib/pool';
 import { SITE_NAME, SITE_URL } from './site';
@@ -72,28 +71,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="he" dir="rtl">
-      <head>
-        {/* A reader's very first visit lands on the about page, not the
-            failures matrix - ported from the prototype's route(), which
-            checked the same localStorage flag before it ever painted a
-            view. This has to run before the home page's own DOM paints, so
-            it is a blocking script rather than a React effect: an effect
-            would flash the matrix for a frame first. Deep links (gap, an
-            item, about itself) are never touched - only a bare "/".
-
-            location.replace() does not stop the browser mid-flight: on a
-            real network (unlike a local dev server) the current document
-            keeps parsing and hydrating while the new one loads, so the
-            failures page's own effects - marking the site "seen", and
-            especially the one-time opening animation - can still fire
-            during that in-between moment. window.__hyRedirecting flags
-            that a redirect is already under way so those effects (see
-            MarkSeen and HomeIntro) can no-op instead of silently burning
-            their one-time flag on a page the reader never actually saw. */}
-        <Script id="first-visit-gate" strategy="beforeInteractive">
-          {`try{if(location.pathname==='/'&&localStorage.getItem('hy_seen')!=='1'){window.__hyRedirecting=true;location.replace('/about/');}}catch(e){}`}
-        </Script>
-      </head>
+      {/* Nothing stands in the head. There was a first-visit gate here - a
+          blocking script that sent a bare "/" to the about page - and it is
+          retired (DIA-441). It never worked as "first visit": a hard load of
+          "/" was redirected before the component that recorded the visit
+          could run, so the bounce repeated for every reader who did not
+          happen to follow a link, including the main one, who arrives from a
+          post to an item and taps the breadcrumb root. DIA-442 is what it
+          should do when it comes back, and it does not need a component. */}
       <body>
         {!IS_PROD && <div className="env-ribbon">{`${ENV} · ${POOL}`}</div>}
         {IS_HELD ? <Holding /> : children}

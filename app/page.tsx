@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { Header } from './components/Header';
 import { Matrix } from './components/Matrix';
 import { HomeIntro } from './components/HomeIntro';
-import { MarkSeen } from './components/MarkSeen';
 import { daysSince } from '@/lib/days';
 import { buildMatrix, buildStrip } from '@/lib/home';
 import { placeById } from '@/lib/data';
@@ -19,7 +18,6 @@ export default function Home() {
   return (
     <>
       <Header current="home" />
-      <MarkSeen />
       <HomeIntro />
       <div className="wrap">
         <section className="view active">

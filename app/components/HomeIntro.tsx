@@ -3,10 +3,6 @@
 import { useEffect } from 'react';
 import { daysSince } from '@/lib/days';
 
-declare global {
-  interface Window { __hyRedirecting?: boolean }
-}
-
 /**
  * The opening sequence, on a reader's first visit only.
  *
@@ -21,17 +17,13 @@ declare global {
  * reader's browser, and the promise that none of this runs for anyone who has
  * asked for reduced motion, or who has been here before.
  *
- * A third guard exists only in the port: a first-time visitor's very first
- * load of "/" can hydrate this page for a moment before the first-visit
- * gate's redirect to about actually takes over the tab (see layout.tsx). If
- * this ran then, it would burn the reader's one-time animation on a page
- * they never actually saw, and it would never play when they arrived at the
- * matrix for real. __hyRedirecting, set synchronously by that gate script,
- * says a redirect is already under way.
+ * It used to carry a third guard, against the first-visit redirect taking
+ * the tab while this page was still hydrating. The redirect is retired
+ * (DIA-441), and nothing can now pull the reader off this page between the
+ * paint and the effect.
  */
 export function HomeIntro() {
   useEffect(() => {
-    if (window.__hyRedirecting) return;
     const strip = document.querySelector<HTMLElement>('.strip');
     if (!strip) return;
 

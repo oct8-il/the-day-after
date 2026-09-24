@@ -5,11 +5,13 @@ import { test, expect } from '@playwright/test';
  *
  * ## What this is guarding
  *
- * A reader's first visit to `/` is bounced to `/about/` by a blocking script
- * in `<head>` (app/layout.tsx). `location.replace()` does not stop the
- * browser mid-flight: the matrix page keeps arriving while the new document
- * loads, and if the redirect lands while React's payload is still streaming,
- * React reports the cut stream - minified error #412, "Connection closed".
+ * There used to be a blocking script in `<head>` that bounced a bare `/` to
+ * `/about/`. `location.replace()` does not stop the browser mid-flight: the
+ * matrix page kept arriving while the new document loaded, and if the
+ * redirect landed while React's payload was still streaming, React reported
+ * the cut stream - minified error #412, "Connection closed". The gate is
+ * retired (DIA-441) and the race with it; the head rule below is worth
+ * keeping on its own merits, and DIA-442 brings the gate back.
  *
  * It fired on every repeat visit until DIA-433, and stopped firing for a
  * reason that had nothing to do with it: that issue moved the type off
@@ -55,26 +57,40 @@ test.describe('the head carries nothing that blocks the first paint', () => {
     });
   }
 
-  test('the first-visit gate is one inline program, and it is what it says', async ({ page, request }) => {
-    // Read from the served document, not from the DOM: by the time a browser
-    // has a DOM here it is already standing on /about/, which carries the
-    // same layout and so the same script. The source is also the only place
-    // the gate's *size* is visible, and its size is the window the redirect
-    // races against.
+  test('nothing in the head redirects, and / is the failures page', async ({ page, request }) => {
+    // There was a first-visit gate here: a blocking script that sent a bare
+    // "/" to the about page. It is retired (DIA-441) because it never meant
+    // "first visit" - a hard load of "/" was redirected before the component
+    // that recorded the visit could run, so the bounce repeated forever for
+    // anyone who did not happen to follow a link. DIA-442 is its return.
     const html = await (await request.get('/')).text();
-    const gate = html.match(/try\{if\(location\.pathname===[^<]*?\}catch\(e\)\{\}/);
-    expect(gate, 'the first-visit gate is in /\'s head').not.toBeNull();
-    const src = gate![0];
-    expect(src).toContain("localStorage.getItem('hy_seen')");
-    expect(src).toContain("location.replace('/about/')");
-    // One gate that runs, not two. The program appears twice in the document
-    // and only one of those is executable: the other is inside the flight
-    // payload, where it is the serialised React tree describing the same
-    // <Script>, and is data rather than code.
-    const runnable = html.split('__next_s=self.__next_s||[]').length - 1;
-    expect(runnable).toBe(1);
-    // And small enough to be over before anything else in the head is.
-    expect(src.length).toBeLessThan(400);
+    expect(html).not.toContain('location.replace');
+    expect(html).not.toContain('hy_seen');
+
+    // And the address does what it says, on a browser that has never been
+    // here and on one that has.
+    for (const visit of [1, 2]) {
+      await page.goto('/', { waitUntil: 'load' });
+      await page.waitForTimeout(700);
+      expect(new URL(page.url()).pathname, `visit ${visit}`).toBe('/');
+      expect(await page.locator('.matrix').count(), `visit ${visit}`).toBeGreaterThan(0);
+    }
+  });
+
+  test('an item is never redirected, and its breadcrumb root reaches the matrix', async ({ page }) => {
+    // The reader this was costing: in from a post, tap 7 באוקטובר, and until
+    // DIA-441 they got the about page instead of the failures matrix - every
+    // time, not once. A phone, because that breadcrumb is the deck's and the
+    // deck is behind §2's breakpoint - which is also where that reader is.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/item/t01/');
+    await page.waitForSelector('.deck[data-live]');
+    expect(new URL(page.url()).pathname).toBe('/item/t01/');
+
+    await page.evaluate(() => document.querySelector<HTMLElement>('.deck-crumb-root')!.click());
+    await page.waitForTimeout(1200);
+    expect(new URL(page.url()).pathname).toBe('/');
+    expect(await page.locator('.matrix').count()).toBeGreaterThan(0);
   });
 });
 
