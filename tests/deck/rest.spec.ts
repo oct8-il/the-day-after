@@ -251,6 +251,30 @@ test.describe('the exits', () => {
     // Gone on its own, and it took nothing with it.
     await expect(toast).toHaveCount(0, { timeout: 4000 });
   });
+
+  test('with neither API the button still answers', async ({ page }) => {
+    // An insecure origin has no `navigator.clipboard` at all and no
+    // `navigator.share` either - which is every phone opening `next dev` over
+    // the wifi, and is how the button came to answer a press with silence.
+    await page.addInitScript(() => {
+      // @ts-expect-error - removing them is the case under test
+      delete navigator.share;
+      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined });
+    });
+    await open(page);
+    await page.click('.deck-six-share');
+    const toast = page.locator('.deck-toast');
+    await expect(toast).toBeVisible();
+    // Either it was copied the old way, or the link itself is on the screen.
+    // Never nothing.
+    const m = await page.evaluate(() => {
+      const t = document.querySelector('.deck-toast')!;
+      return { text: t.textContent ?? '', url: t.hasAttribute('data-url') };
+    });
+    expect(m.text.length).toBeGreaterThan(0);
+    if (m.url) expect(m.text).toMatch(/\/item\/t01\/$/);
+    else expect(m.text).toBe('הקישור הועתק');
+  });
 });
 
 test.describe('the last slide', () => {

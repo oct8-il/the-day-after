@@ -2281,5 +2281,11 @@
     background:var(--text);color:var(--bg);
     font-size:13px;font-weight:600;line-height:1.4;
     pointer-events:none}
+  /* The link itself, where it could not be put on the clipboard. It is the
+     one thing this toast ever says that a reader has to read rather than
+     recognise, so it is allowed to wrap and to be selected. */
+  .deck-toast[data-url]{white-space:normal;max-width:calc(100% - 40px);
+    font-weight:400;font-size:12.5px;pointer-events:auto;user-select:all;
+    -webkit-user-select:all;word-break:break-all;text-align:center}
 
 }

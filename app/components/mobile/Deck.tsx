@@ -220,6 +220,42 @@ const shed = (deck: HTMLElement | null) => {
  * The count line is written from the same number, because a line that said
  * four over three cards would be the slide contradicting itself.
  */
+/**
+ * Putting a link on the clipboard, in a browser that may not have one.
+ *
+ * `navigator.clipboard` exists only in a secure context, and an insecure
+ * context is not an exotic case here: it is every phone opening `next dev`
+ * over the wifi at `http://192.168.x.x:3000`, which is how these screens are
+ * reviewed. There `navigator.share` is missing too, so the share button had
+ * nothing at all to fall back to and answered a press with silence.
+ *
+ * So the old way stands behind the new one. `execCommand` is deprecated and
+ * still works everywhere, and it does not care whether the origin is secure.
+ * It has to run inside the gesture, which it does - this is called straight
+ * out of the click.
+ */
+const copyLink = async (url: string): Promise<boolean> => {
+  try {
+    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(url); return true; }
+  } catch { /* refused, or no permission - try the old way */ }
+  try {
+    const box = document.createElement('textarea');
+    box.value = url;
+    box.setAttribute('readonly', '');
+    // Off-screen but selectable: `display:none` and `visibility:hidden` are
+    // not, and a box the page can see would flash.
+    box.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0';
+    document.body.appendChild(box);
+    box.select();
+    box.setSelectionRange(0, url.length);
+    const ok = document.execCommand('copy');
+    box.remove();
+    return ok;
+  } catch {
+    return false;
+  }
+};
+
 const FLOOR = 2;
 const cards = (deck: HTMLElement | null) => {
   deck?.querySelectorAll<HTMLElement>('.deck-six').forEach((six) => {
@@ -792,9 +828,15 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
    * A cancelled native share does nothing at all - the reader chose not to,
    * and a toast after a deliberate dismissal would read as a reprimand.
    */
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ text: string; url: boolean } | null>(null);
   const toasting = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (toasting.current) clearTimeout(toasting.current); }, []);
+
+  const say = useCallback((text: string, url = false) => {
+    setToast({ text, url });
+    if (toasting.current) clearTimeout(toasting.current);
+    toasting.current = setTimeout(() => setToast(null), url ? TOAST * 3 : TOAST);
+  }, []);
 
   const share = useCallback(async (btn: HTMLElement) => {
     const title = btn.getAttribute('data-share-title') ?? document.title;
@@ -806,17 +848,12 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       try { await navigator.share({ title, url }); } catch { /* dismissed */ }
       return;
     }
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      // A clipboard the browser will not give us leaves nothing to say: the
-      // link is in the address bar, and a failure toast would only be noise.
-      return;
-    }
-    setToast('הקישור הועתק');
-    if (toasting.current) clearTimeout(toasting.current);
-    toasting.current = setTimeout(() => setToast(null), TOAST);
-  }, []);
+    const copied = await copyLink(url);
+    // The button always answers. Where the link could not be put on the
+    // clipboard the link itself is what the toast says, because a reader who
+    // pressed share and got silence has been told the page is broken.
+    say(copied ? 'הקישור הועתק' : url, !copied);
+  }, [say]);
 
   /**
    * A slide that owns pages moved between them. The deck owns the URL, so it
@@ -2086,7 +2123,11 @@ export function Deck({ crumbs, slides, sheets, mid, omit, credit, ground, send }
       {/* §9's copied-link toast, in the same slot the jump pill uses: above
           the strip, because that is where the thumb is not. It is announced
           rather than only drawn - the button it answers does not change. */}
-      {toast !== null && <div className="deck-toast" role="status">{toast}</div>}
+      {toast !== null && (
+        <div className="deck-toast" role="status" data-url={toast.url ? '' : undefined}>
+          {toast.url ? <span dir="ltr">{toast.text}</span> : toast.text}
+        </div>
+      )}
       {/* Not six buttons: §3 says neither strip is tappable, because a dot is
           6px and the rungs are 5px - under any touch target worth offering -
           and a long press is what both of them take instead. So the row is a
