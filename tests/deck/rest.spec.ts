@@ -110,6 +110,23 @@ test.describe('what is on the slide', () => {
     expect(self.has('/item/t01/')).toBe(false);
   });
 
+  test('landing here preloads nothing this page cannot use', async ({ page }) => {
+    await open(page);
+    // Four links to four other item pages, and Next prefetches a link it can
+    // see. Each prefetched route brings its own gate photograph along as a
+    // `<link rel=preload as=image>` that this page can never use - three
+    // wasted downloads per item page on a phone, and the console warning
+    // that says so a few seconds later. The links do not prefetch.
+    const m = await page.evaluate(() => ({
+      preloads: [...document.querySelectorAll('link[rel="preload"][as="image"]')]
+        .map((l) => l.getAttribute('href')),
+      // The one this page does use: its own gate's.
+      gate: document.querySelector('.deck-ground img')?.getAttribute('src') ?? null,
+    }));
+    expect(m.preloads.length).toBeLessThanOrEqual(1);
+    if (m.preloads.length) expect(m.preloads[0]).toBe(m.gate);
+  });
+
   test('the photograph is a watermark, not an image slot', async ({ page }) => {
     await open(page);
     const m = await page.evaluate(() => {

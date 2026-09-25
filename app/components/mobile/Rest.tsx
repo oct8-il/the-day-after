@@ -82,7 +82,13 @@ export type RestProps = {
 function Card({ card, root }: { card: RestCard; root: string }) {
   return (
     <li className="deck-six-card" style={{ ['--c' as string]: card.color }}>
-      <Link href={`/item/${card.id}/`}>
+      {/* No prefetch. Four links on the last slide of every item page is four
+          whole routes fetched on a phone for a trip most readers will not
+          take - and each one drags that item's gate photograph in with it as
+          a `<link rel=preload as=image>` which, on this page, cannot ever be
+          used. Three wasted image preloads per item page, and the console
+          warning that says so. The trip out is a page load either way. */}
+      <Link href={`/item/${card.id}/`} prefetch={false}>
         {card.photo && (
           <i
             className="deck-six-photo"
