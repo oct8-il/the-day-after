@@ -10,6 +10,24 @@
     "status": "[[מאז 2024 חולקו לכיתות נשקים וציוד מגן, אך בקשר חולקו טלפונים צבאיים רק לחלק מהקב\"טים.]](i07-c14, i07-c06, i07-c12)",
     "caveat": "לא פורסם **אימות חיצוני** לחלוקה, והמקורות אינם אומרים היכן מאוחסן הנשק כיום."
   },
+  "photo": {
+    "portrait": {
+      "file": "radio-portrait.jpg",
+      "photographer": "Heterodyne",
+      "source": "ויקישיתוף",
+      "licence": "נחלת הכלל",
+      "place": "לא צוין",
+      "year": "2006"
+    },
+    "landscape": {
+      "file": "armoury-landscape.jpg",
+      "photographer": "זלמנסון זלר",
+      "source": "פיקיוויקי",
+      "licence": "CC BY 2.5",
+      "place": "מזור",
+      "year": "2024"
+    }
+  },
   "claims": [
     {
       "id": "i07-c01",
