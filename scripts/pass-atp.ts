@@ -28,6 +28,35 @@ const taxonomy = JSON.parse(readFileSync(join(ROOT, 'data/taxonomy.json'), 'utf8
 const stageName = (n: number) => taxonomy.stages.find((s: { n: number }) => s.n === n)?.he ?? String(n);
 const published: string[] = JSON.parse(readFileSync(join(ROOT, 'data/live/published.json'), 'utf8'));
 
+/**
+ * A link that opens the source at the quote. Chrome, Edge and Safari scroll to
+ * and highlight a text fragment (#:~:text=start,end); a PDF or a browser
+ * without support simply opens the page. Long quotes match by their first and
+ * last four words, so a trimmed middle still lands.
+ */
+const fragEnc = (s: string) => encodeURIComponent(s).replace(/-/g, '%2D');
+function atQuote(url: string | null, quote?: string): string {
+  if (!url) return '#';
+  if (!quote || /\.pdf($|\?)/i.test(url)) return url;
+  // Anchor on runs of words without quote marks: sources write קב"ט with " or ״,
+  // and a wrong guess makes the fragment miss. The anchors only need to lie inside
+  // the quote, so the first and last clean runs of up to four words are enough.
+  const w = quote.trim().split(/\s+/).filter(Boolean);
+  const clean = (x: string) => !/["״”“׳']/.test(x);
+  const runs: string[][] = [];
+  let cur: string[] = [];
+  for (const x of w) { if (clean(x)) cur.push(x); else { if (cur.length) runs.push(cur); cur = []; } }
+  if (cur.length) runs.push(cur);
+  const good = runs.filter((r) => r.length >= 2);
+  if (!good.length) return url;
+  const first = good[0], last = good[good.length - 1];
+  const text = good.length === 1 && first.length <= 8
+    ? fragEnc(first.join(' '))
+    : good.length === 1
+      ? `${fragEnc(first.slice(0, 4).join(' '))},${fragEnc(first.slice(-4).join(' '))}`
+      : `${fragEnc(first.slice(0, 4).join(' '))},${fragEnc(last.slice(-4).join(' '))}`;
+  return `${url.split('#')[0]}#:~:text=${text}`;
+}
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** A reading render of the annotation: enough to review, not the site's renderer. */
@@ -126,13 +155,33 @@ const claimRows = inc.claims.map((c) => {
     : extra.has(c.id) ? '<span class="tag some">spot-check</span>' : '';
   return `<tr><td class="mono">${c.id}</td><td>${c.asserts_stage === 0 ? `contests ${c.contests}` : c.asserts_stage}</td><td>${esc(c.source_type)}</td>
   <td dir="rtl">${esc(c.source)}<div class="sub">${esc(c.date)}${c.place ? ` · ${esc(c.place)}` : ''}</div></td>
-  <td dir="rtl" class="q">${esc(c.quote ?? '')}</td><td><a href="${esc(c.url ?? '#')}" target="_blank" rel="noopener">open</a></td><td>${flag}</td><td><input type="checkbox"></td></tr>`;
+  <td dir="rtl" class="q">${esc(c.quote ?? '')}</td><td><a href="${esc(atQuote(c.url, c.quote))}" target="_blank" rel="noopener">at the quote ↗</a>${/\.pdf($|\?)/i.test(c.url ?? '') ? '<div class="sub">PDF: search for the quote</div>' : ''}</td><td>${flag}</td><td><input type="checkbox"></td></tr>`;
 }).join('');
 
+/**
+ * For T18: each cited passage, and for each claim under it the sentence to find
+ * and a link that opens the source at it - so the editor checks the statement
+ * against its evidence without hunting through the page.
+ */
+const byId = new Map(inc.claims.map((c) => [c.id, c]));
+function whereToLook(src: string): string {
+  const rows: string[] = [];
+  for (const m of src.matchAll(/\[\[([\s\S]*?)\]\]\(([^)]*)\)/g)) {
+    const said = plainText(m[1]);
+    const ids = m[2].split(',').map((s) => s.trim()).filter(Boolean);
+    const ev = ids.map((cid) => {
+      const c = byId.get(cid);
+      if (!c) return `<div class="ev"><span class="mono">${esc(cid)}</span> — not a claim of this item</div>`;
+      return `<div class="ev"><span class="mono">${esc(cid)}</span> · ${esc(c.source)} · ${esc(c.date)} — <a href="${esc(atQuote(c.url, c.quote))}" target="_blank" rel="noopener">at the quote ↗</a><div class="evq">«${esc(c.quote ?? '')}»</div></div>`;
+    }).join('');
+    rows.push(`<tr><td dir="rtl">${esc(said)}</td><td dir="rtl">${ev}</td></tr>`);
+  }
+  return rows.length ? `<details class="wtl"><summary>Where to look · ${rows.length} passage${rows.length > 1 ? 's' : ''}</summary><table><tr><th>The overview says</th><th>Look for this on the source</th></tr>${rows.join('')}</table></details>` : '';
+}
 const overviews = [
   { label: 'summary · slide 2 (systemic)', text: inc.summary },
   ...(inc.summaries ?? []).slice().sort((a, b) => a.stage - b.stage).map((s) => ({ label: `stage ${s.stage} · ${stageName(s.stage)}`, text: s.text })),
-].map((o) => `<div class="ov"><div class="ovh">${esc(o.label)}</div><div dir="rtl">${review(o.text)}</div></div>`).join('');
+].map((o) => `<div class="ov"><div class="ovh">${esc(o.label)}</div><div dir="rtl">${review(o.text)}</div>${whereToLook(o.text)}</div>`).join('');
 
 const photos = crops.map((x) => x.c ? `<figure><img src="../../public/photos/${esc(x.c.file)}" alt=""><figcaption><b>${x.k}</b><br><span dir="rtl">צילום: ${esc(x.c.photographer)} · ${esc(x.c.source)} · ${esc(x.c.licence)}</span><br><span class="sub">${esc(x.c.place)} · ${esc(x.c.year)}</span></figcaption></figure>` : `<figure class="none"><figcaption><b>${x.k}</b><br>none</figcaption></figure>`).join('');
 
@@ -159,6 +208,7 @@ th{color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.04
 .ov{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:10px 0}.ovh{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 .ov p{margin:6px 0}.ov ul{margin:6px 0;padding-right:20px}mark{background:#5a4a12;color:#ffe9a8;padding:0 2px}.chip{color:var(--accent);font-size:10px;margin-inline-start:3px}
 .photos{display:flex;gap:16px;flex-wrap:wrap}figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px;max-width:420px}figure img{max-height:360px;max-width:100%;display:block;margin-bottom:8px}
+.wtl{margin-top:10px}.wtl summary{cursor:pointer;color:var(--accent);font-size:13px}.wtl table{margin-top:8px}.ev{margin:4px 0}.evq{color:var(--dim);font-size:12.5px;margin-top:2px}
 .gate li{margin:8px 0}.gate input{margin-inline-end:8px}a{color:var(--accent)}
 </style></head><body><main>
 <h1>${id} · pass acceptance record (ATR)</h1>
@@ -178,9 +228,9 @@ ${A.map((c) => `<tr><td>${c.id}</td><td>${esc(c.what)}</td><td>${esc(c.detail)}<
 
 <h2>Editor's tests · T16–T25</h2>
 <ol class="gate">
- <li><label><input type="checkbox">T16 · <b>Quote spot-check:</b> open the flagged links in the claims table: every claim that sets the stage, every contest, plus the two picked at random. Each quote on the page word for word; date and masthead match.</label></li>
+ <li><label><input type="checkbox">T16 · <b>Quote spot-check:</b> the links open each source at the quote, highlighted (PDFs open at the start: search for the quote). Check the flagged ones: every claim that sets the stage, every contest, plus the two picked at random. Each quote on the page word for word; date and masthead match.</label></li>
  <li><label><input type="checkbox">T17 · <b>Claims classified right:</b> each claim meets §3 for its stage and its source type may assert it; a regression erodes the fix as worded.</label></li>
- <li><label><input type="checkbox">T18 · <b>Overviews</b> say no more than their citations; each lead carries what matters most at that stage, including what was not fixed.</label></li>
+ <li><label><input type="checkbox">T18 · <b>Overviews</b> say no more than their citations (open <i>Where to look</i> under each overview: every passage beside the sentence to find on its source, with a link that opens there); each lead carries what matters most at that stage, including what was not fixed.</label></li>
  <li><label><input type="checkbox">T19 · <b>Stage movement</b> ${p?.stage_before != null && p.stage_before !== after ? `(${p.stage_before} → ${after}) ` : ''}is explained by the search log.</label></li>
  <li><label><input type="checkbox">T20 · <b>No names</b> of individuals, officials or victims in quotes or overviews.</label></li>
  <li><label><input type="checkbox">T21 · <b>Photos:</b> of the item or topic-related; no faces, victims or memorials; credit as the source asks.</label></li>
