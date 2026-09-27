@@ -1,6 +1,6 @@
 # The pass — how a published incident is rebuilt and judged
 
-*docs/method/pass.md · v1 · 11 September 2026 · the QA criteria for [DIA-306](https://linear.app/dialog-dimensions/issue/DIA-306) (one full pass per published incident), written before the first incident is touched so every pass is judged the same way.*
+*docs/method/pass.md · v2 · 27 September 2026 (v1: 11 September) · the QA criteria for [DIA-306](https://linear.app/dialog-dimensions/issue/DIA-306) (one full pass per published incident), written before the first incident is touched so every pass is judged the same way.*
 
 This document is the researcher's contract. A pass that does not fill every line of §1 is not a pass. The rules in §2–§4 are the rules the site publishes to readers, in Hebrew, on the about page (DIA-340 ports them); this file is the working text they are ported from, and where the two disagree, this file is wrong until fixed — the reader-facing page is the promise.
 
@@ -68,11 +68,14 @@ Where to look: the responsible body's response to an oversight report (the Compt
 
 Record the computed stage as it was before the pass (`stage_before`). The stage after the pass is computed by `lib/stage.ts` from the claims and is never written down; `check:passes` prints both and whether the item moved. A move down is not a failure of the pass — it is the pass working.
 
-### 1.6 Editor summary for the current stage
+### 1.6 The authored text — summary and stage overviews
 
-Required for every passed incident whose computed stage is 2 or above: a `summaries` entry for that stage, every sentence footnoted to claim ids (`cites`), in the register of the ledger — what the sources say, not what they imply. Content by stage: 2 — the acknowledgement, in the body's words, and what it covers; 3 — what the plan decides (body, instrument, budget, scope, date); 4 — what is reported in place, with scope and what is *not* covered; 5 — what the verifier checked and found; 6 — what eroded, and what remains. Stage 1 has no stage summary: the incident's `summary` field is the description, and the stage-1 chapter is the evidence itself.
+Every passed incident carries (ruled 16 September, DIA-306):
 
-Drafted by the researcher, approved by the editor at PR review. A summary that names a person, or asserts more than its citations, is sent back.
+- **`summary`, in the systemic register** — the failure invariant to the date. Had the attack come on 8 October the text would not change; the 7 October manifestation belongs to the stage-1 overview.
+- **An overview for every reached stage**, in `summaries`: 1 — the manifestation on 7 October, what it looked like on the ground; 2 — the acknowledgement, in the body's words, and what it covers; 3 — what the plan decides (body, instrument, budget, scope, date); 4 — what is in place, with scope and what is *not* covered; 5 — what the verifier checked and found; 6 — what eroded, and what remains. A reached stage is never left unwritten. The validator requires at least the overview for the computed stage.
+
+All of it is annotated per `docs/annotations.html`: every statement sits inside a cite span `[[…]](claim ids)`, and a span says no more than its claims. It is written to the shape in §5. Drafted by the researcher, approved by the editor at review; text that names a person, or asserts more than its citations, is sent back.
 
 ### 1.7 The `pass` block
 
@@ -99,7 +102,15 @@ The checklist, as data, in the incident file. Optional in the schema until 1 Oct
 
 *This is the shape, shown on i13's existing claim ids. It is not a completed pass of i13; the `where` and `date` values are illustrative.*
 
-What the validator checks when a `pass` block is present: every stage 2–6 has exactly one search entry; a `found` entry lists at least one claim id that exists on the incident and asserts that stage; a `not_found` entry coexists with no claim at that stage; a stage-6 claim exists only alongside a stage-4 or stage-5 claim (§3.5); `responsible` is non-empty and passes the naming check; when the computed stage is ≥ 2, a `summaries` entry for it exists. What only the editor checks: that `where` is honest, that §2.3's three groups appear, and that the summary says no more than its citations.
+What the validator checks when a `pass` block is present: every stage 2–6 has exactly one search entry; a `found` entry lists at least one claim id that exists on the incident and asserts that stage; a `not_found` entry coexists with no claim at that stage; a stage-6 claim exists only alongside a stage-4 or stage-5 claim (§3.6); `responsible` is non-empty and passes the naming check; when the computed stage is ≥ 2, a `summaries` entry for it exists. What only the editor checks: that `where` is honest, that §2.3's three groups appear, and that the summary says no more than its citations.
+
+### 1.8 `poll` and `card_line`
+
+Written last, after the overviews are settled (DIA-445, DIA-394). `poll.failure` and `poll.status` may only say what slides 2 and 3 say — each ends in a chip that points there. `poll.question` stays generic in substance, phrased in this item's context, so answers are comparable across the ledger. `poll.caveat` states what is still missing and carries no citation. `card_line` is one short authored sentence for the slide 6 card — not the title truncated.
+
+### 1.9 Photographs
+
+A pass is not done until the item has its two crops — portrait for the gate, landscape for the slide 6 card — each with its full credit. The rules are §6.
 
 ---
 
@@ -194,7 +205,7 @@ A later source reports that a fix that *was in place* (stage 4 or 5) eroded, was
 
 Not regression: a plan cancelled, defunded or stalled before implementation — the item stays at 3 and the cancellation is authored as a contest on the plan claim (`asserts_stage: 0`, `contests: <plan claim>`); an oversight body finding the fix was never actually in place — that is a contest on the stage-4 claim (i06-c07 on i06-c06 is the pattern); a new failure of the same kind that the fix never covered — that is scope, stated in the stage-4 summary.
 
-The case from the 29: i07 carries two stage-6 claims. i07-c09 (October 2025, budget cut) predates the stage-4 claims (January and May 2026) and so cannot be a regression of them — the pass re-classifies it, most likely as a contest on the plan or as context dropped from the ledger. i07-c10 (July 2026, reserve call-up orders cancelled) is after the implementation and is a regression only if the orders were part of the fix reported in place; the pass decides on the sources **(proposed)**.
+The case from the 29, as the first pass decided it (27 September, DIA-314 — pending the editor's review): i07's two stage-6 claims were cuts to the squads' pay (i07-c09) and to their reserve call-up (i07-c10). The fix on i07 as worded is weapons and radios, and the IDF stated that weapons and equipment stay. Neither claim regresses that fix, so both left the item and i07 moved from 6 to 4. The rule it applies: **a regression claim must erode the fix that answers the failure as worded, not a neighbouring measure.**
 
 Restoration after regression: `lib/stage.ts` pins the item at 6 while a stage-6 claim exists. If a later source reports the fix restored, the pass authors the restoring claim at 4 and moves the stage-6 claim out of the ledger with a corrections-log entry, so the history shows the dip **(proposed — the concept says "a later implementation claim moves it back up", and the code does not yet do that by date)**.
 
@@ -211,6 +222,39 @@ A contest attaches to one specific claim and disputes what that claim asserts. I
 Concretely: every claim authored in a pass — new or inherited — has had its URL fetched *in that pass*, the quote located verbatim on the page, the date read off the page, and the source's own name read off the masthead. A page that cannot be fetched from the research environment is logged `unreachable` with the URL and handed to the editor's browser; no claim is authored from it until someone has read it. A page that has changed or vanished since the claim was first authored: keep the claim only if an archive copy shows the quote (`archive_url`), otherwise drop it and log why.
 
 The inherited claims are not exempt. A pass that keeps an existing claim has re-read it; a pass that cannot re-read it removes it.
+
+**Open (found on the i07 pass, 27 September):** the research environment reads pages through a summarising fetch tool. Asked for exact text it usually complies, but it cannot prove a quote is verbatim, and JS-rendered official pages (mod.gov.il) read as empty. Until the editor rules, such a page is logged `unreachable`, the claim may keep its official URL only if a word-for-word relay confirms the text, and the editor's browser check at review is the final re-read.
+
+---
+
+## 5. How an overview is written
+
+The shape ruled on 22 September (DIA-415). `docs/annotations.html` is the contract for *what the markup means*; this section says *what a good overview looks like*.
+
+- **A lead** of two or three lines that says the failure, carrying **exactly one** highlight (`==…==`). One highlight per overview, and it lives in the lead.
+- **One or two section headings.** A heading asserts nothing and carries no cite span.
+- **Bullets**, the systemic ones opening with a **bold lead-in**. Bold is for lead-ins and nothing else.
+- **A lead-in sits inside its passage's cite span**, so the claim that covers the passage covers it. A lead-in that asserts more than its claim does is a coverage failure in spirit even when the parser passes it — the reviewer catches it, not `validate`.
+- **The lead is short enough that the first heading shows above the card's fade.** What stands above the cut is the whole slide for a reader who never taps for more.
+- **Stage overviews** (slide 3) are short by nature and need the lead rule only. The lead carries what the reader most needs to know at that stage — including, at stage 4, what was *not* fixed when that is the story (i07: the radios).
+
+An overview that is one unbroken paragraph longer than the card can hold is a writing failure, and `validate` warns on it.
+
+---
+
+## 6. Photographs
+
+Ruled 27 September (DIA-366, D4 on DIA-353). The shape is `photo.portrait` and `photo.landscape`, each `{ file, photographer, source, licence, place, year }`; files live in `public/photos/`.
+
+- **Sources:** Wikimedia Commons / PikiWiki and the Government Press Office archive. Not press agencies, not photographers by permission, for now.
+- **Licence:** anything with a printable credit and no fee — CC0, public domain, CC BY, CC BY-SA, GPO free use with credit, or written permission. Checked per photo; the credit is written as the source asks for it.
+- **What it shows, in order of preference:** (a) something genuinely of the item — the event, the equipment, the place as it bears on this failure; (b) failing that, a **topic-related illustrative** photo of the subject matter itself (for i07: a handheld radio, a weapons storeroom). A photo of the site alone, or a mood shot, does not qualify. The pass looks for (a) before settling on (b).
+- **Never:** faces, victims, bodies — including memorial photographs, posters and shrines inside the frame.
+- **Crops:** portrait for the full-bleed 390×844 gate; landscape for the 111 px slide 6 card. Rendered in the stage duotone, so structure matters more than colour.
+- **Who picks:** the researcher proposes 2–3 candidates per crop with licence and credit; the editor picks at review.
+- **Import (manual, repeatable):** the original goes to `photographs/` (untracked); the crop is cut to the target aspect and saved to `public/photos/<subject>-portrait.jpg` / `-landscape.jpg`; the credit goes into the incident's `photo` block; `validate:strict` confirms every credit field. Wikimedia cannot be fetched from the research environment, so the editor downloads the chosen originals.
+
+**Open:** whether `validate` should require both crops on an incident with a `pass` block. That would make photos a condition of publishing after 1 October and reverse the d695767 ruling that an item without a photo is publishable.
 
 ---
 
