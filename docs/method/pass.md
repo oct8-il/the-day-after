@@ -4,7 +4,7 @@
 
 This document is the researcher's contract. A pass that does not fill every line of §1 is not a pass. The rules in §2–§4 are the rules the site publishes to readers, in Hebrew, on the about page (DIA-340 ports them); this file is the working text they are ported from, and where the two disagree, this file is wrong until fixed — the reader-facing page is the promise.
 
-Everything below was ruled by the editor on 11 September 2026 unless marked **(proposed)**, which means the researcher applied a ruling to a case the editor has not seen yet and the editor should confirm or overturn it on the first pass that meets it.
+Everything below was ruled by the editor on 11 September 2026, or on the date marked *(ruled …)*, unless marked **(proposed)**, which means the researcher applied a ruling to a case the editor has not seen yet and the editor should confirm or overturn it on the first pass that meets it.
 
 ---
 
@@ -33,7 +33,7 @@ Write it down first, because §3.2 and §3.4 are defined against it. Where the f
 - **At least two independent sources where they exist.** Independent means a different *originating body*, not a different outlet: ynet and Maariv reporting the same IDF probe are one source. A probe and a Comptroller report are two. A probe and a resident's published testimony are two. Where only one origin exists after a real search, say so in the log — it is allowed, and it is information.
 - **Cite the primary when it is online.** If the IDF probe, the Comptroller chapter or the Knesset protocol is on the web, the claim points at it, typed by its own body (official / oversight), and the outlet's article becomes a second link only if it adds something (a quote the primary does not carry, a place). If the primary is not online — most IDF probes are not — the outlet's coverage carries the claim (§3.1).
 - **Quote read off the page**, ≤ 40 words, trimmed of names (§2.4). Not from a research agent's output, not from memory, not from a search snippet (§4).
-- **Date as the page shows it** — day, month or year; never invented precision. Ambiguous numeric dates (`8/1/2026`) are recorded at the precision that is certain (`01.2026`) unless the page's language resolves it **(proposed)**.
+- **Date as the page shows it** — day, month or year; never invented precision. Ambiguous numeric dates (`8/1/2026`) are recorded at the precision that is certain (`01.2026`) unless the page's language resolves it. Never guess a day. *(ruled 27 September)*.
 - **Place on the claim** when the source is about a place (a resident of Sderot, the Nahal Oz post, Route 232); none when it is a document about the country. Place is on the evidence, never on the incident.
 
 ### 1.3 Stages 2–6 — one search each
@@ -102,7 +102,7 @@ The checklist, as data, in the incident file. Optional in the schema until 1 Oct
 
 *This is the shape, shown on i13's existing claim ids. It is not a completed pass of i13; the `where` and `date` values are illustrative.*
 
-What the validator checks when a `pass` block is present: every stage 2–6 has exactly one search entry; a `found` entry lists at least one claim id that exists on the incident and asserts that stage; a `not_found` entry coexists with no claim at that stage; a stage-6 claim exists only alongside a stage-4 or stage-5 claim (§3.6); `responsible` is non-empty and passes the naming check; when the computed stage is ≥ 2, a `summaries` entry for it exists. What only the editor checks: that `where` is honest, that §2.3's three groups appear, and that the summary says no more than its citations.
+What the validator checks when a `pass` block is present: every stage 2–6 has exactly one search entry; a `found` entry lists at least one claim id that exists on the incident and asserts that stage; a `not_found` entry coexists with no claim at that stage; a stage-6 claim exists only alongside a stage-4 or stage-5 claim (§3.6); `responsible` is non-empty and passes the naming check; when the computed stage is ≥ 2, a `summaries` entry for it exists; `poll` and `card_line` are present *(ruled 27 September)*. What only the editor checks: that `where` is honest, that §2.3's three groups appear, and that the summary says no more than its citations.
 
 ### 1.8 `poll` and `card_line`
 
@@ -124,7 +124,7 @@ A pass is not done until the item has its two crops — portrait for the gate, l
 | **oversight** | State Comptroller and Ombudsman, Knesset committees and MMM, courts, a state commission of inquiry | all stages, including 5 | — |
 | **press** | named outlets and named channels (§2.3) | 1–4 and 6 from a single outlet; 5 only for investigative work with a documentary basis, preferably corroborated by a second outlet | 5 from a single report of "sources say" |
 | **research** | INSS, IDI, Misgav, university work, the intelligence-methodology institute, the civil commission of inquiry's research output | 1 and 5 primarily; 2–4 when quoting the body | — |
-| **civil** | bereaved, hostage and survivor organisations, kibbutz and council committees, NGOs (ACRI, the family forums, מועצת אוקטובר) | 1, 6, and contests | 3–4 on their own word — see the i22 case in §3.4 **(proposed)** |
+| **civil** | bereaved, hostage and survivor organisations, kibbutz and council committees, NGOs (ACRI, the family forums, מועצת אוקטובר) | 1, 6, and contests | 3–4 on their own word; at 3–4 only when quoting the implementer (§3.4) |
 
 The type is the type of the *body whose words the claim carries*. Coverage of an IDF probe on ynet is `press`; the probe on idf.il is `official`. Both are admissible; §1.2 says which to prefer.
 
@@ -164,6 +164,8 @@ Two independent origins where they exist (§1.2). Of the 29, i04, i24, i25, i29,
 
 Oversight identifying a failure is stage 1, whatever its date. The Comptroller finding in 2026 that evacuation ran without command (i06-c02) identifies; it does not verify anything.
 
+**Shared evidence between items** (i07's armoury half and i29): one source may back claims on both items, as long as it proves each item's own sentence. Each item's overview stays on its own failure *(ruled 27 September)*.
+
 ### 3.2 Stage 2 — acknowledged
 
 The responsible body (§1.1), in its own words, about *this* failure. Not a general statement ("mistakes were made on 7 October"), not another body speaking about it (the Comptroller, a Knesset chair, the government about the IDF), not a resignation, not a probe's existence.
@@ -172,13 +174,19 @@ Press coverage is admissible when the quote is the body's finding reported as su
 
 A ministry's own inquiry committee acknowledging on the ministry's behalf (i06-c01, the Health Ministry's committee) is stage 2 for that ministry. The IDF History Department writing that readiness squads went to battle with council-bought radios (i07-c04) is stage 2: the body, in its own words, about this failure — the register does not matter.
 
+A **general acknowledgement** counts as stage 2 when the body's own statement plainly covers the failure's area (i07-c04, c05: spatial defence "weak at every level"). The stage-2 overview then says the acknowledgement is general and does not name this failure. A blanket "mistakes were made on 7 October" still does not count *(ruled 27 September)*.
+
 ### 3.3 Stage 3 — plan announced
 
 A decision by a body with authority to make it: a government resolution; an approved budget line; a signed order, procedure or doctrine; a unit stood up or a post created; a bill that has passed a Knesset reading; a tender issued. The claim should carry the instrument, and the summary the scope.
 
 Not a plan: "we will", "we intend", "the IDF has decided to examine", "a team was formed to look into", a recommendation in a probe (a probe recommends; the body decides), a bill merely tabled, a minister's speech. These stay at 2. A probe's recommendations list (i09-c05, i10-c05) is stage 3 only where the source says the recommendation was adopted as a decision; otherwise it is part of the acknowledgement and the search for the decision continues.
 
-Cases from the 29 for the pass to settle **(proposed)**: i05-c03 and i14-c04 rest on a police officer's interview describing a new dispatch arrangement — if the arrangement is described as in force, it is the implementer reporting (stage 4, §3.4); if as intended, it is stage 2; the interview alone is not a decision. i16-c06, the government resolution on an "independent" commission, is a decision by a body with authority and stays at 3; whether it addresses the failure as worded ("no national inquiry body with authority and an end date") is the public's question, and the contest on i16-c07 is the mechanism for the dispute.
+**Interviews** *(ruled 27 September)*: an interview given on the record by the body's spokesperson unit, or by a named-role officer speaking for the body, counts as the body's own statement, at whatever stage its content meets: acknowledgement (2), a decision with its instrument (3), an arrangement described as in force (4). An anonymous "a senior officer said" does not. This settles i05-c03 and i14-c04 on what the interview actually says.
+
+**A programme announced with a schedule and rolling out at once** (Mashiv HaRuach on i07) is recorded as both: the announcement with its schedule is the plan (3), reported deliveries are implementation (4). Both claims stay *(ruled 27 September)*.
+
+i16-c06, the government resolution on an "independent" commission, is a decision by a body with authority and stays at 3; whether it addresses the failure as worded ("no national inquiry body with authority and an end date") is the public's question, and the contest on i16-c07 is the mechanism for the dispute **(proposed)**.
 
 ### 3.4 Stage 4 — implemented
 
@@ -189,9 +197,11 @@ The implementing body reports the change in place, with scope and a date. "In pl
 
 Partial implementation — some places, some languages, a pilot — is stage 4. The summary states the scope and what is not covered, footnoted; the stage-4 question ("how far does what was implemented address the problem") is where partiality is judged.
 
-The fix must answer the failure as worded in `he`. A measure that addresses a neighbouring problem is not a claim on this incident, however real. i02-c07 (the barrier inside Gaza, on an incident about remote-controlled weapons on the fence being neutralised) is the case to rule on in i02's pass **(proposed: it is a claim only if the source ties it to the fence's remote-weapons layer; otherwise it belongs on p2 as context, not on i02)**.
+**Press relaying the implementer** ("the IDF and the Ministry of Defence announced …") carries stage 4. When the implementer's own page is readable, it is cited instead *(ruled 27 September)*.
 
-A civil-society body reporting that the fix happened (i22-c02, ACRI's update that alert languages were added) is admissible as stage 4 only when it quotes the implementer; the pass replaces it with the Home Front Command's own announcement where one exists and keeps the ACRI page as stage 1 / the trigger **(proposed)**.
+The fix must answer the failure as worded in `he`. A measure that addresses a neighbouring problem is not a claim on this incident, however real. i02-c07 (the barrier inside Gaza, on an incident about remote-controlled weapons on the fence being neutralised) stays on i02 only if the source ties it to the fence's remote-weapons layer; otherwise it belongs on p2 as context, not on i02 *(ruled 27 September)*.
+
+A civil-society body reporting that the fix happened (i22-c02, ACRI's update that alert languages were added) is admissible as stage 4 only when it quotes the implementer; the pass replaces it with the Home Front Command's own announcement where one exists and keeps the ACRI page as stage 1 / the trigger *(ruled 27 September)*.
 
 ### 3.5 Stage 5 — independently verified
 
@@ -207,7 +217,7 @@ Not regression: a plan cancelled, defunded or stalled before implementation — 
 
 The case from the 29, as the first pass decided it (27 September, DIA-314 — pending the editor's review): i07's two stage-6 claims were cuts to the squads' pay (i07-c09) and to their reserve call-up (i07-c10). The fix on i07 as worded is weapons and radios, and the IDF stated that weapons and equipment stay. Neither claim regresses that fix, so both left the item and i07 moved from 6 to 4. The rule it applies: **a regression claim must erode the fix that answers the failure as worded, not a neighbouring measure.**
 
-Restoration after regression: `lib/stage.ts` pins the item at 6 while a stage-6 claim exists. If a later source reports the fix restored, the pass authors the restoring claim at 4 and moves the stage-6 claim out of the ledger with a corrections-log entry, so the history shows the dip **(proposed — the concept says "a later implementation claim moves it back up", and the code does not yet do that by date)**.
+Restoration after regression: `lib/stage.ts` pins the item at 6 while a stage-6 claim exists. If a later source reports the fix restored, the pass authors the restoring claim at 4 and moves the stage-6 claim out of the ledger with a corrections-log entry, so the history shows the dip. `lib/stage.ts` is not changed to compute this by date *(ruled 27 September)*.
 
 ### 3.7 Contests
 
@@ -223,7 +233,7 @@ Concretely: every claim authored in a pass — new or inherited — has had its 
 
 The inherited claims are not exempt. A pass that keeps an existing claim has re-read it; a pass that cannot re-read it removes it.
 
-**Open (found on the i07 pass, 27 September):** the research environment reads pages through a summarising fetch tool. Asked for exact text it usually complies, but it cannot prove a quote is verbatim, and JS-rendered official pages (mod.gov.il) read as empty. Until the editor rules, such a page is logged `unreachable`, the claim may keep its official URL only if a word-for-word relay confirms the text, and the editor's browser check at review is the final re-read.
+**Fetch-tool limits** *(ruled 27 September)*: the research environment reads pages through a summarising fetch tool that cannot prove a quote is verbatim, and JS-rendered official pages (mod.gov.il) read as empty. So: (1) at review the editor opens **2–3 quote links per item in the browser, always including the claim that sets the stage**; (2) an official page that will not render may keep its official URL when a relay reprints the text word for word — it is logged `unreachable` and goes into the editor's spot-check.
 
 ---
 
@@ -254,7 +264,7 @@ Ruled 27 September (DIA-366, D4 on DIA-353). The shape is `photo.portrait` and `
 - **Who picks:** the researcher proposes 2–3 candidates per crop with licence and credit; the editor picks at review.
 - **Import (manual, repeatable):** the original goes to `photographs/` (untracked); the crop is cut to the target aspect and saved to `public/photos/<subject>-portrait.jpg` / `-landscape.jpg`; the credit goes into the incident's `photo` block; `validate:strict` confirms every credit field. Wikimedia cannot be fetched from the research environment, so the editor downloads the chosen originals.
 
-**Open:** whether `validate` should require both crops on an incident with a `pass` block. That would make photos a condition of publishing after 1 October and reverse the d695767 ruling that an item without a photo is publishable.
+**Enforcement** *(ruled 27 September)*: the validator keeps its per-crop warning and does **not** require photos. Photos are part of a full pass by the checklist (§1.9) and are checked at review; an item without a photo stays publishable (the d695767 ruling stands).
 
 ---
 

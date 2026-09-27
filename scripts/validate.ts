@@ -274,6 +274,9 @@ for (const file of files) {
     if (computed >= 2 && !(inc.summaries ?? []).some((x) => x.stage === computed)) {
       fail(pw, `computed stage is ${computed} and there is no summary for it - a passed incident carries the editor summary for its current stage`);
     }
+    // A passed item carries the slide 5 head and the slide 6 line (docs/method/pass.md 1.8; ruled 27 Sep 2026).
+    if (!inc.poll) fail(pw, 'no poll block - a passed incident carries the slide 5 head (docs/method/pass.md 1.8)');
+    if (!inc.card_line) fail(pw, 'no card_line - a passed incident carries its slide 6 line (docs/method/pass.md 1.8)');
   }
   if (STRICT && REQUIRE_PASS && isPublished(inc.id) && !inc.pass) {
     fail(where, 'published without a completed pass (docs/method/pass.md) - an unpassed incident leaves published.json');
