@@ -15,7 +15,7 @@ import { Incident } from '../data/schema/index.ts';
 import { stageOf } from '../lib/stage.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DATA = join(ROOT, 'data');
+const DATA = join(ROOT, 'data', 'live');
 const read = (rel: string) => JSON.parse(readFileSync(join(DATA, rel), 'utf8'));
 
 const published: string[] = read('published.json');
