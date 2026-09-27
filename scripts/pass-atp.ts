@@ -1,8 +1,8 @@
 /**
- * The acceptance test for one item's pass (docs/method/pass.md): an ATP the
- * editor works through at review, filled in as far as the machine can fill it.
+ * The acceptance test record (ATR) for one item's pass: the procedure in
+ * docs/method/pass-atp.html, filled in as far as the machine can fill it.
  *
- *   npm run atp -- i07          writes docs/passes/i07-atp.html
+ *   npm run atp -- i07          writes docs/passes/i07-atr.html
  *
  * Part A is automatic: every check that can be computed from the incident file
  * and the validator. Part B is the editor's gate: the checks only a person can
@@ -49,7 +49,7 @@ function review(src: string): string {
 // ---------- Part A: automatic ----------
 type Check = { id: string; what: string; ok: boolean | null; detail: string };
 const A: Check[] = [];
-const add = (what: string, ok: boolean | null, detail: string) => A.push({ id: `A${A.length + 1}`, what, ok, detail });
+const add = (what: string, ok: boolean | null, detail: string) => A.push({ id: `T${String(A.length + 1).padStart(2, '0')}`, what, ok, detail });
 
 const v = spawnSync('node', ['--experimental-strip-types', 'scripts/validate.ts', '--pool=live', '--strict'], { cwd: ROOT, encoding: 'utf8' });
 const mine = (v.stdout + v.stderr).split('\n').filter((l) => l.includes(`incidents/${id}.json`));
@@ -145,7 +145,7 @@ const tag = (ok: boolean | null) => ok === true ? '<span class="tag P">PASS</spa
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${id} · pass ATP</title>
+<title>${id} · pass ATR</title>
 <style>
 :root{--bg:#0f1115;--panel:#171a21;--line:#2a2f3a;--ink:#e6e8ec;--dim:#9aa3b2;--pass:#3fb67f;--fail:#e5534b;--open:#d4a72c;--accent:#7aa2f7}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -161,9 +161,9 @@ th{color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.04
 .photos{display:flex;gap:16px;flex-wrap:wrap}figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px;max-width:420px}figure img{max-height:360px;max-width:100%;display:block;margin-bottom:8px}
 .gate li{margin:8px 0}.gate input{margin-inline-end:8px}a{color:var(--accent)}
 </style></head><body><main>
-<h1>${id} · pass acceptance (ATP / ATR)</h1>
+<h1>${id} · pass acceptance record (ATR)</h1>
 <div dir="rtl" style="font-size:17px;margin:6px 0">${esc(inc.he)}</div>
-<div class="sub">generated ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC by <code>npm run atp -- ${id}</code> · criteria: docs/method/pass.md v2${p?.issue ? ` · <a href="${esc(p.issue)}">issue</a>` : ''}</div>
+<div class="sub">generated ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC by <code>npm run atp -- ${id}</code> · procedure: docs/method/pass-atp.html · criteria: docs/method/pass.md v2${p?.issue ? ` · <a href="${esc(p.issue)}">issue</a>` : ''}</div>
 <div class="kpis">
  <div class="kpi"><b>${p?.stage_before ?? '—'} → ${after}</b><span>stage before → after</span></div>
  <div class="kpi"><b style="color:var(--pass)">${autoPass}</b><span>automatic pass</span></div>
@@ -171,47 +171,50 @@ th{color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.04
  <div class="kpi"><b>${inc.claims.length}</b><span>claims</span></div>
 </div>
 
-<h2>Part A · automatic checks</h2>
+<h2>Automatic tests · T01–T15</h2>
 <div class="wrap"><table><tr><th>#</th><th>Check</th><th>Result</th><th>Verdict</th></tr>
 ${A.map((c) => `<tr><td>${c.id}</td><td>${esc(c.what)}</td><td>${esc(c.detail)}</td><td>${tag(c.ok)}</td></tr>`).join('')}
 </table></div>
 
-<h2>Part B · editor's gate</h2>
+<h2>Editor's tests · T16–T25</h2>
 <ol class="gate">
- <li><label><input type="checkbox">B1 · <b>Quote spot-check (§4):</b> open the flagged links below. Every "sets the stage" and contest row, plus the two picked at random. The quote must be on the page, word for word.</label></li>
- <li><label><input type="checkbox">B2 · <b>Overviews say no more than their citations</b>, and each lead carries what the reader most needs at that stage (§5).</label></li>
- <li><label><input type="checkbox">B3 · <b>Stage movement</b> ${p?.stage_before != null && p.stage_before !== after ? `(${p.stage_before} → ${after})` : ''} is justified by the search log below.</label></li>
- <li><label><input type="checkbox">B4 · <b>Photos:</b> of the item or topic-related, no faces / victims / memorials, credit as the source asks (§6).</label></li>
- <li><label><input type="checkbox">B5 · <b>poll and card_line</b> say only what slides 2 and 3 say; the question is generic in substance (§1.8).</label></li>
- <li><label><input type="checkbox">B6 · <b>Unreachable pages</b> opened in the browser (${unreachable.size}).</label></li>
- <li><label><input type="checkbox">B7 · <b>Rendered in <code>npm run dev:live</code></b> at 390 × 844: the lead ends above the fade on slides 2 and 3.</label></li>
+ <li><label><input type="checkbox">T16 · <b>Quote spot-check:</b> open the flagged links in the claims table: every claim that sets the stage, every contest, plus the two picked at random. Each quote on the page word for word; date and masthead match.</label></li>
+ <li><label><input type="checkbox">T17 · <b>Claims classified right:</b> each claim meets §3 for its stage and its source type may assert it; a regression erodes the fix as worded.</label></li>
+ <li><label><input type="checkbox">T18 · <b>Overviews</b> say no more than their citations; each lead carries what matters most at that stage, including what was not fixed.</label></li>
+ <li><label><input type="checkbox">T19 · <b>Stage movement</b> ${p?.stage_before != null && p.stage_before !== after ? `(${p.stage_before} → ${after}) ` : ''}is explained by the search log.</label></li>
+ <li><label><input type="checkbox">T20 · <b>No names</b> of individuals, officials or victims in quotes or overviews.</label></li>
+ <li><label><input type="checkbox">T21 · <b>Photos:</b> of the item or topic-related; no faces, victims or memorials; credit as the source asks.</label></li>
+ <li><label><input type="checkbox">T22 · <b>poll and card_line</b> say only what slides 2 and 3 say; the question is generic in substance.</label></li>
+ <li><label><input type="checkbox">T23 · <b>Unreachable pages</b> opened (${unreachable.size}).</label></li>
+ <li><label><input type="checkbox">T24 · <b>Editor's calls</b> decided: contests on stage-1 claims (${inc.claims.filter((c) => c.contests && inc.claims.find((x) => x.id === c.contests)?.asserts_stage === 1).map((c) => `${c.id} → ${c.contests}`).join(', ') || 'none'}), and any <i>(proposed)</i> case this item touches.</label></li>
+ <li><label><input type="checkbox">T25 · <b>Rendered</b> in <code>npm run dev:live</code> at 390 × 844: leads end above the fade on slides 2 and 3; photos and credits show.</label></li>
 </ol>
-<p class="sub">Accept = all of A pass and B1–B7 ticked. Otherwise, reply with what to change.</p>
+<p class="sub">Accepted when T01–T15 pass and T16–T25 are ticked. Otherwise reply with the failed test IDs (docs/method/pass-atp.html §5).</p>
 
-<h2>Claims · for B1</h2>
+<h2>Claims · for T16, T17, T20</h2>
 <div class="wrap"><table><tr><th>id</th><th>stage</th><th>type</th><th>source · date</th><th>quote</th><th>link</th><th>flag</th><th>✓</th></tr>${claimRows}</table></div>
 
-<h2>Overviews · for B2</h2>
+<h2>Overviews · for T18, T20</h2>
 ${overviews}
 
-<h2>Search log · for B3</h2>
+<h2>Search log · for T19</h2>
 <div class="wrap"><table><tr><th>search</th><th>outcome</th><th>claims</th><th>where</th><th>note</th></tr>${searchRows}</table></div>
 
-<h2>Photos · for B4</h2>
+<h2>Photos · for T21</h2>
 <div class="photos">${photos}</div>
 
-<h2>poll and card_line · for B5</h2>
+<h2>poll and card_line · for T22</h2>
 <div class="ov" dir="rtl">
  <div class="ovh" dir="ltr">card_line</div><p>${esc(inc.card_line ?? '—')}</p>
  ${inc.poll ? `<div class="ovh" dir="ltr">poll</div><p><b>${esc(inc.poll.question)}</b></p>${review(inc.poll.failure)}${review(inc.poll.status)}<p class="sub">${esc(plainText(inc.poll.caveat))}</p>` : '<p>no poll</p>'}
 </div>
 
-<h2>Unreachable here · for B6</h2>
+<h2>Unreachable here · for T23</h2>
 <ul>${[...unreachable].map((u) => `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(decodeURI(u))}</a></li>`).join('') || '<li>none</li>'}</ul>
 </main></body></html>
 `;
 
 mkdirSync(join(ROOT, 'docs/passes'), { recursive: true });
-const out = join(ROOT, 'docs/passes', `${id}-atp.html`);
+const out = join(ROOT, 'docs/passes', `${id}-atr.html`);
 writeFileSync(out, html);
 console.log(`\n  ${id}: ${autoPass} automatic pass, ${autoFail} fail · ${out.replace(ROOT + '/', '')}\n`);
