@@ -1,6 +1,6 @@
 /**
  * The pass report (docs/method/pass.md). Which published incidents have been
- * rebuilt by a pass, which have not, and where each one moved.
+ * rebuilt by a pass, which have not, and where a pass corrected the stage the old record showed.
  *
  *   npm run check:passes
  *
@@ -30,7 +30,7 @@ for (const id of published) {
   if (!inc.pass) { rows.push(`  ${id}  -        stage ${after}   not passed`); continue; }
   passed++;
   const before = inc.pass.stage_before;
-  const move = before == null ? 'new' : before === after ? 'held' : before < after ? `up from ${before}` : `DOWN from ${before}`;
+  const move = before == null ? 'new' : before === after ? 'held' : before < after ? `corrected up (record said ${before})` : `corrected DOWN (record said ${before})`;
   const open = inc.pass.searches.filter((s) => s.outcome === 'unreachable').map((s) => s.stage);
   const flags = [
     open.length ? `unreachable at stage ${open.join(',')}` : '',

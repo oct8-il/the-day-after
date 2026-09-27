@@ -89,7 +89,7 @@ const p = inc.pass;
 add('A pass block is present (§1.7)', !!p, p ? `dated ${p.date}` : 'missing — nothing below it can pass');
 
 const after = stageOf(inc);
-add('Stage before → after recorded (§1.5)', !!p, p ? `${p.stage_before ?? 'new'} → ${after} (${stageName(after)})${p.stage_before != null && p.stage_before !== after ? ' · moved' : ' · held'}` : '—');
+add('Stage before → after recorded (§1.5)', !!p, p ? `${p.stage_before ?? 'new'} → ${after} (${stageName(after)})${p.stage_before != null && p.stage_before !== after ? ` · the old record said ${p.stage_before}; corrected by the pass` : ' · the old record held'}` : '—');
 
 add('Responsible body named, institutions only (§1.1)', !!p && p.responsible.length > 0, p ? p.responsible.join(' · ') : '—');
 
@@ -231,7 +231,7 @@ ${A.map((c) => `<tr><td>${c.id}</td><td>${esc(c.what)}</td><td>${esc(c.detail)}<
  <li><label><input type="checkbox">T16 · <b>Quote spot-check:</b> the links open each source at the quote, highlighted (PDFs open at the start: search for the quote). Check the flagged ones: every claim that sets the stage, every contest, plus the two picked at random. Each quote on the page word for word; date and masthead match.</label></li>
  <li><label><input type="checkbox">T17 · <b>Claims classified right:</b> each claim meets §3 for its stage and its source type may assert it; a regression erodes the fix as worded.</label></li>
  <li><label><input type="checkbox">T18 · <b>Overviews</b> say no more than their citations (open <i>Where to look</i> under each overview: every passage beside the sentence to find on its source, with a link that opens there); each lead carries what matters most at that stage, including what was not fixed.</label></li>
- <li><label><input type="checkbox">T19 · <b>Stage movement</b> ${p?.stage_before != null && p.stage_before !== after ? `(${p.stage_before} → ${after}) ` : ''}is explained by the search log.</label></li>
+ <li><label><input type="checkbox">T19 · <b>Stage correction</b> ${p?.stage_before != null && p.stage_before !== after ? `(the old record said ${p.stage_before}, the pass finds ${after}) ` : ''}is explained by the search log. A pass corrects our record; it does not report a change in the world.</label></li>
  <li><label><input type="checkbox">T20 · <b>No names</b> of individuals, officials or victims in quotes or overviews.</label></li>
  <li><label><input type="checkbox">T21 · <b>Photos:</b> of the item or topic-related; no faces, victims or memorials; credit as the source asks.</label></li>
  <li><label><input type="checkbox">T22 · <b>poll and card_line</b> say only what slides 2 and 3 say; the question is generic in substance.</label></li>
